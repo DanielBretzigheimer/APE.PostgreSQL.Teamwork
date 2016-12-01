@@ -1,0 +1,63 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Comment CommentText="Creates the Diffs by comparing the old database dump to a new one">
+    <Position X="7.5" Y="1.146" Height="0.75" Width="2.481" />
+  </Comment>
+  <Class Name="APE.PostgreSQL.Teamwork.ViewModel.MainWindowViewModel">
+    <Position X="0.5" Y="2.25" Width="3.25" />
+    <Members>
+      <Field Name="DatabasesEventArgs" Hidden="true" />
+      <Field Name="EditableEventArgs" Hidden="true" />
+      <Field Name="EditButtonEnabledEventArgs" Hidden="true" />
+      <Field Name="ErrorMessageEventArgs" Hidden="true" />
+      <Field Name="LoadingEventArgs" Hidden="true" />
+      <Field Name="SaveButtonVisibilityEventArgs" Hidden="true" />
+      <Field Name="SuccessMessageEventArgs" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <TypeIdentifier />
+    <ShowAsCollectionAssociation>
+      <Property Name="Databases" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.GUI.MainWindow" Collapsed="true">
+    <Position X="0.5" Y="0.5" Width="3.25" />
+    <TypeIdentifier>
+      <HashCode>ACAAAggAAIAQAQABAgAKAAGFAAABCAIAAAAAgCBAAAA=</HashCode>
+      <FileName>MainWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.ViewModel.DatabaseDisplayData">
+    <Position X="4.5" Y="2.25" Width="2.75" />
+    <Members>
+      <Field Name="ApplicableSQLFilesEventArgs" Hidden="true" />
+      <Field Name="DatabaseEventArgs" Hidden="true" />
+      <Field Name="EditModeEventArgs" Hidden="true" />
+      <Field Name="EnabledEventArgs" Hidden="true" />
+      <Field Name="ErrorEventArgs" Hidden="true" />
+      <Field Name="ErrorMessageEventArgs" Hidden="true" />
+      <Field Name="ExportingEventArgs" Hidden="true" />
+      <Field Name="ImportableFilesFoundEventArgs" Hidden="true" />
+      <Field Name="ImportingEventArgs" Hidden="true" />
+      <Field Name="ResettingEventArgs" Hidden="true" />
+      <Field Name="ShowDetailsEventArgs" Hidden="true" />
+      <Field Name="TargetVersionEventArgs" Hidden="true" />
+      <Field Name="TestingEventArgs" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+      <Field Name="UndoingEventArgs" Hidden="true" />
+      <Field Name="VersionsEventArgs" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.ViewModel.Postgres.DifferenceCreator">
+    <Position X="7.5" Y="2.25" Width="2.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

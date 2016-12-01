@@ -1,0 +1,1 @@
+ALTER DATABASE "[NewDatabaseName]" RENAME TO "[OldDatabaseName]";

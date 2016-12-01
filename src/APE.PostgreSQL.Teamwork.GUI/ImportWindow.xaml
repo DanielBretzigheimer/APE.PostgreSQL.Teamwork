@@ -1,0 +1,132 @@
+﻿<local:DialogWindow x:Class="APE.PostgreSQL.Teamwork.GUI.ImportWindow"
+                    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+                    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+                    xmlns:gui="clr-namespace:APE.PostgreSQL.Teamwork.GUI" 
+                    Icon="images/logo-icon.ico"
+                    xmlns:loading="clr-namespace:APE.PostgreSQL.Teamwork.GUI.Loading"
+                    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+                    xmlns:local="clr-namespace:APE.PostgreSQL.Teamwork.GUI"
+                    Title="{Binding SelectedDatabase.Database.Name}" Height="600" Width="1000" Background="#eee">
+
+    <local:DialogWindow.Resources>
+        <local:BindingProxy Data="{Binding}" x:Key="viewModelProxy" />
+
+        <ContextMenu x:Key="ItemContextMenu">
+            <MenuItem Header="Execute file(s)" Command="{Binding Data.ExecuteFileCommand, Source={StaticResource viewModelProxy}}"
+								IsEnabled="{Binding Data.ExecuteButtonEnabled, Source={StaticResource viewModelProxy}}"/>
+            <MenuItem Header="Open file(s)" Command="{Binding Data.OpenFileCommand, Source={StaticResource viewModelProxy}}"/>
+            <MenuItem Header="Refresh file(s)" Command="{Binding Data.RefreshFileCommand, Source={StaticResource viewModelProxy}}" />
+            <MenuItem Header="Mark as executed" Command="{Binding Data.MarkAsExecutedCommand, Source={StaticResource viewModelProxy}}" />
+        </ContextMenu>
+    </local:DialogWindow.Resources>
+
+    <materialDesign:DialogHost x:Name="dialogHost" Identifier="importWindowDialogHost">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Border Background="White" Padding="5">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="5" Color="#FFCCCCCC" Direction="270" ShadowDepth="1"/>
+                </Border.Effect>
+
+                <TextBlock Text="Database Import" FontWeight="Bold" VerticalAlignment="Center" FontSize="18" />
+            </Border>
+
+            <Grid Grid.Row="1">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="280" />
+                    <ColumnDefinition Width="75*" />
+                </Grid.ColumnDefinitions>
+
+                <!--Margin to show GridSplitter-->
+                <Grid>
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto" />
+                            <RowDefinition />
+                        </Grid.RowDefinitions>
+
+                        <materialDesign:Card Margin="5">
+                            <StackPanel Margin="5">
+
+                                <TextBlock Text="Version" FontWeight="Bold" VerticalAlignment="Center" FontSize="18" />
+
+                                <TextBox materialDesign:HintAssist.Hint="Current Version" Text="{Binding SelectedDatabase.Database.CurrentVersion.Full, Mode=OneWay}" 
+                                         IsReadOnly="True" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                <ComboBox materialDesign:HintAssist.Hint="Target Version" ItemsSource="{Binding Path=SelectedDatabase.Versions}"
+                                          SelectedItem="{Binding Path=SelectedDatabase.TargetVersion}" Style="{StaticResource MaterialDesignFloatingHintComboBox}" >
+                                    <ComboBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Full}" />
+                                        </DataTemplate>
+                                    </ComboBox.ItemTemplate>
+                                </ComboBox>
+                            </StackPanel>
+                        </materialDesign:Card>
+
+                        <materialDesign:Card Grid.Row="1" VerticalAlignment="Stretch" Margin="5, 5, 5, 5">
+                            <Grid>
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="auto" />
+                                    <RowDefinition Height="*" />
+                                </Grid.RowDefinitions>
+
+                                <Grid Margin="5">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="170"/>
+                                        <ColumnDefinition Width="auto"/>
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock Text="File" FontWeight="Bold" VerticalAlignment="Center" FontSize="18" />
+                                    <TextBlock Grid.Column="1" Text="Query" FontWeight="Bold" VerticalAlignment="Center" FontSize="18" />
+                                </Grid>
+
+                                <ListBox Grid.Row="1"
+												 Margin="0 0 0 1"
+												 ItemsSource="{Binding SelectedDatabase.ApplicableSQLFiles}" 
+												 SelectedItem="{Binding SelectedDiffFile}"
+												 ScrollViewer.VerticalScrollBarVisibility="Visible"
+												 ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+												 SelectionMode="Extended">
+                                    <ListBox.ItemTemplate>
+                                        <DataTemplate>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="170"/>
+                                                    <ColumnDefinition Width="90"/>
+                                                </Grid.ColumnDefinitions>
+
+                                                <TextBlock Grid.Column="0" Text="{Binding Path=SQLFile.FileName}" FontFamily="Segoe UI Light" FontSize="20" 
+																 Foreground="{Binding Path=Status, Converter={StaticResource ErrorStatusToColorConverter}}" />
+                                                <TextBlock Grid.Column="1" Text="{Binding Path=SQLStatements.Count}" FontFamily="Segoe UI Light" FontSize="20" 
+																 Foreground="{Binding Path=Status, Converter={StaticResource ErrorStatusToColorConverter}}" />
+                                            </Grid>
+                                        </DataTemplate>
+                                    </ListBox.ItemTemplate>
+                                    <ListBox.ItemContainerStyle>
+                                        <Style TargetType="ListBoxItem" BasedOn="{StaticResource MaterialDesignListBoxItem}">
+                                            <Setter Property="IsSelected" Value="{Binding Mode=TwoWay, Path=IsSelected}"/>
+                                            <Setter Property="ContextMenu" Value="{StaticResource ItemContextMenu}" />
+                                        </Style>
+                                    </ListBox.ItemContainerStyle>
+                                </ListBox>
+                            </Grid>
+                        </materialDesign:Card>
+                    </Grid>
+
+                    <Button ToolTip="Execute all files" Style="{StaticResource MaterialDesignFloatingActionButton}" Visibility="{Binding ExecuteButtonVisible, Converter={StaticResource BoolToVisibilityConverter}}"
+						Command="{Binding ExecuteCommand}" IsEnabled="{Binding ExecuteButtonEnabled}" Margin="0,0,35,15" Padding="4" Height="48" Width="48" HorizontalAlignment="Right" VerticalAlignment="Bottom" >
+                        <Grid>
+                            <loading:Spinner Color="White" Visibility="{Binding Loading, Converter={StaticResource BoolToVisibilityConverter}}" />
+                            <materialDesign:PackIcon Kind="Play" Visibility="{Binding Loading, Converter={StaticResource InvertedBoolToVisibilityConverter}}"/>
+                        </Grid>
+                    </Button>
+                </Grid>
+
+                <gui:StatementOverview Grid.Column="1" DataContext="{Binding SelectedDiffFile}" />
+            </Grid>
+        </Grid>
+    </materialDesign:DialogHost>
+</local:DialogWindow>

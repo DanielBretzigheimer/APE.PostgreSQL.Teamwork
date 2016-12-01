@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="NameAndType">
+  <Comment CommentText="The import window displays a list of files which can be imported and contains the options to execute all files automatically or to execute specific files by selecting them">
+    <Position X="0.5" Y="0.5" Height="0.823" Width="3.44" />
+  </Comment>
+  <Class Name="APE.PostgreSQL.Teamwork.ViewModel.ImportWindowViewModel">
+    <Position X="0.5" Y="3.25" Width="3.5" />
+    <Members>
+      <Field Name="DiffFilesEventArgs" Hidden="true" />
+      <Field Name="ExecuteButtonEnabledEventArgs" Hidden="true" />
+      <Field Name="ExecuteButtonVisibleEventArgs" Hidden="true" />
+      <Field Name="LoadingEventArgs" Hidden="true" />
+      <Field Name="SelectedDiffFileEventArgs" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsAssociation>
+      <Property Name="SelectedDiffFile" />
+      <Property Name="SelectedDatabase" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="DiffFiles" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.ViewModel.StatementDisplayData">
+    <Position X="8.5" Y="4.5" Width="2.5" />
+    <Members>
+      <Field Name="EditModeEventArgs" Hidden="true" />
+      <Field Name="StatementEventArgs" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.GUI.ImportWindow" Collapsed="true">
+    <Position X="0.5" Y="1.75" Width="3.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAACAAAAEAAABAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>ImportWindow.xaml.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.ViewModel.SQLFileDisplayData">
+    <Position X="5" Y="4.5" Width="2.5" />
+    <Members>
+      <Field Name="SQLFileEventArgs" Hidden="true" />
+      <Field Name="SQLStatementsEventArgs" Hidden="true" />
+      <Field Name="StatusEventArgs" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <ShowAsCollectionAssociation>
+      <Property Name="SQLStatements" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.ViewModel.DatabaseDisplayData" Collapsed="true">
+    <Position X="5" Y="3.25" Width="2.5" />
+    <Members>
+      <Field Name="ApplicableSQLFilesEventArgs" Hidden="true" />
+      <Field Name="DatabaseEventArgs" Hidden="true" />
+      <Field Name="EditModeEventArgs" Hidden="true" />
+      <Field Name="EnabledEventArgs" Hidden="true" />
+      <Field Name="ErrorEventArgs" Hidden="true" />
+      <Field Name="ErrorMessageEventArgs" Hidden="true" />
+      <Field Name="ExportingEventArgs" Hidden="true" />
+      <Field Name="ImportableFilesFoundEventArgs" Hidden="true" />
+      <Field Name="ImportingEventArgs" Hidden="true" />
+      <Field Name="ResettingEventArgs" Hidden="true" />
+      <Field Name="ShowDetailsEventArgs" Hidden="true" />
+      <Field Name="TargetVersionEventArgs" Hidden="true" />
+      <Field Name="TestingEventArgs" Hidden="true" />
+      <Field Name="UndoingEventArgs" Hidden="true" />
+      <Field Name="VersionsEventArgs" Hidden="true" />
+    </Members>
+    <TypeIdentifier />
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

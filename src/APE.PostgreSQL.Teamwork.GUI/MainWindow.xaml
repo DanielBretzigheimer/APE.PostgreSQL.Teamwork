@@ -1,0 +1,180 @@
+﻿<local:DialogWindow x:Class="APE.PostgreSQL.Teamwork.GUI.MainWindow"
+					xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+					xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+					xmlns:local="clr-namespace:APE.PostgreSQL.Teamwork.GUI" 
+					xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+					xmlns:lib="http://schemas.thinkpixellab.com/2011/xaml/presentation"
+					xmlns:vm="clr-namespace:APE.PostgreSQL.Teamwork.ViewModel;assembly=APE.PostgreSQL.Teamwork.ViewModel"
+					xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
+					xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+                    xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
+					mc:Ignorable="d"
+					MinWidth="500" MinHeight="450" Title="{Binding WindowTitle}" Height="500" 
+					Background="#eee" Width="500" Icon="images/logo-icon.ico">
+
+    <i:Interaction.Triggers>
+        <i:EventTrigger EventName="SizeChanged">
+            <local:InvokeCommandWithEventArgs Command="{Binding SizeChangedCommand}" />
+        </i:EventTrigger>
+    </i:Interaction.Triggers>
+
+    <Window.Resources>
+        <local:BindingProxy x:Key="viewModel" Data="{Binding}" />
+
+        <!--Drag Item Design-->
+        <Style x:Key="DragItemStyle" TargetType="dragablz:DragablzItem">
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="{x:Type dragablz:DragablzItem}" >
+                        <ControlTemplate.Resources>
+                            <SineEase x:Key="Ease" EasingMode="EaseInOut" />
+                        </ControlTemplate.Resources>
+                        <Grid RenderTransformOrigin=".5, .5" Margin="20 0 20 0">
+                            <local:DatabaseDetailView x:Name="DatabaseCard" Width="400" HorizontalAlignment="Center" />
+                            <Grid.RenderTransform>
+                                <ScaleTransform x:Name="ScaleTransform" ScaleX="1" ScaleY="1" />
+                            </Grid.RenderTransform>
+                        </Grid>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsDragging" Value="True">
+                                <Trigger.EnterActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ScaleTransform" Storyboard.TargetProperty="ScaleX">
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1.12" EasingFunction="{StaticResource Ease}" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ScaleTransform" Storyboard.TargetProperty="ScaleY">
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1.12" EasingFunction="{StaticResource Ease}" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DatabaseCard" Storyboard.TargetProperty="(materialDesign:ShadowAssist.ShadowDepth)">
+                                                <DiscreteObjectKeyFrame KeyTime="0:0:0.08" Value="{x:Static materialDesign:ShadowDepth.Depth2}" />
+                                                <DiscreteObjectKeyFrame KeyTime="0:0:0.12" Value="{x:Static materialDesign:ShadowDepth.Depth3}" />
+                                                <DiscreteObjectKeyFrame KeyTime="0:0:0.16" Value="{x:Static materialDesign:ShadowDepth.Depth4}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.EnterActions>
+                                <Trigger.ExitActions>
+                                    <BeginStoryboard>
+                                        <Storyboard>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ScaleTransform" Storyboard.TargetProperty="ScaleX">
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1" EasingFunction="{StaticResource Ease}" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <DoubleAnimationUsingKeyFrames Storyboard.TargetName="ScaleTransform" Storyboard.TargetProperty="ScaleY">
+                                                <EasingDoubleKeyFrame KeyTime="0:0:0.3" Value="1" EasingFunction="{StaticResource Ease}" />
+                                            </DoubleAnimationUsingKeyFrames>
+                                            <ObjectAnimationUsingKeyFrames Storyboard.TargetName="DatabaseCard" Storyboard.TargetProperty="(materialDesign:ShadowAssist.ShadowDepth)">
+                                                <DiscreteObjectKeyFrame KeyTime="0:0:0.12" Value="{x:Static materialDesign:ShadowDepth.Depth4}" />
+                                                <DiscreteObjectKeyFrame KeyTime="0:0:0.16" Value="{x:Static materialDesign:ShadowDepth.Depth3}" />
+                                                <DiscreteObjectKeyFrame KeyTime="0:0:0.22" Value="{x:Static materialDesign:ShadowDepth.Depth2}" />
+                                            </ObjectAnimationUsingKeyFrames>
+                                        </Storyboard>
+                                    </BeginStoryboard>
+                                </Trigger.ExitActions>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <materialDesign:DialogHost x:Name="dialogHost" Identifier="mainWindowDialogHost">
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <ScrollViewer Grid.Row="1">
+                <dragablz:DragablzItemsControl x:Name="DatabaseList" ItemsSource="{Binding Databases}" MaxWidth="460"
+                                               Margin="0 0 0 78" Background="Transparent" 
+                                               HorizontalAlignment="Stretch"
+                                               ItemContainerStyle="{StaticResource DragItemStyle}">
+                    <dragablz:DragablzItemsControl.ItemsOrganiser>
+                        <dragablz:VerticalOrganiser />
+                    </dragablz:DragablzItemsControl.ItemsOrganiser>
+                </dragablz:DragablzItemsControl>
+            </ScrollViewer>
+
+            <Button ToolTip="Add Database" Style="{StaticResource MaterialDesignFloatingActionButton}" Margin="0,0,35,15" 
+							Padding="10" Height="48" Width="48" HorizontalAlignment="Right" VerticalAlignment="Bottom" 
+							Grid.Row="1" Command="{Binding AddDatabaseCommand}">
+                <materialDesign:PackIcon Kind="Plus" RenderOptions.BitmapScalingMode="HighQuality" Width="28" Height="28" />
+            </Button>
+
+            <Border Background="White">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="5" Color="#FFCCCCCC" Direction="270" ShadowDepth="1"/>
+                </Border.Effect>
+
+                <Grid Margin="5,0,5,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <TextBlock Text="Database Overview" FontWeight="Bold" VerticalAlignment="Center" FontSize="18" />
+
+                    <StackPanel Grid.Column="1" Orientation="Horizontal" Margin="5" materialDesign:RippleAssist.IsCentered="True">
+                        <Grid>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="auto" />
+                                <ColumnDefinition Width="auto" />
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Search -->
+                            <TextBox Width="0" materialDesign:HintAssist.Hint="Search" Height="25" Margin="5 0"
+											 Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}" x:Name="searchBar" >
+                                <TextBox.Style>
+                                    <Style TargetType="TextBox" BasedOn="{StaticResource MaterialDesignTextBox}">
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding ShowSearch}" Value="True">
+                                                <DataTrigger.EnterActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation Storyboard.TargetProperty="Width"
+																							 From="0"
+																							 To="150"
+																							 Duration="0:0:0.5"/>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.EnterActions>
+                                                <DataTrigger.ExitActions>
+                                                    <BeginStoryboard>
+                                                        <Storyboard>
+                                                            <DoubleAnimation Storyboard.TargetProperty="Width"
+																							 From="150"
+																							 To="0"
+																							 Duration="0:0:0.5"/>
+                                                        </Storyboard>
+                                                    </BeginStoryboard>
+                                                </DataTrigger.ExitActions>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </TextBox.Style>
+                            </TextBox>
+                            <Button Grid.Column="1" ToolTip="Search Database" Style="{StaticResource MaterialDesignButtonWithoutBorder}" Command="{Binding SearchCommand}"
+											HorizontalAlignment="Right" Click="SearchClick">
+                                <materialDesign:PackIcon Kind="Magnify" RenderOptions.BitmapScalingMode="HighQuality" />
+                            </Button>
+                        </Grid>
+                        <Button ToolTip="Update" Style="{StaticResource MaterialDesignButtonWithoutBorder}" Command="{Binding RefreshDatabasesCommand}">
+                            <materialDesign:PackIcon Kind="Refresh" RenderOptions.BitmapScalingMode="HighQuality" />
+                        </Button>
+
+                        <materialDesign:PopupBox PlacementMode="BottomAndAlignRightEdges" StaysOpen="False"
+                                                 Style="{StaticResource MaterialDesignFlatRoundPopupButton}">
+                            <StackPanel Width="150">
+                                <Button Content="Settings" Command="{Binding SettingCommand}" />
+                                <Button Content="Licenses" Click="ShowLicensesClick"/>
+                            </StackPanel>
+                        </materialDesign:PopupBox>
+                    </StackPanel>
+                </Grid>
+            </Border>
+        </Grid>
+    </materialDesign:DialogHost>
+</local:DialogWindow>
