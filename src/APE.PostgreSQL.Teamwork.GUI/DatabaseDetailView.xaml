@@ -1,0 +1,286 @@
+﻿<UserControl xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:local="clr-namespace:APE.PostgreSQL.Teamwork.View"
+			 xmlns:loading="clr-namespace:APE.PostgreSQL.Teamwork.GUI.Loading"
+			 xmlns:vm="clr-namespace:APE.PostgreSQL.Teamwork.ViewModel;assembly=APE.PostgreSQL.Teamwork.ViewModel"
+			 xmlns:system="clr-namespace:System;assembly=System"
+             x:Class="APE.PostgreSQL.Teamwork.GUI.DatabaseDetailView"
+             xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
+			 xmlns:sys="clr-namespace:System;assembly=mscorlib"
+			 xmlns:lib="http://schemas.thinkpixellab.com/2011/xaml/presentation"
+			 xmlns:materialDesign="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+             mc:Ignorable="d" Margin="5" d:DataContext="{d:DesignInstance Type=vm:DatabaseDisplayData, IsDesignTimeCreatable=True}"
+             d:DesignWidth="300">
+
+    <UserControl.Resources>
+        <!-- Style to hide tool tips that have an empty content. -->
+        <Style TargetType="ToolTip" BasedOn="{StaticResource MaterialDesignToolTip}">
+            <Style.Triggers>
+                <Trigger Property="Content"
+                 Value="{x:Static sys:String.Empty}">
+                    <Setter Property="Visibility"
+                    Value="Collapsed" />
+                </Trigger>
+                <Trigger Property="Content"
+                 Value="{x:Null}">
+                    <Setter Property="Visibility"
+                    Value="Collapsed" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <ControlTemplate x:Key="ExpanderTemplate" TargetType="{x:Type Expander}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto" />
+                    <RowDefinition />
+                </Grid.RowDefinitions>
+                <ContentPresenter x:Name="ExpanderContent" ContentSource="Content" Grid.Row="1">
+                    <ContentPresenter.LayoutTransform>
+                        <ScaleTransform ScaleY="0"/>
+                    </ContentPresenter.LayoutTransform>
+                </ContentPresenter>
+            </Grid>
+            <ControlTemplate.Triggers>
+                <Trigger Property="IsExpanded" Value="True">
+                    <Trigger.EnterActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="ExpanderContent"
+                                                 Storyboard.TargetProperty="(ContentPresenter.LayoutTransform).(ScaleTransform.ScaleY)"                                                 
+                                                 To="1"
+                                                 Duration="0:0:0.4"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.EnterActions>
+                    <Trigger.ExitActions>
+                        <BeginStoryboard>
+                            <Storyboard>
+                                <DoubleAnimation Storyboard.TargetName="ExpanderContent"
+                                                 Storyboard.TargetProperty="(ContentPresenter.LayoutTransform).(ScaleTransform.ScaleY)"
+                                                 To="0"
+                                                 Duration="0:0:0.4"/>
+                            </Storyboard>
+                        </BeginStoryboard>
+                    </Trigger.ExitActions>
+                </Trigger>
+            </ControlTemplate.Triggers>
+        </ControlTemplate>
+    </UserControl.Resources>
+
+    <materialDesign:Card ToolTip="{Binding Database.ProgressInfo}">
+        <Grid>
+            <ProgressBar Value="{Binding Database.Progress}" VerticalAlignment="Top" Style="{StaticResource MaterialDesignLinearProgressBar}" />
+
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition />
+                </Grid.ColumnDefinitions>
+
+                <Grid>
+                    <materialDesign:PackIcon Kind="DragVertical" />
+                    <Thumb Style="{DynamicResource InvisibleThumbStyle}" dragablz:DragablzItem.IsCustomThumb="True">
+                        <Thumb.Template>
+                            <ControlTemplate>
+                                <Grid Background="Transparent" />
+                            </ControlTemplate>
+                        </Thumb.Template>
+                    </Thumb>
+                </Grid>
+
+                <Grid Margin="5" Grid.Column="1">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                        <ColumnDefinition Width="auto" />
+                    </Grid.ColumnDefinitions>
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                        <RowDefinition Height="auto" />
+                    </Grid.RowDefinitions>
+
+                    <Button Grid.Column="0" Command="{Binding ExpandCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}" IsEnabled="{Binding Enabled}"
+									Visibility="{Binding ShowDetails, Converter={StaticResource InvertedBoolToVisibilityConverter}}" ToolTip="Show more information" >
+                        <materialDesign:PackIcon Kind="ChevronDown" RenderOptions.BitmapScalingMode="HighQuality" />
+                    </Button>
+                    <Button Grid.Column="0" Command="{Binding ExpandCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}" IsEnabled="{Binding Enabled}"
+									Visibility="{Binding ShowDetails, Converter={StaticResource BoolToVisibilityConverter}}" ToolTip="Show less information" >
+                        <materialDesign:PackIcon Kind="ChevronUp" RenderOptions.BitmapScalingMode="HighQuality" />
+                    </Button>
+
+                    <TextBlock Grid.Column="1" Text="{Binding Database.Name}" VerticalAlignment="Center" FontSize="14" FontWeight="Bold" Margin="5 0" />
+
+                    <StackPanel Grid.Column="4" IsEnabled="{Binding Enabled}" Orientation="Horizontal"
+                                    Visibility="{Binding Error, Converter={StaticResource InvertedBoolToVisibilityConverter}}">
+                        <Button Padding="4" FontSize="20" Command="{Binding ImportCommand}"
+                                    IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}" 
+                                    Visibility="{Binding ImportableFilesFound, Converter={StaticResource BoolToVisibilityConverter}}"
+                                    Style="{StaticResource MaterialDesignFlatRoundButton}"
+                                    ToolTip="Quick Import database changes" >
+                            <Grid>
+                                <loading:Spinner Visibility="{Binding Importing, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                <materialDesign:PackIcon Kind="DebugStepInto" RenderOptions.BitmapScalingMode="HighQuality"
+                                                             Visibility="{Binding Importing, Converter={StaticResource InvertedBoolToVisibilityConverter}}"/>
+                            </Grid>
+                        </Button>
+
+                        <Button Padding="4" FontSize="20" Command="{Binding OpenImportWindowCommand}"
+                                    IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}" 
+                                    Style="{StaticResource MaterialDesignFlatRoundButton}"
+                                    ToolTip="Open import window" >
+                            <materialDesign:PackIcon Kind="GoogleCirclesExtended" RenderOptions.BitmapScalingMode="HighQuality" />
+                        </Button>
+                    </StackPanel>
+
+                    <Button Grid.Column="4" Padding="4" FontSize="20" Style="{StaticResource MaterialDesignFlatRoundButton}"
+								Visibility="{Binding Error, Converter={StaticResource BoolToVisibilityConverter}}"
+								Command="{Binding CreateDatabaseCommand}" ToolTip="Create database" >
+                        <materialDesign:PackIcon Kind="AutoFix" RenderOptions.BitmapScalingMode="HighQuality" />
+                    </Button>
+
+                    <Grid Grid.Column="5" IsEnabled="{Binding Enabled}">
+                        <Button Padding="4" FontSize="20" Command="{Binding ExportCommand}" 
+                                    IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}" 
+                                    Style="{StaticResource MaterialDesignFlatRoundButton}"
+                                    ToolTip="Export database changes" Visibility="{Binding Error, Converter={StaticResource InvertedBoolToVisibilityConverter}}">
+                            <Grid>
+                                <loading:Spinner Visibility="{Binding Exporting, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                <materialDesign:PackIcon Kind="DebugStepOut" RenderOptions.BitmapScalingMode="HighQuality"
+                                                             Visibility="{Binding Exporting, Converter={StaticResource InvertedBoolToVisibilityConverter}}" />
+                            </Grid>
+                        </Button>
+                    </Grid>
+
+                    <Button Grid.Column="5" Padding="4" FontSize="20" Style="{StaticResource MaterialDesignFlatRoundButton}"
+								Visibility="{Binding Error, Converter={StaticResource BoolToVisibilityConverter}}"
+								Command="{Binding RemoveCommand}" ToolTip="Remove database" >
+                        <materialDesign:PackIcon Kind="Delete" RenderOptions.BitmapScalingMode="HighQuality" />
+                    </Button>
+
+                    <Grid Grid.Column="5" Width="30" ToolTip="Importable files found. Import them before a new Export can be created." Background="#FAFAFA"
+							Visibility="{Binding ImportableFilesFound, Converter={StaticResource BoolToVisibilityConverter}}">
+                        <materialDesign:PackIcon Margin="4" Kind="Alert" RenderOptions.BitmapScalingMode="HighQuality" Foreground="{StaticResource PrimaryHueMidBrush}" />
+                    </Grid>
+
+                    <Expander Grid.Row="1" Grid.ColumnSpan="6" Template="{StaticResource ExpanderTemplate}" OverridesDefaultStyle="True"
+                                  IsExpanded="{Binding ShowDetails}" IsEnabled="{Binding Enabled}">
+                        <StackPanel Margin="0,5,0,0">
+                            <StackPanel Orientation="Horizontal">
+                                <Button Padding="4" FontSize="20" Command="{Binding CreateDumpCommand}"  Style="{StaticResource MaterialDesignFlatRoundButton}"
+											IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}"
+                                            ToolTip="Create a new dump" Width="30">
+                                    <materialDesign:PackIcon Kind="PlusCircleOutline" RenderOptions.BitmapScalingMode="HighQuality" />
+                                </Button>
+
+                                <Button Padding="4" FontSize="20" Command="{Binding OpenPathCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}" 
+											IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}"
+                                            ToolTip="Open diff path" Width="30">
+                                    <materialDesign:PackIcon Kind="Folder" RenderOptions.BitmapScalingMode="HighQuality" />
+                                </Button>
+
+                                <Button Padding="4" FontSize="20" Command="{Binding TestCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}"
+											IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}"
+                                            ToolTip="Check sql files for errors" Width="30" >
+                                    <Grid>
+                                        <loading:Spinner Visibility="{Binding Testing, Converter={StaticResource BoolToVisibilityConverter}}" />
+                                        <materialDesign:PackIcon Kind="CheckboxMarkedCircleOutline" RenderOptions.BitmapScalingMode="HighQuality" 
+																							 Visibility="{Binding Testing, Converter={StaticResource InvertedBoolToVisibilityConverter}}" />
+                                    </Grid>
+                                </Button>
+
+                                <Button Padding="4" FontSize="20" Command="{Binding RemoveCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}"
+													IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}"
+													ToolTip="Remove database" Width="30" >
+                                    <materialDesign:PackIcon Kind="Delete" RenderOptions.BitmapScalingMode="HighQuality" />
+                                </Button>
+
+                                <Button Padding="4" FontSize="20" Command="{Binding ResetCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}"
+													IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}"
+													ToolTip="Reset database (deletes all data, tables, schemas,...)" Width="30" >
+                                    <Grid>
+                                        <loading:Spinner Visibility="{Binding Resetting, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                        <materialDesign:PackIcon Kind="BackupRestore" RenderOptions.BitmapScalingMode="HighQuality"
+																							 Visibility="{Binding Resetting, Converter={StaticResource InvertedBoolToVisibilityConverter}}" />
+                                    </Grid>
+                                </Button>
+
+                                <Button Padding="4" FontSize="20" Command="{Binding UndoCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}"
+													IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}"
+													ToolTip="Tries to undo all changes (differences) to the current database version" Width="30" >
+                                    <Grid>
+                                        <loading:Spinner Visibility="{Binding Undoing, Converter={StaticResource BoolToVisibilityConverter}}"/>
+                                        <materialDesign:PackIcon Kind="DebugStepOver" RenderOptions.BitmapScalingMode="HighQuality" RenderTransformOrigin="0.5,0.5"
+																							 Visibility="{Binding Undoing, Converter={StaticResource InvertedBoolToVisibilityConverter}}" >
+                                            <materialDesign:PackIcon.RenderTransform>
+                                                <ScaleTransform ScaleX="-1"/>
+                                            </materialDesign:PackIcon.RenderTransform>
+                                        </materialDesign:PackIcon>
+                                    </Grid>
+                                </Button>
+
+                                <Grid>
+                                    <Button Padding="4" FontSize="20" Command="{Binding EditCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}"
+												IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}" Background="#FAFAFA"
+												ToolTip="Edit" Width="30">
+                                        <materialDesign:PackIcon Kind="LeadPencil" RenderOptions.BitmapScalingMode="HighQuality" />
+                                    </Button>
+                                    <Button Padding="4" FontSize="20" Command="{Binding SaveCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}"
+												Visibility="{Binding EditMode, Converter={StaticResource BoolToVisibilityConverter}}"
+												ToolTip="Save" Width="30" Background="#FAFAFA">
+                                        <materialDesign:PackIcon Kind="Check" RenderOptions.BitmapScalingMode="HighQuality" />
+                                    </Button>
+                                </Grid>
+                            </StackPanel>
+
+                            <Grid IsEnabled="{Binding EditMode}">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition />
+                                    <ColumnDefinition Width="30" />
+                                </Grid.ColumnDefinitions>
+                                <TextBox VerticalAlignment="Center" IsEnabled="False" Text="{Binding Database.CurrentVersion, Mode=OneWay}"
+										 materialDesign:HintAssist.Hint="Version" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                <Button Padding="0" Grid.Column="1" Height="30" Width="30" Command="{Binding ReduceVersionCommand}"
+                            Style="{StaticResource MaterialDesignFlatRoundButton}" Background="Transparent" >
+                                    <materialDesign:PackIcon Kind="MenuDown" RenderOptions.BitmapScalingMode="HighQuality" />
+                                </Button>
+                            </Grid>
+
+                            <TextBox Margin="0 8 0 8" IsEnabled="{Binding EditMode}"
+										 materialDesign:HintAssist.Hint="Database name" Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                                <Binding Path="Database.Name" UpdateSourceTrigger="PropertyChanged">
+                                    <Binding.ValidationRules>
+                                        <local:CheckDatabaseValidationRule ValidatesOnTargetUpdated="True" />
+                                    </Binding.ValidationRules>
+                                </Binding>
+                            </TextBox>
+
+                            <TextBlock Text="Path" FontSize="10" Foreground="Gray" />
+                            <Button IsEnabled="{Binding EditMode}" Command="{Binding EditPathCommand}" ToolTip="Datenbank Verzeichnis wählen">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <TextBlock VerticalAlignment="Center" Text="{Binding Database.Path}" IsEnabled="False" TextTrimming="CharacterEllipsis" />
+                                    <materialDesign:PackIcon Grid.Column="2" Kind="Folder" RenderOptions.BitmapScalingMode="HighQuality" />
+                                </Grid>
+                            </Button>
+                        </StackPanel>
+                    </Expander>
+
+                    <TextBlock Grid.Row="2" Grid.ColumnSpan="5" Text="{Binding ErrorMessage}" Visibility="{Binding Error, Converter={StaticResource BoolToVisibilityConverter}}" 
+                       Foreground="Red" TextWrapping="Wrap"/>
+                </Grid>
+            </Grid>
+        </Grid>
+    </materialDesign:Card>
+</UserControl>

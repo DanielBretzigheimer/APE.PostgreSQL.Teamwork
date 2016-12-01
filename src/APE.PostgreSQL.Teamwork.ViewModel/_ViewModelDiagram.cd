@@ -1,0 +1,264 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="The MainWindow which displays a header with options to add a new Database and the Settings and a list of all Databases">
+    <Position X="0.5" Y="0.5" Height="0.969" Width="2.512" />
+  </Comment>
+  <Comment CommentText="The Database which contains a name to which the connection is established, a version and a path with all SQL Files (Dump, Diff, Undodiff)">
+    <Position X="3.292" Y="0.5" Height="0.969" Width="2.512" />
+  </Comment>
+  <Comment CommentText="Represents a SQL File which contains SQL statements, a version, a path and a name">
+    <Position X="7.25" Y="0.5" Height="0.969" Width="2.512" />
+  </Comment>
+  <Comment CommentText="The sql statements which are inside a SQLFile. They can be executed and contain a result (bool, brush and message) afterwards. The event is called when the status of the statement is changed">
+    <Position X="11.073" Y="0.5" Height="1.198" Width="2.512" />
+  </Comment>
+  <Class Name="APE.PostgreSQL.Teamwork.ViewModel.MainWindowViewModel">
+    <Position X="0.5" Y="2" Width="2.5" />
+    <Members>
+      <Field Name="_Databases" Hidden="true" />
+      <Field Name="_Editable" Hidden="true" />
+      <Field Name="_EditButtonEnabled" Hidden="true" />
+      <Field Name="_ErrorMessage" Hidden="true" />
+      <Field Name="_Loading" Hidden="true" />
+      <Field Name="_SaveButtonVisibility" Hidden="true" />
+      <Field Name="_SuccessMessage" Hidden="true" />
+      <Method Name="DatabasesAfterSet" Hidden="true" />
+      <Method Name="DatabasesBeforeSet" Hidden="true" />
+      <Field Name="DatabasesEventArgs" Hidden="true" />
+      <Method Name="EditableAfterSet" Hidden="true" />
+      <Method Name="EditableBeforeSet" Hidden="true" />
+      <Field Name="EditableEventArgs" Hidden="true" />
+      <Method Name="EditButtonEnabledAfterSet" Hidden="true" />
+      <Method Name="EditButtonEnabledBeforeSet" Hidden="true" />
+      <Field Name="EditButtonEnabledEventArgs" Hidden="true" />
+      <Method Name="ErrorMessageAfterSet" Hidden="true" />
+      <Method Name="ErrorMessageBeforeSet" Hidden="true" />
+      <Field Name="ErrorMessageEventArgs" Hidden="true" />
+      <Field Name="isStarting" Hidden="true" />
+      <Field Name="isStopping" Hidden="true" />
+      <Method Name="LoadingAfterSet" Hidden="true" />
+      <Method Name="LoadingBeforeSet" Hidden="true" />
+      <Field Name="LoadingEventArgs" Hidden="true" />
+      <Method Name="SaveButtonVisibilityAfterSet" Hidden="true" />
+      <Method Name="SaveButtonVisibilityBeforeSet" Hidden="true" />
+      <Field Name="SaveButtonVisibilityEventArgs" Hidden="true" />
+      <Method Name="StartCore" Hidden="true" />
+      <Method Name="StopCore" Hidden="true" />
+      <Method Name="SuccessMessageAfterSet" Hidden="true" />
+      <Method Name="SuccessMessageBeforeSet" Hidden="true" />
+      <Field Name="SuccessMessageEventArgs" Hidden="true" />
+      <Field Name="uiDispatcher" Hidden="true" />
+      <Field Name="worker" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>IwPAAgEDAOIwAQDAAGhQIoYCAFLCCCEAIAASUCIABCA=</HashCode>
+      <FileName>ViewModels\MainWindowViewModel.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.Statement">
+    <Position X="11" Y="4.5" Width="2.5" />
+    <Members>
+      <Field Name="_ErrorMessage" Hidden="true" />
+      <Field Name="_ResultBrush" Hidden="true" />
+      <Field Name="_SQL" Hidden="true" />
+      <Field Name="database" Hidden="true" />
+      <Method Name="ErrorMessageAfterSet" Hidden="true" />
+      <Method Name="ErrorMessageBeforeSet" Hidden="true" />
+      <Field Name="ErrorMessageEventArgs" Hidden="true" />
+      <Field Name="file" Hidden="true" />
+      <Method Name="ResultBrushAfterSet" Hidden="true" />
+      <Method Name="ResultBrushBeforeSet" Hidden="true" />
+      <Field Name="ResultBrushEventArgs" Hidden="true" />
+      <Method Name="SQLAfterSet" Hidden="true" />
+      <Method Name="SQLBeforeSet" Hidden="true" />
+      <Field Name="SQLEventArgs" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AQBAAAAAAIBAAARAAkAACRQAAAAAAAAIRAAAEBAAAAY=</HashCode>
+      <FileName>Statement.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.SQLFile">
+    <Position X="7.25" Y="4.5" Width="2.5" />
+    <Members>
+      <Field Name="_ErrorColor" Hidden="true" />
+      <Field Name="_ErrorCount" Hidden="true" />
+      <Field Name="_SQLStatements" Hidden="true" />
+      <Field Name="database" Hidden="true" />
+      <Method Name="ErrorColorAfterSet" Hidden="true" />
+      <Method Name="ErrorColorBeforeSet" Hidden="true" />
+      <Field Name="ErrorColorEventArgs" Hidden="true" />
+      <Method Name="ErrorCountAfterSet" Hidden="true" />
+      <Method Name="ErrorCountBeforeSet" Hidden="true" />
+      <Field Name="ErrorCountEventArgs" Hidden="true" />
+      <Field Name="Log" Hidden="true" />
+      <Field Name="regexDiffVersion" Hidden="true" />
+      <Field Name="regexDumpVersion" Hidden="true" />
+      <Field Name="regexUndoDiffFile" Hidden="true" />
+      <Method Name="SQLStatementsAfterSet" Hidden="true" />
+      <Method Name="SQLStatementsBeforeSet" Hidden="true" />
+      <Field Name="SQLStatementsEventArgs" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>JAAAAwEGAhAMAAJAIAABAABAQAgEAgACIAqABABBAIA=</HashCode>
+      <FileName>SQLFile.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="SQLStatements" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.Database">
+    <Position X="3.25" Y="4.5" Width="2.5" />
+    <Members>
+      <Field Name="_Name" Hidden="true" />
+      <Field Name="_NotAppliedSQLFiles" Hidden="true" />
+      <Field Name="_Path" Hidden="true" />
+      <Field Name="_Progress" Hidden="true" />
+      <Field Name="Log" Hidden="true" />
+      <Method Name="NameAfterSet" Hidden="true" />
+      <Method Name="NameBeforeSet" Hidden="true" />
+      <Field Name="NameEventArgs" Hidden="true" />
+      <Method Name="NotAppliedSQLFilesAfterSet" Hidden="true" />
+      <Method Name="NotAppliedSQLFilesBeforeSet" Hidden="true" />
+      <Field Name="NotAppliedSQLFilesEventArgs" Hidden="true" />
+      <Method Name="PathAfterSet" Hidden="true" />
+      <Method Name="PathBeforeSet" Hidden="true" />
+      <Field Name="PathEventArgs" Hidden="true" />
+      <Method Name="ProgressAfterSet" Hidden="true" />
+      <Method Name="ProgressBeforeSet" Hidden="true" />
+      <Field Name="ProgressEventArgs" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>AggAAAIAlAQgBgZoQAIQJAQgAEi0AhgAQAkCBAKUAkA=</HashCode>
+      <FileName>Database.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="NotAppliedSQLFiles" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.113" Collapsed="true" />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.ViewModel.DatabaseDisplayData" Collapsed="true">
+    <Position X="3.25" Y="2" Width="2.5" />
+    <Members>
+      <Field Name="_Database" Hidden="true" />
+      <Field Name="_DetailMode" Hidden="true" />
+      <Field Name="_EditMode" Hidden="true" />
+      <Field Name="_Enabled" Hidden="true" />
+      <Field Name="_Error" Hidden="true" />
+      <Field Name="_ErrorMessage" Hidden="true" />
+      <Field Name="_Exporting" Hidden="true" />
+      <Field Name="_NotAppliedSQLFiles" Hidden="true" />
+      <Field Name="_Reseting" Hidden="true" />
+      <Field Name="_Testing" Hidden="true" />
+      <Method Name="DatabaseAfterSet" Hidden="true" />
+      <Method Name="DatabaseBeforeSet" Hidden="true" />
+      <Field Name="DatabaseEventArgs" Hidden="true" />
+      <Method Name="DetailModeAfterSet" Hidden="true" />
+      <Method Name="DetailModeBeforeSet" Hidden="true" />
+      <Field Name="DetailModeEventArgs" Hidden="true" />
+      <Method Name="EditModeAfterSet" Hidden="true" />
+      <Method Name="EditModeBeforeSet" Hidden="true" />
+      <Field Name="EditModeEventArgs" Hidden="true" />
+      <Method Name="EnabledAfterSet" Hidden="true" />
+      <Method Name="EnabledBeforeSet" Hidden="true" />
+      <Field Name="EnabledEventArgs" Hidden="true" />
+      <Method Name="ErrorAfterSet" Hidden="true" />
+      <Method Name="ErrorBeforeSet" Hidden="true" />
+      <Field Name="ErrorEventArgs" Hidden="true" />
+      <Method Name="ErrorMessageAfterSet" Hidden="true" />
+      <Method Name="ErrorMessageBeforeSet" Hidden="true" />
+      <Field Name="ErrorMessageEventArgs" Hidden="true" />
+      <Method Name="ExportingAfterSet" Hidden="true" />
+      <Method Name="ExportingBeforeSet" Hidden="true" />
+      <Field Name="ExportingEventArgs" Hidden="true" />
+      <Field Name="Log" Hidden="true" />
+      <Method Name="NotAppliedSQLFilesAfterSet" Hidden="true" />
+      <Method Name="NotAppliedSQLFilesBeforeSet" Hidden="true" />
+      <Field Name="NotAppliedSQLFilesEventArgs" Hidden="true" />
+      <Method Name="ResetingAfterSet" Hidden="true" />
+      <Method Name="ResetingBeforeSet" Hidden="true" />
+      <Field Name="ResetingEventArgs" Hidden="true" />
+      <Method Name="TestingAfterSet" Hidden="true" />
+      <Method Name="TestingBeforeSet" Hidden="true" />
+      <Field Name="TestingEventArgs" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Database" Type="APE.PostgreSQL.Teamwork.Database">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.12" Y="-1.159" Height="0.182" Width="1.128" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>gVBEGIAAVM4A5Y1wAEoQBoATggm4AAgBGCICFEIMAwQ=</HashCode>
+      <FileName>ViewModels\DisplayData\DatabaseDisplayData.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Database" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="NotAppliedSQLFiles" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.ViewModel.StatementDisplayData">
+    <Position X="11" Y="2" Width="2.5" />
+    <Members>
+      <Field Name="_EditMode" Hidden="true" />
+      <Field Name="_Statement" Hidden="true" />
+      <Method Name="EditModeAfterSet" Hidden="true" />
+      <Method Name="EditModeBeforeSet" Hidden="true" />
+      <Field Name="EditModeEventArgs" Hidden="true" />
+      <Field Name="originalSQL" Hidden="true" />
+      <Method Name="StatementAfterSet" Hidden="true" />
+      <Method Name="StatementBeforeSet" Hidden="true" />
+      <Field Name="StatementEventArgs" Hidden="true" />
+      <Field Name="updateFile" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Properties" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Statement" Type="APE.PostgreSQL.Teamwork.Statement">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-0.953" Y="0.227" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>ABAAABAAQCAAQAACAAgIjAAiAAAAAAABCAAAAQAEAAA=</HashCode>
+      <FileName>ViewModels\DisplayData\StatementDisplayData.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Statement" />
+    </ShowAsAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.ViewModel.SQLFileDisplayData">
+    <Position X="7.25" Y="2" Width="2.5" />
+    <Members>
+      <Field Name="_SQLFile" Hidden="true" />
+      <Field Name="_SQLStatements" Hidden="true" />
+      <Method Name="SQLFileAfterSet" Hidden="true" />
+      <Method Name="SQLFileBeforeSet" Hidden="true" />
+      <Field Name="SQLFileEventArgs" Hidden="true" />
+      <Method Name="SQLStatementsAfterSet" Hidden="true" />
+      <Method Name="SQLStatementsBeforeSet" Hidden="true" />
+      <Field Name="SQLStatementsEventArgs" Hidden="true" />
+    </Members>
+    <TypeIdentifier>
+      <HashCode>QAAAAAAAAgAEEAAAAAAAQADEQAAAAAACAAAAIAAAAAA=</HashCode>
+      <FileName>ViewModels\DisplayData\SQLFileDisplayData.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="SQLFile" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Property Name="SQLStatements" />
+    </ShowAsCollectionAssociation>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

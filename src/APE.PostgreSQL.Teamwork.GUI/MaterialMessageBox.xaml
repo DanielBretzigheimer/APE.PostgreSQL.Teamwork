@@ -1,0 +1,60 @@
+﻿<UserControl x:Class="APE.PostgreSQL.Teamwork.GUI.MaterialMessageBox"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:materialDesign="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+             xmlns:local="clr-namespace:APE.PostgreSQL.Teamwork.GUI"
+             xmlns:model="clr-namespace:APE.PostgreSQL.Teamwork.Model;assembly=APE.PostgreSQL.Teamwork.Model"
+             mc:Ignorable="d" Width="400" Height="200"
+             d:DesignHeight="300" d:DesignWidth="300">
+
+    <Grid Margin="5">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition />
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <!--Title-->
+        <TextBlock x:Name="title" Grid.Row="0" FontWeight="Bold" 
+                             VerticalAlignment="Center" FontSize="18" />
+
+        <!--Message-->
+        <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+            <TextBlock x:Name="message" TextWrapping="Wrap" />
+        </ScrollViewer>
+
+        <!--Buttons-->
+        <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Visibility="Collapsed" Width="100" x:Name="btnOk"  Content="OK"
+                            Style="{StaticResource MaterialDesignFlatRoundButton}"
+                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" >
+                <Button.CommandParameter>
+                    <model:MaterialMessageBoxResult>OK</model:MaterialMessageBoxResult>
+                </Button.CommandParameter>
+            </Button>
+            <Button Visibility="Collapsed" Width="100" x:Name="btnYes" Content="Yes" 
+                            Style="{StaticResource MaterialDesignFlatRoundButton}"
+                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" >
+                <Button.CommandParameter>
+                    <model:MaterialMessageBoxResult>Yes</model:MaterialMessageBoxResult>
+                </Button.CommandParameter>
+            </Button>
+            <Button Visibility="Collapsed" Width="100" x:Name="btnNo" Content="No" 
+                            Style="{StaticResource MaterialDesignFlatRoundButton}" 
+                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" >
+                <Button.CommandParameter>
+                    <model:MaterialMessageBoxResult>No</model:MaterialMessageBoxResult>
+                </Button.CommandParameter>
+            </Button>
+            <Button Visibility="Collapsed" Width="100" x:Name="btnCancel" Content="Cancel" 
+                            Style="{StaticResource MaterialDesignFlatRoundButton}" 
+                            Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" >
+                <Button.CommandParameter>
+                    <model:MaterialMessageBoxResult>Cancel</model:MaterialMessageBoxResult>
+                </Button.CommandParameter>
+            </Button>
+        </StackPanel>
+    </Grid>
+</UserControl>

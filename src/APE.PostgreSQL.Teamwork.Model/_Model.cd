@@ -1,0 +1,44 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="possible file types for the SQLFile class">
+    <Position X="13" Y="0.5" Height="0.75" Width="1.533" />
+  </Comment>
+  <Comment CommentText="Model class for the database table for executed statements">
+    <Position X="6.031" Y="0.5" Height="0.75" Width="2.471" />
+  </Comment>
+  <Comment CommentText="Small class which can export the actual user settings into a file">
+    <Position X="3.292" Y="0.5" Height="0.75" Width="2.471" />
+  </Comment>
+  <Comment CommentText="Read default sql templates from files and makes them accessable with methods and replaces placeholders with parameters">
+    <Position X="0.5" Y="0.5" Height="0.812" Width="2.471" />
+  </Comment>
+  <Class Name="APE.PostgreSQL.Teamwork.Templates.SQLTemplates">
+    <Position X="0.5" Y="1.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAEAgEAQAABqEAAAIAAEEEBAgCAgAgAAAEQBACYAA=</HashCode>
+      <FileName>Templates\SQLTemplates.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.Model.ConfigurationExport">
+    <Position X="3.25" Y="1.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>ConfigurationExport.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.Model.ExecutedStatement">
+    <Position X="6" Y="1.5" Width="2.5" />
+    <TypeIdentifier>
+      <HashCode>IQAAAgAAAAAAAAAAAAAAAAACAAAAAAAAAACAQAAAAAA=</HashCode>
+      <FileName>ExecutedStatement.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Enum Name="APE.PostgreSQL.Teamwork.FileType">
+    <Position X="13" Y="1.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAABAAAAAAAAAgAAAAAAAAAAAAAAAAAgAAAA=</HashCode>
+      <FileName>FileType.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

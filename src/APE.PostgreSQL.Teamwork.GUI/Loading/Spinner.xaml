@@ -1,0 +1,63 @@
+﻿<UserControl x:Class="APE.PostgreSQL.Teamwork.GUI.Loading.Spinner"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
+             xmlns:loading="clr-namespace:APE.PostgreSQL.Teamwork.GUI.Loading"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+	<UserControl.Resources>
+		<Storyboard x:Key="rotate" RepeatBehavior="Forever">
+			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="canvas" 
+                                           Storyboard.TargetProperty="(UIElement.RenderTransform).(TransformGroup.Children)[2].(RotateTransform.Angle)">
+				<EasingDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+				<EasingDoubleKeyFrame KeyTime="00:00:10" Value="3600"/>
+			</DoubleAnimationUsingKeyFrames>
+		</Storyboard>
+		<Storyboard x:Key="size" RepeatBehavior="Forever">
+			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="arc"
+                                           Storyboard.TargetProperty="StartAngle">
+				<EasingDoubleKeyFrame KeyTime="00:00:00" Value="0"/>
+				<EasingDoubleKeyFrame KeyTime="00:00:01" Value="3.25"/>
+				<EasingDoubleKeyFrame KeyTime="00:00:02" Value="0"/>
+			</DoubleAnimationUsingKeyFrames>
+
+			<DoubleAnimationUsingKeyFrames BeginTime="00:00:00" Storyboard.TargetName="arc"
+                                           Storyboard.TargetProperty="EndAngle">
+				<EasingDoubleKeyFrame KeyTime="00:00:00" Value="6"/>
+				<EasingDoubleKeyFrame KeyTime="00:00:01" Value="3.75"/>
+				<EasingDoubleKeyFrame KeyTime="00:00:02" Value="6"/>
+			</DoubleAnimationUsingKeyFrames>
+		</Storyboard>
+	</UserControl.Resources>
+	<UserControl.Triggers>
+		<EventTrigger RoutedEvent="FrameworkElement.Loaded">
+			<BeginStoryboard Storyboard="{StaticResource rotate}"/>
+			<BeginStoryboard Storyboard="{StaticResource size}"/>
+		</EventTrigger>
+	</UserControl.Triggers>
+
+	<Viewbox StretchDirection="Both" Stretch="Uniform">
+		<Canvas Height="20" Width="20">
+			<Canvas x:Name="canvas" Height="20" Width="20" RenderTransformOrigin="0.5,0.5">
+				<Canvas.RenderTransform>
+					<TransformGroup>
+						<ScaleTransform/>
+						<SkewTransform/>
+						<RotateTransform/>
+						<TranslateTransform/>
+					</TransformGroup>
+				</Canvas.RenderTransform>
+
+				<loading:Arc 
+                    x:Name="arc"
+                    Height="20"
+                    Width="20"
+                   Center="10 10" 
+                    StrokeThickness="2"
+                   SmallAngle="False"
+                   Radius="8"/>
+			</Canvas>
+		</Canvas>
+	</Viewbox>
+</UserControl>

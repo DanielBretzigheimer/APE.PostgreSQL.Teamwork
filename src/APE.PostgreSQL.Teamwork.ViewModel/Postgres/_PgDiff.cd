@@ -1,0 +1,265 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1">
+  <Comment CommentText="Creates a new SQL File which contains all difference between the two dump files.">
+    <Position X="0.5" Y="0.51" Height="0.917" Width="2.242" />
+  </Comment>
+  <Comment CommentText="Creates a new SQL File which contains all difference between the two dump files.">
+    <Position X="0.5" Y="3.5" Height="0.604" Width="2.242" />
+  </Comment>
+  <Comment CommentText="Classes which create the sql statements to add, drop or edit the data corresponding to there origin and target">
+    <Position X="2.969" Y="4" Height="0.385" Width="12.346" />
+  </Comment>
+  <Comment CommentText="Classes which parse the dump files text to the corresponding objects which can be used by the PgDiff classes">
+    <Position X="3" Y="0.5" Height="0.396" Width="12.21" />
+  </Comment>
+  <Comment CommentText="Model classes which represent the postgre types and contains the sql to create or drop them">
+    <Position X="2.99" Y="5.979" Height="0.385" Width="12.346" />
+  </Comment>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.PgDiff">
+    <Position X="0.5" Y="1.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAgAAAAAAAAAAIAAAFAAAAAAAAAAAAg=</HashCode>
+      <FileName>PgDiff\PgDiff.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.PgDiffAggregate" Collapsed="true">
+    <Position X="3" Y="4.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AIAAAAAAAQAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>PgDiff\PgDiffAggregates.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.PgDiffArguments" Collapsed="true">
+    <Position X="5.5" Y="4.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>IAAgIAQAAIAAEAAAQAAAAAQAAEAgAABAAgAACAAACIA=</HashCode>
+      <FileName>PgDiff\PgDiffArguments.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.PgDiffConstraints" Collapsed="true">
+    <Position X="8" Y="4.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAAQAIAAAAAAAAAAAAEAAAAIAAAAAAAAAAAAA=</HashCode>
+      <FileName>PgDiff\PgDiffConstraints.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.PgDiffFunctions" Collapsed="true">
+    <Position X="10.5" Y="4.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAAAAAAAAAAAIAAAAQAAAAAAAA=</HashCode>
+      <FileName>PgDiff\PgDiffFunctions.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.PgDiffIndexes" Collapsed="true">
+    <Position X="3" Y="5.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAEAAAAAQAAAAABAAAAAAAAAAAAAAAAAgEAAAAAAAA=</HashCode>
+      <FileName>PgDiff\PgDiffIndexes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.PgDiffSequences" Collapsed="true">
+    <Position X="8" Y="5.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAgAAAAQAAAQCAAAAAAAA=</HashCode>
+      <FileName>PgDiff\PgDiffSequences.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.PgDiffTables" Collapsed="true">
+    <Position X="10.5" Y="5.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAEIgABCAAAAAAEABAIAAAAAABAACAgAAAQAAEEACBA=</HashCode>
+      <FileName>PgDiff\PgDiffTables.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.PgDiffTriggers" Collapsed="true">
+    <Position X="13" Y="5.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>EAgAAAAAAQAAAAAAAAAAAAIAAAAAAAAAAAAAAAAAAAI=</HashCode>
+      <FileName>PgDiff\PgDiffTriggers.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.PgDiffTypes" Collapsed="true">
+    <Position X="5.5" Y="5.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAIAAAAAAAAAAAAAAAAAAAAAAAAABAAAIAAAAAA=</HashCode>
+      <FileName>PgDiff\PgDiffTypes.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.PgDiffViews" Collapsed="true">
+    <Position X="13" Y="4.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>CAAIBAAAAAAAAAAAAAAAQAAAAgAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>PgDiff\PgDiffViews.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.SearchPathHelper">
+    <Position X="0.5" Y="4.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAgAAAAAACAA=</HashCode>
+      <FileName>PgDiff\SearchPathHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.parsers.AlterSequenceParser" Collapsed="true">
+    <Position X="10.5" Y="1" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Parser\AlterSequenceParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.parsers.AlterTableParser" Collapsed="true">
+    <Position X="3" Y="1" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>CAAAAAAAAAAAAAADAAAAAAgAAAAAAAAACAAAAAgCIAA=</HashCode>
+      <FileName>Parser\AlterTableParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.parsers.AlterViewParser" Collapsed="true">
+    <Position X="8" Y="1" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Parser\AlterViewParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.parsers.CommentParser" Collapsed="true">
+    <Position X="3" Y="3.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAABAAAAAAAAEAACgAIAAAAACAAAAEIAAAAAABgAKAA=</HashCode>
+      <FileName>Parser\CommentParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.parsers.CreateAggregateParser" Collapsed="true">
+    <Position X="13" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Parser\CreateAggregateParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.parsers.CreateFunctionParser" Collapsed="true">
+    <Position X="5.5" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Parser\CreateFunctionParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.parsers.CreateIndexParser" Collapsed="true">
+    <Position X="10.5" Y="2.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Parser\CreateIndexParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.parsers.CreateSchemaParser" Collapsed="true">
+    <Position X="8" Y="2.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Parser\CreateSchemaParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.parsers.CreateSequenceParser" Collapsed="true">
+    <Position X="10.5" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Parser\CreateSequenceParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.parsers.CreateTableParser" Collapsed="true">
+    <Position X="3" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAACAAAAAAAAAAAAAAAAAAAAAAgAAAAIAAAAAAA=</HashCode>
+      <FileName>Parser\CreateTableParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.parsers.CreateTriggerParser" Collapsed="true">
+    <Position X="3" Y="2.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Parser\CreateTriggerParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.parsers.CreateTypeParser" Collapsed="true">
+    <Position X="5.5" Y="2.5" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Parser\CreateTypeParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.parsers.CreateViewParser" Collapsed="true">
+    <Position X="8" Y="1.75" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAIAA=</HashCode>
+      <FileName>Parser\CreateViewParser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.parsers.Parser" Collapsed="true">
+    <Position X="10.5" Y="3.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAIAIBIAgQAUAKACAACIAQCAQAEIAAAEAAAA=</HashCode>
+      <FileName>Parser\Parser.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PgDiff.parsers.ParserUtils" Collapsed="true">
+    <Position X="13" Y="3.25" Width="2.25" />
+    <TypeIdentifier>
+      <HashCode>AgAAAAAAEAAAAEAAAAAAAAAAAAAIAAAAAAAAAAAAgAA=</HashCode>
+      <FileName>Parser\ParserUtils.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PostgresSchema.PgAggregate" Collapsed="true">
+    <Position X="3" Y="6.5" Width="2.25" />
+    <NestedTypes>
+      <Class Name="APE.PostgreSQL.Teamwork.PostgresSchema.PgAggregate.Argument" Collapsed="true">
+        <TypeIdentifier />
+      </Class>
+    </NestedTypes>
+    <TypeIdentifier />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PostgresSchema.PgColumn" Collapsed="true">
+    <Position X="5.5" Y="6.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PostgresSchema.PgColumnUtils" Collapsed="true">
+    <Position X="8" Y="6.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PostgresSchema.PgConstraint" Collapsed="true">
+    <Position X="10.5" Y="6.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PostgresSchema.PgDatabase" Collapsed="true">
+    <Position X="3" Y="7.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PostgresSchema.PgFunction" Collapsed="true">
+    <Position X="5.5" Y="7.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PostgresSchema.PgIndex" Collapsed="true">
+    <Position X="8" Y="7.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PostgresSchema.PgSchema" Collapsed="true">
+    <Position X="10.5" Y="7.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PostgresSchema.PgSequence" Collapsed="true">
+    <Position X="3" Y="8.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PostgresSchema.PgTable" Collapsed="true">
+    <Position X="5.5" Y="8.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PostgresSchema.PgTrigger" Collapsed="true">
+    <Position X="13" Y="7.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PostgresSchema.PgType" Collapsed="true">
+    <Position X="13" Y="6.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="APE.PostgreSQL.Teamwork.PostgresSchema.PgView" Collapsed="true">
+    <Position X="8" Y="8.5" Width="2.25" />
+    <TypeIdentifier />
+  </Class>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>
