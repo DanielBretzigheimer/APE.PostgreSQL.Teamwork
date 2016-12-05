@@ -8,18 +8,23 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     public interface IStatement
     {
         /// <summary>
-        /// The SQL of the statement.
+        /// Gets the SQL of the <see cref="IStatement"/>.
         /// </summary>
         string SQL { get; }
 
         /// <summary>
-        /// Gets a bool indicating that the statement contains an alter type
-        /// which means it cannot be executed in transaction.
+        /// Gets the search path for this <see cref="IStatement"/>.
+        /// </summary>
+        string SearchPath { get; }
+
+        /// <summary>
+        /// Gets a bool, indicating that this <see cref="IStatement"/> contains an alter type which means it cannot 
+        /// be executed in transaction.
         /// </summary>
         bool SupportsTransaction { get; }
 
         /// <summary>
-        /// Executes the SQL Statement.
+        /// Executes the <see cref="SQL"/> of this <see cref="IStatement"/>.
         /// </summary>
         void Execute();
     }
