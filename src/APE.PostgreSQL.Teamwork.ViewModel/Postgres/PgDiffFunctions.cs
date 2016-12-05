@@ -20,7 +20,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for new or modified functions.
         /// </summary>
-        public static void CreateFunctions(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper, bool ignoreFunctionWhitespace)
+        public static void Create(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper, bool ignoreFunctionWhitespace)
         {
             // Add new functions and replace modified functions
             foreach (PgFunction newFunction in newSchema.Functions)
@@ -44,7 +44,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for dropping of functions that exist no more.
         /// </summary>
-        public static void DropFunctions(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Drop(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
                 return;
