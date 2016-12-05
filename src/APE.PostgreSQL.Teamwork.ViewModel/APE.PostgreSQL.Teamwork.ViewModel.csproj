@@ -124,7 +124,7 @@
     <Compile Include="Postgres\PgDiffConstraints.cs" />
     <Compile Include="Postgres\PgDiffFunctions.cs" />
     <Compile Include="Postgres\PgDiffIndexes.cs" />
-    <Compile Include="Postgres\PgDiffPrevileges.cs" />
+    <Compile Include="Postgres\PgDiffPrivileges.cs" />
     <Compile Include="Postgres\PgDiffSequences.cs" />
     <Compile Include="Postgres\PgDiffTables.cs" />
     <Compile Include="Postgres\PgDiffTriggers.cs" />

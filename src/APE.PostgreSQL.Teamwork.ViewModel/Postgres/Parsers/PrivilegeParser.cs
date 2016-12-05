@@ -33,14 +33,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             var kind = enumEntries.Single(k => k.ToString().ToUpper() == privilegeKind);
             parser.Expect("ON");
 
-            string type = string.Empty;
-            if (parser.ExpectOptional("FUNCTION"))
-                type = "FUNCTION";
-            else if (parser.ExpectOptional("SCHEMA"))
-                type = "SCHEMA";
-            else
-                throw new ArgumentException($"The statement \"{statement}\" contains a unexpected type.");
-
+            var type = parser.ParseIdentifier().ToUpper();
             var name = parser.ParseIdentifier();
             var nameWithSchema = name;
 

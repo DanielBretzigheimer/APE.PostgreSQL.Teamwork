@@ -55,9 +55,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 ? PgPrivilegeCommand.Revoke
                 : PgPrivilegeCommand.Grant;
 
-            var command = this.Command.ToString().ToUpper();
+            var command = revertedCommand.ToString().ToUpper();
             var privilege = this.Privilege.ToString().ToUpper();
-            var tofrom = this.Command == PgPrivilegeCommand.Grant
+            var tofrom = revertedCommand == PgPrivilegeCommand.Grant
                 ? "TO"
                 : "FROM";
 

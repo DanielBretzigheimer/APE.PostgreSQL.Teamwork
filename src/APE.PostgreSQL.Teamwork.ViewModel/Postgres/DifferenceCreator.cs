@@ -14,6 +14,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
     /// </summary>
     public class DifferenceCreator : IDifferenceCreator
     {
+        public const string WarningMessagePrefix = "-- ATTENTION: ";
+
         /// <summary>
         /// Creates a diff of the database between the two dump files and writes it to the stream writer.
         /// </summary>
@@ -198,7 +200,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 PgDiffViews.Create(writer, oldSchema, newSchema, searchPathHelper);
                 PgDiffViews.Alter(writer, oldSchema, newSchema, searchPathHelper);
                 PgDiffSequences.Drop(writer, oldSchema, newSchema, searchPathHelper);
-                PgDiffPrevileges.Create(writer, oldSchema, newSchema, searchPathHelper);
+                PgDiffPrivileges.Create(writer, oldSchema, newSchema, searchPathHelper);
 
                 // drop type after table is altered
                 PgDiffTypes.Drop(writer, oldSchema, newSchema, searchPathHelper);

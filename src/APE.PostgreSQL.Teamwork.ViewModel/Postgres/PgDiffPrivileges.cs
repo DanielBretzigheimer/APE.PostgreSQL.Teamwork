@@ -10,8 +10,10 @@ using APE.PostgreSQL.Teamwork.Model.PostgresSchema.Enums;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
 {
-    public static class PgDiffPrevileges
+    public static class PgDiffPrivileges
     {
+        private const string BetaMessage = DifferenceCreator.WarningMessagePrefix + "Privileges are in beta and may not work as expected!";
+
         /// <summary>
         /// Adds <see cref="PgPrivilegeCommand.Grant"/> and <see cref="PgPrivilegeCommand.Revoke"/> privileges.
         /// </summary>
@@ -24,6 +26,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 {
                     searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();
+                    writer.WriteLine(BetaMessage);
                     writer.WriteLine(privilege.Create());
                 }
             }
@@ -38,6 +41,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 {
                     searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();
+                    writer.WriteLine(BetaMessage);
                     writer.WriteLine(privilege.CreateRevert());
                 }
             }
