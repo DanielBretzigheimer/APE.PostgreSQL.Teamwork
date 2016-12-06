@@ -256,7 +256,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="APE.PostgreSQL.Teamwork.GUI.licenseheader" />
-    <None Include="APE.PostgreSQL.Teamwork.GUI_TemporaryKey.pfx" />
     <None Include="log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

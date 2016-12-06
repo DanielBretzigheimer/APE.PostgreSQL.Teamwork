@@ -1,4 +1,5 @@
 ﻿// <copyright file="StatementDisplayData.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using APE.CodeGeneration.Attributes;
@@ -48,7 +49,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 }
             });
 
-            this.CopyCommand = new RelayCommand(() => Clipboard.SetText(this.Statement.SQL));
+            this.CopyCommand = new RelayCommand(this.CopyToClipboard);
+        }
+
+        private void CopyToClipboard()
+        {
+            var statementText = new StringBuilder();
+            statementText.AppendLine(this.Statement.SearchPath);
+            statementText.AppendLine();
+            statementText.AppendLine(this.Statement.SQL);
+            Clipboard.SetText(statementText.ToString());
         }
     }
 }

@@ -8,6 +8,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     // APE.CodeGeneration.Attribute [NotifyProperty(typeof(ObservableCollection<StatementDisplayData>), "SQLStatements")]
     // APE.CodeGeneration.Attribute [NotifyProperty(typeof(SQLFile), "SQLFile")]
     // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.PublicGetPrivateSet, typeof(ErrorStatus), "Status")]
+    // APE.CodeGeneration.Attribute [NotifyProperty(typeof(bool), "ShowWarning")]
+    // APE.CodeGeneration.Attribute [NotifyProperty(typeof(string), "WarningText")]
     // APE.CodeGeneration.Attribute [NotifyPropertySupport]
     public partial class SQLFileDisplayData
   : System.ComponentModel.INotifyPropertyChanged
@@ -111,6 +113,68 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         //protected virtual void StatusChanging(ErrorStatus newValue) { }
         //protected virtual void StatusChanged() { }
+
+        protected static readonly System.ComponentModel.PropertyChangedEventArgs ShowWarningEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(ShowWarning));
+        private bool _ShowWarning;
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool ShowWarning
+        {
+            get
+            {
+                return this._ShowWarning;
+            }
+            set
+            {
+                if (!object.Equals(this._ShowWarning, value))
+                {
+                    //this.ShowWarningChanging(value);
+                    this.ShowWarningBeforeSet(value);
+                    this._ShowWarning = value;
+                    this.OnPropertyChanged(ShowWarningEventArgs);
+                    //this.ShowWarningChanged();
+                    this.ShowWarningAfterSet();
+                }
+            }
+        }
+
+        partial void ShowWarningBeforeSet(bool newValue);
+        partial void ShowWarningAfterSet();
+
+        //protected virtual void ShowWarningChanging(bool newValue) { }
+        //protected virtual void ShowWarningChanged() { }
+
+        protected static readonly System.ComponentModel.PropertyChangedEventArgs WarningTextEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(WarningText));
+        private string _WarningText;
+        /// <summary>
+        /// 
+        /// </summary>
+        public string WarningText
+        {
+            get
+            {
+                return this._WarningText;
+            }
+            set
+            {
+                if (!object.Equals(this._WarningText, value))
+                {
+                    //this.WarningTextChanging(value);
+                    this.WarningTextBeforeSet(value);
+                    this._WarningText = value;
+                    this.OnPropertyChanged(WarningTextEventArgs);
+                    //this.WarningTextChanged();
+                    this.WarningTextAfterSet();
+                }
+            }
+        }
+
+        partial void WarningTextBeforeSet(string newValue);
+        partial void WarningTextAfterSet();
+
+        //protected virtual void WarningTextChanging(string newValue) { }
+        //protected virtual void WarningTextChanged() { }
 
         //--------------------------------------------------------------------------------
         // generated code for NotifyPropertySupport

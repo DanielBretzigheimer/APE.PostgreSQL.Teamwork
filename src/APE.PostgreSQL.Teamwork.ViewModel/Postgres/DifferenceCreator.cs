@@ -14,6 +14,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
     /// </summary>
     public class DifferenceCreator : IDifferenceCreator
     {
+        public const string WarningMessagePrefix = "-- ATTENTION: ";
+
         /// <summary>
         /// Creates a diff of the database between the two dump files and writes it to the stream writer.
         /// </summary>
@@ -170,37 +172,38 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 }
 
                 // drop
-                PgDiffTriggers.DropTriggers(writer, oldSchema, newSchema, searchPathHelper);
-                PgDiffAggregate.DropAggregates(writer, oldSchema, newSchema, searchPathHelper);
-                PgDiffFunctions.DropFunctions(writer, oldSchema, newSchema, searchPathHelper);
-                PgDiffViews.DropViews(writer, oldSchema, newSchema, searchPathHelper);
-                PgDiffConstraints.DropConstraints(writer, oldSchema, newSchema, true, searchPathHelper);
-                PgDiffConstraints.DropConstraints(writer, oldSchema, newSchema, false, searchPathHelper);
-                PgDiffIndexes.DropIndexes(writer, oldSchema, newSchema, searchPathHelper);
+                PgDiffTriggers.Drop(writer, oldSchema, newSchema, searchPathHelper);
+                PgDiffAggregate.Drop(writer, oldSchema, newSchema, searchPathHelper);
+                PgDiffFunctions.Drop(writer, oldSchema, newSchema, searchPathHelper);
+                PgDiffViews.Drop(writer, oldSchema, newSchema, searchPathHelper);
+                PgDiffConstraints.Drop(writer, oldSchema, newSchema, true, searchPathHelper);
+                PgDiffConstraints.Drop(writer, oldSchema, newSchema, false, searchPathHelper);
+                PgDiffIndexes.Drop(writer, oldSchema, newSchema, searchPathHelper);
                 PgDiffTables.DropClusters(writer, oldSchema, newSchema, searchPathHelper);
-                PgDiffTables.DropTables(writer, oldSchema, newSchema, searchPathHelper);
+                PgDiffTables.Drop(writer, oldSchema, newSchema, searchPathHelper);
 
                 // create and alter
-                PgDiffTypes.CreateTypes(writer, oldSchema, newSchema, searchPathHelper);
-                PgDiffSequences.CreateSequences(writer, oldSchema, newSchema, searchPathHelper);
-                PgDiffSequences.AlterSequences(writer, oldSchema, newSchema, searchPathHelper, false);
-                PgDiffTables.CreateTables(writer, oldSchema, newSchema, searchPathHelper);
-                PgDiffTables.AlterTables(writer, oldSchema, newSchema, searchPathHelper);
+                PgDiffTypes.Create(writer, oldSchema, newSchema, searchPathHelper);
+                PgDiffSequences.Create(writer, oldSchema, newSchema, searchPathHelper);
+                PgDiffSequences.Alter(writer, oldSchema, newSchema, searchPathHelper, false);
+                PgDiffTables.Create(writer, oldSchema, newSchema, searchPathHelper);
+                PgDiffTables.Alter(writer, oldSchema, newSchema, searchPathHelper);
                 PgDiffSequences.AlterCreatedSequences(writer, oldSchema, newSchema, searchPathHelper);
-                PgDiffFunctions.CreateFunctions(writer, oldSchema, newSchema, searchPathHelper, false);
-                PgDiffAggregate.CreateAggregates(writer, oldSchema, newSchema, searchPathHelper);
-                PgDiffConstraints.CreateConstraints(writer, oldSchema, newSchema, true, false, searchPathHelper);
-                PgDiffConstraints.CreateConstraints(writer, oldSchema, newSchema, false, false, searchPathHelper);
-                PgDiffConstraints.CreateConstraints(writer, oldSchema, newSchema, false, true, searchPathHelper);
-                PgDiffIndexes.CreateIndexes(writer, oldSchema, newSchema, searchPathHelper);
+                PgDiffFunctions.Create(writer, oldSchema, newSchema, searchPathHelper, false);
+                PgDiffAggregate.Create(writer, oldSchema, newSchema, searchPathHelper);
+                PgDiffConstraints.Create(writer, oldSchema, newSchema, true, false, searchPathHelper);
+                PgDiffConstraints.Create(writer, oldSchema, newSchema, false, false, searchPathHelper);
+                PgDiffConstraints.Create(writer, oldSchema, newSchema, false, true, searchPathHelper);
+                PgDiffIndexes.Create(writer, oldSchema, newSchema, searchPathHelper);
                 PgDiffTables.CreateClusters(writer, oldSchema, newSchema, searchPathHelper);
-                PgDiffTriggers.CreateTriggers(writer, oldSchema, newSchema, searchPathHelper);
-                PgDiffViews.CreateViews(writer, oldSchema, newSchema, searchPathHelper);
-                PgDiffViews.AlterViews(writer, oldSchema, newSchema, searchPathHelper);
-                PgDiffSequences.DropSequences(writer, oldSchema, newSchema, searchPathHelper);
+                PgDiffTriggers.Create(writer, oldSchema, newSchema, searchPathHelper);
+                PgDiffViews.Create(writer, oldSchema, newSchema, searchPathHelper);
+                PgDiffViews.Alter(writer, oldSchema, newSchema, searchPathHelper);
+                PgDiffSequences.Drop(writer, oldSchema, newSchema, searchPathHelper);
+                PgDiffPrivileges.Create(writer, oldSchema, newSchema, searchPathHelper);
 
                 // drop type after table is altered
-                PgDiffTypes.DropTypes(writer, oldSchema, newSchema, searchPathHelper);
+                PgDiffTypes.Drop(writer, oldSchema, newSchema, searchPathHelper);
 
                 // alter comments
                 PgDiffFunctions.AlterComments(writer, oldSchema, newSchema, searchPathHelper);

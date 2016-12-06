@@ -8,38 +8,42 @@ using Moq;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
-	[TestClass]
-	public class StatementTest
-	{
-		[TestMethod]
-		public void ConstructorTest()
-		{
-			var databaseMock = new Mock<IDatabase>();
+    [TestClass]
+    public class StatementTest
+    {
+        [TestMethod]
+        public void ConstructorTest()
+        {
+            var databaseMock = new Mock<IDatabase>();
 
-			var sql = "SELECT * FROM \"TEST\"";
-			var statement = new Statement(sql, databaseMock.Object);
-			statement.Should().NotBeNull();
-			statement.SQL.Should().Be(sql);
-			statement.SupportsTransaction.Should().BeTrue();
+            var searchPath = "-- search path";
+            var sql = "SELECT * FROM \"TEST\"";
+            var statement = new Statement(searchPath, sql, databaseMock.Object);
+            statement.Should().NotBeNull();
+            statement.SQL.Should().Be(sql);
+            statement.SupportsTransaction.Should().BeTrue();
+            statement.SearchPath.Should().Be(searchPath);
 
-			sql = "ALTER TYPE \"TestType\" ADD VALUE newVal;";
-			statement = new Statement(sql, databaseMock.Object);
-			statement.Should().NotBeNull();
-			statement.SQL.Should().Be(sql);
-			statement.SupportsTransaction.Should().BeFalse();
-		}
+            sql = "ALTER TYPE \"TestType\" ADD VALUE newVal;";
+            statement = new Statement(searchPath, sql, databaseMock.Object);
+            statement.Should().NotBeNull();
+            statement.SQL.Should().Be(sql);
+            statement.SupportsTransaction.Should().BeFalse();
+            statement.SearchPath.Should().Be(searchPath);
+        }
 
-		[TestMethod]
-		public void ExecuteTest()
-		{
-			var databaseMock = new Mock<IDatabase>();
+        [TestMethod]
+        public void ExecuteTest()
+        {
+            var databaseMock = new Mock<IDatabase>();
 
-			string sql = "SELECT * FROM \"TEST\"";
-
-			Statement statement = new Statement(sql, databaseMock.Object);
-			statement.Execute();
-			databaseMock.Setup(d => d.ExecuteCommandNonQuery(sql)).Throws(new Exception());
-			new Action(() => statement.Execute()).ShouldThrow<Exception>();
-		}
-	}
+            var searchPath = "-- search path";
+            string sql = "SELECT * FROM \"TEST\"";
+            Statement statement = new Statement(searchPath, sql, databaseMock.Object);
+            statement.Execute();
+            databaseMock.Setup(d => d.ExecuteCommandNonQuery(sql)).Throws(new Exception());
+            new Action(() => statement.Execute()).ShouldThrow<Exception>();
+            statement.SearchPath.Should().Be(searchPath);
+        }
+    }
 }
