@@ -131,7 +131,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
             var databaseSettings = new List<DatabaseSetting>();
             foreach (var database in newDatabaseOrder)
-                databaseSettings.Add(new DatabaseSetting(database.Id, database.Database.Name, database.Database.Path));
+                databaseSettings.Add(new DatabaseSetting(database.Id, database.Name, database.Path));
 
             SettingsManager.Get().Setting.DatabaseSettings = databaseSettings;
         }
