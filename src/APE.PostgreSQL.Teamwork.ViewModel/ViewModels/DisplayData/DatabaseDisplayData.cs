@@ -479,6 +479,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                         // ensure that the loading spinner is disabled
                         this.Resetting = false;
                     }
+
+                    this.UpdateData();
                 });
         }
 

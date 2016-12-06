@@ -24,7 +24,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <param name="primaryKey">Determines whether primary keys should be processed or any other constraints should be processed.</param>
         /// <param name="searchPathHelper">Search path helper.</param>
         /// <param name="foreignKey">Determines wheter forein keys should be processed.</param>
-        public static void CreateConstraints(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, bool primaryKey, bool foreignKey, SearchPathHelper searchPathHelper)
+        public static void Create(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, bool primaryKey, bool foreignKey, SearchPathHelper searchPathHelper)
         {
             foreach (PgTable newTable in newSchema.Tables)
             {
@@ -53,7 +53,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <param name="searchPathHelper">Search path helper.</param>
         /// <param name="newSchema">The schema of the new database.</param>
         /// <param name="oldSchema">The schema of the old database.</param>
-        public static void DropConstraints(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, bool primaryKey, SearchPathHelper searchPathHelper)
+        public static void Drop(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, bool primaryKey, SearchPathHelper searchPathHelper)
         {
             foreach (PgTable newTable in newSchema.Tables)
             {
@@ -155,7 +155,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <returns>List of constraints that should be dropped.</returns>
         private static IList<PgConstraint> GetDropConstraints(PgTable oldTable, PgTable newTable, bool primaryKey)
         {
-            // todo db Teamwork Constraints that are depending on a removed field should not be added to drop because they are already removed.
+            // todo db Constraints that are depending on a removed field should not be added to drop because they are already removed.
             IList<PgConstraint> constraints = new List<PgConstraint>();
 
             if (newTable != null && oldTable != null)

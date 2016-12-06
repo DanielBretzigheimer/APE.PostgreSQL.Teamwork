@@ -76,6 +76,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="EqualsAndHashCode.cs" />
+    <Compile Include="PostgresSchema\Enums\PgPrivilegeKind.cs" />
+    <Compile Include="PostgresSchema\PgPrivilege.cs" />
+    <Compile Include="PostgresSchema\Enums\PgPrivilegeCommand.cs" />
     <Compile Include="Setting\ApplicationSetting.cs" />
     <Compile Include="Setting\SettingsManager.cs" />
     <Compile Include="CommandLineArgs.cs">
