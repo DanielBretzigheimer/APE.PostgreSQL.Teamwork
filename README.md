@@ -4,3 +4,6 @@ The APE.PostgreSQL.Teamwork Tool can be used to work together on an PostgreSQL D
 
 ## First Start and Usage
 Take a look at the [Wiki](https://github.com/DanielBretzigheimer/APE.PostgreSQL.Teamwork/wiki)
+
+## Download
+Download the Tool [here](https://drive.google.com/file/d/0B38NBwtZxVHweXIzdTNWWnhaU0E/view)
