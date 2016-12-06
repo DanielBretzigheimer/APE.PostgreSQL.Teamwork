@@ -82,8 +82,8 @@ namespace APE.PostgreSQL.Teamwork.GUI
             var oldDatabases = e.PreviousOrder.Cast<DatabaseDisplayData>().ToList();
             var newDatabases = e.NewOrder.Cast<DatabaseDisplayData>().ToList();
 
-            var oldDatabaseNames = oldDatabases.Select(d => d.Database.Name).ToList();
-            var newDatabaseNames = newDatabases.Select(d => d.Database.Name).ToList();
+            var oldDatabaseNames = oldDatabases.Select(d => d.Name).ToList();
+            var newDatabaseNames = newDatabases.Select(d => d.Name).ToList();
             var orderEquals = true;
             for (int i = 0; i < oldDatabaseNames.Count(); i++)
             {

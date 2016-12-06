@@ -576,7 +576,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 }
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
-{        using System.IO;
+{        using System;
+    using System.IO;
     using APE.CodeGeneration.Attributes;
     using APE.PostgreSQL.Teamwork.ViewModel;
 
@@ -621,6 +622,34 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             catch (System.MissingMethodException missingMethodException)
             {
                 throw new System.NotSupportedException("database with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static string GetSearchPath(this Statement targetClass)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                return (string)po.GetFieldOrProperty("SearchPath");
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("SearchPath with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static void SetSearchPath(this Statement targetClass, string value)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                po.SetFieldOrProperty("SearchPath", value);
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("SearchPath with requested parameters is not found. Rerun code generation.", missingMethodException);
             }
         }
     }
@@ -2125,7 +2154,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 }
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
-{        using System.Windows;
+{        using System.Text;
+    using System.Windows;
     using System.Windows.Input;
     using APE.CodeGeneration.Attributes;
     using Npgsql;
@@ -2144,6 +2174,20 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             catch (System.MissingMethodException missingMethodException)
             {
                 throw new System.NotSupportedException("CreateCommands with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static void CallCopyToClipboard(this StatementDisplayData targetClass)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                po.Invoke("CopyToClipboard", new object[] { });
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("CopyToClipboard with requested parameters is not found. Rerun code generation.", missingMethodException);
             }
         }
 

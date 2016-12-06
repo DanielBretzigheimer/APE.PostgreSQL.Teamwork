@@ -149,9 +149,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             StringBuilder statement = new StringBuilder();
 
             var lines = this.file.ReadAllLines(this.Path);
+            var currentSearchPath = string.Empty;
 
             foreach (var line in lines)
             {
+                if (line.StartsWith("SET search_path = "))
+                    currentSearchPath = line;
+
                 // checks if a function begins in this line
                 if (new Regex("CREATE.+FUNCTION").Matches(line.ToUpper()).Count != 0)
                     isFunction = true;
@@ -191,7 +195,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
                     if (!isTransaction)
                     {
-                        Statement sqlStatement = new Statement(statement.ToString().Trim(), this.database);
+                        Statement sqlStatement = new Statement(currentSearchPath, statement.ToString().Trim(), this.database);
                         retVal.Add(sqlStatement);
                         statement.Clear();
                     }
@@ -201,7 +205,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             // add ending even if its not a statement
             if (statement.ToString().Trim() != string.Empty)
             {
-                Statement sqlStatement = new Statement(statement.ToString().Trim(), this.database);
+                Statement sqlStatement = new Statement(currentSearchPath, statement.ToString().Trim(), this.database);
                 retVal.Add(sqlStatement);
                 statement.Clear();
             }

@@ -18,6 +18,7 @@ namespace APE.PostgreSQL.Teamwork.CommandPrompt
         /// <returns>1 if the operation failed or 0 if no error occurred.</returns>
 		public static int Main(string[] args)
         {
+            Console.WriteLine("Start configuring Log4Net");
             ConfigureLog4Net();
 
             var commandLineInterpreter = new CommandLineExecutor();
@@ -36,8 +37,8 @@ namespace APE.PostgreSQL.Teamwork.CommandPrompt
         /// </summary>
         private static void ConfigureLog4Net(string log4NetConfigFile)
         {
-            if (File.Exists(log4NetConfigFile + "." + System.Environment.MachineName))
-                log4NetConfigFile += "." + System.Environment.MachineName;
+            if (File.Exists(log4NetConfigFile + "." + Environment.MachineName))
+                log4NetConfigFile += "." + Environment.MachineName;
 
             if (!File.Exists(log4NetConfigFile))
                 throw new Exception(log4NetConfigFile + " does not exist.");

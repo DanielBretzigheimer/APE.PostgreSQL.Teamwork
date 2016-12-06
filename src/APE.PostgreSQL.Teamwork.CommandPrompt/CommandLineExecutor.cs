@@ -106,6 +106,7 @@ namespace APE.PostgreSQL.Teamwork.CommandPrompt
                 return this.Execute(commandLineArgs);
 
             // 1 means an error occured for the setup
+            Console.WriteLine("Could not parse arguments");
             return 1;
         }
     }

@@ -22,7 +22,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <param name="oldSchema">Original schema.</param>
         /// <param name="newSchema">New schema.</param>
         /// <param name="searchPathHelper">Search path helper.</param>
-        public static void CreateAggregates(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Create(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             // Add new aggregates and replace modified aggregates
             foreach (PgAggregate newAggregate in newSchema.Aggregates)
@@ -50,7 +50,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <param name="oldSchema">Original schema.</param>
         /// <param name="newSchema">New schema.</param>
         /// <param name="searchPathHelper">Search path helper.</param>
-        public static void DropAggregates(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Drop(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
                 return;

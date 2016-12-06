@@ -52,6 +52,11 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         private readonly IList<PgConstraint> primaryKeys = new List<PgConstraint>();
 
         /// <summary>
+        /// List of privileges in the schema.
+        /// </summary>
+        private readonly IList<PgPrivilege> privileges = new List<PgPrivilege>();
+
+        /// <summary>
         /// Creates a new <see cref="PgSchema"/> object.
         /// </summary>
         /// <param name="name">The name of the <see cref="PgSchema"/>.</param>
@@ -166,6 +171,14 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             get
             {
                 return new ReadOnlyCollection<PgConstraint>(this.primaryKeys);
+            }
+        }
+
+        public IList<PgPrivilege> Privileges
+        {
+            get
+            {
+                return new ReadOnlyCollection<PgPrivilege>(this.privileges);
             }
         }
 
@@ -349,6 +362,15 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         }
 
         /// <summary>
+        /// Adds the given privilege to the list of privileges in this schema.
+        /// </summary>
+        /// <param name="privilege">The privilege which is added.</param>
+        public void AddPrivilege(PgPrivilege privilege)
+        {
+            this.privileges.Add(privilege);
+        }
+
+        /// <summary>
         /// Adds primary key to the list of primary keys.
         /// </summary>
         public void AddPrimaryKey(PgConstraint primaryKey)
@@ -481,6 +503,22 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         }
 
         /// <summary>
+        /// Returns true if schema contains privilege with given name, otherwise false.
+        /// </summary>
+        /// <param name="other">Checks if this privilege is also in this schema.</param>
+        /// <returns>True if schema contains privilege with given name, otherwise false.</returns>
+        public bool ContainsPrivilege(PgPrivilege other)
+        {
+            foreach (var privilege in this.Privileges)
+            {
+                if (privilege.Equals(other))
+                    return true;
+            }
+
+            return false;
+        }
+
+        /// <summary>
         /// Returns true if schema contains sequence with given name, otherwise false.
         /// </summary>
         /// <param name="name">Name of the sequence.</param>
@@ -522,6 +560,11 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             }
 
             return false;
+        }
+
+        public override string ToString()
+        {
+            return $"{this.GetType().Name} {this.Name}";
         }
     }
 }

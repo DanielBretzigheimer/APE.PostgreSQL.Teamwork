@@ -53,6 +53,29 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         private bool dataInitialized = false;
 
+        // todo db make name notify property and make Database.Name/Path a normal property and use only these in GUI
+        public string Name
+        {
+            get
+            {
+                if (this.Database == null)
+                    return DatabaseSetting.GetDatabaseSetting(this.Id).Name;
+
+                return this.Database.Name;
+            }
+        }
+
+        public string Path
+        {
+            get
+            {
+                if (this.Database == null)
+                    return DatabaseSetting.GetDatabaseSetting(this.Id).Path;
+
+                return this.Database.Path;
+            }
+        }
+
         /// <summary>
         /// Design time constructor.
         /// </summary>
@@ -188,17 +211,24 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         private void ConnectDatabase()
         {
             // first check if database can be reached
-            if (connectionManager.CheckConnection(DatabaseSetting.GetDatabaseSetting(this.Id).Name))
+            if (connectionManager.CheckConnection(this.Name))
             {
-                this.Database = new Database(DatabaseSetting.GetDatabaseSetting(this.Id).Name, DatabaseSetting.GetDatabaseSetting(this.Id).Path, this.connectionManager, this.fileSystemAccess, this.processManager, this.differenceCreator, this.sQLFileTester, initializeData: false);
+                this.Database = new Database(
+                    this.Name,
+                    DatabaseSetting.GetDatabaseSetting(this.Id).Path,
+                    this.connectionManager,
+                    this.fileSystemAccess,
+                    this.processManager,
+                    this.differenceCreator,
+                    this.sQLFileTester,
+                    initializeData: false);
                 this.Error = false;
                 this.ErrorMessage = string.Empty;
             }
             else
             {
                 // could not connect to the database
-                var databaseName = DatabaseSetting.GetDatabaseSetting(this.Id).Name;
-                this.ErrorMessage = $"Connection to Database '{databaseName}' cannot be established!";
+                this.ErrorMessage = $"Connection to Database '{this.Name}' cannot be established!";
                 this.Error = true;
             }
         }
@@ -449,6 +479,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                         // ensure that the loading spinner is disabled
                         this.Resetting = false;
                     }
+
+                    this.UpdateData();
                 });
         }
 

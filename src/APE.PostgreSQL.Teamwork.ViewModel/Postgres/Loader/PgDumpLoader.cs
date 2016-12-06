@@ -4,6 +4,7 @@ using System.IO;
 using System.Text;
 using System.Text.RegularExpressions;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
+using APE.PostgreSQL.Teamwork.Model.PostgresSchema.Enums;
 using APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
@@ -85,6 +86,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
         /// FUNCTION statement.
         /// </summary>
         private static readonly Regex PatternCreateFunction = new Regex("^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?FUNCTION[\\s]+.*$", RegexOptions.Singleline);
+
+        /// <summary>
+        /// Regex for testing whether it is a GRANT PRIVILEGE statement
+        /// </summary>
+        private static readonly Regex PatternPrivilegeGrant = new Regex("GRANT.+?TO.+?;", RegexOptions.Singleline);
+
+        /// <summary>
+        /// Regex for testing whether it is a REVOKE PRIVILEGE statement
+        /// </summary>
+        private static readonly Regex PatternPrivilegeRevoke = new Regex("REVOKE.+?FROM.+?;", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex for testing whether it is CREATE AGGREGATE or CREATE OR REPLACE
@@ -171,6 +182,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
                         CreateTriggerParser.Parse(database, statement, ignoreSlonyTriggers);
                     else if (PatternCreateFunction.Matches(statement).Count != 0)
                         CreateFunctionParser.Parse(database, statement);
+                    else if (PatternPrivilegeGrant.Matches(statement).Count != 0)
+                        PrivilegeParser.Parse(database, statement, PgPrivilegeCommand.Grant);
+                    else if (PatternPrivilegeRevoke.Matches(statement).Count != 0)
+                        PrivilegeParser.Parse(database, statement, PgPrivilegeCommand.Revoke);
                     else if (PatternCreateAggregate.Matches(statement).Count != 0)
                         CreateAggregateParser.Parse(database, statement);
                     else if (PatternComment.Matches(statement).Count != 0)
