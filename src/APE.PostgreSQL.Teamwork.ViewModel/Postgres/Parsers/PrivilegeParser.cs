@@ -39,8 +39,22 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             if (parser.ExpectOptional("("))
             {
-                parser.Expect(")");
-                name += "()";
+                name += "(";
+                while (!parser.ExpectOptional(")"))
+                {
+                    var argumentName = ParserUtils.GetObjectName(parser.ParseIdentifier());
+                    var dataType = parser.ParseDataType();
+                    name += $"{argumentName} {dataType}";
+
+                    if (parser.ExpectOptional(")"))
+                        break;
+                    else
+                    {
+                        parser.Expect(",");
+                        name += ", ";
+                    }
+                }
+                name += ")";
             }
 
             switch (command)
