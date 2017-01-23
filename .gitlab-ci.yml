@@ -1,0 +1,34 @@
+Build:
+    stage: build
+    artifacts:
+        when: on_success
+        expire_in: 30 mins
+        paths:
+            - src\*\bin\Release
+    script: 
+        - REM SetVersionToAssemblyInfo.ps1
+        - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\SetVersionToAssemblyInfo.ps1 %CI_PIPELINE_ID% %CI_BUILD_REF_NAME% %CI_BUILD_REF% %CI_BUILD_REPO%
+
+        - REM NuGet
+        - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\RestoreNugetPackages.ps1
+
+        - REM MSBuild
+        - msbuild src\NugetPackage.sln /verbosity:normal /p:Configuration=Release /maxcpucount:4
+
+UnitTest:
+    stage: test
+    script: 
+        - REM MSTest 
+        - echo on
+        - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\RunUnittests.ps1
+
+CreateNugetPackage:
+    stage: deploy
+    only:
+        - master
+    #when: manual
+    script:
+        - src\.nuget\NuGet.exe pack src\APE.PostgreSQL.Teamwork.CommandPrompt\APE.PostgreSQL.Teamwork.CommandPrompt.csproj -Prop Configuration=Release -IncludeReferencedProjects -OutputDirectory C:\NuGetOwncloud\NuGet\APE.PostgreSQL.Teamwork\
+    environment:
+        name: NuGetBuilds
+
