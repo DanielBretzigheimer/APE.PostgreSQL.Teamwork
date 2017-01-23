@@ -9,7 +9,7 @@ using System.Windows;
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
 [assembly: AssemblyTitle("APE.PostgreSQL.Teamwork.CommandPrompt")]
-[assembly: AssemblyDescription("CurrentVersion.txt = <Version> ; GitHash: <Git-Hash>;")]
+[assembly: AssemblyDescription("BuildVersion.txt = <BuildVersion> ; GitHash: <Git-Hash>;")]
 [assembly: AssemblyConfiguration("<Git-Branch>")]
 [assembly: AssemblyCompany("APE Engineering GmbH")]
 [assembly: AssemblyProduct("APE.PostgreSQL.Teamwork.CommandPrompt")]
@@ -42,5 +42,5 @@ using System.Windows;
 // You can specify all the values or you can default the Build and Revision Numbers 
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
-[assembly: AssemblyVersion("0.0.0.<Version>")]
-[assembly: AssemblyFileVersion("0.0.0.<Version>")]
+[assembly: AssemblyVersion("0.0.0.<BuildVersion>")]
+[assembly: AssemblyFileVersion("0.0.0.<BuildVersion>")]
