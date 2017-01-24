@@ -29,5 +29,8 @@ CreateNugetPackage:
     #when: manual
     script:
         - src\.nuget\NuGet.exe pack src\APE.PostgreSQL.Teamwork.CommandPrompt\APE.PostgreSQL.Teamwork.CommandPrompt.csproj -Prop Configuration=Release -IncludeReferencedProjects -OutputDirectory C:\NuGetOwncloud\NuGet\APE.PostgreSQL.Teamwork\
+
+        - REM Symbols for internal use
+        - src\.nuget\NuGet.exe pack src\APE.PostgreSQL.Teamwork.CommandPrompt\APE.PostgreSQL.Teamwork.CommandPrompt.csproj -Prop Configuration=Release -Symbols -OutputDirectory C:\NuGetOwncloud\NuGetSymbols\APE.PostgreSQL.Teamwork\
     environment:
         name: NuGetBuilds
