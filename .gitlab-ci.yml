@@ -31,4 +31,3 @@ CreateNugetPackage:
         - src\.nuget\NuGet.exe pack src\APE.PostgreSQL.Teamwork.CommandPrompt\APE.PostgreSQL.Teamwork.CommandPrompt.csproj -Prop Configuration=Release -IncludeReferencedProjects -OutputDirectory C:\NuGetOwncloud\NuGet\APE.PostgreSQL.Teamwork\
     environment:
         name: NuGetBuilds
-
