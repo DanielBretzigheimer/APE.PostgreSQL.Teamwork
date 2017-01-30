@@ -1,3 +1,6 @@
+before_script:
+    - REM NuGet     
+    - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\RestoreNugetPackages.ps1 
 Build:
     stage: build
     artifacts:
@@ -6,11 +9,8 @@ Build:
         paths:
             - src\*\bin\Release
     script: 
-        - REM SetVersionToAssemblyInfo.ps1
-        - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\SetVersionToAssemblyInfo.ps1 %CI_PIPELINE_ID% %CI_BUILD_REF_NAME% %CI_BUILD_REF% %CI_BUILD_REPO%
-
-        - REM NuGet
-        - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\RestoreNugetPackages.ps1
+        - REM WriteBuildVersionToAssemblyInfo.ps1
+        - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\WriteBuildVersionToAssemblyInfo.ps1 %CI_PROJECT_NAME% %CI_BUILD_REF_NAME% %CI_BUILD_REF% %CI_BUILD_REPO%
 
         - REM MSBuild
         - msbuild src\NugetPackage.sln /verbosity:normal /p:Configuration=Release /maxcpucount:4
@@ -28,9 +28,6 @@ CreateNugetPackage:
         - master
     #when: manual
     script:
-        - src\.nuget\NuGet.exe pack src\APE.PostgreSQL.Teamwork.CommandPrompt\APE.PostgreSQL.Teamwork.CommandPrompt.csproj -Prop Configuration=Release -IncludeReferencedProjects -OutputDirectory C:\NuGetOwncloud\NuGet\APE.PostgreSQL.Teamwork\
-
-        - REM Symbols for internal use
-        - src\.nuget\NuGet.exe pack src\APE.PostgreSQL.Teamwork.CommandPrompt\APE.PostgreSQL.Teamwork.CommandPrompt.csproj -Prop Configuration=Release -Symbols -OutputDirectory C:\NuGetOwncloud\NuGetSymbols\APE.PostgreSQL.Teamwork\
+        - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\BuildNugetPakages.ps1
     environment:
         name: NuGetBuilds
