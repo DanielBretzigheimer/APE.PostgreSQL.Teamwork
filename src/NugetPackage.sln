@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.25123.0
+VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".nuget", ".nuget", "{5000425E-F1D3-4BDA-BF89-93CCD1F07928}"
 	ProjectSection(SolutionItems) = preProject
@@ -13,6 +13,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APE.PostgreSQL.Teamwork.Model", "APE.PostgreSQL.Teamwork.Model\APE.PostgreSQL.Teamwork.Model.csproj", "{C3DF1F15-E4C9-4052-9535-AF39FF0E2191}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APE.PostgreSQL.Teamwork.CommandPrompt", "APE.PostgreSQL.Teamwork.CommandPrompt\APE.PostgreSQL.Teamwork.CommandPrompt.csproj", "{CE35B78F-B9E6-462D-BD8A-314D71D6B5D0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APE.PostgreSQL.Teamwork.GUI", "APE.PostgreSQL.Teamwork.GUI\APE.PostgreSQL.Teamwork.GUI.csproj", "{E9A43C83-45D8-4B05-AFA4-0E3FAF0EC57F}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -39,6 +41,12 @@ Global
 		{CE35B78F-B9E6-462D-BD8A-314D71D6B5D0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CE35B78F-B9E6-462D-BD8A-314D71D6B5D0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CE35B78F-B9E6-462D-BD8A-314D71D6B5D0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E9A43C83-45D8-4B05-AFA4-0E3FAF0EC57F}.Alle Erstellen - DEBUG|Any CPU.ActiveCfg = Release|Any CPU
+		{E9A43C83-45D8-4B05-AFA4-0E3FAF0EC57F}.Alle Erstellen - DEBUG|Any CPU.Build.0 = Release|Any CPU
+		{E9A43C83-45D8-4B05-AFA4-0E3FAF0EC57F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E9A43C83-45D8-4B05-AFA4-0E3FAF0EC57F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E9A43C83-45D8-4B05-AFA4-0E3FAF0EC57F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E9A43C83-45D8-4B05-AFA4-0E3FAF0EC57F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
