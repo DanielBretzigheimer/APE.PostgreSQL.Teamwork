@@ -29,5 +29,11 @@ CreateNugetPackage:
     #when: manual
     script:
         - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\BuildNugetPakages.ps1
+
+        - REM Copy Executables
+        - del /S /Q "C:\NuGetOwncloud\APE Tools\APE.PostgreSQL.Teamwork"
+        - xcopy /E /V /Y src\APE.PostgreSQL.Teamwork.GUI\bin\Release\* "C:\NuGetOwncloud\APE Tools\APE.PostgreSQL.Teamwork"
+        - del /S /Q "C:\NuGetOwncloud\Customer\Loepfe\MillMasterTOP\APE.PostgreSQL.Teamwork"
+        - xcopy /E /V /Y src\APE.PostgreSQL.Teamwork.GUI\bin\Release\* "C:\NuGetOwncloud\Customer\Loepfe\MillMasterTOP\APE.PostgreSQL.Teamwork"
     environment:
         name: NuGetBuilds
