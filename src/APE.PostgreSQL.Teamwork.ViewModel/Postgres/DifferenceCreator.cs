@@ -22,19 +22,29 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <returns>A bool indicating differences where found.</returns>
         public bool Create(string filePath, string databaseName, string oldDumpFile, string newDumpFile)
         {
+            using (StreamWriter writer = new StreamWriter(filePath))
+                return this.Create(writer, databaseName, oldDumpFile, newDumpFile);
+        }
+
+        /// <summary>
+        /// Creates a diff of the database between the two dump files and writes it to the stream writer.
+        /// </summary>
+        /// <returns>A bool indicating differences where found.</returns>
+        public bool Create(Stream stream, string databaseName, string oldDumpFile, string newDumpFile)
+        {
+            using (StreamWriter writer = new StreamWriter(stream))
+                return this.Create(writer, databaseName, oldDumpFile, newDumpFile);
+        }
+
+        public bool Create(StreamWriter writer, string databaseName, string oldDumpFile, string newDumpFile)
+        {
             PgDatabase oldDatabase = PgDumpLoader.LoadDatabaseSchema(oldDumpFile, databaseName, false, false);
             PgDatabase newDatabase = PgDumpLoader.LoadDatabaseSchema(newDumpFile, databaseName, false, false);
 
+            // mark the file as deleteable if no changes where made
             bool created = false;
-
-            // write diff file
-            using (StreamWriter writer = new StreamWriter(filePath))
-            {
-                // mark the file as deleteable if no changes where made
-                created = this.DiffDatabaseSchemas(writer, oldDatabase, newDatabase, false);
-                writer.Close();
-            }
-
+            created = this.DiffDatabaseSchemas(writer, oldDatabase, newDatabase, false);
+            writer.Close();
             return created;
         }
 

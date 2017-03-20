@@ -10,6 +10,9 @@ using APE.PostgreSQL.Teamwork.Model.Setting;
 using APE.PostgreSQL.Teamwork.Model.Templates;
 using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
 using APE.PostgreSQL.Teamwork.ViewModel.TestHelper;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
+using System;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {
@@ -22,6 +25,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     [NotifyProperty(typeof(List<string>), "Databases")]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "DataChecked", false)]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "DatabaseExists", false)]
+    [NotifyProperty(AccessModifier.Public, typeof(bool), "Loading", false)]
     [CtorParameter(typeof(IConnectionManager))]
     [CtorParameter(typeof(IFileSystemAccess))]
     [CtorParameter(typeof(IProcessManager))]
@@ -29,12 +33,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     [CtorParameter(typeof(ISQLFileTester))]
     public partial class AddDatabaseViewModel : BaseViewModel
     {
+        private List<string> databaseDirectories = new List<string>();
+        private readonly object databaseDirectoriesLock = new object();
+
         public ICommand OkCommand { get; set; }
         public ICommand ChooseDirectoryPathCommand { get; set; }
 
         partial void AddDatabaseViewModelCtor()
         {
             this.InitializeCommands();
+
+            this.ExecuteInTask(this.SearchDatabaseDirectories, (exec) => this.Loading = exec);
 
             this.Databases = this.connectionManager.ExecuteCommand<string>(SQLTemplates.GetAllTables());
             this.Databases.Remove(SettingsManager.Get().Setting.Id);
@@ -45,6 +54,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
             if (this.Databases.Count == 1)
                 this.DatabaseName = this.Databases.Single();
+        }
+
+        private void SearchDatabaseDirectories()
+        {
+            this.SearchDatabaseDirectories(SettingsManager.Get().Setting.DefaultDatabaseFolderPath);
+
+            if (string.IsNullOrWhiteSpace(this.DatabasePath) && !string.IsNullOrWhiteSpace(this.DatabaseName))
+                this.UpdatePath();
         }
 
         private void InitializeCommands()
@@ -129,11 +146,69 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         partial void DatabaseNameAfterSet()
         {
             this.CheckData();
+            this.UpdatePath();
         }
 
         partial void DatabasePathAfterSet()
         {
             this.CheckData();
+        }
+
+        private void UpdatePath()
+        {
+            // try to find database folder
+            var splitName = new Regex("([A-Z].*?(?=[A-Z\r\n]|$))");
+
+            var splittedDatabaseName = splitName
+                .Split(this.DatabaseName)
+                .Where(s =>
+                {
+                    s = s.Replace(".", string.Empty)
+                    .Replace(",", string.Empty)
+                    .Trim();
+                    return !string.IsNullOrWhiteSpace(s);
+                });
+
+            double confidence = 0;
+            string path = null;
+            lock (this.databaseDirectoriesLock)
+            {
+                foreach (var databaseDirectory in this.databaseDirectories)
+                {
+                    var matches = splittedDatabaseName.Count(name => databaseDirectory.Contains(name));
+                    var lowerCaseMatches = splittedDatabaseName.Count(name => databaseDirectory.ToLower().Contains(name.ToLower()));
+
+                    var currentConfidence = matches * 2 + lowerCaseMatches;
+                    if (currentConfidence > confidence)
+                    {
+                        confidence = currentConfidence;
+                        path = databaseDirectory;
+                    }
+                }
+            }
+
+            this.DatabasePath = path;
+        }
+
+        private void SearchDatabaseDirectories(string path, int depth = 0)
+        {
+            // stop to search for directories if its to deep
+            if (depth > 10)
+                return;
+
+            foreach (var directory in Directory.GetDirectories(path))
+            {
+                foreach (var file in Directory.GetFiles(directory, $"*{SQLTemplates.DumpFile}"))
+                {
+                    lock (this.databaseDirectoriesLock)
+                    {
+                        this.databaseDirectories.Add(directory);
+                    }
+                    break;
+                }
+
+                this.SearchDatabaseDirectories(directory, depth + 1);
+            }
         }
     }
 }

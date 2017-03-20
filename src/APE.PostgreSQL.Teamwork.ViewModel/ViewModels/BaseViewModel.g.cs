@@ -9,7 +9,8 @@ using log4net;
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {
     // APE.CodeGeneration.Attribute [NotifyPropertySupport]
-    public partial class BaseViewModel
+    public partial class 
+        BaseViewModel
   : System.ComponentModel.INotifyPropertyChanged
     {
         // APE CodeGeneration Generated Code

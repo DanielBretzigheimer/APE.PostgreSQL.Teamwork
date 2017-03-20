@@ -9,6 +9,9 @@ using APE.PostgreSQL.Teamwork.Model.Setting;
 using APE.PostgreSQL.Teamwork.Model.Templates;
 using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
 using APE.PostgreSQL.Teamwork.ViewModel.TestHelper;
+using System.Diagnostics;
+using System.Text.RegularExpressions;
+using System;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {
@@ -17,6 +20,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     // APE.CodeGeneration.Attribute [NotifyProperty(typeof(List<string>), "Databases")]
     // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "DataChecked", false)]
     // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "DatabaseExists", false)]
+    // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "Loading", false)]
     // APE.CodeGeneration.Attribute [CtorParameter(typeof(IConnectionManager))]
     // APE.CodeGeneration.Attribute [CtorParameter(typeof(IFileSystemAccess))]
     // APE.CodeGeneration.Attribute [CtorParameter(typeof(IProcessManager))]
@@ -241,6 +245,37 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         //protected virtual void DatabaseExistsChanging(bool newValue) { }
         //protected virtual void DatabaseExistsChanged() { }
+
+        protected static readonly System.ComponentModel.PropertyChangedEventArgs LoadingEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Loading));
+        private bool _Loading = false;
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool Loading
+        {
+            get
+            {
+                return this._Loading;
+            }
+            set
+            {
+                if (!object.Equals(this._Loading, value))
+                {
+                    //this.LoadingChanging(value);
+                    this.LoadingBeforeSet(value);
+                    this._Loading = value;
+                    this.OnPropertyChanged(LoadingEventArgs);
+                    //this.LoadingChanged();
+                    this.LoadingAfterSet();
+                }
+            }
+        }
+
+        partial void LoadingBeforeSet(bool newValue);
+        partial void LoadingAfterSet();
+
+        //protected virtual void LoadingChanging(bool newValue) { }
+        //protected virtual void LoadingChanged() { }
 
         //ncrunch: no coverage end
     }

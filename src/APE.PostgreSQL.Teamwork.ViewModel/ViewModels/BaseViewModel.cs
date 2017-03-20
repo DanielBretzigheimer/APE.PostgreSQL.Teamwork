@@ -14,7 +14,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     /// the possibility to execute a action in an task.
     /// </summary>
     [NotifyPropertySupport]
-    public partial class BaseViewModel
+    public partial class 
+        BaseViewModel
     {
         protected static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 

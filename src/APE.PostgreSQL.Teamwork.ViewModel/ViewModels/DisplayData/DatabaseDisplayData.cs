@@ -378,15 +378,31 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 this.UpdateData();
                 this.ResetTargetVersion();
                 var messageBox = MainWindowViewModel.GetMessageBox(
-                            $"Are you sure you want to import changes for '{this.Database.Name}' to Version {this.Database.LastApplicableVersion}?",
+                            $"Import changes for database '{this.Database.Name}' to Version {this.Database.LastApplicableVersion}. Do you want to check for import conflicts?",
                             "Import database changes",
-                            MessageBoxButton.YesNo);
+                            MessageBoxButton.YesNoCancel);
                 var result = await MainWindowViewModel.ShowDialog(messageBox);
-                if (result == MaterialMessageBoxResult.No)
+                if (result == MaterialMessageBoxResult.Cancel)
                     return;
-
+                
                 this.Importing = true;
                 var oldVersion = this.Database.CurrentVersion;
+
+                // check compatibility
+                if (result == MaterialMessageBoxResult.Yes)
+                {
+                    if (this.Database.ImportConflicts(
+                       SettingsManager.Get().Setting.PgDumpLocation,
+                       SettingsManager.Get().Setting.Host,
+                       SettingsManager.Get().Setting.Id,
+                       SettingsManager.Get().Setting.Password))
+                    {
+                        // todo add message
+                        var compatibilityMessageBox = MainWindowViewModel.GetMessageBox($"TODO", "Compatibility problems found.", MessageBoxButton.OK);
+                        await MainWindowViewModel.ShowDialog(compatibilityMessageBox);
+                        return;
+                    }
+                }
 
                 try
                 {

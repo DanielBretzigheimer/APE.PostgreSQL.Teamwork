@@ -73,6 +73,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         }
 
         /// <summary>
+        /// Gets the location of the dump for the <see cref="CurrentVersion"/>.
+        /// </summary>
+        public string CurrentDumpLocation => this.GenerateFileLocation(this.CurrentVersion.Main, SQLTemplates.DumpFile);
+
+        /// <summary>
         /// Creates a dump file for the given database at the given path.
         /// </summary>
         public SQLFile CreateDump(string path, string dumpCreatorPath, string host, string id, string password)
@@ -324,7 +329,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 // file paths
                 int newVersion = this.CurrentVersion.Main + 1;
                 Log.Debug(string.Format("New Version for exported files is {0}", newVersion));
-                string previousDump = this.GenerateFileLocation(this.CurrentVersion.Main, SQLTemplates.DumpFile);
+                string previousDump = this.CurrentDumpLocation;
                 string dump = this.GenerateFileLocation(newVersion, SQLTemplates.DumpFile);
                 string diff = this.GenerateFileLocation(newVersion, SQLTemplates.DiffFile);
                 string undoDiff = this.GenerateFileLocation(newVersion, SQLTemplates.UndoDiffFile);
@@ -390,6 +395,43 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 }
 
                 this.UpdateData();
+            }
+        }
+
+        /// <summary>
+        /// Checks if the current database contains changes and checks if this changes are in conflict with the not imported
+        /// diff files.
+        /// </summary>
+        public bool ImportConflicts(string dumpCreatorPath, string host, string id, string password)
+        {
+            var tmpDumpPath = System.IO.Path.Combine(this.Path, $"Temp{SQLTemplates.DumpFile}");
+
+            try
+            {
+                // check if database contains changes
+                this.CreateDump(tmpDumpPath, dumpCreatorPath, host, id, password);
+
+                if (this.fileSystemAccess.GetFileSize(tmpDumpPath) == this.fileSystemAccess.GetFileSize(this.CurrentDumpLocation))
+                {
+                    // check files byte by byte
+                    var oldDump = this.fileSystemAccess.ReadAllText(this.CurrentDumpLocation);
+                    var newDump = this.fileSystemAccess.ReadAllText(tmpDumpPath);
+
+                    if (oldDump.Equals(newDump))
+                        return false;
+                }
+
+                //var stream = new MemoryStream();
+                // todo finish implementation
+                //this.differenceCreator.CreateRaw(this.Name, this.CurrentDumpLocation, tmpDumpPath);
+                
+                return true;
+            }
+            finally
+            {
+                // delete temp files afterwards
+                if (this.fileSystemAccess.FileExists(tmpDumpPath))
+                    this.fileSystemAccess.DeleteFile(tmpDumpPath);
             }
         }
 
