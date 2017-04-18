@@ -941,7 +941,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
     internal static class MainWindowViewModelExtension
     {
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static void CallUpdateWorkerTick(this MainWindowViewModel targetClass, object sender, EventArgs e)
+        internal static void CallUpdateWorkerTick(this BaseViewModel targetClass, object sender, EventArgs e)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -955,7 +955,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static void CallCheckSettings(this MainWindowViewModel targetClass)
+        internal static void CallCheckSettings(this BaseViewModel targetClass)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -969,7 +969,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static string CallSearchFileRecursivly(this MainWindowViewModel targetClass, string filename, string path)
+        internal static string CallSearchFileRecursivly(this BaseViewModel targetClass, string filename, string path)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -983,7 +983,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static object CallConnectionMessageBoxClosingEventHandler(this MainWindowViewModel targetClass, MaterialMessageBoxResult result)
+        internal static object CallConnectionMessageBoxClosingEventHandler(this BaseViewModel targetClass, MaterialMessageBoxResult result)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -997,7 +997,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static void CallDatabaseRemoved(this MainWindowViewModel targetClass, object sender, EventArgs e)
+        internal static void CallDatabaseRemoved(this BaseViewModel targetClass, object sender, EventArgs e)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1011,7 +1011,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static void CallRefreshDatabases(this MainWindowViewModel targetClass)
+        internal static void CallRefreshDatabases(this BaseViewModel targetClass)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1025,7 +1025,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static void CallOpenSettings(this MainWindowViewModel targetClass)
+        internal static void CallOpenSettings(this BaseViewModel targetClass)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1039,7 +1039,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static void CallCreateCommands(this MainWindowViewModel targetClass)
+        internal static void CallCreateCommands(this BaseViewModel targetClass)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1053,7 +1053,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static void CallSizeChanged(this MainWindowViewModel targetClass, SizeChangedEventArgs args)
+        internal static void CallSizeChanged(this BaseViewModel targetClass, SizeChangedEventArgs args)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1067,7 +1067,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static object GetupdateLock(this MainWindowViewModel targetClass)
+        internal static object GetupdateLock(this BaseViewModel targetClass)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1081,7 +1081,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static void SetupdateLock(this MainWindowViewModel targetClass, object value)
+        internal static void SetupdateLock(this BaseViewModel targetClass, object value)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1095,7 +1095,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static DispatcherTimer Getworker(this MainWindowViewModel targetClass)
+        internal static DispatcherTimer Getworker(this BaseViewModel targetClass)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1109,7 +1109,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static void Setworker(this MainWindowViewModel targetClass, DispatcherTimer value)
+        internal static void Setworker(this BaseViewModel targetClass, DispatcherTimer value)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1123,7 +1123,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static Dispatcher GetuiDispatcher(this MainWindowViewModel targetClass)
+        internal static Dispatcher GetuiDispatcher(this BaseViewModel targetClass)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1137,7 +1137,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static void SetuiDispatcher(this MainWindowViewModel targetClass, Dispatcher value)
+        internal static void SetuiDispatcher(this BaseViewModel targetClass, Dispatcher value)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1151,7 +1151,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static List<DatabaseDisplayData> GetunfilteredDatabases(this MainWindowViewModel targetClass)
+        internal static List<DatabaseDisplayData> GetunfilteredDatabases(this BaseViewModel targetClass)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1165,7 +1165,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static void SetunfilteredDatabases(this MainWindowViewModel targetClass, List<DatabaseDisplayData> value)
+        internal static void SetunfilteredDatabases(this BaseViewModel targetClass, List<DatabaseDisplayData> value)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1179,7 +1179,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static string GetWindowTitle(this MainWindowViewModel targetClass)
+        internal static string GetWindowTitle(this BaseViewModel targetClass)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1193,7 +1193,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static void SetWindowTitle(this MainWindowViewModel targetClass, string value)
+        internal static void SetWindowTitle(this BaseViewModel targetClass, string value)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1207,7 +1207,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static ICommand GetSettingCommand(this MainWindowViewModel targetClass)
+        internal static ICommand GetSettingCommand(this BaseViewModel targetClass)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1221,7 +1221,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static void SetSettingCommand(this MainWindowViewModel targetClass, ICommand value)
+        internal static void SetSettingCommand(this BaseViewModel targetClass, ICommand value)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1235,7 +1235,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static ICommand GetAddDatabaseCommand(this MainWindowViewModel targetClass)
+        internal static ICommand GetAddDatabaseCommand(this BaseViewModel targetClass)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1249,7 +1249,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static void SetAddDatabaseCommand(this MainWindowViewModel targetClass, ICommand value)
+        internal static void SetAddDatabaseCommand(this BaseViewModel targetClass, ICommand value)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1263,7 +1263,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static ICommand GetRefreshDatabasesCommand(this MainWindowViewModel targetClass)
+        internal static ICommand GetRefreshDatabasesCommand(this BaseViewModel targetClass)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1277,7 +1277,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static void SetRefreshDatabasesCommand(this MainWindowViewModel targetClass, ICommand value)
+        internal static void SetRefreshDatabasesCommand(this BaseViewModel targetClass, ICommand value)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1291,7 +1291,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static ICommand GetSearchCommand(this MainWindowViewModel targetClass)
+        internal static ICommand GetSearchCommand(this BaseViewModel targetClass)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -1305,7 +1305,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static void SetSearchCommand(this MainWindowViewModel targetClass, ICommand value)
+        internal static void SetSearchCommand(this BaseViewModel targetClass, ICommand value)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try

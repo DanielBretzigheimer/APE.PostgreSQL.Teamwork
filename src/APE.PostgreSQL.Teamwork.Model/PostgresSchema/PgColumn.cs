@@ -77,7 +77,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <returns>Full definition of the column.</returns>
         public string GetFullDefinition(bool addDefaults)
         {
-            StringBuilder definitionSql = new StringBuilder(100);
+            var definitionSql = new StringBuilder(100);
             definitionSql.Append(PgDiffStringExtension.QuoteName(this.Name));
             definitionSql.Append(' ');
             definitionSql.Append(this.Type);
@@ -89,7 +89,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             }
             else if (!this.NullValue && addDefaults)
             {
-                string defaultColValue = PgColumnUtils.GetDefaultValue(this.Type);
+                var defaultColValue = PgColumnUtils.GetDefaultValue(this.Type);
 
                 if (defaultColValue != null)
                 {
@@ -99,7 +99,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             }
 
             if (!this.NullValue)
+            {
                 definitionSql.Append(" NOT NULL");
+            }
 
             return definitionSql.ToString();
         }

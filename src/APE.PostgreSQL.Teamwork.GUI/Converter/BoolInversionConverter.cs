@@ -8,22 +8,24 @@ using System.Windows.Data;
 
 namespace APE.PostgreSQL.Teamwork.GUI.Converter
 {
-	/// <summary>
-	/// Converter which inverts the given boolean.
-	/// </summary>
-	public class BoolInversionConverter : IValueConverter
-	{
-		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-		{
-			if (!(value is bool))
-				throw new InvalidOperationException("The target must be a boolean");
+    /// <summary>
+    /// Converter which inverts the given boolean.
+    /// </summary>
+    public class BoolInversionConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (!(value is bool))
+            {
+                throw new InvalidOperationException("The target must be a boolean");
+            }
 
-			return !(bool)value;
-		}
+            return !(bool)value;
+        }
 
-		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-		{
-			throw new NotSupportedException();
-		}
-	}
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotSupportedException();
+        }
+    }
 }

@@ -6,6 +6,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Exceptions
     /// <summary>
     /// Is thrown if an exception is thrown while parsing the SQL.
     /// </summary>
+    [Serializable]
     public class TeamworkParserException : Exception
     {
         public TeamworkParserException()

@@ -6,32 +6,32 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
-	[TestClass]
-	public class DatabaseVersionTest
-	{
-		[TestMethod]
-		public void ConstructorTest()
-		{
-			DatabaseVersion dv = new DatabaseVersion("\\Test\\Path\\0001.diff.sql");
-			dv.Should().NotBeNull();
-			dv.Main.Should().Be(1);
-			dv.Minor.Should().Be(string.Empty);
-			dv.Full.Should().Be("0001");
+    [TestClass]
+    public class DatabaseVersionTest
+    {
+        [TestMethod]
+        public void ConstructorTest()
+        {
+            var dv = new DatabaseVersion("\\Test\\Path\\0001.diff.sql");
+            dv.Should().NotBeNull();
+            dv.Main.Should().Be(1);
+            dv.Minor.Should().Be(string.Empty);
+            dv.Full.Should().Be("0001");
 
-			dv = new DatabaseVersion("\\Test\\Path\\8534.a.diff.sql");
-			dv.Should().NotBeNull();
-			dv.Main.Should().Be(8534);
-			dv.Minor.Should().Be(".a");
-			dv.Full.Should().Be("8534.a");
+            dv = new DatabaseVersion("\\Test\\Path\\8534.a.diff.sql");
+            dv.Should().NotBeNull();
+            dv.Main.Should().Be(8534);
+            dv.Minor.Should().Be(".a");
+            dv.Full.Should().Be("8534.a");
 
-			dv = new DatabaseVersion("\\Test0002\\Path\\0008.diff.sql");
-			dv.Should().NotBeNull();
-			dv.Main.Should().Be(8);
-			dv.Minor.Should().Be(string.Empty);
-			dv.Full.Should().Be("0008");
+            dv = new DatabaseVersion("\\Test0002\\Path\\0008.diff.sql");
+            dv.Should().NotBeNull();
+            dv.Main.Should().Be(8);
+            dv.Minor.Should().Be(string.Empty);
+            dv.Full.Should().Be("0008");
 
-			new Action(() => new DatabaseVersion(string.Empty)).ShouldThrow<ArgumentException>();
-		}
+            new Action(() => new DatabaseVersion(string.Empty)).ShouldThrow<ArgumentException>();
+        }
 
         [TestMethod]
         public void OperatorTest()
@@ -59,5 +59,5 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             (dv2 != dv1).Should().BeTrue();
             (dv3 == dv3alternative).Should().BeTrue();
         }
-	}
+    }
 }

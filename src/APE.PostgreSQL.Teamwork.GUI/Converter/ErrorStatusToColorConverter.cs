@@ -10,31 +10,29 @@ using APE.PostgreSQL.Teamwork.Model;
 
 namespace APE.PostgreSQL.Teamwork.GUI.Converter
 {
-	public class ErrorStatusToColorConverter : IValueConverter
-	{
-		public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-		{
-			if (value is ErrorStatus)
-			{
-				var status = (ErrorStatus)value;
+    public class ErrorStatusToColorConverter : IValueConverter
+    {
+        public object Convert(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            if (value is ErrorStatus status)
+            {
+                switch (status)
+                {
+                    case ErrorStatus.Error:
+                        return Brushes.Red;
+                    case ErrorStatus.Successful:
+                        return Brushes.Green;
+                    case ErrorStatus.Unknown:
+                        return Brushes.Black;
+                }
+            }
 
-				switch (status)
-				{
-					case ErrorStatus.Error:
-						return Brushes.Red;
-					case ErrorStatus.Successful:
-						return Brushes.Green;
-					case ErrorStatus.Unknown:
-						return Brushes.Black;
-				}
-			}
+            return Brushes.Transparent;
+        }
 
-			return Brushes.Transparent;
-		}
-
-		public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
-		{
-			throw new NotImplementedException();
-		}
-	}
+        public object ConvertBack(object value, Type targetType, object parameter, System.Globalization.CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

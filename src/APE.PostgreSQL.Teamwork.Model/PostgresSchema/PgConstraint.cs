@@ -33,7 +33,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder creationSql = new StringBuilder(100);
+                var creationSql = new StringBuilder(100);
                 creationSql.Append("ALTER TABLE ");
                 creationSql.Append(PgDiffStringExtension.QuoteName(this.TableName));
                 creationSql.Append("\n\tADD CONSTRAINT ");
@@ -74,7 +74,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder dropSql = new StringBuilder(100);
+                var dropSql = new StringBuilder(100);
                 dropSql.Append("ALTER TABLE ");
                 dropSql.Append(PgDiffStringExtension.QuoteName(this.TableName));
                 dropSql.Append("\n\tDROP CONSTRAINT ");
@@ -122,13 +122,14 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         public override bool Equals(object obj)
         {
-            bool equals = false;
+            var equals = false;
 
             if (this == obj)
-                equals = true;
-            else if (obj is PgConstraint)
             {
-                PgConstraint constraint = (PgConstraint)obj;
+                equals = true;
+            }
+            else if (obj is PgConstraint constraint)
+            {
                 equals = this.Definition.Equals(constraint.Definition)
                     && this.Name.Equals(constraint.Name)
                     && this.TableName.Equals(constraint.TableName);

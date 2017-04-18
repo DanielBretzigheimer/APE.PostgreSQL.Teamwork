@@ -40,7 +40,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         public static void Drop(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
+            {
                 return;
+            }
 
             foreach (PgView oldView in oldSchema.Views)
             {
@@ -61,21 +63,25 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         public static void Alter(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
+            {
                 return;
+            }
 
             foreach (PgView oldView in oldSchema.Views)
             {
                 PgView newView = newSchema.GetView(oldView.Name);
 
                 if (newView == null)
+                {
                     continue;
+                }
 
                 DiffDefaultValues(writer, oldView, newView, searchPathHelper);
 
-                if (oldView.Comment == null && newView.Comment != null
-                    || oldView.Comment != null
+                if ((oldView.Comment == null && newView.Comment != null)
+                    || (oldView.Comment != null
                     && newView.Comment != null
-                    && !oldView.Comment.Equals(newView.Comment))
+                    && !oldView.Comment.Equals(newView.Comment)))
                 {
                     searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();
@@ -104,10 +110,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 foreach (PgView.ColumnComment columnComment in oldView.ColumnComments)
                 {
                     if (!columnNames.Contains(columnComment.ColumnName))
+                    {
                         columnNames.Add(columnComment.ColumnName);
+                    }
                 }
 
-                foreach (string columnName in columnNames)
+                foreach (var columnName in columnNames)
                 {
                     PgView.ColumnComment oldColumnComment = null;
                     PgView.ColumnComment newColumnComment = null;
@@ -130,10 +138,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                         }
                     }
 
-                    if (oldColumnComment == null && newColumnComment != null
-                        || oldColumnComment != null
+                    if ((oldColumnComment == null && newColumnComment != null)
+                        || (oldColumnComment != null
                         && newColumnComment != null
-                        && !oldColumnComment.Comment.Equals(newColumnComment.Comment))
+                        && !oldColumnComment.Comment.Equals(newColumnComment.Comment)))
                     {
                         searchPathHelper.OutputSearchPath(writer);
                         writer.WriteLine();
@@ -168,7 +176,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             string[] oldViewColumnNames;
 
             if (oldView.ColumnNames == null || oldView.ColumnNames.Count == 0)
+            {
                 oldViewColumnNames = null;
+            }
             else
             {
                 oldViewColumnNames = oldView.ColumnNames.ToArray();
@@ -177,16 +187,22 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             string[] newViewColumnNames;
 
             if (newView.ColumnNames == null || newView.ColumnNames.Count == 0)
+            {
                 newViewColumnNames = null;
+            }
             else
             {
                 newViewColumnNames = newView.ColumnNames.ToArray();
             }
 
             if (oldViewColumnNames == null && newViewColumnNames == null)
+            {
                 return !oldView.Query.Replace(" ", string.Empty).Trim().Equals(newView.Query.Replace(" ", string.Empty).Trim());
+            }
             else
+            {
                 return !oldViewColumnNames.Equals(newViewColumnNames);
+            }
         }
 
         /// <summary>
@@ -201,7 +217,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             // modify defaults that are in old view
             foreach (PgView.DefaultValue oldValue in oldValues)
             {
-                bool found = false;
+                var found = false;
 
                 foreach (PgView.DefaultValue newValue in newValues)
                 {
@@ -241,7 +257,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             // add new defaults
             foreach (PgView.DefaultValue newValue in newValues)
             {
-                bool found = false;
+                var found = false;
 
                 foreach (PgView.DefaultValue oldValue in oldValues)
                 {
@@ -253,7 +269,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 }
 
                 if (found)
+                {
                     continue;
+                }
 
                 searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();

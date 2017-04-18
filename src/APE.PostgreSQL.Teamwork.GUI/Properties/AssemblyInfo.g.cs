@@ -35,7 +35,7 @@ using System.Runtime.InteropServices;
 // [assembly: AssemblyVersion("1.0.*")]
 // DONT USE SUBVERSION VERSION => every time the AssemblyInfo.cs is changed
 // a new config file is created
-[assembly: AssemblyVersion("0.0.0.0")]
-[assembly: AssemblyFileVersion("0.0.0.0")]
+[assembly: AssemblyVersion("1.0.0.0")]
+[assembly: AssemblyFileVersion("1.0.0.0")]
 
 [assembly: System.Runtime.CompilerServices.InternalsVisibleTo("APE.Common2.Test")]

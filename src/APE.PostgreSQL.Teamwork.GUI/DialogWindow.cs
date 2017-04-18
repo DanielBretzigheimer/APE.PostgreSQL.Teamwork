@@ -1,4 +1,4 @@
-﻿// <copyright file="dialogwindow.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+﻿// <copyright file="DialogWindow.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -77,7 +77,9 @@ namespace APE.PostgreSQL.Teamwork.GUI
                                 {
                                     // if the settin view was closed return
                                     if (eventArgs.Parameter.GetType() != typeof(MaterialMessageBoxResult))
+                                    {
                                         return;
+                                    }
 
                                     var displayableView = closingEventHandler?.Invoke((MaterialMessageBoxResult)eventArgs.Parameter);
                                     if (displayableView != null)
@@ -88,9 +90,13 @@ namespace APE.PostgreSQL.Teamwork.GUI
                                 }));
 
                         if (retval == null)
-                            result = Model.MaterialMessageBoxResult.None;
+                        {
+                            result = MaterialMessageBoxResult.None;
+                        }
                         else
-                            result = retval.GetType() == typeof(MaterialMessageBoxResult) ? (MaterialMessageBoxResult)retval : Model.MaterialMessageBoxResult.None;
+                        {
+                            result = retval.GetType() == typeof(MaterialMessageBoxResult) ? (MaterialMessageBoxResult)retval : MaterialMessageBoxResult.None;
+                        }
                     }
                     catch (InvalidOperationException)
                     {

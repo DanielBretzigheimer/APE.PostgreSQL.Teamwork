@@ -35,13 +35,13 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder creationSql = new StringBuilder(100);
+                var creationSql = new StringBuilder(100);
                 creationSql.Append("CREATE TRIGGER ");
                 creationSql.Append(PgDiffStringExtension.QuoteName(this.Name));
                 creationSql.Append("\n\t");
                 creationSql.Append(this.Before ? "BEFORE" : "AFTER");
 
-                bool firstEvent = true;
+                var firstEvent = true;
 
                 if (this.OnInsert)
                 {
@@ -52,7 +52,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 if (this.OnUpdate)
                 {
                     if (firstEvent)
+                    {
                         firstEvent = false;
+                    }
                     else
                     {
                         creationSql.Append(" OR");
@@ -64,12 +66,14 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                     {
                         creationSql.Append(" OF");
 
-                        bool first = true;
+                        var first = true;
 
-                        foreach (string columnName in this.updateColumns)
+                        foreach (var columnName in this.updateColumns)
                         {
                             if (first)
+                            {
                                 first = false;
+                            }
                             else
                             {
                                 creationSql.Append(',');
@@ -84,7 +88,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 if (this.OnDelete)
                 {
                     if (!firstEvent)
+                    {
                         creationSql.Append(" OR");
+                    }
 
                     creationSql.Append(" DELETE");
                 }
@@ -92,7 +98,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 if (this.OnTruncate)
                 {
                     if (!firstEvent)
+                    {
                         creationSql.Append(" OR");
+                    }
 
                     creationSql.Append(" TRUNCATE");
                 }
@@ -210,19 +218,20 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         public override bool Equals(object obj)
         {
-            bool equals = false;
+            var equals = false;
 
             if (this == obj)
-                equals = true;
-            else if (obj is PgTrigger)
             {
-                PgTrigger trigger = (PgTrigger)obj;
+                equals = true;
+            }
+            else if (obj is PgTrigger trigger)
+            {
                 equals = (this.Before == trigger.Before) && (this.ForEachRow == trigger.ForEachRow) && this.Function.Equals(trigger.Function) && this.Name.Equals(trigger.Name) && (this.OnDelete == trigger.OnDelete) && (this.OnInsert == trigger.OnInsert) && (this.OnUpdate == trigger.OnUpdate) && (this.OnTruncate == trigger.OnTruncate) && this.TableName.Equals(trigger.TableName);
 
                 if (equals)
                 {
-                    List<string> sorted1 = new List<string>(this.updateColumns);
-                    List<string> sorted2 = new List<string>(trigger.UpdateColumns);
+                    var sorted1 = new List<string>(this.updateColumns);
+                    var sorted2 = new List<string>(trigger.UpdateColumns);
                     sorted1.Sort();
                     sorted2.Sort();
 

@@ -1,6 +1,7 @@
 ﻿// <copyright file="CreateSequenceParser.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
+using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 {
@@ -21,19 +22,21 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         public static void Parse(PgDatabase database, string statement)
         {
-            Parser parser = new Parser(statement);
+            var parser = new Parser(statement);
             parser.Expect("CREATE", "SEQUENCE");
 
-            string sequenceName = parser.ParseIdentifier();
+            var sequenceName = parser.ParseIdentifier();
 
-            PgSequence sequence = new PgSequence(ParserUtils.GetObjectName(sequenceName));
+            var sequence = new PgSequence(ParserUtils.GetObjectName(sequenceName));
 
-            string schemaName = ParserUtils.GetSchemaName(sequenceName, database);
+            var schemaName = ParserUtils.GetSchemaName(sequenceName, database);
 
             PgSchema schema = database.GetSchema(schemaName);
 
             if (schema == null)
-                throw new Exception(string.Format("CannotFindSchema", schemaName, statement));
+            {
+                throw new TeamworkParserException($"CannotFindSchema {schemaName} from {statement}");
+            }
 
             schema.AddSequence(sequence);
 
@@ -45,22 +48,32 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     sequence.Increment = parser.ParseString();
                 }
                 else if (parser.ExpectOptional("MINVALUE"))
+                {
                     sequence.MinValue = parser.ParseString();
+                }
                 else if (parser.ExpectOptional("MAXVALUE"))
+                {
                     sequence.MaxValue = parser.ParseString();
+                }
                 else if (parser.ExpectOptional("START"))
                 {
                     parser.ExpectOptional("WITH");
                     sequence.StartWith = parser.ParseString();
                 }
                 else if (parser.ExpectOptional("CACHE"))
+                {
                     sequence.Cache = parser.ParseString();
+                }
                 else if (parser.ExpectOptional("CYCLE"))
+                {
                     sequence.Cycle = true;
+                }
                 else if (parser.ExpectOptional("OWNED", "BY"))
                 {
                     if (parser.ExpectOptional("NONE"))
+                    {
                         sequence.Owner = null;
+                    }
                     else
                     {
                         sequence.Owner = ParserUtils.GetObjectName(parser.ParseIdentifier());
@@ -69,11 +82,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 else if (parser.ExpectOptional("NO"))
                 {
                     if (parser.ExpectOptional("MINVALUE"))
+                    {
                         sequence.MinValue = null;
+                    }
                     else if (parser.ExpectOptional("MAXVALUE"))
+                    {
                         sequence.MaxValue = null;
+                    }
                     else if (parser.ExpectOptional("CYCLE"))
+                    {
                         sequence.Cycle = false;
+                    }
                     else
                     {
                         parser.ThrowUnsupportedCommand();

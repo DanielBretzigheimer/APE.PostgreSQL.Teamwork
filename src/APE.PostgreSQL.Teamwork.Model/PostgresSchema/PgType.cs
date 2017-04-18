@@ -53,7 +53,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder createString = new StringBuilder(500);
+                var createString = new StringBuilder(500);
                 createString.Append("CREATE TYPE ");
                 createString.Append(PgDiffStringExtension.QuoteName(this.Name));
                 createString.Append(" AS ");
@@ -62,11 +62,13 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 {
                     createString.AppendLine("(");
 
-                    bool first = true;
+                    var first = true;
                     foreach (var argument in this.AttributeArguments)
                     {
                         if (!first)
+                        {
                             createString.Append(", ");
+                        }
 
                         createString.Append(argument.Full);
                         first = false;
@@ -77,11 +79,14 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                     createString.Append("ENUM");
                     createString.AppendLine("(");
 
-                    bool first = true;
-                    foreach (string entry in this.EnumEntries)
+                    var first = true;
+                    foreach (var entry in this.EnumEntries)
                     {
                         if (!first)
+                        {
                             createString.Append(",");
+                        }
+
                         createString.AppendLine(entry);
                         first = false;
                     }
@@ -100,7 +105,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder dropString = new StringBuilder(100);
+                var dropString = new StringBuilder(100);
                 dropString.AppendLine("-- Droping Enum (Type) doesn't work when there are relationships");
                 dropString.Append("DROP TYPE ");
                 dropString.Append(PgDiffStringExtension.QuoteName(this.Name));
@@ -117,15 +122,17 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder signature = new StringBuilder(100);
+                var signature = new StringBuilder(100);
                 signature.Append(this.Name);
                 signature.Append('(');
 
-                bool first = true;
+                var first = true;
                 foreach (var argument in this.AttributeArguments)
                 {
                     if (!first)
+                    {
                         signature.Append(',');
+                    }
 
                     signature.Append(argument.Full);
                     first = false;
@@ -137,7 +144,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 foreach (var entry in this.EnumEntries)
                 {
                     if (!first)
+                    {
                         signature.Append(',');
+                    }
 
                     signature.Append(entry);
                     first = false;
@@ -156,7 +165,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <returns>The SQL which can alter the <see cref="PgType"/>.</returns>
         public string AlterSQL(string newValue)
         {
-            StringBuilder alterString = new StringBuilder(100);
+            var alterString = new StringBuilder(100);
             alterString.AppendLine("-- Add value only if it does not exist because if the undo diff is called the value wont be removed (not possible in postgres 9.4 without dropping the whole enum)");
             alterString.Append("ALTER TYPE ");
             alterString.Append(PgDiffStringExtension.QuoteName(this.Name));

@@ -24,12 +24,18 @@ namespace APE.PostgreSQL.Teamwork.GUI
         /// </remarks>
         public string CommandName
         {
-            get { return this.commandName; }
+            get
+            {
+                return this.commandName;
+            }
 
             set
             {
                 if (!(this.CommandName != value))
+                {
                     return;
+                }
+
                 this.commandName = value;
             }
         }
@@ -41,27 +47,35 @@ namespace APE.PostgreSQL.Teamwork.GUI
         protected override void Invoke(object parameter)
         {
             if (this.AssociatedObject == null)
+            {
                 return;
+            }
 
             ICommand command = this.ResolveCommand();
             if (command == null || !command.CanExecute(parameter))
+            {
                 return;
+            }
 
             command.Execute(parameter);
         }
 
         private ICommand ResolveCommand()
         {
-            ICommand command = (ICommand)null;
+            var command = (ICommand)null;
             if (this.Command != null)
+            {
                 command = this.Command;
+            }
             else if (this.DataContext != null)
             {
                 // search command in given datacontext
                 foreach (PropertyInfo propertyInfo in this.DataContext.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
                 {
                     if (typeof(ICommand).IsAssignableFrom(propertyInfo.PropertyType) && string.Equals(propertyInfo.Name, this.CommandName, StringComparison.Ordinal))
+                    {
                         command = (ICommand)propertyInfo.GetValue((object)this.DataContext, (object[])null);
+                    }
                 }
             }
             else if (this.AssociatedObject != null)
@@ -70,7 +84,9 @@ namespace APE.PostgreSQL.Teamwork.GUI
                 foreach (PropertyInfo propertyInfo in this.AssociatedObject.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
                 {
                     if (typeof(ICommand).IsAssignableFrom(propertyInfo.PropertyType) && string.Equals(propertyInfo.Name, this.CommandName, StringComparison.Ordinal))
+                    {
                         command = (ICommand)propertyInfo.GetValue((object)this.AssociatedObject, (object[])null);
+                    }
                 }
             }
 

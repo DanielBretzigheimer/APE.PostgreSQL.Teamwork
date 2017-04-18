@@ -14,7 +14,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     /// the possibility to execute a action in an task.
     /// </summary>
     [NotifyPropertySupport]
-    public partial class 
+    public partial class
         BaseViewModel
     {
         protected static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
@@ -39,13 +39,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         // Get basic views
         public static Func<object> GetAddDatabseView { get; set; }
+
         public static Func<object> GetSettingView { get; set; }
 
         /// <summary>
         /// Gets or sets a function which can create a MaterialMessageBox with the given parameters (text, title, buttons).
         /// </summary>
         public static Func<string, string, MessageBoxButton, object> GetMessageBox { get; set; }
+
         public static Action<DatabaseDisplayData> OpenImportWindow { get; set; }
+
         public static Action<SQLFileDisplayData, SQLFileDisplayData> OpenExportWindow { get; set; }
 
         /// <summary>
@@ -71,7 +74,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                     catch (Exception ex)
                     {
                         if (Debugger.IsAttached)
+                        {
                             Debugger.Break();
+                        }
+
                         Log.Error("Exception while executing Action in Task", ex);
                     }
                 }).Start();

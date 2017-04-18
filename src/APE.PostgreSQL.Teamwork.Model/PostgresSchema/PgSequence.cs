@@ -35,7 +35,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder createSequenceSQL = new StringBuilder(100);
+                var createSequenceSQL = new StringBuilder(100);
                 createSequenceSQL.Append("CREATE SEQUENCE ");
                 createSequenceSQL.Append(PgDiffStringExtension.QuoteName(this.Name));
 
@@ -54,7 +54,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 createSequenceSQL.Append("\n\t");
 
                 if (this.MaxValue == null)
+                {
                     createSequenceSQL.Append("NO MAXVALUE");
+                }
                 else
                 {
                     createSequenceSQL.Append("MAXVALUE ");
@@ -64,7 +66,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 createSequenceSQL.Append("\n\t");
 
                 if (this.MinValue == null)
+                {
                     createSequenceSQL.Append("NO MINVALUE");
+                }
                 else
                 {
                     createSequenceSQL.Append("MINVALUE ");
@@ -78,7 +82,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 }
 
                 if (this.Cycle)
+                {
                     createSequenceSQL.Append("\n\tCYCLE");
+                }
 
                 createSequenceSQL.Append(';');
 
@@ -103,7 +109,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder ownedBySql = new StringBuilder(100);
+                var ownedBySql = new StringBuilder(100);
 
                 ownedBySql.Append("ALTER SEQUENCE ");
                 ownedBySql.Append(PgDiffStringExtension.QuoteName(this.Name));

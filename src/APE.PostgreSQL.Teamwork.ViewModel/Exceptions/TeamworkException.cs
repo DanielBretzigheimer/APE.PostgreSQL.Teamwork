@@ -1,11 +1,13 @@
 ﻿// <copyright file="TeamworkException.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
+using System.Runtime.Serialization;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Exceptions
 {
     /// <summary>
     /// Exception which is thrown from the teamwork tool and caught with specific care.
     /// </summary>
+    [Serializable]
     public class TeamworkException : Exception
     {
         public TeamworkException(string msg)
@@ -30,6 +32,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Exceptions
         public static TeamworkException NoChanges(string previousDump, string dump)
         {
             return new TeamworkException($"No changes found between {previousDump} and {dump}", false);
+        }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+            info.AddValue(nameof(this.ShowAsError), this.ShowAsError);
         }
     }
 }

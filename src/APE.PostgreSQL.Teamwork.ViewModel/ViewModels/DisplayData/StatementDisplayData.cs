@@ -22,7 +22,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// Initializes the StatementDisplayData.
         /// </summary>
         /// <param name="statement">The SQL statement which is displayed.</param>
-        /// <param name="updateFile">Is called when the user changed the SQL statement and gets the old and new SQL as parameter.</param>
         public StatementDisplayData(IStatement statement)
         {
             this.CreateCommands();
@@ -31,8 +30,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         }
 
         public ICommand RetryCommand { get; private set; }
+
         public ICommand CopyCommand { get; private set; }
+
         public ICommand EditCommand { get; private set; }
+
         public ICommand SaveCommand { get; private set; }
 
         private void CreateCommands()

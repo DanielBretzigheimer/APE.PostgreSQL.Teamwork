@@ -10,7 +10,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
     /// <summary>
     /// C# class for the Postgres Argument.
     /// </summary>
-	public class PgArgument
+    public class PgArgument
     {
         /// <summary>
         /// Creates a new Instance of an <see cref="PgArgument"/>.

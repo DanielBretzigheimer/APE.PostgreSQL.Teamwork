@@ -34,7 +34,9 @@ namespace APE.PostgreSQL.Teamwork
         private void CloseClick(object sender, RoutedEventArgs e)
         {
             if (DialogHost.CloseDialogCommand.CanExecute(true, this))
+            {
                 DialogHost.CloseDialogCommand.Execute(true, this);
+            }
         }
     }
 }

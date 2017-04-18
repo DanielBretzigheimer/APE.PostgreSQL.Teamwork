@@ -83,11 +83,17 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         public PgSchema GetSchema(string name)
         {
             if (name == null)
+            {
                 return this.DefaultSchema;
+            }
 
             foreach (PgSchema schema in this.schemas)
+            {
                 if (schema.Name.Equals(name))
+                {
                     return schema;
+                }
+            }
 
             return null;
         }

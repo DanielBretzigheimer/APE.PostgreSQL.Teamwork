@@ -20,29 +20,38 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         public static void Parse(PgDatabase database, string statement, bool ignoreSlonyTriggers)
         {
-            Parser parser = new Parser(statement);
+            var parser = new Parser(statement);
             parser.Expect("CREATE", "TRIGGER");
 
-            string triggerName = parser.ParseIdentifier();
+            var triggerName = parser.ParseIdentifier();
 
-            string objectName = ParserUtils.GetObjectName(triggerName);
+            var objectName = ParserUtils.GetObjectName(triggerName);
 
-            PgTrigger trigger = new PgTrigger();
-            trigger.Name = objectName;
-
+            var trigger = new PgTrigger()
+            {
+                Name = objectName,
+            };
             if (parser.ExpectOptional("BEFORE"))
+            {
                 trigger.Before = true;
+            }
             else if (parser.ExpectOptional("AFTER"))
+            {
                 trigger.Before = false;
+            }
 
-            bool first = true;
+            var first = true;
 
             while (true)
             {
                 if (!first && !parser.ExpectOptional("OR"))
+                {
                     break;
+                }
                 else if (parser.ExpectOptional("INSERT"))
+                {
                     trigger.OnInsert = true;
+                }
                 else if (parser.ExpectOptional("UPDATE"))
                 {
                     trigger.OnUpdate = true;
@@ -57,11 +66,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     }
                 }
                 else if (parser.ExpectOptional("DELETE"))
+                {
                     trigger.OnDelete = true;
+                }
                 else if (parser.ExpectOptional("TRUNCATE"))
+                {
                     trigger.OnTruncate = true;
+                }
                 else if (first)
+                {
                     break;
+                }
                 else
                 {
                     parser.ThrowUnsupportedCommand();
@@ -72,7 +87,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             parser.Expect("ON");
 
-            string tableName = parser.ParseIdentifier();
+            var tableName = parser.ParseIdentifier();
 
             trigger.TableName = ParserUtils.GetObjectName(tableName);
 
@@ -81,9 +96,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 parser.ExpectOptional("EACH");
 
                 if (parser.ExpectOptional("ROW"))
+                {
                     trigger.ForEachRow = true;
+                }
                 else if (parser.ExpectOptional("STATEMENT"))
+                {
                     trigger.ForEachRow = false;
+                }
                 else
                 {
                     parser.ThrowUnsupportedCommand();
@@ -93,14 +112,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             if (parser.ExpectOptional("WHEN"))
             {
                 parser.Expect("(");
-                trigger.When = parser.Expression;
+                trigger.When = parser.Expression();
                 parser.Expect(")");
             }
 
             parser.Expect("EXECUTE", "PROCEDURE");
             trigger.Function = parser.Rest;
 
-            bool ignoreSlonyTrigger = ignoreSlonyTriggers && ("_slony_logtrigger".Equals(trigger.Name) || "_slony_denyaccess".Equals(trigger.Name));
+            var ignoreSlonyTrigger = ignoreSlonyTriggers && ("_slony_logtrigger".Equals(trigger.Name) || "_slony_denyaccess".Equals(trigger.Name));
 
             if (!ignoreSlonyTrigger)
             {

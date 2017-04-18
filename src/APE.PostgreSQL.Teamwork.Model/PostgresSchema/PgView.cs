@@ -48,7 +48,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder creationSql = new StringBuilder(this.Query.Length * 2);
+                var creationSql = new StringBuilder(this.Query.Length * 2);
                 creationSql.Append("CREATE VIEW ");
                 creationSql.Append(PgDiffStringExtension.QuoteName(this.Name));
 
@@ -56,10 +56,12 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 {
                     creationSql.Append(" (");
 
-                    for (int i = 0; i < this.ColumnNames.Count; i++)
+                    for (var i = 0; i < this.ColumnNames.Count; i++)
                     {
                         if (i > 0)
+                        {
                             creationSql.Append(", ");
+                        }
 
                         creationSql.Append(PgDiffStringExtension.QuoteName(this.ColumnNames[i]));
                     }

@@ -22,7 +22,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 {
                     PgType oldType = null;
                     if (oldSchema != null)
+                    {
                         oldType = oldSchema.GetEnum(newType.Name);
+                    }
+
                     if (oldType != null)
                     {
                         // if definitions of type changed it will be ignored to
@@ -42,7 +45,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         internal static void Drop(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
+            {
                 return;
+            }
 
             foreach (PgType oldType in oldSchema.Types)
             {
@@ -50,7 +55,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 {
                     List<string> newValues = newSchema.TypeEntriesChanged(oldType);
                     if (newValues != null)
+                    {
                         AddDefinition(writer, oldType, newValues, searchPathHelper);
+                    }
                     else
                     {
                         var newType = newSchema.GetEnum(oldType.Name);
@@ -74,7 +81,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
 
         private static void AddDefinition(StreamWriter writer, PgType type, List<string> newValues, SearchPathHelper searchPathHelper)
         {
-            foreach (string newValue in newValues)
+            foreach (var newValue in newValues)
             {
                 searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();

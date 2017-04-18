@@ -28,7 +28,9 @@ namespace APE.PostgreSQL.Teamwork.Model
             get
             {
                 if (this.version == null)
+                {
                     this.version = new DatabaseVersion(this);
+                }
 
                 return this.version;
             }

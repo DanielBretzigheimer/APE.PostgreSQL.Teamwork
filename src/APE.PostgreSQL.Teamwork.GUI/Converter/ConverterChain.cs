@@ -11,34 +11,36 @@ using System.Windows.Markup;
 
 namespace APE.PostgreSQL.Teamwork.GUI.Converter
 {
-	/// <summary>
-	/// Represents a chain of <see cref="IValueConverter"/>s to be executed in succession.
-	/// </summary>
-	[ContentProperty("Converters")]
-	[ContentWrapper(typeof(Collection<IValueConverter>))]
-	public class ConverterChain : IValueConverter
-	{
-		private Collection<IValueConverter> converters;
+    /// <summary>
+    /// Represents a chain of <see cref="IValueConverter"/>s to be executed in succession.
+    /// </summary>
+    [ContentProperty("Converters")]
+    [ContentWrapper(typeof(Collection<IValueConverter>))]
+    public class ConverterChain : IValueConverter
+    {
+        private Collection<IValueConverter> converters;
 
-		/// <summary>
-		/// Gets the converters to execute.
-		/// </summary>
-		public Collection<IValueConverter> Converters
-		{
-			get { return this.converters ?? (this.converters = new Collection<IValueConverter>()); }
-		}
+        /// <summary>
+        /// Gets the converters to execute.
+        /// </summary>
+        public Collection<IValueConverter> Converters
+        {
+            get { return this.converters ?? (this.converters = new Collection<IValueConverter>()); }
+        }
 
-		public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			foreach (var valueConverter in this.Converters)
-				value = valueConverter.Convert(value, targetType, parameter, culture);
+        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            foreach (var valueConverter in this.Converters)
+            {
+                value = valueConverter.Convert(value, targetType, parameter, culture);
+            }
 
-			return value;
-		}
+            return value;
+        }
 
-		public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-		{
-			throw new NotImplementedException();
-		}
-	}
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            throw new NotImplementedException();
+        }
+    }
 }

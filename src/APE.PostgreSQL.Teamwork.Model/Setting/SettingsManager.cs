@@ -52,7 +52,9 @@ namespace APE.PostgreSQL.Teamwork.Model.Setting
         public static SettingsManager Get(bool refresh = false)
         {
             if (instance != null && !refresh)
+            {
                 return instance;
+            }
 
             if (!File.Exists(settingsPath))
             {
@@ -64,12 +66,29 @@ namespace APE.PostgreSQL.Teamwork.Model.Setting
             return LoadFile(settingsPath);
         }
 
+        /// <summary>
+        /// Saves the application settings.
+        /// </summary>
+        public void Save()
+        {
+            // serialize
+            var xmlDocument = new XmlDocument();
+            var serializer = new XmlSerializer(this.GetType());
+            using (var stream = new MemoryStream())
+            {
+                serializer.Serialize(stream, this);
+                stream.Position = 0;
+                xmlDocument.Load(stream);
+                xmlDocument.Save(settingsPath);
+            }
+        }
+
         private static SettingsManager LoadFile(string path)
         {
             // deserialize
-            string attributeXml = string.Empty;
+            var attributeXml = string.Empty;
 
-            XmlDocument xmlDocument = new XmlDocument();
+            var xmlDocument = new XmlDocument();
 
             try
             {
@@ -85,39 +104,16 @@ namespace APE.PostgreSQL.Teamwork.Model.Setting
                 return Get();
             }
 
-            string xmlString = xmlDocument.OuterXml;
+            var xmlString = xmlDocument.OuterXml;
 
-            using (StringReader read = new StringReader(xmlString))
+            using (var read = new StringReader(xmlString))
             {
-                XmlSerializer serializer = new XmlSerializer(typeof(SettingsManager));
-                using (XmlReader reader = new XmlTextReader(read))
-                {
-                    instance = (SettingsManager)serializer.Deserialize(reader);
-                    reader.Close();
-                }
-
-                read.Close();
+                var serializer = new XmlSerializer(typeof(SettingsManager));
+                XmlReader reader = new XmlTextReader(read);
+                instance = (SettingsManager)serializer.Deserialize(reader);
             }
 
             return instance;
-        }
-
-        /// <summary>
-        /// Saves the application settings.
-        /// </summary>
-        public void Save()
-        {
-            // serialize
-            XmlDocument xmlDocument = new XmlDocument();
-            XmlSerializer serializer = new XmlSerializer(this.GetType());
-            using (MemoryStream stream = new MemoryStream())
-            {
-                serializer.Serialize(stream, this);
-                stream.Position = 0;
-                xmlDocument.Load(stream);
-                xmlDocument.Save(settingsPath);
-                stream.Close();
-            }
         }
     }
 }

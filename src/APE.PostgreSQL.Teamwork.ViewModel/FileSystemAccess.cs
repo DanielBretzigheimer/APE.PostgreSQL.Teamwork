@@ -92,8 +92,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         public long GetFileSize(string file)
         {
-            if (!System.IO.File.Exists(file))
+            if (!File.Exists(file))
+            {
                 throw new FileNotFoundException("File not found", file);
+            }
+
             return new FileInfo(file).Length;
         }
 
@@ -152,8 +155,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             try
             {
                 fi = new FileInfo(path);
-                fs = System.IO.File.OpenWrite(fi.FullName);
-                fs.Close();
+                fs = File.OpenWrite(fi.FullName);
                 return false;
             }
             catch (Exception)
@@ -164,7 +166,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (fs != null)
                 {
-                    fs.Close();
                     fs.Dispose();
                 }
             }
@@ -184,7 +185,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         public void CreateDirectory(string path)
         {
             if (Directory.Exists(path) == false)
+            {
                 Directory.CreateDirectory(path);
+            }
         }
 
         public bool CurrentUserHasWriteAccess(string path)
@@ -192,10 +195,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             try
             {
                 // Is the read-only flag set?
-                var attributes = System.IO.File.GetAttributes(path);
+                var attributes = File.GetAttributes(path);
                 if ((attributes & FileAttributes.ReadOnly) != 0 ||
                     (attributes & FileAttributes.System) != 0)
+                {
                     return false;
+                }
 
                 // Get all R/W - ACLs that affect the current user.
                 var accessRulez = Directory.GetAccessControl(path)
@@ -245,10 +250,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             return System.IO.File.ReadAllText(fileName);
         }
 
+        public void SetCreationTime(string path, DateTime creationTime)
+        {
+            System.IO.File.SetCreationTime(path, creationTime);
+        }
+
         private void GetFiles(string path, string searchPattern, IList<string> files, int max)
         {
             if (files.Count >= max)
+            {
                 return;
+            }
 
             try
             {
@@ -264,11 +276,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 // ok, so we are not allowed to dig into that directory. Move on.
             }
-        }
-
-        public void SetCreationTime(string path, DateTime creationTime)
-        {
-            System.IO.File.SetCreationTime(path, creationTime);
         }
     }
 }

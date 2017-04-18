@@ -67,7 +67,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         public override bool Equals(object obj)
         {
             if (obj == null || obj.GetType() != typeof(PgPrivilege))
+            {
                 return false;
+            }
 
             var other = (PgPrivilege)obj;
             return this.Command == other.Command
@@ -75,6 +77,11 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 && this.OnName == other.OnName
                 && this.OnType == other.OnType
                 && this.Role == other.Role;
+        }
+
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
         }
 
         public override string ToString()

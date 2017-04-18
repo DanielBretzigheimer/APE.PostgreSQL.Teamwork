@@ -61,9 +61,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             string[] names = SplitNames(name);
 
             if (names.Length < 2)
+            {
                 return database.DefaultSchema.Name;
+            }
             else
+            {
                 return names[0];
+            }
         }
 
         /// <summary>
@@ -74,15 +78,19 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             string adjName;
 
             if (names.Count == 1)
+            {
                 adjName = names[0];
+            }
             else
             {
-                StringBuilder str = new StringBuilder(names.Count * 15);
+                var str = new StringBuilder(names.Count * 15);
 
-                foreach (string name in names)
+                foreach (var name in names)
                 {
                     if (str.Length > 0)
+                    {
                         str.Append(',');
+                    }
 
                     str.Append(name);
                 }
@@ -90,14 +98,18 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 adjName = str.ToString().GetHashCode().ToString("x");
             }
 
-            StringBuilder result = new StringBuilder(30);
+            var result = new StringBuilder(30);
             if (prefix != null && prefix.Length > 0)
+            {
                 result.Append(prefix);
+            }
 
             result.Append(adjName);
 
             if (postfix != null && postfix.Length > 0)
+            {
                 result.Append(postfix);
+            }
 
             return result.ToString();
         }
@@ -110,12 +122,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             {
                 if (splitArray.Length > 1)
                 {
-                    for (int i = splitArray.Length; i > 0; i--)
+                    for (var i = splitArray.Length; i > 0; i--)
                     {
                         if (splitArray[i - 1].Length > 0)
                         {
                             if (i < splitArray.Length)
+                            {
                                 System.Array.Resize(ref splitArray, i);
+                            }
 
                             break;
                         }
@@ -135,14 +149,18 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             {
                 var names = System.Text.RegularExpressions.Regex.Split(@string, "\\.");
                 if (names.Length <= 1)
+                {
                     return names;
+                }
 
-                for (int i = names.Length; i > 0; i--)
+                for (var i = names.Length; i > 0; i--)
                 {
                     if (names[i - 1].Length > 0)
                     {
                         if (i < names.Length)
+                        {
                             System.Array.Resize(ref names, i);
+                        }
 
                         break;
                     }
@@ -152,26 +170,32 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             }
             else
             {
-                List<string> strings = new List<string>(2);
-                int startPos = 0;
+                var strings = new List<string>(2);
+                var startPos = 0;
 
                 while (true)
                 {
                     if (@string[startPos] == '"')
                     {
-                        int endPos = @string.IndexOf('"', startPos + 1);
+                        var endPos = @string.IndexOf('"', startPos + 1);
                         strings.Add(@string.Substring(startPos + 1, endPos - (startPos + 1)));
 
                         if (endPos + 1 == @string.Length)
+                        {
                             break;
+                        }
                         else if (@string[endPos + 1] == '.')
+                        {
                             startPos = endPos + 2;
+                        }
                         else
+                        {
                             startPos = endPos + 1;
+                        }
                     }
                     else
                     {
-                        int endPos = @string.IndexOf('.', startPos);
+                        var endPos = @string.IndexOf('.', startPos);
 
                         if (endPos == -1)
                         {

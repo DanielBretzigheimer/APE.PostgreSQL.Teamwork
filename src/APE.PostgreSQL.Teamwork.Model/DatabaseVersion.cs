@@ -40,14 +40,21 @@ namespace APE.PostgreSQL.Teamwork.Model
         public DatabaseVersion(string path)
         {
             if (path.Contains(TempUndoDiffName) || path.Contains(TempUndoDumpName))
+            {
                 this.Main = int.MaxValue; // check for test version
+            }
             else
             {
                 MatchCollection collection = RegexDiffVersion.Matches(path);
                 if (collection.Count == 0)
+                {
                     collection = RegexDumpVersion.Matches(path);
+                }
+
                 if (collection.Count == 0)
+                {
                     collection = RegexUndoDiffFile.Matches(path);
+                }
 
                 if (collection.Count != 0)
                 {
@@ -55,7 +62,9 @@ namespace APE.PostgreSQL.Teamwork.Model
                     this.Minor = collection[0].Groups["SubVersion"].Value;
                 }
                 else
+                {
                     throw new ArgumentException("Version could not be parsed from path " + path);
+                }
             }
         }
 
@@ -126,7 +135,9 @@ namespace APE.PostgreSQL.Teamwork.Model
         public static bool operator <(DatabaseVersion a, DatabaseVersion b)
         {
             if (a == b)
+            {
                 return false;
+            }
 
             var versions = new List<DatabaseVersion> { a, b }
             .OrderBy(v => v.Full);
@@ -140,7 +151,9 @@ namespace APE.PostgreSQL.Teamwork.Model
         public static bool operator >(DatabaseVersion a, DatabaseVersion b)
         {
             if (a == b)
+            {
                 return false;
+            }
 
             var versions = new List<DatabaseVersion> { a, b }
             .OrderBy(v => v.Full);
@@ -171,11 +184,15 @@ namespace APE.PostgreSQL.Teamwork.Model
         {
             // If both are null, or both are same instance, return true.
             if (object.ReferenceEquals(a, b))
+            {
                 return true;
+            }
 
             // If one is null, but not both, return false.
             if (((object)a == null) || ((object)b == null))
+            {
                 return false;
+            }
 
             return a.Equals(b);
         }
@@ -216,11 +233,15 @@ namespace APE.PostgreSQL.Teamwork.Model
         internal static DatabaseVersion CommandLineVersion(string version)
         {
             if (version.Length < 4)
+            {
                 throw new ArgumentException($"Version could not be parsed from {version}");
+            }
 
-            var retVal = new DatabaseVersion();
-            retVal.Main = int.Parse(version.Substring(0, 4));
-            retVal.Minor = version.Substring(4);
+            var retVal = new DatabaseVersion()
+            {
+                Main = int.Parse(version.Substring(0, 4)),
+                Minor = version.Substring(4),
+            };
             return retVal;
         }
     }

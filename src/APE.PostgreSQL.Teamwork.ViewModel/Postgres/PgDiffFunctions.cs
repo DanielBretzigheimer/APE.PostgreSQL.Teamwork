@@ -28,9 +28,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 PgFunction oldFunction;
 
                 if (oldSchema == null)
+                {
                     oldFunction = null;
+                }
                 else
+                {
                     oldFunction = oldSchema.GetFunction(newFunction.Signature);
+                }
 
                 if ((oldFunction == null) || !newFunction.Equals(oldFunction, ignoreFunctionWhitespace))
                 {
@@ -47,7 +51,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         public static void Drop(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
+            {
                 return;
+            }
 
             // Drop functions that exist no more
             foreach (PgFunction oldFunction in oldSchema.Functions)
@@ -67,16 +73,21 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         public static void AlterComments(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
+            {
                 return;
+            }
 
             foreach (PgFunction oldfunction in oldSchema.Functions)
             {
                 PgFunction newFunction = newSchema.GetFunction(oldfunction.Signature);
 
                 if (newFunction == null)
+                {
                     continue;
+                }
 
-                if (oldfunction.Comment == null && newFunction.Comment != null || oldfunction.Comment != null && newFunction.Comment != null && !oldfunction.Comment.Equals(newFunction.Comment))
+                if ((oldfunction.Comment == null && newFunction.Comment != null)
+                    || (oldfunction.Comment != null && newFunction.Comment != null && !oldfunction.Comment.Equals(newFunction.Comment)))
                 {
                     searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();
@@ -85,14 +96,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                     writer.Write(PgDiffStringExtension.QuoteName(newFunction.Name));
                     writer.Write('(');
 
-                    bool addComma = false;
-
+                    var addComma = false;
                     foreach (PgFunction.Argument argument in newFunction.Arguments)
                     {
                         if (addComma)
+                        {
                             writer.Write(", ");
+                        }
                         else
+                        {
                             addComma = true;
+                        }
 
                         writer.Write(argument.GetDeclaration(false));
                     }
@@ -110,13 +124,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                     writer.Write(PgDiffStringExtension.QuoteName(newFunction.Name));
                     writer.Write('(');
 
-                    bool addComma = false;
+                    var addComma = false;
                     foreach (PgFunction.Argument argument in newFunction.Arguments)
                     {
                         if (addComma)
+                        {
                             writer.Write(", ");
+                        }
                         else
+                        {
                             addComma = true;
+                        }
 
                         writer.Write(argument.GetDeclaration(false));
                     }

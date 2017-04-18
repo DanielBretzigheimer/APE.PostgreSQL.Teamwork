@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Input;
 using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.Model;
@@ -53,29 +54,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         private bool dataInitialized = false;
 
-        // todo db make name notify property and make Database.Name/Path a normal property and use only these in GUI
-        public string Name
-        {
-            get
-            {
-                if (this.Database == null)
-                    return DatabaseSetting.GetDatabaseSetting(this.Id).Name;
-
-                return this.Database.Name;
-            }
-        }
-
-        public string Path
-        {
-            get
-            {
-                if (this.Database == null)
-                    return DatabaseSetting.GetDatabaseSetting(this.Id).Path;
-
-                return this.Database.Path;
-            }
-        }
-
         /// <summary>
         /// Design time constructor.
         /// </summary>
@@ -90,6 +68,33 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         public event EventHandler<EventArgs> Removed;
 
+        // todo db make name notify property and make Database.Name/Path a normal property and use only these in GUI
+        public string Name
+        {
+            get
+            {
+                if (this.Database == null)
+                {
+                    return DatabaseSetting.GetDatabaseSetting(this.Id).Name;
+                }
+
+                return this.Database.Name;
+            }
+        }
+
+        public string Path
+        {
+            get
+            {
+                if (this.Database == null)
+                {
+                    return DatabaseSetting.GetDatabaseSetting(this.Id).Path;
+                }
+
+                return this.Database.Path;
+            }
+        }
+
         /// <summary>
         /// Gets or sets a bool which indicates if the <see cref="Database"/> was auto expanded (not expanded by the user). Databases get
         /// auto expanded if the GUI has enough room or get shrunk if the GUI gets smaller.
@@ -98,18 +103,31 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         // Database Commands
         public ICommand ExportCommand { get; private set; }
+
         public ICommand OpenImportWindowCommand { get; private set; }
+
         public ICommand CreateDumpCommand { get; private set; }
+
         public ICommand ReduceVersionCommand { get; private set; }
+
         public ICommand TestCommand { get; private set; }
+
         public ICommand OpenPathCommand { get; private set; }
+
         public ICommand EditCommand { get; private set; }
+
         public ICommand SaveCommand { get; private set; }
+
         public ICommand EditPathCommand { get; private set; }
+
         public ICommand RemoveCommand { get; private set; }
+
         public ICommand ResetCommand { get; private set; }
+
         public ICommand UndoCommand { get; set; }
+
         public ICommand ImportCommand { get; set; }
+
         public ICommand CreateDatabaseCommand { get; set; }
 
         // common commands
@@ -122,7 +140,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         public void UpdateData(bool force = false)
         {
             if (this.Resetting || this.Error)
+            {
                 return;
+            }
 
             try
             {
@@ -131,18 +151,27 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 this.UpdateApplicableSQLFiles();
 
                 // add all available versions to which the user can up or downgrade
-                var versions = new List<DatabaseVersion>();
-                versions.Add(DatabaseVersion.StartVersion); // undo all
+                var versions = new List<DatabaseVersion>
+                {
+                    DatabaseVersion.StartVersion, // undo all
+                };
+
                 versions.AddRange(this.Database.DiffFiles.Select(f => f.Version));
 
                 // only update versions if they are changed
                 if (this.Versions == null || versions == null || !versions.SequenceEqual(this.Versions))
+                {
                     this.Versions = versions;
+                }
 
                 if (this.Database.CurrentVersion < this.Database.LastApplicableVersion)
+                {
                     this.ImportableFilesFound = true;
+                }
                 else
+                {
                     this.ImportableFilesFound = false;
+                }
 
                 // activate after ImportableFilesFound is set
                 if (!this.dataInitialized)
@@ -186,7 +215,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         {
             // user has shown the detail so we do not automatically close it
             if (autoExpand && this.AutoExpanded == false)
+            {
                 return;
+            }
 
             this.AutoExpanded = autoExpand;
             this.ShowDetails = !this.ShowDetails;
@@ -211,7 +242,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         private void ConnectDatabase()
         {
             // first check if database can be reached
-            if (connectionManager.CheckConnection(this.Name))
+            if (this.connectionManager.CheckConnection(this.Name))
             {
                 this.Database = new Database(
                     this.Name,
@@ -259,12 +290,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         {
             var applicableSQLFiles = new ObservableCollection<SQLFileDisplayData>();
             foreach (var file in this.Database.GetToBeAppliedSQLFiles(this.TargetVersion))
+            {
                 applicableSQLFiles.Add(new SQLFileDisplayData(file));
+            }
 
             if (this.ApplicableSQLFiles == null
                 || this.ApplicableSQLFiles.Count != applicableSQLFiles.Count
                 || applicableSQLFiles.Any(f => this.ApplicableSQLFiles.FirstOrDefault((oldFile) => oldFile.SQLFile.Version.Full == f.SQLFile.Version.Full) == null))
+            {
                 this.ApplicableSQLFiles = applicableSQLFiles;
+            }
         }
 
         /// <summary>
@@ -300,17 +335,21 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         }
 
         /// <summary>
-        /// Shows a <see cref="FolderBrowserDialog"/> to the user and
-        /// saves the selected path as the new database path.
+        /// Shows a <see cref="FolderBrowserDialog"/> to the user and saves the selected path as the new database path.
         /// </summary>
         private void EditPath()
         {
             // todo db implement material folder browser
-            System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
-            dialog.ShowNewFolderButton = true;
-            dialog.SelectedPath = this.Database.Path;
-            if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+            var dialog = new FolderBrowserDialog()
+            {
+                ShowNewFolderButton = true,
+                SelectedPath = this.Database.Path,
+            };
+
+            if (dialog.ShowDialog() != DialogResult.OK)
+            {
                 return;
+            }
 
             this.Database.Path = dialog.SelectedPath;
         }
@@ -323,8 +362,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             this.ExpandCommand = new RelayCommand(() => this.ToggleExpansion(false));
             this.OpenPathCommand = new RelayCommand(async () =>
             {
-                if (fileSystemAccess.DirectoryExists(this.Database.Path))
+                if (this.fileSystemAccess.DirectoryExists(this.Database.Path))
+                {
                     this.processManager.Start(this.Database.Path);
+                }
                 else
                 {
                     var messageBox = MainWindowViewModel.GetMessageBox(
@@ -335,7 +376,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 }
             });
             this.SaveCommand = new RelayCommand(() => this.Save());
-            this.EditCommand = new RelayCommand(() => EditMode = true);
+            this.EditCommand = new RelayCommand(() => this.EditMode = true);
             this.EditPathCommand = new RelayCommand(() => this.EditPath());
             this.ExportCommand = new RelayCommand(() => this.ExecuteInTask(() => this.Export()));
             this.OpenImportWindowCommand = new RelayCommand(() => MainWindowViewModel.OpenImportWindow(this));
@@ -383,8 +424,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                             MessageBoxButton.YesNoCancel);
                 var result = await MainWindowViewModel.ShowDialog(messageBox);
                 if (result == MaterialMessageBoxResult.Cancel)
+                {
                     return;
-                
+                }
+
                 this.Importing = true;
                 var oldVersion = this.Database.CurrentVersion;
 
@@ -414,9 +457,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 catch (Exception ex)
                 {
                     var errorFile = this.ApplicableSQLFiles.FirstOrDefault(f => f.Status == ErrorStatus.Error);
-                    string path = "unknown";
+                    var path = "unknown";
                     if (errorFile != null)
+                    {
                         path = errorFile.SQLFile.Path;
+                    }
+
                     var message = $"Error in file {path}: {ex.Message}\n\nStart rolling back to version {oldVersion}";
                     MainWindowViewModel.ShowDialog(MainWindowViewModel.GetMessageBox(message, "Execution failed", MessageBoxButton.OK)).Wait();
                     Log.Info(string.Format("Error while executing files. Rolling back to version {0}", oldVersion), ex);
@@ -441,7 +487,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                                 MessageBoxButton.YesNo);
                 var result = await MainWindowViewModel.ShowDialog(messageBox);
                 if (result == MaterialMessageBoxResult.No)
+                {
                     return;
+                }
 
                 this.Undoing = true;
                 try
@@ -479,7 +527,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                                 MessageBoxButton.YesNo);
                     var result = await MainWindowViewModel.ShowDialog(messageBox);
                     if (result == MaterialMessageBoxResult.No)
+                    {
                         return;
+                    }
 
                     this.Resetting = true;
                     try
@@ -502,17 +552,20 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         private void CreateDump()
         {
-            System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog();
-            sfd.Filter = DumpExtension;
-
+            var sfd = new SaveFileDialog()
+            {
+                Filter = DumpExtension,
+            };
             var result = sfd.ShowDialog();
-            if (result == System.Windows.Forms.DialogResult.OK)
+            if (result == DialogResult.OK)
+            {
                 this.Database.CreateDump(
                     sfd.FileName,
                     SettingsManager.Get().Setting.PgDumpLocation,
                     SettingsManager.Get().Setting.Host,
                     SettingsManager.Get().Setting.Id,
                     SettingsManager.Get().Setting.Password);
+            }
         }
 
         private async void ReduceVersion()
@@ -524,7 +577,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             var result = await MainWindowViewModel.ShowDialog(messageBox);
 
             if (result == MaterialMessageBoxResult.Yes)
+            {
                 this.Database.ReduceVersion();
+            }
         }
 
         /// <summary>
@@ -551,7 +606,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                     this.processManager.Start(undoDiff.SQLFile.Path);
                 }
                 else
-                    MainWindowViewModel.OpenExportWindow(diff, undoDiff);
+                {
+                    BaseViewModel.OpenExportWindow(diff, undoDiff);
+                }
             }
             catch (Exception ex)
             {
@@ -559,9 +616,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 var message = ex.Message;
 
                 if (ex is FileNotFoundException)
+                {
                     message = $"{message}: {((FileNotFoundException)ex).FileName}";
+                }
                 else if (ex is TeamworkException && !((TeamworkException)ex).ShowAsError)
+                {
                     title = "Info";
+                }
 
                 Log.Warn(string.Format("Error while exporting database {0}", this.Database.Name), ex);
                 var messageBox = MainWindowViewModel.GetMessageBox(

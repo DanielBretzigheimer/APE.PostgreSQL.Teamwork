@@ -16,12 +16,12 @@ using APE.PostgreSQL.Teamwork.ViewModel;
 
 namespace APE.PostgreSQL.Teamwork.GUI
 {
-	public partial class ExportWindow : Window
-	{
-		public ExportWindow(SQLFileDisplayData diff, SQLFileDisplayData undoDiff)
-		{
-			this.DataContext = new ExportWindowViewModel(diff, undoDiff);
-			this.InitializeComponent();
-		}
-	}
+    public partial class ExportWindow : Window
+    {
+        public ExportWindow(SQLFileDisplayData diff, SQLFileDisplayData undoDiff)
+        {
+            this.DataContext = new ExportWindowViewModel(diff, undoDiff);
+            this.InitializeComponent();
+        }
+    }
 }

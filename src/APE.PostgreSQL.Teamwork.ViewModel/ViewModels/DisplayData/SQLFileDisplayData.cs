@@ -1,4 +1,4 @@
-// <copyright file="sqlfiledisplaydata.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+// <copyright file="SQLFileDisplayData.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using System.Collections.ObjectModel;
 using System.Linq;
@@ -46,6 +46,28 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             this.RefreshStatements();
         }
 
+        public void ExecuteInTransaction()
+        {
+            try
+            {
+                this.SQLFile.ExecuteInTransaction();
+                this.Status = ErrorStatus.Successful;
+            }
+            catch (TeamworkConnectionException)
+            {
+                this.Status = ErrorStatus.Error;
+                throw;
+            }
+        }
+
+        /// <summary>
+        ///  Returns a string that represents the current object.
+        /// </summary>
+        public override string ToString()
+        {
+            return this.SQLFile.ToString();
+        }
+
         private void RefreshStatements()
         {
             foreach (var statement in this.SQLFile.SQLStatements)
@@ -67,33 +89,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
                     var warning = sql.Substring(warningStart + DifferenceCreator.WarningMessagePrefix.Length, warningLength - DifferenceCreator.WarningMessagePrefix.Length);
                     if (!newWarningText.ToString().Contains(warning))
+                    {
                         newWarningText.AppendLine(warning);
+                    }
                 }
             }
 
             this.WarningText = newWarningText.ToString();
-        }
-
-        public void ExecuteInTransaction()
-        {
-            try
-            {
-                this.SQLFile.ExecuteInTransaction();
-                this.Status = ErrorStatus.Successful;
-            }
-            catch (TeamworkConnectionException)
-            {
-                this.Status = ErrorStatus.Error;
-                throw;
-            }
-        }
-
-        /// <summary>
-        ///  Returns a string that represents the current object.
-        /// </summary>
-		public override string ToString()
-        {
-            return this.SQLFile.ToString();
         }
     }
 }

@@ -31,9 +31,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 PgTable oldTable;
 
                 if (oldSchema == null)
+                {
                     oldTable = null;
+                }
                 else
+                {
                     oldTable = oldSchema.GetTable(newTable.Name);
+                }
 
                 // Add new constraints
                 foreach (PgConstraint constraint in GetNewConstraints(oldTable, newTable, primaryKey, foreignKey))
@@ -60,7 +64,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 PgTable oldTable;
 
                 if (oldSchema == null)
+                {
                     oldTable = null;
+                }
                 else
                 {
                     oldTable = oldSchema.GetTable(newTable.Name);
@@ -82,23 +88,30 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         public static void AlterComments(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
+            {
                 return;
+            }
 
             foreach (PgTable oldTable in oldSchema.Tables)
             {
                 PgTable newTable = newSchema.GetTable(oldTable.Name);
 
                 if (newTable == null)
+                {
                     continue;
+                }
 
                 foreach (PgConstraint oldConstraint in oldTable.Constraints)
                 {
                     PgConstraint newConstraint = newTable.GetConstraint(oldConstraint.Name);
 
                     if (newConstraint == null)
+                    {
                         continue;
+                    }
 
-                    if (oldConstraint.Comment == null && newConstraint.Comment != null || oldConstraint.Comment != null && newConstraint.Comment != null && !oldConstraint.Comment.Equals(newConstraint.Comment))
+                    if ((oldConstraint.Comment == null && newConstraint.Comment != null)
+                        || (oldConstraint.Comment != null && newConstraint.Comment != null && !oldConstraint.Comment.Equals(newConstraint.Comment)))
                     {
                         searchPathHelper.OutputSearchPath(writer);
                         writer.WriteLine();
@@ -161,8 +174,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             if (newTable != null && oldTable != null)
             {
                 foreach (PgConstraint constraint in oldTable.Constraints)
+                {
                     if (constraint.PrimaryKeyConstraint == primaryKey && (!newTable.ContainsConstraint(constraint.Name) || !newTable.GetConstraint(constraint.Name).Equals(constraint)))
+                    {
                         constraints.Add(constraint);
+                    }
+                }
             }
 
             return constraints;
@@ -176,19 +193,29 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             IList<PgConstraint> constraints = new List<PgConstraint>();
 
             if (newTable == null)
+            {
                 return constraints;
+            }
 
             if (oldTable == null)
             {
                 foreach (PgConstraint constraint in newTable.Constraints)
+                {
                     if (constraint.PrimaryKeyConstraint == primaryKey && constraint.ForeignKeyConstraint == foreignKey)
+                    {
                         constraints.Add(constraint);
+                    }
+                }
             }
             else
             {
                 foreach (PgConstraint constraint in newTable.Constraints)
+                {
                     if ((constraint.PrimaryKeyConstraint == primaryKey && constraint.ForeignKeyConstraint == foreignKey) && (!oldTable.ContainsConstraint(constraint.Name) || !oldTable.GetConstraint(constraint.Name).Equals(constraint)))
+                    {
                         constraints.Add(constraint);
+                    }
+                }
             }
 
             return constraints;

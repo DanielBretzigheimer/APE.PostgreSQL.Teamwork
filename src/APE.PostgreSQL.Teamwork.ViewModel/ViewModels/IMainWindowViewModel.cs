@@ -5,7 +5,7 @@ using System.Collections.Generic;
 namespace APE.PostgreSQL.Teamwork.ViewModel.ViewModels
 {
     /// <summary>
-    /// ViewModel for the <see cref="MainWindowView"/> which displays a list of
+    /// ViewModel for the MainWindowView which displays a list of
     /// databases.
     /// </summary>
     public interface IMainWindowViewModel

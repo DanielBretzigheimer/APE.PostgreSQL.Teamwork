@@ -43,6 +43,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// Outputs statements for altering of new sequences.
         /// </summary>
         /// <param name="writer">Writer the output should be written to.</param>
+        /// <param name="oldSchema">The old schema.</param>
+        /// <param name="newSchema">The new schema.</param>
+        /// <param name="searchPathHelper">The search path helper.</param>
         public static void AlterCreatedSequences(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             // Alter created sequences
@@ -63,7 +66,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         public static void Drop(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
+            {
                 return;
+            }
 
             // Drop sequences that do not exist in new schema
             foreach (PgSequence sequence in oldSchema.Sequences)
@@ -83,21 +88,24 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         public static void Alter(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper, bool ignoreStartWith)
         {
             if (oldSchema == null)
+            {
                 return;
+            }
 
-            StringBuilder alterSequenceSql = new StringBuilder(100);
+            var alterSequenceSql = new StringBuilder(100);
             foreach (PgSequence newSequence in newSchema.Sequences)
             {
                 PgSequence oldSequence = oldSchema.GetSequence(newSequence.Name);
 
                 if (oldSequence == null)
+                {
                     continue;
+                }
 
                 alterSequenceSql.Length = 0;
 
-                string oldIncrement = oldSequence.Increment;
-
-                string newIncrement = newSequence.Increment;
+                var oldIncrement = oldSequence.Increment;
+                var newIncrement = newSequence.Increment;
 
                 if (newIncrement != null && !newIncrement.Equals(oldIncrement))
                 {
@@ -105,23 +113,26 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                     alterSequenceSql.Append(newIncrement);
                 }
 
-                string oldMinValue = oldSequence.MinValue;
-                string newMinValue = newSequence.MinValue;
+                var oldMinValue = oldSequence.MinValue;
+                var newMinValue = newSequence.MinValue;
 
                 if (newMinValue == null && oldMinValue != null)
+                {
                     alterSequenceSql.Append("\n\tNO MINVALUE");
+                }
                 else if (newMinValue != null && !newMinValue.Equals(oldMinValue))
                 {
                     alterSequenceSql.Append("\n\tMINVALUE ");
                     alterSequenceSql.Append(newMinValue);
                 }
 
-                string oldMaxValue = oldSequence.MaxValue;
-
-                string newMaxValue = newSequence.MaxValue;
+                var oldMaxValue = oldSequence.MaxValue;
+                var newMaxValue = newSequence.MaxValue;
 
                 if (newMaxValue == null && oldMaxValue != null)
+                {
                     alterSequenceSql.Append("\n\tNO MAXVALUE");
+                }
                 else if (newMaxValue != null && !newMaxValue.Equals(oldMaxValue))
                 {
                     alterSequenceSql.Append("\n\tMAXVALUE ");
@@ -130,8 +141,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
 
                 if (!ignoreStartWith)
                 {
-                    string oldStart = oldSequence.StartWith;
-                    string newStart = newSequence.StartWith;
+                    var oldStart = oldSequence.StartWith;
+                    var newStart = newSequence.StartWith;
 
                     if (newStart != null && !newStart.Equals(oldStart))
                     {
@@ -140,9 +151,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                     }
                 }
 
-                string oldCache = oldSequence.Cache;
-
-                string newCache = newSequence.Cache;
+                var oldCache = oldSequence.Cache;
+                var newCache = newSequence.Cache;
 
                 if (newCache != null && !newCache.Equals(oldCache))
                 {
@@ -150,18 +160,20 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                     alterSequenceSql.Append(newCache);
                 }
 
-                bool oldCycle = oldSequence.Cycle;
-
-                bool newCycle = newSequence.Cycle;
+                var oldCycle = oldSequence.Cycle;
+                var newCycle = newSequence.Cycle;
 
                 if (oldCycle && !newCycle)
+                {
                     alterSequenceSql.Append("\n\tNO CYCLE");
+                }
                 else if (!oldCycle && newCycle)
+                {
                     alterSequenceSql.Append("\n\tCYCLE");
+                }
 
-                string oldOwnedBy = oldSequence.Owner;
-
-                string newOwnedBy = newSequence.Owner;
+                var oldOwnedBy = oldSequence.Owner;
+                var newOwnedBy = newSequence.Owner;
 
                 if (newOwnedBy != null && !newOwnedBy.Equals(oldOwnedBy))
                 {
@@ -178,10 +190,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                     writer.WriteLine(';');
                 }
 
-                if (oldSequence.Comment == null && newSequence.Comment != null
-                    || oldSequence.Comment != null
+                if ((oldSequence.Comment == null && newSequence.Comment != null)
+                    || (oldSequence.Comment != null
                     && newSequence.Comment != null
-                    && !oldSequence.Comment.Equals(newSequence.Comment))
+                    && !oldSequence.Comment.Equals(newSequence.Comment)))
                 {
                     searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();

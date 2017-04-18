@@ -31,11 +31,13 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder creationSql = new StringBuilder(100);
+                var creationSql = new StringBuilder(100);
                 creationSql.Append("CREATE ");
 
                 if (this.Unique)
+                {
                     creationSql.Append("UNIQUE ");
+                }
 
                 creationSql.Append("INDEX ");
                 creationSql.Append(PgDiffStringExtension.QuoteName(this.Name));
@@ -95,13 +97,14 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         public override bool Equals(object obj)
         {
-            bool equals = false;
+            var equals = false;
 
             if (this == obj)
-                equals = true;
-            else if (obj is PgIndex)
             {
-                PgIndex index = (PgIndex)obj;
+                equals = true;
+            }
+            else if (obj is PgIndex index)
+            {
                 equals = this.Definition.Equals(index.Definition) && this.Name.Equals(index.Name) && this.TableName.Equals(index.TableName) && this.Unique == index.Unique;
             }
 

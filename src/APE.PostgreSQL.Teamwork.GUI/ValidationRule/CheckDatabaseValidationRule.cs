@@ -31,12 +31,18 @@ namespace APE.PostgreSQL.Teamwork.View
 
                 // check connection
                 if (this.connectionManager.CheckConnection(databaseName))
+                {
                     return ValidationResult.ValidResult;
+                }
                 else
+                {
                     return new ValidationResult(false, "Database was not found.");
+                }
             }
             else
+            {
                 return new ValidationResult(false, "Input has to be a text.");
+            }
         }
     }
 }

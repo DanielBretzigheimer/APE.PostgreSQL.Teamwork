@@ -1,4 +1,4 @@
-﻿// <copyright file="mainwindow.xaml.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+﻿// <copyright file="MainWindow.xaml.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +30,9 @@ namespace APE.PostgreSQL.Teamwork.GUI
             get
             {
                 if (this.dialogHost == null)
+                {
                     throw new InvalidOperationException("Can not show a dialog before the dialog host was initialized");
+                }
 
                 return this.dialogHost.Identifier;
             }
@@ -77,7 +79,9 @@ namespace APE.PostgreSQL.Teamwork.GUI
             if (e.NewOrder == null
                 || e.PreviousOrder == null
                 || e.NewOrder.Count() != e.PreviousOrder.Count())
+            {
                 return;
+            }
 
             var oldDatabases = e.PreviousOrder.Cast<DatabaseDisplayData>().ToList();
             var newDatabases = e.NewOrder.Cast<DatabaseDisplayData>().ToList();
@@ -85,15 +89,19 @@ namespace APE.PostgreSQL.Teamwork.GUI
             var oldDatabaseNames = oldDatabases.Select(d => d.Name).ToList();
             var newDatabaseNames = newDatabases.Select(d => d.Name).ToList();
             var orderEquals = true;
-            for (int i = 0; i < oldDatabaseNames.Count(); i++)
+            for (var i = 0; i < oldDatabaseNames.Count(); i++)
             {
                 if (oldDatabaseNames[i] != newDatabaseNames[i])
+                {
                     orderEquals = false;
+                }
             }
 
             // no change in order
             if (orderEquals)
+            {
                 return;
+            }
 
             this.lastOrder = newDatabases;
         }
@@ -175,7 +183,7 @@ namespace APE.PostgreSQL.Teamwork.GUI
 
         private async void ShowLicensesClick(object sender, RoutedEventArgs e)
         {
-            StringBuilder licenseText = new StringBuilder();
+            var licenseText = new StringBuilder();
 
             var apgDiffLink = new Hyperlink() { NavigateUri = new Uri("http://www.apgdiff.com/index.php") };
             apgDiffLink.Inlines.Add("http://www.apgdiff.com/index.php");

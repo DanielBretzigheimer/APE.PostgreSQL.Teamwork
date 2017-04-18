@@ -1,6 +1,7 @@
 ﻿// <copyright file="AlterSequenceParser.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
+using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 {
@@ -21,37 +22,47 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         public static void Parse(PgDatabase database, string statement)
         {
-            Parser parser = new Parser(statement);
+            var parser = new Parser(statement);
 
             parser.Expect("ALTER", "SEQUENCE");
 
-            string sequenceName = parser.ParseIdentifier();
+            var sequenceName = parser.ParseIdentifier();
 
-            string schemaName = ParserUtils.GetSchemaName(sequenceName, database);
+            var schemaName = ParserUtils.GetSchemaName(sequenceName, database);
 
             PgSchema schema = database.GetSchema(schemaName);
 
             if (schema == null)
-                throw new Exception(string.Format("CannotFindSchema", schemaName, statement));
+            {
+                throw new TeamworkParserException($"CannotFindSchema {schemaName} from statement {statement}");
+            }
 
-            string objectName = ParserUtils.GetObjectName(sequenceName);
+            var objectName = ParserUtils.GetObjectName(sequenceName);
 
             PgSequence sequence = schema.GetSequence(objectName);
 
             if (sequence == null)
-                throw new Exception(string.Format("CannotFindSequence", sequenceName, statement));
+            {
+                throw new TeamworkParserException($"CannotFindSequence {sequenceName} from statement {statement}");
+            }
 
             while (!parser.ExpectOptional(";"))
             {
                 if (parser.ExpectOptional("OWNED", "BY"))
                 {
                     if (parser.ExpectOptional("NONE"))
+                    {
                         sequence.Owner = null;
+                    }
                     else
-                        sequence.Owner = parser.Expression;
+                    {
+                        sequence.Owner = parser.Expression();
+                    }
                 }
                 else
+                {
                     parser.ThrowUnsupportedCommand();
+                }
             }
         }
     }

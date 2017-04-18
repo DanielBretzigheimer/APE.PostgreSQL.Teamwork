@@ -1,4 +1,4 @@
-// <copyright file="settingviewmodel.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+// <copyright file="SettingViewModel.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -33,12 +33,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         public SettingViewModel(IConnectionManager connectionManager)
         {
-            if (connectionManager == null)
-                throw new ArgumentNullException("connectionManager", "connectionManager == null");
-            this.connectionManager = connectionManager;
+            this.connectionManager = connectionManager ?? throw new ArgumentNullException("connectionManager", "connectionManager == null");
 
             if (!this.connectionManager.CheckConnection())
+            {
                 this.Message = "Could not establish a connection to the default database. Check your Settings";
+            }
 
             this.Load();
 
@@ -139,12 +139,15 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         private void SelectPgDumpPath()
         {
-            Microsoft.Win32.OpenFileDialog dialog = new Microsoft.Win32.OpenFileDialog();
-            dialog.Filter = ExeExtension;
-
+            var dialog = new Microsoft.Win32.OpenFileDialog()
+            {
+                Filter = ExeExtension,
+            };
             var result = dialog.ShowDialog();
             if (result != null && result == true)
+            {
                 this.PgDump = dialog.FileName;
+            }
         }
 
         /// <summary>
@@ -153,10 +156,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         private void SelectDefaultDatabaseFolderPath()
         {
-            FolderBrowserDialog dialog = new FolderBrowserDialog();
-            dialog.ShowNewFolderButton = true;
+            var dialog = new FolderBrowserDialog()
+            {
+                ShowNewFolderButton = true,
+            };
             if (dialog.ShowDialog() != DialogResult.OK)
+            {
                 return;
+            }
 
             this.DatabaseFolderPath = dialog.SelectedPath;
         }

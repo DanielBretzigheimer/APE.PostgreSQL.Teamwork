@@ -1,4 +1,4 @@
-﻿// <copyright file="PgDiffPrevileges.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+﻿// <copyright file="PgDiffPrivileges.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -32,7 +32,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             }
 
             if (oldSchema == null)
+            {
                 return;
+            }
 
             // revert privileges
             foreach (var privilege in oldSchema.Privileges)

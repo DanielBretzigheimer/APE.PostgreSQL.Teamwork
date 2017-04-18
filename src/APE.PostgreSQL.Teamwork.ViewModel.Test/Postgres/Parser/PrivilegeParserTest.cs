@@ -1,4 +1,5 @@
-﻿using System;
+﻿// <copyright file="PrivilegeParserTest.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema.Enums;
 using APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers;

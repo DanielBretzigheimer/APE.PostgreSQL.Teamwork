@@ -2,8 +2,10 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Serialization;
 using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Serialization;
 using Npgsql;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Exceptions
@@ -11,6 +13,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Exceptions
     /// <summary>
     /// Exception which is thrown when an error occurs with the connection and contains the file and statement for which the error occurred (if available).
     /// </summary>
+    [Serializable]
     public class TeamworkConnectionException : Exception
     {
         /// <summary>
@@ -39,5 +42,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Exceptions
         public ISQLFile File { get; set; }
 
         public NpgsqlException SqlException { get; set; }
+
+        public override void GetObjectData(SerializationInfo info, StreamingContext context)
+        {
+            base.GetObjectData(info, context);
+        }
     }
 }

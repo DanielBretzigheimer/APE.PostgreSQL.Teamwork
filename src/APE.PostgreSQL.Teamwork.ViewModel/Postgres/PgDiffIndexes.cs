@@ -56,7 +56,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             {
                 PgTable oldTable = null;
                 if (oldSchema != null)
+                {
                     oldTable = oldSchema.GetTable(newTable.Name);
+                }
 
                 // Drop indexes that do not exist in new schema or are modified
                 foreach (PgIndex index in GetDropIndexes(oldTable, newTable))
@@ -74,19 +76,23 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         public static void AlterComments(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
+            {
                 return;
+            }
 
             foreach (PgIndex oldIndex in oldSchema.Indexes)
             {
                 PgIndex newIndex = newSchema.GetIndex(oldIndex.Name);
 
                 if (newIndex == null)
+                {
                     continue;
+                }
 
-                if (oldIndex.Comment == null && newIndex.Comment != null
-                    || oldIndex.Comment != null
+                if ((oldIndex.Comment == null && newIndex.Comment != null)
+                    || (oldIndex.Comment != null
                     && newIndex.Comment != null
-                    && !oldIndex.Comment.Equals(newIndex.Comment))
+                    && !oldIndex.Comment.Equals(newIndex.Comment)))
                 {
                     searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();
@@ -119,8 +125,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             if (newTable != null && oldTable != null)
             {
                 foreach (PgIndex index in oldTable.Indexes)
+                {
                     if (!newTable.ContainsIndex(index.Name) || !newTable.GetIndex(index.Name).Equals(index))
+                    {
                         list.Add(index);
+                    }
+                }
             }
 
             return list;
@@ -134,18 +144,26 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             IList<PgIndex> indexes = new List<PgIndex>();
 
             if (newTable == null)
+            {
                 return indexes;
+            }
 
             if (oldTable == null)
             {
                 foreach (PgIndex index in newTable.Indexes)
+                {
                     indexes.Add(index);
+                }
             }
             else
             {
                 foreach (PgIndex index in newTable.Indexes)
+                {
                     if (!oldTable.ContainsIndex(index.Name) || !oldTable.GetIndex(index.Name).Equals(index))
+                    {
                         indexes.Add(index);
+                    }
+                }
             }
 
             return indexes;

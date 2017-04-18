@@ -76,7 +76,7 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// </summary>
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.AppendLine("DatabaseName: " + this.DatabaseName);
             builder.AppendLine("Username: " + this.Username);
             builder.AppendLine("Password: ***HIDDEN***");
@@ -85,9 +85,13 @@ namespace APE.PostgreSQL.Teamwork.Model
             builder.AppendLine("FilePath: " + this.FilePath);
 
             if (this.FullTargetVersion == null)
+            {
                 builder.AppendLine("TargetVersion: " + this.TargetVersion);
+            }
             else
+            {
                 builder.AppendLine("FullTargetVersion: " + this.FullTargetVersion);
+            }
 
             return builder.ToString();
         }

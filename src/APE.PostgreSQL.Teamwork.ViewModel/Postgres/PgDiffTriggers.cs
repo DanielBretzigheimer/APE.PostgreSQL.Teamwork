@@ -28,7 +28,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 PgTable oldTable;
 
                 if (oldSchema == null)
+                {
                     oldTable = null;
+                }
                 else
                 {
                     oldTable = oldSchema.GetTable(newTable.Name);
@@ -54,9 +56,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 PgTable oldTable;
 
                 if (oldSchema == null)
+                {
                     oldTable = null;
+                }
                 else
+                {
                     oldTable = oldSchema.GetTable(newTable.Name);
+                }
 
                 // Drop triggers that no more exist or are modified
                 foreach (PgTrigger trigger in GetDropTriggers(oldTable, newTable))
@@ -74,26 +80,32 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         public static void AlterComments(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
+            {
                 return;
+            }
 
             foreach (PgTable oldTable in oldSchema.Tables)
             {
                 PgTable newTable = newSchema.GetTable(oldTable.Name);
 
                 if (newTable == null)
+                {
                     continue;
+                }
 
                 foreach (PgTrigger oldTrigger in oldTable.Triggers)
                 {
                     PgTrigger newTrigger = newTable.GetTrigger(oldTrigger.Name);
 
                     if (newTrigger == null)
+                    {
                         continue;
+                    }
 
-                    if (oldTrigger.Comment == null && newTrigger.Comment != null
-                        || oldTrigger.Comment != null
+                    if ((oldTrigger.Comment == null && newTrigger.Comment != null)
+                        || (oldTrigger.Comment != null
                         && newTrigger.Comment != null
-                        && !oldTrigger.Comment.Equals(newTrigger.Comment))
+                        && !oldTrigger.Comment.Equals(newTrigger.Comment)))
                     {
                         searchPathHelper.OutputSearchPath(writer);
                         writer.WriteLine();
@@ -130,8 +142,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             {
                 IList<PgTrigger> newTriggers = newTable.Triggers;
                 foreach (PgTrigger oldTrigger in oldTable.Triggers)
+                {
                     if (!newTriggers.Contains(oldTrigger))
+                    {
                         list.Add(oldTrigger);
+                    }
+                }
             }
 
             return list;
@@ -142,17 +158,23 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// </summary>
         private static IList<PgTrigger> GetNewTriggers(PgTable oldTable, PgTable newTable)
         {
-            List<PgTrigger> list = new List<PgTrigger>();
+            var list = new List<PgTrigger>();
 
             if (newTable != null)
             {
                 if (oldTable == null)
+                {
                     list.AddRange(newTable.Triggers);
+                }
                 else
                 {
                     foreach (PgTrigger newTrigger in newTable.Triggers)
+                    {
                         if (!oldTable.Triggers.Contains(newTrigger))
+                        {
                             list.Add(newTrigger);
+                        }
+                    }
                 }
             }
 

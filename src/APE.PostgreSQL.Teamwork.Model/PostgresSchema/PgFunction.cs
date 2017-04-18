@@ -29,20 +29,24 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder creationSql = new StringBuilder(500);
+                var creationSql = new StringBuilder(500);
 
                 // drop the function if it exists to avoid errors
                 creationSql.Append("DROP FUNCTION IF EXISTS ");
                 creationSql.Append(PgDiffStringExtension.QuoteName(this.Name));
                 creationSql.Append('(');
-                bool addComma = false;
+                var addComma = false;
 
-                foreach (PgFunction.Argument argument in this.arguments)
+                foreach (Argument argument in this.arguments)
                 {
                     if (addComma)
+                    {
                         creationSql.Append(", ");
+                    }
                     else
+                    {
                         addComma = true;
+                    }
 
                     creationSql.Append(argument.DataType);
                 }
@@ -59,7 +63,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 foreach (Argument argument in this.arguments)
                 {
                     if (addComma)
+                    {
                         creationSql.Append(", ");
+                    }
 
                     creationSql.Append(argument.GetDeclaration(true));
 
@@ -81,7 +87,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                     foreach (Argument argument in this.arguments)
                     {
                         if (addComma)
+                        {
                             creationSql.Append(", ");
+                        }
 
                         creationSql.Append(argument.GetDeclaration(false));
 
@@ -110,20 +118,24 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder dropSql = new StringBuilder(100);
+                var dropSql = new StringBuilder(100);
                 dropSql.Append("DROP FUNCTION IF EXISTS ");
                 dropSql.Append(PgDiffStringExtension.QuoteName(this.Name));
                 dropSql.Append('(');
 
-                bool addComma = false;
+                var addComma = false;
 
                 foreach (Argument argument in this.arguments)
                 {
                     if ("OUT".Equals(argument.Mode, StringComparison.CurrentCultureIgnoreCase))
+                    {
                         continue;
+                    }
 
                     if (addComma)
+                    {
                         dropSql.Append(", ");
+                    }
 
                     dropSql.Append(argument.DataType);
 
@@ -161,19 +173,23 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder signature = new StringBuilder(100);
+                var signature = new StringBuilder(100);
                 signature.Append(this.Name);
                 signature.Append('(');
 
-                bool addComma = false;
+                var addComma = false;
 
                 foreach (Argument argument in this.arguments)
                 {
                     if ("OUT".Equals(argument.Mode, StringComparison.CurrentCultureIgnoreCase))
+                    {
                         continue;
+                    }
 
                     if (addComma)
+                    {
                         signature.Append(',');
+                    }
 
                     signature.Append(argument.DataType.ToLower(new System.Globalization.CultureInfo("en")));
 
@@ -200,15 +216,19 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         public override bool Equals(object obj)
         {
             if (!(obj is PgFunction))
+            {
                 return false;
+            }
             else if (obj == this)
+            {
                 return true;
+            }
 
             return this.Equals(obj, false);
         }
 
         /// <summary>
-        /// Compares two objects whether they are equal. If both objects are of the same class but they equal just in whitespace in 
+        /// Compares two objects whether they are equal. If both objects are of the same class but they equal just in whitespace in
         /// <see cref="Body"/>, they are considered being equal.
         /// </summary>
         /// <param name="obj">Object to be compared.</param>
@@ -216,16 +236,18 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <returns>True if given <see cref="object"/> is <see cref="PgFunction"/> and its code is the same when compared ignoring whitespace, otherwise returns false.</returns>
         public bool Equals(object obj, bool ignoreFunctionWhitespace)
         {
-            bool equals = false;
+            var equals = false;
 
             if (this == obj)
-                equals = true;
-            else if (obj is PgFunction)
             {
-                PgFunction function = (PgFunction)obj;
-
-                if (this.Name == null && function.Name != null || this.Name != null && !this.Name.Equals(function.Name))
+                equals = true;
+            }
+            else if (obj is PgFunction function)
+            {
+                if ((this.Name == null && function.Name != null) || (this.Name != null && !this.Name.Equals(function.Name)))
+                {
                     return false;
+                }
 
                 string thisBody;
 
@@ -242,17 +264,23 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                     thatBody = function.Body;
                 }
 
-                if (thisBody == null && thatBody != null || thisBody != null && !thisBody.Equals(thatBody))
+                if ((thisBody == null && thatBody != null) || (thisBody != null && !thisBody.Equals(thatBody)))
+                {
                     return false;
+                }
 
                 if (this.arguments.Count != function.Arguments.Count)
+                {
                     return false;
+                }
                 else
                 {
-                    for (int i = 0; i < this.arguments.Count; i++)
+                    for (var i = 0; i < this.arguments.Count; i++)
                     {
                         if (!this.arguments[i].Equals(function.Arguments[i]))
+                        {
                             return false;
+                        }
                     }
                 }
 
@@ -268,7 +296,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <returns>A hash code for the current object.</returns>
         public override int GetHashCode()
         {
-            StringBuilder hashCode = new StringBuilder(500);
+            var hashCode = new StringBuilder(500);
             hashCode.Append(this.Body);
             hashCode.Append('|');
             hashCode.Append(this.Name);
@@ -329,7 +357,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             /// <param name="includeDefaultValue">Whether to include default value.</param>
             public string GetDeclaration(bool includeDefaultValue)
             {
-                StringBuilder declarationSql = new StringBuilder(50);
+                var declarationSql = new StringBuilder(50);
 
                 if (this.mode != null && !"IN".Equals(this.mode, StringComparison.CurrentCultureIgnoreCase))
                 {
@@ -360,11 +388,15 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             public override bool Equals(object obj)
             {
                 if (!(obj is Argument))
+                {
                     return false;
+                }
                 else if (this == obj)
+                {
                     return true;
+                }
 
-                Argument argument = (Argument)obj;
+                var argument = (Argument)obj;
                 return (this.DataType == null ? argument.DataType == null : this.DataType.Equals(argument.DataType, StringComparison.CurrentCultureIgnoreCase)) && (this.DefaultExpression == null ? argument.DefaultExpression == null : this.DefaultExpression.Equals(this.DefaultExpression)) && (this.mode == null ? argument.Mode == null : this.mode.Equals(argument.Mode, StringComparison.CurrentCultureIgnoreCase)) && (this.Name == null ? argument.Name == null : this.Name.Equals(argument.Name));
             }
 
@@ -374,12 +406,12 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             /// <returns>A hash code for the current object.</returns>
             public override int GetHashCode()
             {
-                StringBuilder hashCode = new StringBuilder(50);
-                hashCode.Append(this.mode == null ? null : this.mode.ToUpper(new System.Globalization.CultureInfo("en")));
+                var hashCode = new StringBuilder(50);
+                hashCode.Append(this.mode?.ToUpper(new System.Globalization.CultureInfo("en")));
                 hashCode.Append('|');
                 hashCode.Append(this.Name);
                 hashCode.Append('|');
-                hashCode.Append(this.DataType == null ? null : this.DataType.ToUpper(new System.Globalization.CultureInfo("en")));
+                hashCode.Append(this.DataType?.ToUpper(new System.Globalization.CultureInfo("en")));
                 hashCode.Append('|');
                 hashCode.Append(this.DefaultExpression);
 

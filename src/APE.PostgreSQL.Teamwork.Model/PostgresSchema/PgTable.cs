@@ -87,21 +87,25 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder sql = new StringBuilder(1000);
+                var sql = new StringBuilder(1000);
                 sql.Append("CREATE TABLE ");
                 sql.Append(PgDiffStringExtension.QuoteName(this.Name));
                 sql.Append(" (\n");
 
-                bool first = true;
+                var first = true;
 
                 if (this.columns.Count == 0)
+                {
                     sql.Append(')');
+                }
                 else
                 {
                     foreach (PgColumn column in this.columns)
                     {
                         if (first)
+                        {
                             first = false;
+                        }
                         else
                         {
                             sql.Append(",\n");
@@ -120,10 +124,12 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
 
                     first = true;
 
-                    foreach (string tableName in this.inherits)
+                    foreach (var tableName in this.inherits)
                     {
                         if (first)
+                        {
                             first = false;
+                        }
                         else
                         {
                             sql.Append(", ");
@@ -140,13 +146,17 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                     sql.Append("\n");
 
                     if ("OIDS=false".Equals(this.With, StringComparison.CurrentCultureIgnoreCase))
+                    {
                         sql.Append("WITHOUT OIDS");
+                    }
                     else
                     {
                         sql.Append("WITH ");
 
                         if ("OIDS".Equals(this.With, StringComparison.CurrentCultureIgnoreCase) || "OIDS=true".Equals(this.With, StringComparison.CurrentCultureIgnoreCase))
+                        {
                             sql.Append("OIDS");
+                        }
                         else
                         {
                             sql.Append(this.With);
@@ -274,7 +284,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 foreach (PgColumn column in this.columns)
                 {
                     if (column.Statistics != null)
+                    {
                         list.Add(column);
+                    }
                 }
 
                 return list;
@@ -291,7 +303,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             foreach (PgColumn column in this.columns)
             {
                 if (column.Name.Equals(name))
+                {
                     return column;
+                }
             }
 
             return null;
@@ -307,7 +321,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             foreach (PgIndex index in this.indexes)
             {
                 if (index.Name.Equals(name))
+                {
                     return index;
+                }
             }
 
             return null;
@@ -323,7 +339,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             foreach (PgTrigger trigger in this.triggers)
             {
                 if (trigger.Name.Equals(name))
+                {
                     return trigger;
+                }
             }
 
             return null;
@@ -339,7 +357,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             foreach (PgConstraint constraint in this.constraints)
             {
                 if (constraint.Name.Equals(name))
+                {
                     return constraint;
+                }
             }
 
             return null;
@@ -395,7 +415,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             foreach (PgColumn column in this.columns)
             {
                 if (column.Name.Equals(name))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -411,7 +433,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             foreach (PgConstraint constraint in this.constraints)
             {
                 if (constraint.Name.Equals(name))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -427,7 +451,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             foreach (PgIndex index in this.indexes)
             {
                 if (index.Name.Equals(name))
+                {
                     return true;
+                }
             }
 
             return false;

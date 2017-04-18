@@ -79,7 +79,6 @@ namespace APE.PostgreSQL.Teamwork
                 using (var connection = new NpgsqlConnection(connectionString))
                 {
                     connection.Open();
-                    connection.Close();
                 }
 
                 return true;
@@ -145,6 +144,7 @@ namespace APE.PostgreSQL.Teamwork
             NpgsqlConnection.ClearAllPools();
         }
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "This is ok because the sql is no user input.")]
         private void ExecuteCommandNonQuery(string databaseName, string sql)
         {
             lock (this.connectionLock)
@@ -185,12 +185,11 @@ namespace APE.PostgreSQL.Teamwork
                 catch (Exception)
                 {
                     if (Debugger.IsAttached)
+                    {
                         Debugger.Break();
+                    }
+
                     throw;
-                }
-                finally
-                {
-                    connection.Close();
                 }
             }
         }
@@ -203,9 +202,11 @@ namespace APE.PostgreSQL.Teamwork
         private NpgsqlConnectionStringBuilder GetConnectionString(string databaseName)
         {
             if (!this.Initialized)
+            {
                 throw new InvalidOperationException(string.Format("{0} was not initialized", typeof(ConnectionManager).Name));
+            }
 
-            string connectionString = SettingsManager.Get().Setting.ConnectionStringTemplate;
+            var connectionString = SettingsManager.Get().Setting.ConnectionStringTemplate;
             connectionString = connectionString.Replace("[Id]", this.id);
             connectionString = connectionString.Replace("[Host]", this.host);
             connectionString = connectionString.Replace("[Database]", databaseName);
