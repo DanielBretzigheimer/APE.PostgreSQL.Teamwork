@@ -68,11 +68,13 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the authorization for this <see cref="PgSchema"/>
         /// </summary>
+        [NullGuard.AllowNull]
         public string Authorization { get; set; }
 
         /// <summary>
         /// Gets or sets the comment for this <see cref="PgSchema"/>
         /// </summary>
+        [NullGuard.AllowNull]
         public string Comment { get; set; }
 
         /// <summary>
@@ -220,6 +222,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <param name="signature">Signature of the function to be searched.</param>
         /// <returns>Found function or null if no such function has been found.</returns>
+        [return: NullGuard.AllowNull]
         public PgFunction GetFunction(string signature)
         {
             foreach (PgFunction function in this.functions)
@@ -236,6 +239,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets the <see cref="PgAggregate"/> with the given signature.
         /// </summary>
+        [return: NullGuard.AllowNull]
         public PgAggregate GetAggregate(string signature)
         {
             foreach (PgAggregate aggregate in this.aggregates)
@@ -252,6 +256,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets the <see cref="PgType"/> with the given name.
         /// </summary>
+        [return: NullGuard.AllowNull]
         public PgType GetEnum(string name)
         {
             foreach (PgType type in this.types)
@@ -268,6 +273,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets the <see cref="PgType"/> with the given signature.
         /// </summary>
+        [return: NullGuard.AllowNull]
         public PgType GetPgType(string signature)
         {
             foreach (PgType type in this.types)
@@ -286,6 +292,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <param name="name">Name of the index to be searched.</param>
         /// <returns>Found index or null if no such index has been found.</returns>
+        [return: NullGuard.AllowNull]
         public PgIndex GetIndex(string name)
         {
             foreach (PgIndex index in this.indexes)
@@ -304,6 +311,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <param name="name">Name of the primary key to be searched.</param>
         /// <returns>Found primary key or null if no such primary key has been found.</returns>
+        [return: NullGuard.AllowNull]
         public PgConstraint GetPrimaryKey(string name)
         {
             foreach (PgConstraint constraint in this.primaryKeys)
@@ -322,6 +330,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <param name="name">Name of the sequence to be searched.</param>
         /// <returns>Found sequence or null if no such sequence has been found.</returns>
+        [return: NullGuard.AllowNull]
         public PgSequence GetSequence(string name)
         {
             foreach (PgSequence sequence in this.sequences)
@@ -340,6 +349,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <param name="name">Name of the table to be searched.</param>
         /// <returns>Found table or null if no such table has been found.</returns>
+        [return: NullGuard.AllowNull]
         public PgTable GetTable(string name)
         {
             foreach (PgTable table in this.tables)
@@ -358,6 +368,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <param name="name">Name of the view to be searched.</param>
         /// <returns>Found view or null if no such view has been found.</returns>
+        [return: NullGuard.AllowNull]
         public PgView GetView(string name)
         {
             foreach (PgView view in this.views)
@@ -481,6 +492,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets a list of all new entries for the given <see cref="PgType"/> or null if it was not found.
         /// </summary>
+        [return: NullGuard.AllowNull]
         public List<string> TypeEntriesChanged(PgType oldType)
         {
             foreach (PgType type in this.types)
@@ -598,6 +610,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             return false;
         }
 
+        [return: NullGuard.AllowNull]
         public override string ToString()
         {
             return $"{this.GetType().Name} {this.Name}";

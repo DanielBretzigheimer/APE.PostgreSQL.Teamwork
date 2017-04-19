@@ -21,7 +21,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for creation of new indexes.
         /// </summary>
-        public static void Create(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Create(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             foreach (PgTable newTable in newSchema.Tables)
             {
@@ -50,7 +50,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for dropping indexes that exist no more.
         /// </summary>
-        public static void Drop(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Drop(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             foreach (PgTable newTable in newSchema.Tables)
             {
@@ -73,7 +73,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for index comments that have changed.
         /// </summary>
-        public static void AlterComments(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void AlterComments(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
             {
@@ -116,7 +116,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Returns list of indexes that should be dropped.
         /// </summary>
-        private static IList<PgIndex> GetDropIndexes(PgTable oldTable, PgTable newTable)
+        private static IList<PgIndex> GetDropIndexes([NullGuard.AllowNull] PgTable oldTable, [NullGuard.AllowNull] PgTable newTable)
         {
             // todo db Teamwork Indexes that are depending on a removed field should not be added
             // to drop because they are already removed.
@@ -139,7 +139,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Returns list of indexes that should be added.
         /// </summary>
-        private static IList<PgIndex> GetNewIndexes(PgTable oldTable, PgTable newTable)
+        private static IList<PgIndex> GetNewIndexes([NullGuard.AllowNull] PgTable oldTable, [NullGuard.AllowNull] PgTable newTable)
         {
             IList<PgIndex> indexes = new List<PgIndex>();
 

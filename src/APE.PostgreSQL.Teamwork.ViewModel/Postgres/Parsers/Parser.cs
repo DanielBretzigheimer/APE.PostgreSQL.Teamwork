@@ -50,6 +50,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         /// <returns> rest of the string, without trailing ';' if present, or null if
         /// there is nothing more in the string </returns>
+        [NullGuard.AllowNull]
         public string Rest
         {
             get
@@ -403,6 +404,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         /// <param name="words">Words to check.</param>
         /// <returns>Found word or null if non of the words has been found.</returns>
+        [return: NullGuard.AllowNull]
         public string ExpectOptionalOneOf(params string[] words)
         {
             foreach (var word in words)

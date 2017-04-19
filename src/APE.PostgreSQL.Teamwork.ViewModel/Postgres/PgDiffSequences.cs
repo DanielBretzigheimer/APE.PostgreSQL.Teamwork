@@ -25,7 +25,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <param name="oldSchema">Original schema.</param>
         /// <param name="newSchema">New schema.</param>
         /// <param name="searchPathHelper">Search path helper.</param>
-        public static void Create(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Create(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             // Add new sequences
             foreach (PgSequence sequence in newSchema.Sequences)
@@ -46,7 +46,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <param name="oldSchema">The old schema.</param>
         /// <param name="newSchema">The new schema.</param>
         /// <param name="searchPathHelper">The search path helper.</param>
-        public static void AlterCreatedSequences(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void AlterCreatedSequences(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             // Alter created sequences
             foreach (PgSequence sequence in newSchema.Sequences)
@@ -63,7 +63,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for dropping of sequences that do not exist anymore.
         /// </summary>
-        public static void Drop(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Drop(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
             {
@@ -85,7 +85,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statement for modified sequences.
         /// </summary>
-        public static void Alter(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper, bool ignoreStartWith)
+        public static void Alter(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper, bool ignoreStartWith)
         {
             if (oldSchema == null)
             {

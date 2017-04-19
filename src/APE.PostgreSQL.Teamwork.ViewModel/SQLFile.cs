@@ -144,6 +144,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         ///  Returns a string that represents the current object.
         /// </summary>
+        [return: NullGuard.AllowNull]
         public override string ToString()
         {
             return string.Format("{0} Path: {1} Statements {2}", this.GetType().Name.ToString(), this.Path, this.SQLStatements.Count());
@@ -161,82 +162,89 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             var isTransaction = false;
             var statement = new StringBuilder();
 
-            var lines = this.file.ReadAllLines(this.Path);
-            var currentSearchPath = string.Empty;
-
-            foreach (var line in lines)
+            try
             {
-                if (line.StartsWith("SET search_path = "))
+                var lines = this.file.ReadAllLines(this.Path);
+                var currentSearchPath = string.Empty;
+                foreach (var line in lines)
                 {
-                    currentSearchPath = line;
-                }
-
-                // checks if a function begins in this line
-                if (new Regex("CREATE.+FUNCTION").Matches(line.ToUpper()).Count != 0)
-                {
-                    isFunction = true;
-                }
-
-                if (!isTransaction && line.Contains("BEGIN;"))
-                {
-                    isTransaction = true;
-                }
-                else if (isTransaction && line.Contains("COMMIT;"))
-                {
-                    isTransaction = false;
-                }
-
-                // no possible end in line
-                var endPosition = line.IndexOf(";");
-                var commentStart = line.IndexOf(SQLTemplates.Comment);
-
-                // checks if the line is in a function
-                if (isFunction)
-                {
-                    endPosition = -1;
-
-                    // possible function endings
-                    if (line.Contains("$$;"))
+                    if (line.StartsWith("SET search_path = "))
                     {
-                        endPosition = line.IndexOf("$$;") + 3;
+                        currentSearchPath = line;
                     }
-                    else if (line.Contains("$_$;"))
+
+                    // checks if a function begins in this line
+                    if (new Regex("CREATE.+FUNCTION").Matches(line.ToUpper()).Count != 0)
                     {
-                        endPosition = line.IndexOf("$_$;") + 4;
+                        isFunction = true;
                     }
-                    else if (line.Contains("OWNER TO") && line.Contains(";"))
+
+                    if (!isTransaction && line.Contains("BEGIN;"))
                     {
-                        // OWNER TO ...; marks the end of an function if its copied from the pgadmin
-                        endPosition = line.IndexOf(";") + 1;
+                        isTransaction = true;
+                    }
+                    else if (isTransaction && line.Contains("COMMIT;"))
+                    {
+                        isTransaction = false;
+                    }
+
+                    // no possible end in line
+                    var endPosition = line.IndexOf(";");
+                    var commentStart = line.IndexOf(SQLTemplates.Comment);
+
+                    // checks if the line is in a function
+                    if (isFunction)
+                    {
+                        endPosition = -1;
+
+                        // possible function endings
+                        if (line.Contains("$$;"))
+                        {
+                            endPosition = line.IndexOf("$$;") + 3;
+                        }
+                        else if (line.Contains("$_$;"))
+                        {
+                            endPosition = line.IndexOf("$_$;") + 4;
+                        }
+                        else if (line.Contains("OWNER TO") && line.Contains(";"))
+                        {
+                            // OWNER TO ...; marks the end of an function if its copied from the pgadmin
+                            endPosition = line.IndexOf(";") + 1;
+                        }
+                    }
+
+                    statement.AppendLine(line);
+
+                    // checks if statment ends
+                    if (endPosition > -1
+                            && (commentStart == -1 || endPosition < commentStart))
+                    {
+                        isFunction = false;
+
+                        if (!isTransaction)
+                        {
+                            var sqlStatement = new Statement(currentSearchPath, statement.ToString().Trim(), this.database);
+                            retVal.Add(sqlStatement);
+                            statement.Clear();
+                        }
                     }
                 }
 
-                statement.AppendLine(line);
-
-                // checks if statment ends
-                if (endPosition > -1
-                        && (commentStart == -1 || endPosition < commentStart))
+                // add ending even if its not a statement
+                if (statement.ToString().Trim() != string.Empty)
                 {
-                    isFunction = false;
-
-                    if (!isTransaction)
-                    {
-                        var sqlStatement = new Statement(currentSearchPath, statement.ToString().Trim(), this.database);
-                        retVal.Add(sqlStatement);
-                        statement.Clear();
-                    }
+                    var sqlStatement = new Statement(currentSearchPath, statement.ToString().Trim(), this.database);
+                    retVal.Add(sqlStatement);
+                    statement.Clear();
                 }
+
+                return retVal;
             }
-
-            // add ending even if its not a statement
-            if (statement.ToString().Trim() != string.Empty)
+            catch (Exception)
             {
-                var sqlStatement = new Statement(currentSearchPath, statement.ToString().Trim(), this.database);
-                retVal.Add(sqlStatement);
-                statement.Clear();
+                // file could not be read maybe because its already opened
+                return new List<IStatement>();
             }
-
-            return retVal;
         }
     }
 }

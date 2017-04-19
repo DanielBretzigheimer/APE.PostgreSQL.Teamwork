@@ -33,6 +33,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the comment of the <see cref="PgDatabase"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Comment { get; set; }
 
         /// <summary>
@@ -80,7 +81,8 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <param name="name">Schema name or null which means default schema.</param>
         /// <returns>Found schema or null.</returns>
-        public PgSchema GetSchema(string name)
+        [return: NullGuard.AllowNull]
+        public PgSchema GetSchema([NullGuard.AllowNull] string name)
         {
             if (name == null)
             {

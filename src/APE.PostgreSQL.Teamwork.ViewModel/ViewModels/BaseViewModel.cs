@@ -10,12 +10,11 @@ using log4net;
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {
     /// <summary>
-    /// Base class for all ViewModels which contains a logger and
+    /// Base partial class for all ViewModels which contains a logger and
     /// the possibility to execute a action in an task.
     /// </summary>
     [NotifyPropertySupport]
-    public partial class
-        BaseViewModel
+    public partial class BaseViewModel
     {
         protected static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -64,23 +63,23 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         protected void ExecuteInTask(Action action, Action<bool> setExecuting = null)
         {
             new Task(() =>
+            {
+                try
                 {
-                    try
+                    setExecuting?.Invoke(true);
+                    action();
+                    setExecuting?.Invoke(false);
+                }
+                catch (Exception ex)
+                {
+                    if (Debugger.IsAttached)
                     {
-                        setExecuting?.Invoke(true);
-                        action();
-                        setExecuting?.Invoke(false);
+                        Debugger.Break();
                     }
-                    catch (Exception ex)
-                    {
-                        if (Debugger.IsAttached)
-                        {
-                            Debugger.Break();
-                        }
 
-                        Log.Error("Exception while executing Action in Task", ex);
-                    }
-                }).Start();
+                    Log.Error("Exception while executing Action in Task", ex);
+                }
+            }).Start();
         }
     }
 }

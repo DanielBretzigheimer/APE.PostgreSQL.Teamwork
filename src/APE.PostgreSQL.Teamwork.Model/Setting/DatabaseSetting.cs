@@ -104,6 +104,7 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// <summary>
         /// Creates a string of the <see cref="DatabaseSetting"/> which contains the <see cref="Id"/> and <see cref="Name"/>.
         /// </summary>
+        [return: NullGuard.AllowNull]
         public override string ToString()
         {
             return $"{this.Id} {this.Name}";

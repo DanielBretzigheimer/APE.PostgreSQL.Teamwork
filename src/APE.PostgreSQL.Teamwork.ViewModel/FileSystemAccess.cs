@@ -53,7 +53,22 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         public string[] ReadAllLines(string fileName)
         {
-            return System.IO.File.ReadAllLines(fileName);
+            var lines = new List<string>();
+            using (var sr = new StreamReader(fileName))
+            {
+                while (true)
+                {
+                    var line = sr.ReadLine();
+                    if (line == null)
+                    {
+                        break;
+                    }
+
+                    lines.Add(line);
+                }
+            }
+
+            return lines.ToArray();
         }
 
         public void WriteToFile(MemoryStream stream, string fileName)

@@ -11,10 +11,10 @@ using log4net;
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {
 #pragma warning disable SA1402 // File may only contain a single type
-                              /// <summary>
-                              /// Implementation of an ICommand that represents a command with a typed CommandParameter
-                              /// </summary>
-                              /// <typeparam name="T">CommandParameter type</typeparam>
+    /// <summary>
+    /// Implementation of an ICommand that represents a command with a typed CommandParameter
+    /// </summary>
+    /// <typeparam name="T">CommandParameter type</typeparam>
     public class RelayCommand<T> : ICommand
 #pragma warning restore SA1402 // File may only contain a single type
     {
@@ -70,7 +70,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         /// <param name="parameter">Command parameter</param>
         /// <returns>true if this command can be executed</returns>
-        public virtual bool CanExecute(object parameter)
+        public virtual bool CanExecute([NullGuard.AllowNull] object parameter)
         {
             try
             {
@@ -92,7 +92,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// Implementation of the ICommand interface: Execute this command
         /// </summary>
         /// <param name="parameter">Command parameter</param>
-        public virtual void Execute(object parameter)
+        public virtual void Execute([NullGuard.AllowNull] object parameter)
         {
             if (this.CanExecute(parameter))
             {
@@ -140,7 +140,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// Is called before the action is executed.
         /// </summary>
         /// <param name="parameter">Parameter the action is invoked with</param>
-        protected virtual void OnBeforeExecute(T parameter)
+        protected virtual void OnBeforeExecute([NullGuard.AllowNull] T parameter)
         {
         }
 
@@ -149,7 +149,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         /// <param name="parameter">Parameter the action is invoked with.</param>
         /// <param name="ex">Exception if thrown by the action. Null if no exception is thrown.</param>
-        protected virtual void OnAfterExecute(T parameter, Exception ex)
+        protected virtual void OnAfterExecute([NullGuard.AllowNull] T parameter, Exception ex)
         {
             if (ex != null)
             {

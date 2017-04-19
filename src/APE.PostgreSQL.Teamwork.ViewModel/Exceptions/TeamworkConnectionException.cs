@@ -19,7 +19,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Exceptions
         /// <summary>
         /// Creates a new Exception with the given parameters and a user defined message.
         /// </summary>
-        public TeamworkConnectionException(ISQLFile file, string message)
+        public TeamworkConnectionException([NullGuard.AllowNull] ISQLFile file, string message)
             : base(message)
         {
             this.File = file;
@@ -29,7 +29,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Exceptions
         /// Creates a new Exception with the given parameters, a user defined message and a
         /// inner exception which is used for the stack trace.
         /// </summary>
-        public TeamworkConnectionException(ISQLFile file, string message, NpgsqlException innerException)
+        public TeamworkConnectionException([NullGuard.AllowNull] ISQLFile file, string message, NpgsqlException innerException)
             : base(message, innerException)
         {
             this.SqlException = innerException;
@@ -39,6 +39,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Exceptions
         /// <summary>
         /// SQLFile in which the exception occurred (can be null).
         /// </summary>
+        [NullGuard.AllowNull]
         public ISQLFile File { get; set; }
 
         public NpgsqlException SqlException { get; set; }

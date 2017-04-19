@@ -22,10 +22,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <returns>A bool indicating differences where found.</returns>
         public bool Create(string filePath, string databaseName, string oldDumpFile, string newDumpFile)
         {
+            var result = false;
             using (var writer = new StreamWriter(filePath))
             {
-                return this.Create(writer, databaseName, oldDumpFile, newDumpFile);
+                result = this.Create(writer, databaseName, oldDumpFile, newDumpFile);
             }
+
+            return result;
         }
 
         /// <summary>
@@ -34,10 +37,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <returns>A bool indicating differences where found.</returns>
         public bool Create(Stream stream, string databaseName, string oldDumpFile, string newDumpFile)
         {
+            var result = false;
             using (var writer = new StreamWriter(stream))
             {
-                return this.Create(writer, databaseName, oldDumpFile, newDumpFile);
+                result = this.Create(writer, databaseName, oldDumpFile, newDumpFile);
             }
+
+            return result;
         }
 
         public bool Create(StreamWriter writer, string databaseName, string oldDumpFile, string newDumpFile)

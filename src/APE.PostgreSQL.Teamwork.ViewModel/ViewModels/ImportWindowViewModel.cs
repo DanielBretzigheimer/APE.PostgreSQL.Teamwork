@@ -18,7 +18,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     /// which the user can execute.
     /// </summary>
     [NotifyProperty(typeof(List<SQLFileDisplayData>), "DiffFiles")]
-    [NotifyProperty(typeof(SQLFileDisplayData), "SelectedDiffFile")]
+    [AllowNullNotifyProperty(typeof(SQLFileDisplayData), "SelectedDiffFile")]
     [NotifyProperty(typeof(bool), "ExecuteButtonEnabled")]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "ExecuteButtonVisible", true)]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "Loading", false)]

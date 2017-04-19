@@ -52,12 +52,14 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// Gets or sets the target version to which the database will be upgraded or downgraded. This is a simple number. If not set the last applicable version will be set.
         /// </summary>
         [Option('v', "targetversion", Required = false, HelpText = "The target version to which the database will be upgraded or downgraded. This is a simple number. If not set the last applicable version will be set.")]
+        [NullGuard.AllowNull]
         public int? TargetVersion { get; set; }
 
         /// <summary>
         /// Gets or sets the full target version to which the database will be upgraded or downgraded. Should look e.g. like \"0000.a\". If not set the last applicable version will be set.
         /// </summary>
         [Option('t', "fulltargetversion", Required = false, HelpText = "The full target version to which the database will be upgraded or downgraded. Should look e.g. like \"0000.a\". If not set the last applicable version will be set.")]
+        [NullGuard.AllowNull]
         public string FullTargetVersion { get; set; }
 
         /// <summary>
@@ -74,6 +76,7 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>
+        [return: NullGuard.AllowNull]
         public override string ToString()
         {
             var builder = new StringBuilder();

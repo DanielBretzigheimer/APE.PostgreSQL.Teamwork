@@ -27,16 +27,7 @@ namespace APE.PostgreSQL.Teamwork.Model.Setting
         private SettingsManager()
         {
             // initialize default settings
-            this.Setting = new ApplicationSetting()
-            {
-                ConnectionStringTemplate = "User Id=[Id];Password=[Password];host=[Host];database=[Database];Port=[Port];",
-                PgDumpLocation = @"C:\Program Files\PostgreSQL\9.5\bin\pg_dump.exe",
-                Host = "localhost",
-                Id = "postgres",
-                Port = 5432,
-                OpenFilesInDefaultApplication = false,
-                AutoRefresh = false,
-            };
+            this.Setting = new ApplicationSetting();
         }
 
         /// <summary>

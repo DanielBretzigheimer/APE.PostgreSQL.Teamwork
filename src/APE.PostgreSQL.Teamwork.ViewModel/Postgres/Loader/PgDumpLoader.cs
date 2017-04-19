@@ -250,6 +250,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
         /// Reads whole statement from the reader into single-line string.
         /// </summary>
         /// <returns>Whole statement from the reader into single-line string.</returns>
+        [return: NullGuard.AllowNull]
         private static string GetWholeStatement(StreamReader reader)
         {
             var statement = new StringBuilder(1024);

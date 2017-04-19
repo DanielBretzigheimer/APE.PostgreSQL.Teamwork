@@ -117,16 +117,19 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets the comment.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Comment { get; set; }
 
         /// <summary>
         /// Gets the whole definition of the aggregate from RETURNS keyword.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Body { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the aggregate including argument types.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Name { get; set; }
 
         /// <summary>
@@ -170,7 +173,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Determines whether the specified object is equal to the current object.
         /// </summary>
-        public override bool Equals(object obj)
+        public override bool Equals([NullGuard.AllowNull] object obj)
         {
             if (!(obj is PgAggregate))
             {
@@ -208,7 +211,6 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 }
 
                 string thisBody;
-
                 string thatBody;
 
                 if (ignoreAggregateWhitespace)
@@ -276,12 +278,13 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             /// <summary>
             /// Gets or sets the <see cref="DataType"/> of this <see cref="Argument"/>.
             /// </summary>
+            [NullGuard.AllowNull]
             public string DataType { get; set; }
 
             /// <summary>
             /// Determines whether the specified object is equal to the current object.
             /// </summary>
-            public override bool Equals(object obj)
+            public override bool Equals([NullGuard.AllowNull] object obj)
             {
                 if (!(obj is Argument))
                 {

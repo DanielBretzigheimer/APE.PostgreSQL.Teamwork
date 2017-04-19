@@ -64,7 +64,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             return $"{command} {privilege} ON {this.OnType} {this.OnName} {tofrom} {this.Role};";
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals([NullGuard.AllowNull] object obj)
         {
             if (obj == null || obj.GetType() != typeof(PgPrivilege))
             {
@@ -84,6 +84,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             return base.GetHashCode();
         }
 
+        [return: NullGuard.AllowNull]
         public override string ToString()
         {
             return $"{this.GetType().Name} {this.Create()}";

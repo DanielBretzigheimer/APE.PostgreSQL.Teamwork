@@ -10,8 +10,8 @@
 					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                     xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
 					mc:Ignorable="d"
-					MinWidth="500" MinHeight="450" Title="{Binding WindowTitle}" Height="500" 
-					Background="#eee" Width="500" Icon="images/logo-icon.ico">
+					MinWidth="500" MinHeight="450" Title="{Binding WindowTitle}" Height="550" 
+					Background="#eee" Width="600" Icon="images/logo-icon.ico">
 
     <i:Interaction.Triggers>
         <i:EventTrigger EventName="SizeChanged">

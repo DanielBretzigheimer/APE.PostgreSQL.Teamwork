@@ -20,6 +20,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the comment of the <see cref="PgFunction"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Comment { get; set; }
 
         /// <summary>
@@ -108,6 +109,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the body of the <see cref="PgFunction"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Body { get; set; }
 
         /// <summary>
@@ -151,6 +153,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the name of the <see cref="PgFunction"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Name { get; set; }
 
         /// <summary>
@@ -213,7 +216,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Determines whether the specified object is equal to the current object.
         /// </summary>
-        public override bool Equals(object obj)
+        public override bool Equals([NullGuard.AllowNull] object obj)
         {
             if (!(obj is PgFunction))
             {
@@ -323,16 +326,19 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             /// <summary>
             /// Gets or sets the data type of the <see cref="Argument"/>.
             /// </summary>
+            [NullGuard.AllowNull]
             public string DataType { get; set; }
 
             /// <summary>
             /// Gets or sets the default expression of the <see cref="Argument"/>.
             /// </summary>
+            [NullGuard.AllowNull]
             public string DefaultExpression { get; set; }
 
             /// <summary>
             /// Gets or sets the mode of the <see cref="Argument"/>.
             /// </summary>
+            [NullGuard.AllowNull]
             public string Mode
             {
                 get
@@ -349,6 +355,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             /// <summary>
             /// Gets or sets the name of the <see cref="Argument"/>.
             /// </summary>
+            [NullGuard.AllowNull]
             public string Name { get; set; }
 
             /// <summary>
@@ -385,7 +392,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             /// <summary>
             /// Determines whether the specified object is equal to the current object.
             /// </summary>
-            public override bool Equals(object obj)
+            public override bool Equals([NullGuard.AllowNull] object obj)
             {
                 if (!(obj is Argument))
                 {

@@ -22,14 +22,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     /// </summary>
     [NotifyProperty(typeof(string), "Name")]
     [NotifyProperty(typeof(string), "Path")]
-    [NotifyProperty(typeof(DatabaseVersion), "CurrentVersion")]
+    [AllowNullNotifyProperty(typeof(DatabaseVersion), "CurrentVersion")]
     [NotifyProperty(typeof(DatabaseVersion), "LastApplicableVersion")]
-    [NotifyProperty(typeof(ObservableCollection<SQLFile>), "UndoDiffFiles")]
-    [NotifyProperty(typeof(ObservableCollection<SQLFile>), "DiffFiles")]
+    [AllowNullNotifyProperty(typeof(ObservableCollection<SQLFile>), "UndoDiffFiles")]
+    [AllowNullNotifyProperty(typeof(ObservableCollection<SQLFile>), "DiffFiles")]
     [NotifyProperty(AccessModifier.Public, typeof(double), "Progress", 100, "The progress of the current action. Not all actions are modifing it.")]
-    [NotifyProperty(AccessModifier.Public, typeof(string), "ProgressInfo", "", "This will be shown to the user as additional info to the current progress.")]
-    [CtorParameter(AccessModifier.Private, typeof(string), "name")]
-    [CtorParameter(AccessModifier.Private, typeof(string), "path")]
+    [AllowNullNotifyProperty(AccessModifier.Public, typeof(string), "ProgressInfo", "", "This will be shown to the user as additional info to the current progress.")]
+    [CtorParameter(AccessModifier.Private, typeof(string), "databaseName")]
+    [CtorParameter(AccessModifier.Private, typeof(string), "databasePath")]
     [CtorParameter(typeof(IConnectionManager))]
     [CtorParameter(typeof(IFileSystemAccess))]
     [CtorParameter(typeof(IProcessManager))]
@@ -327,98 +327,101 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         public void Export(string dumpCreatorPath, string host, string id, string password)
         {
-            Log.Info(string.Format("Start exporting Database {0}", this.Name));
-            this.SearchFiles(true);
-
-            this.SetProgress(0, "Start the export");
-            if (this.DiffFiles.Where(f => f.Version > this.CurrentVersion).Count() > 0)
+            lock (this.updateLock)
             {
-                throw new TeamworkConnectionException(null, "Newer Versions found which must be imported before an export.");
-            }
-            else
-            {
-                this.UpdateVersion();
+                Log.Info(string.Format("Start exporting Database {0}", this.Name));
+                this.SearchFiles(true);
 
-                // file paths
-                var newVersion = this.CurrentVersion.Main + 1;
-                Log.Debug(string.Format("New Version for exported files is {0}", newVersion));
-                var previousDump = this.CurrentDumpLocation;
-                var dump = this.GenerateFileLocation(newVersion, SQLTemplates.DumpFile);
-                var diff = this.GenerateFileLocation(newVersion, SQLTemplates.DiffFile);
-                var undoDiff = this.GenerateFileLocation(newVersion, SQLTemplates.UndoDiffFile);
-
-                this.exporting = true;
-
-                try
+                this.SetProgress(0, "Start the export");
+                if (this.DiffFiles.Where(f => f.Version > this.CurrentVersion).Count() > 0)
                 {
-                    // update version before creating dump, so the new dump contains the next version
-                    this.SetProgress(10, "Creating a new dump");
-                    this.CreateDump(dumpCreatorPath, host, id, password);
+                    throw new TeamworkConnectionException(null, "Newer Versions found which must be imported before an export.");
+                }
+                else
+                {
+                    this.UpdateVersion();
 
-                    if (this.fileSystemAccess.GetFileSize(previousDump) == this.fileSystemAccess.GetFileSize(dump))
+                    // file paths
+                    var newVersion = this.CurrentVersion.Main + 1;
+                    Log.Debug(string.Format("New Version for exported files is {0}", newVersion));
+                    var previousDump = this.CurrentDumpLocation;
+                    var dump = this.GenerateFileLocation(newVersion, SQLTemplates.DumpFile);
+                    var diff = this.GenerateFileLocation(newVersion, SQLTemplates.DiffFile);
+                    var undoDiff = this.GenerateFileLocation(newVersion, SQLTemplates.UndoDiffFile);
+
+                    this.exporting = true;
+
+                    try
                     {
-                        // check files byte by byte
-                        var oldDump = this.fileSystemAccess.ReadAllLines(previousDump);
-                        var newDump = this.fileSystemAccess.ReadAllLines(dump);
+                        // update version before creating dump, so the new dump contains the next version
+                        this.SetProgress(10, "Creating a new dump");
+                        this.CreateDump(dumpCreatorPath, host, id, password);
 
-                        if (oldDump.SequenceEqual(newDump))
+                        if (this.fileSystemAccess.GetFileSize(previousDump) == this.fileSystemAccess.GetFileSize(dump))
                         {
-                            throw TeamworkException.NoChanges(previousDump, dump);
+                            // check files byte by byte
+                            var oldDump = this.fileSystemAccess.ReadAllLines(previousDump);
+                            var newDump = this.fileSystemAccess.ReadAllLines(dump);
+
+                            if (oldDump.SequenceEqual(newDump))
+                            {
+                                throw TeamworkException.NoChanges(previousDump, dump);
+                            }
                         }
+
+                        // diff only original dumps
+                        this.SetProgress(20, "Finding differences and creating files");
+                        this.CreateDiffs(previousDump, dump, diff, undoDiff);
+
+                        // test the new diff with all previous
+                        this.TestSQLFiles(40, 100);
+                        Log.Info(string.Format("Finished exporting version {0}", newVersion));
                     }
-
-                    // diff only original dumps
-                    this.SetProgress(20, "Finding differences and creating files");
-                    this.CreateDiffs(previousDump, dump, diff, undoDiff);
-
-                    // test the new diff with all previous
-                    this.TestSQLFiles(40, 100);
-                    Log.Info(string.Format("Finished exporting version {0}", newVersion));
-                }
-                catch (TeamworkConnectionException ex)
-                {
-                    Log.Warn(string.Format("Error occured while testing exported files."), ex);
-
-                    var file = "unknown";
-                    if (ex.File != null)
+                    catch (TeamworkConnectionException ex)
                     {
-                        file = ex.File.Path;
+                        Log.Warn(string.Format("Error occured while testing exported files."), ex);
+
+                        var file = "unknown";
+                        if (ex.File != null)
+                        {
+                            file = ex.File.Path;
+                        }
+
+                        // do not delete files if only the test did not work => can be manually fixed by the user
+                        throw new Exception(string.Format("Error occured in file {0} while testing exported files. Diff and Dump files will not be deleted and can be edited manually. Error: {1}", file, ex.Message), ex);
                     }
-
-                    // do not delete files if only the test did not work => can be manually fixed by the user
-                    throw new Exception(string.Format("Error occured in file {0} while testing exported files. Diff and Dump files will not be deleted and can be edited manually. Error: {1}", file, ex.Message), ex);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error("Error occured while exporting new version", ex);
-
-                    // delete new files if an error occured
-                    if (this.fileSystemAccess.FileExists(dump))
+                    catch (Exception ex)
                     {
-                        this.fileSystemAccess.DeleteFile(dump);
-                    }
+                        Log.Error("Error occured while exporting new version", ex);
 
-                    if (this.fileSystemAccess.FileExists(diff))
+                        // delete new files if an error occured
+                        if (this.fileSystemAccess.FileExists(dump))
+                        {
+                            this.fileSystemAccess.DeleteFile(dump);
+                        }
+
+                        if (this.fileSystemAccess.FileExists(diff))
+                        {
+                            this.fileSystemAccess.DeleteFile(diff);
+                        }
+
+                        if (this.fileSystemAccess.FileExists(undoDiff))
+                        {
+                            this.fileSystemAccess.DeleteFile(undoDiff);
+                        }
+
+                        if (newVersion == this.CurrentVersion.Main)
+                        {
+                            this.ReduceVersion();
+                        }
+
+                        throw;
+                    }
+                    finally
                     {
-                        this.fileSystemAccess.DeleteFile(diff);
+                        this.exporting = false;
+                        this.SetProgress(100);
                     }
-
-                    if (this.fileSystemAccess.FileExists(undoDiff))
-                    {
-                        this.fileSystemAccess.DeleteFile(undoDiff);
-                    }
-
-                    if (newVersion == this.CurrentVersion.Main)
-                    {
-                        this.ReduceVersion();
-                    }
-
-                    throw;
-                }
-                finally
-                {
-                    this.exporting = false;
-                    this.SetProgress(100);
                 }
 
                 this.UpdateData();
@@ -576,8 +579,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         partial void DatabaseCtor()
         {
-            this.Name = this.name;
-            this.Path = this.path;
+            this.Name = this.databaseName;
+            this.Path = this.databasePath;
 
             this.CreateTeamworkSchema();
 

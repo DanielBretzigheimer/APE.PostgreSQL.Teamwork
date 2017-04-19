@@ -33,11 +33,13 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets a <see cref="List{String}"/> of all column names.
         /// </summary>
+        [NullGuard.AllowNull]
         public List<string> ColumnNames { get; set; }
 
         /// <summary>
         /// Gets or sets the comment of the <see cref="PgView"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Comment { get; set; }
 
         /// <summary>
@@ -248,6 +250,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             /// <summary>
             /// Gets the comment.
             /// </summary>
+            [NullGuard.AllowNull]
             public string Comment { get; private set; }
         }
     }

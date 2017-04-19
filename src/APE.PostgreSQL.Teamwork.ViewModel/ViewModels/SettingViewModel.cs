@@ -20,7 +20,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     [NotifyProperty(typeof(string), "DatabaseFolderPath")]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "OpenFilesDefault")]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "AutoRefresh")]
-    [NotifyProperty(AccessModifier.Public, typeof(string), "Message", null)]
+    [AllowNullNotifyProperty(AccessModifier.Public, typeof(string), "Message", null)]
     public partial class SettingViewModel : BaseViewModel
     {
         private const string ConfigExtension = "Config (*.config)|*.config";
@@ -67,15 +67,15 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         private void Load()
         {
-            this.ConnectionString = SettingsManager.Get().Setting.ConnectionStringTemplate;
-            this.PgDump = SettingsManager.Get().Setting.PgDumpLocation;
-            this.Password = SettingsManager.Get().Setting.Password;
-            this.Host = SettingsManager.Get().Setting.Host;
-            this.Id = SettingsManager.Get().Setting.Id;
-            this.Port = SettingsManager.Get().Setting.Port;
-            this.OpenFilesDefault = SettingsManager.Get().Setting.OpenFilesInDefaultApplication;
-            this.AutoRefresh = SettingsManager.Get().Setting.AutoRefresh;
-            this.DatabaseFolderPath = SettingsManager.Get().Setting.DefaultDatabaseFolderPath;
+            this.connectionString = SettingsManager.Get().Setting.ConnectionStringTemplate;
+            this.pgDump = SettingsManager.Get().Setting.PgDumpLocation;
+            this.password = SettingsManager.Get().Setting.Password;
+            this.host = SettingsManager.Get().Setting.Host;
+            this.id = SettingsManager.Get().Setting.Id;
+            this.port = SettingsManager.Get().Setting.Port;
+            this.openFilesDefault = SettingsManager.Get().Setting.OpenFilesInDefaultApplication;
+            this.autoRefresh = SettingsManager.Get().Setting.AutoRefresh;
+            this.databaseFolderPath = SettingsManager.Get().Setting.DefaultDatabaseFolderPath;
             this.UpdateConnectionStringPreview();
         }
 

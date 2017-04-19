@@ -46,6 +46,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         /// <param name="name">Optionally schema qualified name.</param>
         /// <returns>Name of the object or null if there is no third object name.</returns>
+        [return: NullGuard.AllowNull]
         public static string GetThirdObjectName(string name)
         {
             string[] names = SplitNames(name);
@@ -73,7 +74,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// <summary>
         /// Generates unique name from the prefix, list of names, and postfix.
         /// </summary>
-        public static string GenerateName(string prefix, IList<string> names, string postfix)
+        public static string GenerateName([NullGuard.AllowNull] string prefix, IList<string> names, [NullGuard.AllowNull] string postfix)
         {
             string adjName;
 

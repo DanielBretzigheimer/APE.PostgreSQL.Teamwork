@@ -38,11 +38,13 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the comment of the <see cref="PgColumn"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Comment { get; set; }
 
         /// <summary>
         /// Gets or sets the default value of the <see cref="PgColumn"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string DefaultValue { get; set; }
 
         /// <summary>
@@ -58,11 +60,13 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the statistics of the <see cref="PgColumn"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public int? Statistics { get; set; }
 
         /// <summary>
         /// Gets or sets the storage of the <see cref="PgColumn"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Storage { get; set; }
 
         /// <summary>

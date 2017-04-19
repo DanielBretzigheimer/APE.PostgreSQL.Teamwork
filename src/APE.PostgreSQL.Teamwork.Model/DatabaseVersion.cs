@@ -83,7 +83,6 @@ namespace APE.PostgreSQL.Teamwork.Model
         public DatabaseVersion(int mainVersion)
         {
             this.Main = mainVersion;
-            this.Minor = string.Empty;
         }
 
         private DatabaseVersion()
@@ -106,7 +105,7 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// <summary>
         /// Gets the minor part of the version. (e.g. ".a").
         /// </summary>
-        public string Minor { get; private set; }
+        public string Minor { get; private set; } = string.Empty;
 
         /// <summary>
         /// Gets the full version which contains out of the <see cref="Main"/> and <see cref="Minor"/> version.
@@ -180,7 +179,7 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// <summary>
         /// Checks if the version a is equal to the version b and returns a boolean with the result.
         /// </summary>
-        public static bool operator ==(DatabaseVersion a, DatabaseVersion b)
+        public static bool operator ==([NullGuard.AllowNull] DatabaseVersion a, [NullGuard.AllowNull] DatabaseVersion b)
         {
             // If both are null, or both are same instance, return true.
             if (object.ReferenceEquals(a, b))
@@ -200,7 +199,7 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// <summary>
         /// Checks if the version a is not equal to the version b and returns a boolean with the result.
         /// </summary>
-        public static bool operator !=(DatabaseVersion a, DatabaseVersion b)
+        public static bool operator !=([NullGuard.AllowNull] DatabaseVersion a, [NullGuard.AllowNull] DatabaseVersion b)
         {
             return !(a == b);
         }
@@ -208,7 +207,7 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// <summary>
         /// Determines whether the specified object is equal to the current object.
         /// </summary>
-        public override bool Equals(object obj)
+        public override bool Equals([NullGuard.AllowNull] object obj)
         {
             return EqualsAndHashCode.AreEqual(this, obj);
         }
@@ -225,6 +224,7 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// <summary>
         ///  Returns a string that represents the current object.
         /// </summary>
+        [return: NullGuard.AllowNull]
         public override string ToString()
         {
             return this.Full;

@@ -361,6 +361,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// Parses comment from parser. If comment is "null" string then null is
         /// returned, otherwise the parsed string is returned.
         /// </summary>
+        [return: NullGuard.AllowNull]
         private static string GetComment(Parser parser)
         {
             var comment = parser.ParseString();

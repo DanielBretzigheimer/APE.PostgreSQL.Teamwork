@@ -35,10 +35,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     [NotifyProperty(AccessModifier.Public, typeof(bool), "Error", false)]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "ImportableFilesFound", false)]
     [NotifyProperty(typeof(string), "ErrorMessage")]
-    [NotifyProperty(typeof(Database), "Database")]
+    [AllowNullNotifyProperty(typeof(Database), "Database")]
     [NotifyProperty(AccessModifier.Public, typeof(DatabaseVersion), "TargetVersion")]
-    [NotifyProperty(AccessModifier.Public, typeof(List<DatabaseVersion>), "Versions")]
-    [NotifyProperty(typeof(ObservableCollection<SQLFileDisplayData>), "ApplicableSQLFiles")]
+    [AllowNullNotifyProperty(AccessModifier.Public, typeof(List<DatabaseVersion>), "Versions")]
+    [AllowNullNotifyProperty(typeof(ObservableCollection<SQLFileDisplayData>), "ApplicableSQLFiles")]
     [CtorParameter(typeof(IConnectionManager))]
     [CtorParameter(typeof(IFileSystemAccess))]
     [CtorParameter(typeof(IProcessManager))]
@@ -226,6 +226,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         ///  Returns a string that represents the current object.
         /// </summary>
+        [return: NullGuard.AllowNull]
         public override string ToString()
         {
             return this.Database.Name;
@@ -233,7 +234,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void DatabaseDisplayDataCtor()
         {
-            this._TargetVersion = DatabaseVersion.StartVersion;
+            this.targetVersion = DatabaseVersion.StartVersion;
             this.InitializeCommands();
             this.AutoExpanded = true;
             this.ConnectDatabase();

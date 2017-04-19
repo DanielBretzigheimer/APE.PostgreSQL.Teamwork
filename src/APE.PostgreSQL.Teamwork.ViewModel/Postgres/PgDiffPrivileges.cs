@@ -17,7 +17,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Adds <see cref="PgPrivilegeCommand.Grant"/> and <see cref="PgPrivilegeCommand.Revoke"/> privileges.
         /// </summary>
-        public static void Create(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Create(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             // Add new sequences
             foreach (var privilege in newSchema.Privileges)

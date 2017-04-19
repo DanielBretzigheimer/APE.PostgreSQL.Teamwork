@@ -197,7 +197,7 @@ namespace APE.PostgreSQL.Teamwork.TestHelper
 
         /* Objects */
 
-        public void Set(string name, object value)
+        public void Set(string name, [NullGuard.AllowNull] object value)
         {
             this.objects[name] = value;
         }

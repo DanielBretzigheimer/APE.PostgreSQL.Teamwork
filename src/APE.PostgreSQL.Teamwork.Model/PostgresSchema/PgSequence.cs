@@ -20,11 +20,13 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the cache of the <see cref="PgSequence"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Cache { get; set; }
 
         /// <summary>
         /// Gets or sets the comment of the <see cref="PgSequence"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Comment { get; set; }
 
         /// <summary>
@@ -146,16 +148,19 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the increment of the <see cref="PgSequence"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Increment { get; set; }
 
         /// <summary>
         /// Gets or sets the max value of the <see cref="PgSequence"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string MaxValue { get; set; }
 
         /// <summary>
         /// Gets or sets the min value of the <see cref="PgSequence"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string MinValue { get; set; }
 
         /// <summary>
@@ -166,11 +171,13 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the start value of the <see cref="PgSequence"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string StartWith { get; set; }
 
         /// <summary>
         /// Gets or sets the owner of the <see cref="PgSequence"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Owner { get; set; }
     }
 }

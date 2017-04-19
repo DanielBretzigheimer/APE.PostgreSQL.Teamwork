@@ -21,7 +21,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for creation of new triggers.
         /// </summary>
-        public static void Create(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Create(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             foreach (PgTable newTable in newSchema.Tables)
             {
@@ -49,7 +49,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for dropping triggers.
         /// </summary>
-        public static void Drop(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Drop(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             foreach (PgTable newTable in newSchema.Tables)
             {
@@ -77,7 +77,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for trigger comments that have changed.
         /// </summary>
-        public static void AlterComments(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void AlterComments(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
             {
@@ -134,7 +134,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Returns list of triggers that should be dropped.
         /// </summary>
-        private static IList<PgTrigger> GetDropTriggers(PgTable oldTable, PgTable newTable)
+        private static IList<PgTrigger> GetDropTriggers([NullGuard.AllowNull] PgTable oldTable, [NullGuard.AllowNull] PgTable newTable)
         {
             IList<PgTrigger> list = new List<PgTrigger>();
 
@@ -156,7 +156,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Returns list of triggers that should be added.
         /// </summary>
-        private static IList<PgTrigger> GetNewTriggers(PgTable oldTable, PgTable newTable)
+        private static IList<PgTrigger> GetNewTriggers([NullGuard.AllowNull] PgTable oldTable, PgTable newTable)
         {
             var list = new List<PgTrigger>();
 

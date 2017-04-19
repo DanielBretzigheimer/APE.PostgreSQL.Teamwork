@@ -17,8 +17,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     /// <summary>
     /// ViewModel for the AddDatabaseView which lets you add databases and checks the validity of the input.
     /// </summary>
-    [NotifyProperty(typeof(string), "DatabaseName")]
-    [NotifyProperty(typeof(string), "DatabasePath")]
+    [NotifyProperty(AccessModifier.Public, typeof(string), "DatabaseName", "")]
+    [NotifyProperty(AccessModifier.Public, typeof(string), "DatabasePath", "")]
     [NotifyProperty(typeof(List<string>), "Databases")]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "DataChecked", false)]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "DatabaseExists", false)]
@@ -188,7 +188,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 });
 
             double confidence = 0;
-            string path = null;
+            var path = string.Empty;
             lock (this.databaseDirectoriesLock)
             {
                 foreach (var databaseDirectory in this.databaseDirectories)

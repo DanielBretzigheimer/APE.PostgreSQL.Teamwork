@@ -55,7 +55,7 @@ namespace APE.PostgreSQL.Teamwork.Model
             this.getHashCode = this.BuildGetHashCode(properties);
         }
 
-        public bool AreEqual(T source, object target)
+        public bool AreEqual([NullGuard.AllowNull] T source, [NullGuard.AllowNull] object target)
         {
             if (source == null || target == null)
             {
@@ -70,7 +70,7 @@ namespace APE.PostgreSQL.Teamwork.Model
             return this.equals(source, (T)target);
         }
 
-        public int GetHashCode(T source)
+        public int GetHashCode([NullGuard.AllowNull] T source)
         {
             if (source == null)
             {

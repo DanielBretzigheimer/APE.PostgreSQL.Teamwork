@@ -63,6 +63,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         ///  Returns a string that represents the current object.
         /// </summary>
+        [return: NullGuard.AllowNull]
         public override string ToString()
         {
             return this.SQLFile.ToString();
