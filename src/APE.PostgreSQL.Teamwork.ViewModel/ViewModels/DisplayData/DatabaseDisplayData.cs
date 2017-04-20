@@ -432,24 +432,24 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 this.Importing = true;
                 var oldVersion = this.Database.CurrentVersion;
 
-                // check compatibility
-                if (result == MaterialMessageBoxResult.Yes)
-                {
-                    if (this.Database.ImportConflicts(
-                       SettingsManager.Get().Setting.PgDumpLocation,
-                       SettingsManager.Get().Setting.Host,
-                       SettingsManager.Get().Setting.Id,
-                       SettingsManager.Get().Setting.Password))
-                    {
-                        // todo add message
-                        var compatibilityMessageBox = MainWindowViewModel.GetMessageBox($"TODO", "Compatibility problems found.", MessageBoxButton.OK);
-                        await MainWindowViewModel.ShowDialog(compatibilityMessageBox);
-                        return;
-                    }
-                }
-
                 try
                 {
+                    // check compatibility
+                    if (result == MaterialMessageBoxResult.Yes)
+                    {
+                        if (this.Database.ImportConflicts(
+                           SettingsManager.Get().Setting.PgDumpLocation,
+                           SettingsManager.Get().Setting.Host,
+                           SettingsManager.Get().Setting.Id,
+                           SettingsManager.Get().Setting.Password))
+                        {
+                            // todo add message
+                            var compatibilityMessageBox = MainWindowViewModel.GetMessageBox($"TODO", "Compatibility problems found.", MessageBoxButton.OK);
+                            await MainWindowViewModel.ShowDialog(compatibilityMessageBox);
+                            return;
+                        }
+                    }
+
                     this.UpdateToVersion(this.Database.LastApplicableVersion);
                     var finishedMessageBox = MainWindowViewModel.GetMessageBox("All SQL Files succesfully executed!", "Succesfully Executed", MessageBoxButton.OK);
                     await MainWindowViewModel.ShowDialog(finishedMessageBox);

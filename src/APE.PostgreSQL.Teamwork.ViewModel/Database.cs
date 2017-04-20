@@ -230,7 +230,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
             // file paths
             var previousDump = this.GenerateFileLocation(this.CurrentVersion.Main, SQLTemplates.DumpFile);
-            var dump = this.GenerateFileLocation($"{DatabaseVersion.TempUndoDumpName}{this.CurrentVersion}", SQLTemplates.DumpFile);
+            var dump = this.GenerateFileLocation($"{DatabaseVersion.TempDumpName}{this.CurrentVersion}", SQLTemplates.DumpFile);
             var undoDiff = this.GenerateFileLocation($"{DatabaseVersion.TempUndoDiffName}{this.CurrentVersion}", SQLTemplates.UndoDiffFile);
 
             try
@@ -434,7 +434,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         public bool ImportConflicts(string dumpCreatorPath, string host, string id, string password)
         {
-            var tmpDumpPath = System.IO.Path.Combine(this.Path, $"Temp{SQLTemplates.DumpFile}");
+            var tmpDumpPath = System.IO.Path.Combine(this.Path, $"{DatabaseVersion.TempDumpName}{SQLTemplates.DumpFile}");
 
             try
             {

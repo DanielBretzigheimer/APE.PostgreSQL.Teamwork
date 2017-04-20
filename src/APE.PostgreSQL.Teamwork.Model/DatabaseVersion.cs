@@ -17,7 +17,7 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// <summary>
         /// The temporary name of an dump file which is used for undoing a version.
         /// </summary>
-        public const string TempUndoDumpName = "TempUndoDump";
+        public const string TempDumpName = "TempDump";
 
         /// <summary>
         /// The temporary name of a diff file.
@@ -39,7 +39,7 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// <param name="path">File path with the version.</param>
         public DatabaseVersion(string path)
         {
-            if (path.Contains(TempUndoDiffName) || path.Contains(TempUndoDumpName))
+            if (path.Contains(TempUndoDiffName) || path.Contains(TempDumpName))
             {
                 this.Main = int.MaxValue; // check for test version
             }
