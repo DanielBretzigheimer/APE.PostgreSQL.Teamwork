@@ -214,7 +214,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 return new ReadOnlyCollection<PgTable>(this.tables);
             }
         }
-
+        
         /// <summary>
         /// Finds function according to specified function signature.
         /// </summary>
