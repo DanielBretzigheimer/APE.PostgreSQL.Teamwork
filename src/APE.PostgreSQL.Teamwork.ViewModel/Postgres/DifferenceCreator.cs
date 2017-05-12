@@ -199,7 +199,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 (w, newSchema, oldSchema) => { PgDiffPrivileges.Create(w, oldSchema, newSchema, new SearchPathHelper(newSchema)); },
 
                 // drop type after table is altered
-                (w, newSchema, oldSchema) => { PgDiffTypes.Drop(w, newSchema, oldSchema, new SearchPathHelper(newSchema)); },
+                (w, newSchema, oldSchema) => { PgDiffTypes.Drop(w, oldSchema, newSchema, new SearchPathHelper(newSchema)); },
 
                 (w, newSchema, oldSchema) => { PgDiffFunctions.AlterComments(w, oldSchema, newSchema, new SearchPathHelper(newSchema)); },
                 (w, newSchema, oldSchema) => { PgDiffConstraints.AlterComments(w, oldSchema, newSchema, new SearchPathHelper(newSchema)); },
