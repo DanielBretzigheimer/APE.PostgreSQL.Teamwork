@@ -182,8 +182,9 @@ namespace APE.PostgreSQL.Teamwork
                 {
                     return connection.Query<T>(sql).ToList();
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
+                    Log.Error(ex);
                     if (Debugger.IsAttached)
                         Debugger.Break();
                     throw;
