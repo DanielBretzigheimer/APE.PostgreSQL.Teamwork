@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.1.3
+ - schema order bug fixed
+
 ## 0.0.0.17
  - readme fixed
  - changelog fixed
