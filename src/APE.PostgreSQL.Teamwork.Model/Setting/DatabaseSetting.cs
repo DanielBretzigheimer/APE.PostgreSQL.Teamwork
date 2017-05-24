@@ -14,13 +14,6 @@ namespace APE.PostgreSQL.Teamwork.Model
     public class DatabaseSetting
     {
         /// <summary>
-        /// This is used for serializing the <see cref="DatabaseSetting"/>.
-        /// </summary>
-        protected DatabaseSetting()
-        {
-        }
-
-        /// <summary>
         /// Creates a new <see cref="DatabaseSetting"/>.
         /// </summary>
         /// <param name="id">The id of the setting.</param>
@@ -31,6 +24,13 @@ namespace APE.PostgreSQL.Teamwork.Model
             this.Id = id;
             this.Path = path;
             this.Name = name;
+        }
+
+        /// <summary>
+        /// This is used for serializing the <see cref="DatabaseSetting"/>.
+        /// </summary>
+        protected DatabaseSetting()
+        {
         }
 
         /// <summary>
@@ -104,6 +104,7 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// <summary>
         /// Creates a string of the <see cref="DatabaseSetting"/> which contains the <see cref="Id"/> and <see cref="Name"/>.
         /// </summary>
+        [return: NullGuard.AllowNull]
         public override string ToString()
         {
             return $"{this.Id} {this.Name}";

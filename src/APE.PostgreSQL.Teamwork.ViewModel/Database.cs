@@ -22,14 +22,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     /// </summary>
     [NotifyProperty(typeof(string), "Name")]
     [NotifyProperty(typeof(string), "Path")]
-    [NotifyProperty(typeof(DatabaseVersion), "CurrentVersion")]
+    [AllowNullNotifyProperty(typeof(DatabaseVersion), "CurrentVersion")]
     [NotifyProperty(typeof(DatabaseVersion), "LastApplicableVersion")]
-    [NotifyProperty(typeof(ObservableCollection<SQLFile>), "UndoDiffFiles")]
-    [NotifyProperty(typeof(ObservableCollection<SQLFile>), "DiffFiles")]
+    [AllowNullNotifyProperty(typeof(ObservableCollection<SQLFile>), "UndoDiffFiles")]
+    [AllowNullNotifyProperty(typeof(ObservableCollection<SQLFile>), "DiffFiles")]
     [NotifyProperty(AccessModifier.Public, typeof(double), "Progress", 100, "The progress of the current action. Not all actions are modifing it.")]
-    [NotifyProperty(AccessModifier.Public, typeof(string), "ProgressInfo", "", "This will be shown to the user as additional info to the current progress.")]
-    [CtorParameter(AccessModifier.Private, typeof(string), "name")]
-    [CtorParameter(AccessModifier.Private, typeof(string), "path")]
+    [AllowNullNotifyProperty(AccessModifier.Public, typeof(string), "ProgressInfo", "", "This will be shown to the user as additional info to the current progress.")]
+    [CtorParameter(AccessModifier.Private, typeof(string), "databaseName")]
+    [CtorParameter(AccessModifier.Private, typeof(string), "databasePath")]
     [CtorParameter(typeof(IConnectionManager))]
     [CtorParameter(typeof(IFileSystemAccess))]
     [CtorParameter(typeof(IProcessManager))]
@@ -61,16 +61,15 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         private Database(IConnectionManager connectionManager, IFileSystemAccess fileSystemAccess, IProcessManager processManager)
         {
-            if (connectionManager == null)
-                throw new ArgumentNullException("connectionManager", "connectionManager == null");
-            this.connectionManager = connectionManager;
-            if (fileSystemAccess == null)
-                throw new ArgumentNullException("file", "file == null");
-            this.fileSystemAccess = fileSystemAccess;
-            if (processManager == null)
-                throw new ArgumentNullException("process", "process == null");
-            this.processManager = processManager;
+            this.connectionManager = connectionManager ?? throw new ArgumentNullException("connectionManager", "connectionManager == null");
+            this.fileSystemAccess = fileSystemAccess ?? throw new ArgumentNullException("file", "file == null");
+            this.processManager = processManager ?? throw new ArgumentNullException("process", "process == null");
         }
+
+        /// <summary>
+        /// Gets the location of the dump for the <see cref="CurrentVersion"/>.
+        /// </summary>
+        public string CurrentDumpLocation => this.GenerateFileLocation(this.CurrentVersion.Main, SQLTemplates.DumpFile);
 
         /// <summary>
         /// Creates a dump file for the given database at the given path.
@@ -78,13 +77,20 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         public SQLFile CreateDump(string path, string dumpCreatorPath, string host, string id, string password)
         {
             this.UpdateVersion();
-            var startInfo = new ProcessStartInfo(dumpCreatorPath, "-s -h " + host + " -U " + id + " -w -f \"" + path + "\" " + this.Name);
+            var processArguments = $"-s -h {host} -U {id} -w -f \"{path}\" {this.Name}";
+            var startInfo = new ProcessStartInfo(dumpCreatorPath, processArguments)
+            {
+                UseShellExecute = false,
+            };
 
-            // set the password (this is mandatory for postgres 9.5)
-            startInfo.UseShellExecute = false;
+            // set the password (this is mandatory for postgres 9.5 and above)
             startInfo.EnvironmentVariables.Add("PGPASSWORD", password);
 
-            processManager.Execute(startInfo);
+            this.processManager.Execute(startInfo);
+
+            if (!this.fileSystemAccess.FileExists(path))
+                throw new FileNotFoundException($"The dump {path} could not be created. It looks like the PgDump.exe did not work. Check the {dumpCreatorPath} works with this arguments: {processArguments}");
+
             return new SQLFile(path, this, this.fileSystemAccess);
         }
 
@@ -93,7 +99,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         public SQLFile CreateDump(string dumpCreatorPath, string host, string id, string password)
         {
-            string dumpfileLocation = this.GenerateFileLocation(this.CurrentVersion.Main + 1, SQLTemplates.DumpFile);
+            var dumpfileLocation = this.GenerateFileLocation(this.CurrentVersion.Main + 1, SQLTemplates.DumpFile);
             return this.CreateDump(dumpfileLocation, dumpCreatorPath, host, id, password);
         }
 
@@ -132,7 +138,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// Updates the database to the given main version by executing diffs or undo diffs.
         /// </summary>
         /// <param name="version">The target version.</param>
-        /// <param name="afterFileExecution">Action which is called after a file was executed with a List of all SQLFiles 
+        /// <param name="afterFileExecution">Action which is called after a file was executed with a List of all SQLFiles
         /// (<see cref="IEnumerable{SQLFile}"/>) and the currently executed one.</param>
         /// <exception cref="TeamworkConnectionException">Is thrown when an error occurred while executing the SQL Statements.</exception>
         public void UpdateToVersion(DatabaseVersion version, Action<IEnumerable<SQLFile>, SQLFile> afterFileExecution = null)
@@ -141,7 +147,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             Log.Info(string.Format("Upgrade database from version {0} to version {1} with {2} sql files", this.CurrentVersion, version, files.Count()));
 
             // execute diffs
-            for (int fileIndex = 0; fileIndex < files.Count(); fileIndex++)
+            for (var fileIndex = 0; fileIndex < files.Count(); fileIndex++)
             {
                 var file = files.ElementAt(fileIndex);
                 file.ExecuteInTransaction();
@@ -163,15 +169,19 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 var executedFiles = this.GetExecutedFiles();
 
                 if (version >= this.CurrentVersion)
+                {
                     return this.DiffFiles
                                     .Where(f => (f.Version > this.CurrentVersion
                                     || executedFiles.FirstOrDefault(execFile => execFile.DatabaseVersion == f.Version) == null)
                                     && f.Version <= version);
+                }
                 else
+                {
                     return this.UndoDiffFiles
                                     .Where(f => f.Version <= this.CurrentVersion
                                     && f.Version > version
                                     && executedFiles.FirstOrDefault(execFile => execFile.DatabaseVersion == f.Version) != null);
+                }
             }
         }
 
@@ -181,7 +191,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <remarks>IMPORTANT: This will NOT execute any undo diff files.</remarks>
         public void ReduceVersion()
         {
-            // ensure that the version is 
+            // ensure that the version is
             this.UpdateVersion();
             var sql = SQLTemplates.RemoveVersion(this.CurrentVersion);
             this.ExecuteCommandNonQuery(sql);
@@ -199,7 +209,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
             // create schema and table if not already there
             if (!schemaExists)
+            {
                 this.ExecuteCommandNonQuery(SQLTemplates.CreateTeamworkSchemaSQL());
+            }
         }
 
         /// <summary>
@@ -222,13 +234,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             this.UpdateVersion();
 
             // file paths
-            string previousDump = this.GenerateFileLocation(this.CurrentVersion.Main, SQLTemplates.DumpFile);
-            string dump = this.GenerateFileLocation($"{DatabaseVersion.TempUndoDumpName}{this.CurrentVersion}", SQLTemplates.DumpFile);
-            string undoDiff = this.GenerateFileLocation($"{DatabaseVersion.TempUndoDiffName}{this.CurrentVersion}", SQLTemplates.UndoDiffFile);
+            var previousDump = this.GenerateFileLocation(this.CurrentVersion.Main, SQLTemplates.DumpFile);
+            var dump = this.GenerateFileLocation($"{DatabaseVersion.TempDumpName}{this.CurrentVersion}", SQLTemplates.DumpFile);
+            var undoDiff = this.GenerateFileLocation($"{DatabaseVersion.TempUndoDiffName}{this.CurrentVersion}", SQLTemplates.UndoDiffFile);
 
             try
             {
-                // update version before creating dump, so the new dump contains the next version 
+                // update version before creating dump, so the new dump contains the next version
                 this.SetProgress(10, "Creating dump with changes which should be undone");
                 this.CreateDump(dump, dumpCreatorPath, host, id, password);
 
@@ -239,7 +251,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                     var newDump = this.fileSystemAccess.ReadAllLines(dump);
 
                     if (oldDump.SequenceEqual(newDump))
+                    {
                         throw TeamworkException.NoChanges(previousDump, dump);
+                    }
                 }
 
                 // diff only original dumps
@@ -256,7 +270,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
                 var file = "unknown";
                 if (ex.File != null)
+                {
                     file = ex.File.Path;
+                }
 
                 // do not delete files if only the test did not work => can be manually fixed by the user
                 throw new Exception(string.Format("Error occured in file {0} while testing exported files. Diff and Dump files will not be deleted and can be edited manually. Error: {1}", file, ex.Message), ex);
@@ -270,9 +286,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 // remove undo diff and dump
                 if (this.fileSystemAccess.FileExists(dump))
+                {
                     this.fileSystemAccess.DeleteFile(dump);
+                }
+
                 if (this.fileSystemAccess.FileExists(undoDiff))
+                {
                     this.fileSystemAccess.DeleteFile(undoDiff);
+                }
 
                 this.SetProgress(100);
             }
@@ -301,7 +322,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             catch (NpgsqlException ex)
             {
                 Log.Error(ex.Message, ex);
-                throw new Exception(string.Format("Error while resetting database .", ex));
+                throw new TeamworkParserException($"Error while resetting database. {ex.Message}");
             }
         }
 
@@ -311,85 +332,145 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         public void Export(string dumpCreatorPath, string host, string id, string password)
         {
-            Log.Info(string.Format("Start exporting Database {0}", this.Name));
-            this.SearchFiles(true);
-
-            this.SetProgress(0, "Start the export");
-            if (this.DiffFiles.Where(f => f.Version > CurrentVersion).Count() > 0)
-                throw new TeamworkConnectionException(null, "Newer Versions found which must be imported before an export.");
-            else
+            lock (this.updateLock)
             {
-                this.UpdateVersion();
+                Log.Info(string.Format("Start exporting Database {0}", this.Name));
+                this.SearchFiles(true);
 
-                // file paths
-                int newVersion = this.CurrentVersion.Main + 1;
-                Log.Debug(string.Format("New Version for exported files is {0}", newVersion));
-                string previousDump = this.GenerateFileLocation(this.CurrentVersion.Main, SQLTemplates.DumpFile);
-                string dump = this.GenerateFileLocation(newVersion, SQLTemplates.DumpFile);
-                string diff = this.GenerateFileLocation(newVersion, SQLTemplates.DiffFile);
-                string undoDiff = this.GenerateFileLocation(newVersion, SQLTemplates.UndoDiffFile);
-
-                this.exporting = true;
-
-                try
+                this.SetProgress(0, "Start the export");
+                if (this.DiffFiles.Where(f => f.Version > this.CurrentVersion).Count() > 0)
                 {
-                    // update version before creating dump, so the new dump contains the next version 
-                    this.SetProgress(10, "Creating a new dump");
-                    this.CreateDump(dumpCreatorPath, host, id, password);
+                    throw new TeamworkConnectionException(null, "Newer Versions found which must be imported before an export.");
+                }
+                else
+                {
+                    this.UpdateVersion();
 
-                    if (this.fileSystemAccess.GetFileSize(previousDump) == this.fileSystemAccess.GetFileSize(dump))
+                    // file paths
+                    var newVersion = this.CurrentVersion.Main + 1;
+                    Log.Debug(string.Format("New Version for exported files is {0}", newVersion));
+                    var previousDump = this.CurrentDumpLocation;
+                    var dump = this.GenerateFileLocation(newVersion, SQLTemplates.DumpFile);
+                    var diff = this.GenerateFileLocation(newVersion, SQLTemplates.DiffFile);
+                    var undoDiff = this.GenerateFileLocation(newVersion, SQLTemplates.UndoDiffFile);
+
+                    this.exporting = true;
+
+                    try
                     {
-                        // check files byte by byte
-                        var oldDump = this.fileSystemAccess.ReadAllLines(previousDump);
-                        var newDump = this.fileSystemAccess.ReadAllLines(dump);
+                        // update version before creating dump, so the new dump contains the next version
+                        this.SetProgress(10, "Creating a new dump");
+                        this.CreateDump(dumpCreatorPath, host, id, password);
 
-                        if (oldDump.SequenceEqual(newDump))
-                            throw TeamworkException.NoChanges(previousDump, dump);
+                        if (this.fileSystemAccess.GetFileSize(previousDump) == this.fileSystemAccess.GetFileSize(dump))
+                        {
+                            // check files byte by byte
+                            var oldDump = this.fileSystemAccess.ReadAllLines(previousDump);
+                            var newDump = this.fileSystemAccess.ReadAllLines(dump);
+
+                            if (oldDump.SequenceEqual(newDump))
+                            {
+                                throw TeamworkException.NoChanges(previousDump, dump);
+                            }
+                        }
+
+                        // diff only original dumps
+                        this.SetProgress(20, "Finding differences and creating files");
+                        this.CreateDiffs(previousDump, dump, diff, undoDiff);
+
+                        // test the new diff with all previous
+                        this.TestSQLFiles(40, 100);
+                        Log.Info(string.Format("Finished exporting version {0}", newVersion));
                     }
+                    catch (TeamworkConnectionException ex)
+                    {
+                        Log.Warn(string.Format("Error occured while testing exported files."), ex);
 
-                    // diff only original dumps
-                    this.SetProgress(20, "Finding differences and creating files");
-                    this.CreateDiffs(previousDump, dump, diff, undoDiff);
+                        var file = "unknown";
+                        if (ex.File != null)
+                        {
+                            file = ex.File.Path;
+                        }
 
-                    // test the new diff with all previous
-                    this.TestSQLFiles(40, 100);
-                    Log.Info(string.Format("Finished exporting version {0}", newVersion));
-                }
-                catch (TeamworkConnectionException ex)
-                {
-                    Log.Warn(string.Format("Error occured while testing exported files."), ex);
+                        // do not delete files if only the test did not work => can be manually fixed by the user
+                        throw new Exception(string.Format("Error occured in file {0} while testing exported files. Diff and Dump files will not be deleted and can be edited manually. Error: {1}", file, ex.Message), ex);
+                    }
+                    catch (Exception ex)
+                    {
+                        Log.Error("Error occured while exporting new version", ex);
 
-                    var file = "unknown";
-                    if (ex.File != null)
-                        file = ex.File.Path;
+                        // delete new files if an error occured
+                        if (this.fileSystemAccess.FileExists(dump))
+                        {
+                            this.fileSystemAccess.DeleteFile(dump);
+                        }
 
-                    // do not delete files if only the test did not work => can be manually fixed by the user
-                    throw new Exception(string.Format("Error occured in file {0} while testing exported files. Diff and Dump files will not be deleted and can be edited manually. Error: {1}", file, ex.Message), ex);
-                }
-                catch (Exception ex)
-                {
-                    Log.Error("Error occured while exporting new version", ex);
+                        if (this.fileSystemAccess.FileExists(diff))
+                        {
+                            this.fileSystemAccess.DeleteFile(diff);
+                        }
 
-                    // delete new files if an error occured
-                    if (this.fileSystemAccess.FileExists(dump))
-                        this.fileSystemAccess.DeleteFile(dump);
-                    if (this.fileSystemAccess.FileExists(diff))
-                        this.fileSystemAccess.DeleteFile(diff);
-                    if (this.fileSystemAccess.FileExists(undoDiff))
-                        this.fileSystemAccess.DeleteFile(undoDiff);
+                        if (this.fileSystemAccess.FileExists(undoDiff))
+                        {
+                            this.fileSystemAccess.DeleteFile(undoDiff);
+                        }
 
-                    if (newVersion == this.CurrentVersion.Main)
-                        this.ReduceVersion();
+                        if (newVersion == this.CurrentVersion.Main)
+                        {
+                            this.ReduceVersion();
+                        }
 
-                    throw;
-                }
-                finally
-                {
-                    this.exporting = false;
-                    this.SetProgress(100);
+                        throw;
+                    }
+                    finally
+                    {
+                        this.exporting = false;
+                        this.SetProgress(100);
+                    }
                 }
 
                 this.UpdateData();
+            }
+        }
+
+        /// <summary>
+        /// Checks if the current database contains changes and checks if this changes are in conflict with the not imported
+        /// diff files.
+        /// </summary>
+        public bool ImportConflicts(string dumpCreatorPath, string host, string id, string password)
+        {
+            var tmpDumpPath = System.IO.Path.Combine(this.Path, $"{DatabaseVersion.TempDumpName}{SQLTemplates.DumpFile}");
+
+            try
+            {
+                // check if database contains changes
+                this.CreateDump(tmpDumpPath, dumpCreatorPath, host, id, password);
+
+                if (this.fileSystemAccess.GetFileSize(tmpDumpPath) == this.fileSystemAccess.GetFileSize(this.CurrentDumpLocation))
+                {
+                    // check files byte by byte
+                    var oldDump = this.fileSystemAccess.ReadAllText(this.CurrentDumpLocation);
+                    var newDump = this.fileSystemAccess.ReadAllText(tmpDumpPath);
+
+                    if (oldDump.Equals(newDump))
+                    {
+                        return false;
+                    }
+                }
+
+                //// var stream = new MemoryStream();
+                //// todo finish implementation
+                //// this.differenceCreator.CreateRaw(this.Name, this.CurrentDumpLocation, tmpDumpPath);
+
+                return true;
+            }
+            finally
+            {
+                // delete temp files afterwards
+                if (this.fileSystemAccess.FileExists(tmpDumpPath))
+                {
+                    this.fileSystemAccess.DeleteFile(tmpDumpPath);
+                }
             }
         }
 
@@ -402,7 +483,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         public void CreateDiffFile(string firstDump, string secondDump, string diff)
         {
             if (!this.fileSystemAccess.FileExists(firstDump))
+            {
                 throw new FileNotFoundException(string.Format("Dump not found ({0})", firstDump));
+            }
+
             if (!firstDump.Contains(SQLTemplates.DumpFile)
                 || !secondDump.Contains(SQLTemplates.DumpFile))
             {
@@ -414,8 +498,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             }
 
             // create diff file and throw exception if nothing changed
-            if (!differenceCreator.Create(diff, this.Name, firstDump, secondDump))
+            if (!this.differenceCreator.Create(diff, this.Name, firstDump, secondDump))
+            {
                 throw TeamworkException.NoChanges(firstDump, secondDump);
+            }
         }
 
         /// <summary>
@@ -426,16 +512,22 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             Log.Debug(string.Format("Start updating last applicable version"));
 
             if (this.DiffFiles != null && this.DiffFiles.Count > 0)
+            {
                 this.LastApplicableVersion = this.DiffFiles.Last().Version;
+            }
             else
+            {
                 this.LastApplicableVersion = DatabaseVersion.StartVersion;
+            }
 
             Log.Debug(string.Format("Start updating current version (old: {0})", this.CurrentVersion));
             DatabaseVersion highestVersion = DatabaseVersion.StartVersion;
             foreach (var file in this.GetExecutedFiles())
             {
                 if (file.DatabaseVersion > highestVersion)
+                {
                     highestVersion = file.DatabaseVersion;
+                }
             }
 
             Log.Debug(string.Format("New current Version = {0}", highestVersion));
@@ -456,7 +548,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 // create temp database
                 this.ExecuteCommandNonQuery(SQLTemplates.CreateDatabase(databaseName));
                 this.SetProgress(this.Progress + progressStepSmall);
-                Database managementDatabase = new Database(databaseName, this.Path, this.connectionManager, this.fileSystemAccess, this.processManager, this.differenceCreator, this.sqlFileTester, true);
+                var managementDatabase = new Database(databaseName, this.Path, this.connectionManager, this.fileSystemAccess, this.processManager, this.differenceCreator, this.sqlFileTester, true);
                 managementDatabase.UpdateData();
 
                 var updateProgress = new Action<IEnumerable<SQLFile>, SQLFile>((files, file) =>
@@ -472,7 +564,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 managementDatabase.UpdateToVersion(managementDatabase.LastApplicableVersion, updateProgress);
 
                 if (managementDatabase.UndoDiffFiles.Count > 0)
+                {
                     managementDatabase.UpdateToVersion(managementDatabase.UndoDiffFiles.Last().Version, updateProgress);
+                }
             }
             finally
             {
@@ -485,14 +579,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         }
 
         /// <summary>
-        /// Creates a new instance of the database class and creates the
-        /// teamwork schema (if it does not already exist) and updates 
+        /// Creates a new instance of the database class and creates the teamwork schema (if it does not already exist) and updates
         /// the data from it.
         /// </summary>
         partial void DatabaseCtor()
         {
-            this.Name = this.name;
-            this.Path = this.path;
+            this.Name = this.databaseName;
+            this.Path = this.databasePath;
 
             this.CreateTeamworkSchema();
 
@@ -535,26 +628,30 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         {
             // do not reload files while exporting
             if (this.exporting)
+            {
                 return;
+            }
 
             var diffFiles = new ObservableCollection<SQLFile>();
             var undoDiffFiles = new ObservableCollection<SQLFile>();
 
             Log.Info(string.Format("Start searching files in path {0} for database {1}", this.Path, this.Name));
-            if (fileSystemAccess.DirectoryExists(this.Path))
+            if (this.fileSystemAccess.DirectoryExists(this.Path))
             {
                 // first dump is added others are ignored
-                bool dumpNeeded = true;
+                var dumpNeeded = true;
 
                 // return if no files changed
-                var files = fileSystemAccess.GetFiles(this.Path);
+                var files = this.fileSystemAccess.GetFiles(this.Path);
                 if (!force
                         && this.cachedFiles.Count() == files.Count()
                         && this.cachedFiles.Any(f => files.Contains(f)))
+                {
                     return;
+                }
 
                 this.cachedFiles = files;
-                foreach (string file in files)
+                foreach (var file in files)
                 {
                     try
                     {
@@ -568,9 +665,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                             }
                         }
                         else if (file.Contains(SQLTemplates.DiffFile))
+                        {
                             diffFiles.Add(new SQLFile(file, this, this.fileSystemAccess));
+                        }
                         else if (file.Contains(SQLTemplates.UndoDiffFile))
+                        {
                             undoDiffFiles.Add(new SQLFile(file, this, this.fileSystemAccess));
+                        }
                     }
                     catch (ArgumentException ex)
                     {
@@ -584,13 +685,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             if (this.UndoDiffFiles == null
                             || undoDiffFiles.Count != this.UndoDiffFiles.Count
                             || undoDiffFiles.Any(f => this.UndoDiffFiles.FirstOrDefault((oldFile) => oldFile.Version == f.Version) == null))
+            {
                 this.UndoDiffFiles = new ObservableCollection<SQLFile>(undoDiffFiles.OrderByDescending(f => f.Version.Main));
+            }
 
             Log.Info(string.Format("Found {0} diff files", diffFiles.Count));
             if (this.DiffFiles == null
                             || diffFiles.Count != this.DiffFiles.Count
                             || diffFiles.Any(f => this.DiffFiles.FirstOrDefault((oldFile) => oldFile.Version == f.Version) == null))
+            {
                 this.DiffFiles = new ObservableCollection<SQLFile>(diffFiles.OrderBy(f => f.Version.Full));
+            }
 
             var executedStatements = this.GetExecutedFiles();
             var notAppliedFiles = diffFiles.Where(f => executedStatements.FirstOrDefault(s => s.DatabaseVersion == f.Version) == null).ToList();
@@ -599,15 +704,21 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
             Log.Debug("*** DIFF FILES ***");
             foreach (SQLFile sqlFile in this.DiffFiles)
+            {
                 Log.DebugFormat(sqlFile.Path);
+            }
 
             Log.Debug("*** UNDO DIFF FILES ***");
             foreach (SQLFile sqlFile in this.UndoDiffFiles)
+            {
                 Log.DebugFormat(sqlFile.Path);
+            }
 
             Log.Debug("*** NOT APPLIED FILES ***");
             foreach (SQLFile sqlFile in notAppliedFiles)
+            {
                 Log.DebugFormat(sqlFile.Path);
+            }
         }
 
         /// <summary>
@@ -629,7 +740,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         {
             var directory = this.Path;
             if (!directory.EndsWith("\\"))
+            {
                 directory += "\\";
+            }
 
             directory += prefix + extension;
 
@@ -644,7 +757,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         private void SetProgress(double progress, string message = null)
         {
             if (message != null)
+            {
                 Log.Debug(message);
+            }
 
             this.Progress = progress;
             this.ProgressInfo = message;

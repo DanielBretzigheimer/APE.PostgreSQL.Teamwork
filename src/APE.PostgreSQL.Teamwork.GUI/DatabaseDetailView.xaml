@@ -8,6 +8,7 @@
 			 xmlns:system="clr-namespace:System;assembly=System"
              x:Class="APE.PostgreSQL.Teamwork.GUI.DatabaseDetailView"
              xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
 			 xmlns:sys="clr-namespace:System;assembly=mscorlib"
 			 xmlns:lib="http://schemas.thinkpixellab.com/2011/xaml/presentation"
 			 xmlns:materialDesign="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
@@ -180,7 +181,8 @@
                                     <materialDesign:PackIcon Kind="PlusCircleOutline" RenderOptions.BitmapScalingMode="HighQuality" />
                                 </Button>
 
-                                <Button Padding="4" FontSize="20" Command="{Binding OpenPathCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}" 
+                                <Button Padding="4" FontSize="20" Command="{Binding OpenPathCommand}" 
+                                        Style="{StaticResource MaterialDesignFlatRoundButton}" 
 											IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}"
                                             ToolTip="Open diff path" Width="30">
                                     <materialDesign:PackIcon Kind="Folder" RenderOptions.BitmapScalingMode="HighQuality" />
@@ -246,15 +248,30 @@
                                     <ColumnDefinition Width="30" />
                                 </Grid.ColumnDefinitions>
                                 <TextBox VerticalAlignment="Center" IsEnabled="False" Text="{Binding Database.CurrentVersion, Mode=OneWay}"
-										 materialDesign:HintAssist.Hint="Version" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" >
+                                    <materialDesign:HintAssist.Hint>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Information" Margin="0 0 5 0"
+                                                 Foreground="{Binding Path=BorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=TextBox}}" />
+                                            <TextBlock VerticalAlignment="Center" Text="Version" Foreground="{Binding Path=BorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=TextBox}}" />
+                                        </StackPanel>
+                                    </materialDesign:HintAssist.Hint>
+                                </TextBox>
+                                
                                 <Button Padding="0" Grid.Column="1" Height="30" Width="30" Command="{Binding ReduceVersionCommand}"
-                            Style="{StaticResource MaterialDesignFlatRoundButton}" Background="Transparent" >
+                                        Style="{StaticResource MaterialDesignFlatRoundButton}" Background="Transparent" >
                                     <materialDesign:PackIcon Kind="MenuDown" RenderOptions.BitmapScalingMode="HighQuality" />
                                 </Button>
                             </Grid>
 
-                            <TextBox Margin="0 8 0 8" IsEnabled="{Binding EditMode}"
-										 materialDesign:HintAssist.Hint="Database name" Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                            <TextBox Margin="0 8 0 8" IsEnabled="{Binding EditMode}" Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                                <materialDesign:HintAssist.Hint>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="Database" Margin="0 0 5 0"
+                                                 Foreground="{Binding Path=BorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=TextBox}}" />
+                                        <TextBlock VerticalAlignment="Center" Text="Database Name" Foreground="{Binding Path=BorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=TextBox}}" />
+                                    </StackPanel>
+                                </materialDesign:HintAssist.Hint>
                                 <Binding Path="Database.Name" UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
                                         <local:CheckDatabaseValidationRule ValidatesOnTargetUpdated="True" />
@@ -262,18 +279,22 @@
                                 </Binding>
                             </TextBox>
 
-                            <TextBlock Text="Path" FontSize="10" Foreground="Gray" />
-                            <Button IsEnabled="{Binding EditMode}" Command="{Binding EditPathCommand}" ToolTip="Datenbank Verzeichnis wählen">
-                                <Grid>
-                                    <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="10" />
-                                        <ColumnDefinition Width="auto" />
-                                    </Grid.ColumnDefinitions>
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding Database.Path}" IsEnabled="False" TextTrimming="CharacterEllipsis" />
-                                    <materialDesign:PackIcon Grid.Column="2" Kind="Folder" RenderOptions.BitmapScalingMode="HighQuality" />
-                                </Grid>
-                            </Button>
+                            <TextBox IsReadOnly="True" Text="{Binding Database.Path}"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                         IsEnabled="{Binding EditMode}" >
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding EditPathCommand}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <materialDesign:HintAssist.Hint>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="Folder" Margin="0 0 5 0"
+                                                 Foreground="{Binding Path=BorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=TextBox}}" />
+                                        <TextBlock VerticalAlignment="Center" Text="Path" Foreground="{Binding Path=BorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=TextBox}}" />
+                                    </StackPanel>
+                                </materialDesign:HintAssist.Hint>
+                            </TextBox>
                         </StackPanel>
                     </Expander>
 

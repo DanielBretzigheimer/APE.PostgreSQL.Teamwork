@@ -1,4 +1,4 @@
-﻿// <copyright file="sqltemplates.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+﻿// <copyright file="SQLTemplates.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using System.IO;
 using System.Reflection;
@@ -49,6 +49,7 @@ namespace APE.PostgreSQL.Teamwork.Model.Templates
         private static string addExecutedFile;
         private static string getTables;
 
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Justification = "This is ok because we want to raise this exception as soon as the application is started!")]
         static SQLTemplates()
         {
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Templates";
@@ -75,7 +76,9 @@ namespace APE.PostgreSQL.Teamwork.Model.Templates
                 || removeVersion == null
                 || addExecutedFile == null
                 || getTables == null)
-                throw new Exception("Properties.Resources not found");
+            {
+                throw new FileNotFoundException("Properties.Resources not found");
+            }
         }
 
         /// <summary>
@@ -169,7 +172,9 @@ namespace APE.PostgreSQL.Teamwork.Model.Templates
             // ignores the whole statement which add the file to the ExecutedFiles if it is an undo diff
             var ignore = string.Empty;
             if (fileType == FileType.UndoDiff)
+            {
                 ignore = Comment;
+            }
 
             return addExecutedFile
                 .Replace("[Schema]", PostgreSQLTeamworkSchemaName)
@@ -181,7 +186,7 @@ namespace APE.PostgreSQL.Teamwork.Model.Templates
         }
 
         /// <summary>
-        /// Gets a SQL string which can add a row into the execution history. 
+        /// Gets a SQL string which can add a row into the execution history.
         /// </summary>
         /// <param name="version">Version of the SQL file.</param>
         /// <param name="fileType">The type of the file (diff, dump...).</param>

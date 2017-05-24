@@ -72,7 +72,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
                 "OWNER TO public;",
                 "BEGIN;",
                 "COMMIT;",
-                "Blub"
+                "Blub",
             };
 
             fileMock.Setup(f => f.ReadAllLines(It.IsAny<string>())).Returns(sqlStatements);

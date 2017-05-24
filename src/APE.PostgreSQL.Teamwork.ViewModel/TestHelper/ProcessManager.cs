@@ -1,4 +1,4 @@
-﻿// <copyright file="processmanager.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+﻿// <copyright file="ProcessManager.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -27,7 +27,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.TestHelper
 
         private void Execute(ProcessStartInfo startInfo, bool async)
         {
-            Process process = new Process();
+            var process = new Process();
 
             startInfo.CreateNoWindow = true;
             startInfo.WindowStyle = ProcessWindowStyle.Hidden;

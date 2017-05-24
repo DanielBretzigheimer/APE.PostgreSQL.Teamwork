@@ -21,7 +21,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for creation of new indexes.
         /// </summary>
-        public static void Create(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Create(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             foreach (PgTable newTable in newSchema.Tables)
             {
@@ -50,13 +50,15 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for dropping indexes that exist no more.
         /// </summary>
-        public static void Drop(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Drop(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             foreach (PgTable newTable in newSchema.Tables)
             {
                 PgTable oldTable = null;
                 if (oldSchema != null)
+                {
                     oldTable = oldSchema.GetTable(newTable.Name);
+                }
 
                 // Drop indexes that do not exist in new schema or are modified
                 foreach (PgIndex index in GetDropIndexes(oldTable, newTable))
@@ -71,22 +73,26 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for index comments that have changed.
         /// </summary>
-        public static void AlterComments(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void AlterComments(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
+            {
                 return;
+            }
 
             foreach (PgIndex oldIndex in oldSchema.Indexes)
             {
                 PgIndex newIndex = newSchema.GetIndex(oldIndex.Name);
 
                 if (newIndex == null)
+                {
                     continue;
+                }
 
-                if (oldIndex.Comment == null && newIndex.Comment != null
-                    || oldIndex.Comment != null
+                if ((oldIndex.Comment == null && newIndex.Comment != null)
+                    || (oldIndex.Comment != null
                     && newIndex.Comment != null
-                    && !oldIndex.Comment.Equals(newIndex.Comment))
+                    && !oldIndex.Comment.Equals(newIndex.Comment)))
                 {
                     searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();
@@ -110,7 +116,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Returns list of indexes that should be dropped.
         /// </summary>
-        private static IList<PgIndex> GetDropIndexes(PgTable oldTable, PgTable newTable)
+        private static IList<PgIndex> GetDropIndexes([NullGuard.AllowNull] PgTable oldTable, [NullGuard.AllowNull] PgTable newTable)
         {
             // todo db Teamwork Indexes that are depending on a removed field should not be added
             // to drop because they are already removed.
@@ -119,8 +125,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             if (newTable != null && oldTable != null)
             {
                 foreach (PgIndex index in oldTable.Indexes)
+                {
                     if (!newTable.ContainsIndex(index.Name) || !newTable.GetIndex(index.Name).Equals(index))
+                    {
                         list.Add(index);
+                    }
+                }
             }
 
             return list;
@@ -129,23 +139,31 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Returns list of indexes that should be added.
         /// </summary>
-        private static IList<PgIndex> GetNewIndexes(PgTable oldTable, PgTable newTable)
+        private static IList<PgIndex> GetNewIndexes([NullGuard.AllowNull] PgTable oldTable, [NullGuard.AllowNull] PgTable newTable)
         {
             IList<PgIndex> indexes = new List<PgIndex>();
 
             if (newTable == null)
+            {
                 return indexes;
+            }
 
             if (oldTable == null)
             {
                 foreach (PgIndex index in newTable.Indexes)
+                {
                     indexes.Add(index);
+                }
             }
             else
             {
                 foreach (PgIndex index in newTable.Indexes)
+                {
                     if (!oldTable.ContainsIndex(index.Name) || !oldTable.GetIndex(index.Name).Equals(index))
+                    {
                         indexes.Add(index);
+                    }
+                }
             }
 
             return indexes;

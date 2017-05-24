@@ -30,19 +30,21 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder creationSql = new StringBuilder(500);
+                var creationSql = new StringBuilder(500);
 
                 creationSql.AppendLine();
                 creationSql.Append("CREATE AGGREGATE ");
                 creationSql.Append(PgDiffStringExtension.QuoteName(this.Name));
                 creationSql.Append('(');
 
-                bool addComma = false;
+                var addComma = false;
 
                 foreach (Argument argument in this.Arguments)
                 {
                     if (addComma)
+                    {
                         creationSql.Append(", ");
+                    }
 
                     creationSql.Append(argument.DataType);
 
@@ -64,7 +66,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                     foreach (Argument argument in this.Arguments)
                     {
                         if (addComma)
+                        {
                             creationSql.Append(", ");
+                        }
 
                         creationSql.Append(argument.DataType);
 
@@ -88,16 +92,18 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder dropSql = new StringBuilder(100);
+                var dropSql = new StringBuilder(100);
                 dropSql.Append("DROP AGGREGATE IF EXISTS ");
                 dropSql.Append(PgDiffStringExtension.QuoteName(this.Name));
                 dropSql.Append('(');
 
-                bool addComma = false;
+                var addComma = false;
                 foreach (Argument argument in this.Arguments)
                 {
                     if (addComma)
+                    {
                         dropSql.Append(", ");
+                    }
 
                     dropSql.Append(argument.DataType);
                     addComma = true;
@@ -111,16 +117,19 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets the comment.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Comment { get; set; }
 
         /// <summary>
         /// Gets the whole definition of the aggregate from RETURNS keyword.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Body { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the aggregate including argument types.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Name { get; set; }
 
         /// <summary>
@@ -137,16 +146,18 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder signature = new StringBuilder(100);
+                var signature = new StringBuilder(100);
                 signature.Append(this.Name);
                 signature.Append('(');
 
-                bool addComma = false;
+                var addComma = false;
 
                 foreach (Argument argument in this.Arguments)
                 {
                     if (addComma)
+                    {
                         signature.Append(',');
+                    }
 
                     signature.Append(argument.DataType.ToLower(new System.Globalization.CultureInfo("en")));
 
@@ -162,18 +173,22 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Determines whether the specified object is equal to the current object.
         /// </summary>
-        public override bool Equals(object obj)
+        public override bool Equals([NullGuard.AllowNull] object obj)
         {
             if (!(obj is PgAggregate))
+            {
                 return false;
+            }
             else if (obj == this)
+            {
                 return true;
+            }
 
             return this.Equals(obj, false);
         }
 
         /// <summary>
-        /// Compares two objects whether they are equal. If both objects are of the same class but they equal just in whitespace in 
+        /// Compares two objects whether they are equal. If both objects are of the same class but they equal just in whitespace in
         /// there body, they are considered being equal.
         /// </summary>
         /// <param name="obj">Object to be compared.</param>
@@ -184,15 +199,18 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         public bool Equals(object obj, bool ignoreAggregateWhitespace)
         {
             if (this == obj)
-                return true;
-            else if (obj is PgAggregate)
             {
-                PgAggregate aggregate = (PgAggregate)obj;
-                if (this.Name == null && aggregate.Name != null || this.Name != null && !this.Name.Equals(aggregate.Name))
+                return true;
+            }
+            else if (obj is PgAggregate aggregate)
+            {
+                if ((this.Name == null && aggregate.Name != null)
+                    || (this.Name != null && !this.Name.Equals(aggregate.Name)))
+                {
                     return false;
+                }
 
                 string thisBody;
-
                 string thatBody;
 
                 if (ignoreAggregateWhitespace)
@@ -206,17 +224,23 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                     thatBody = aggregate.Body;
                 }
 
-                if (thisBody == null && thatBody != null || thisBody != null && !thisBody.Equals(thatBody))
+                if ((thisBody == null && thatBody != null) || (thisBody != null && !thisBody.Equals(thatBody)))
+                {
                     return false;
+                }
 
                 if (this.Arguments.Count != aggregate.Arguments.Count)
+                {
                     return false;
+                }
                 else
                 {
-                    for (int i = 0; i < this.Arguments.Count; i++)
+                    for (var i = 0; i < this.Arguments.Count; i++)
                     {
                         if (!this.Arguments[i].Equals(aggregate.Arguments[i]))
+                        {
                             return false;
+                        }
                     }
                 }
 
@@ -232,7 +256,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <returns>A hash code for the current object.</returns>
         public override int GetHashCode()
         {
-            StringBuilder hashCode = new StringBuilder(500);
+            var hashCode = new StringBuilder(500);
             hashCode.Append(this.Body);
             hashCode.Append('|');
             hashCode.Append(this.Name);
@@ -254,19 +278,24 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             /// <summary>
             /// Gets or sets the <see cref="DataType"/> of this <see cref="Argument"/>.
             /// </summary>
+            [NullGuard.AllowNull]
             public string DataType { get; set; }
 
             /// <summary>
             /// Determines whether the specified object is equal to the current object.
             /// </summary>
-            public override bool Equals(object obj)
+            public override bool Equals([NullGuard.AllowNull] object obj)
             {
                 if (!(obj is Argument))
+                {
                     return false;
+                }
                 else if (this == obj)
+                {
                     return true;
+                }
 
-                Argument argument = (Argument)obj;
+                var argument = (Argument)obj;
 
                 return this.DataType == null ?
                     argument.DataType == null :
@@ -279,8 +308,8 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             /// <returns>A hash code for the current object.</returns>
             public override int GetHashCode()
             {
-                StringBuilder hashCode = new StringBuilder(50);
-                hashCode.Append(this.DataType == null ? null : this.DataType.ToUpper(new System.Globalization.CultureInfo("en")));
+                var hashCode = new StringBuilder(50);
+                hashCode.Append(this.DataType?.ToUpper(new System.Globalization.CultureInfo("en")));
                 return hashCode.ToString().GetHashCode();
             }
         }

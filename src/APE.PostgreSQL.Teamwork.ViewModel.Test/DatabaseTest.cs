@@ -91,9 +91,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             // set this because in create dump a SQL File is created which needs this
             fileMock.Setup(f => f.FileExists(It.IsAny<string>())).Returns(true);
 
-            var d = new Database(name, path, connectionManagerMock.Object, fileMock.Object, processMock.Object, diffCreatorMock.Object, sqlFileTester.Object, initializeData: false);
-
-            d.CurrentVersion = DatabaseVersion.StartVersion;
+            var d = new Database(name, path, connectionManagerMock.Object, fileMock.Object, processMock.Object, diffCreatorMock.Object, sqlFileTester.Object, initializeData: false)
+            {
+                CurrentVersion = DatabaseVersion.StartVersion,
+            };
             d.CreateDump(string.Empty, string.Empty, string.Empty, string.Empty);
 
             processMock.VerifyAll();
@@ -190,9 +191,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             connectionManagerMock.Setup(c => c.ExecuteCommand<ExecutedFile>(It.IsAny<IDatabase>(), It.IsAny<string>())).Returns(new List<ExecutedFile>());
 
             // UpdateData is called internally when bool is set to true
-            var database = new Database(name, path, connectionManagerMock.Object, fileMock.Object, processMock.Object, diffCreatorMock.Object, sqlFileTester.Object, initializeData: false);
-
-            database.CurrentVersion = DatabaseVersion.StartVersion;
+            var database = new Database(name, path, connectionManagerMock.Object, fileMock.Object, processMock.Object, diffCreatorMock.Object, sqlFileTester.Object, initializeData: false)
+            {
+                CurrentVersion = DatabaseVersion.StartVersion,
+            };
             connectionManagerMock.Setup(c => c.ExecuteCommandNonQuery(It.IsAny<IDatabase>(), SQLTemplates.RemoveVersion(database.CurrentVersion))).Verifiable();
 
             database.ReduceVersion();
@@ -257,7 +259,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             // UpdateData is called internally when bool is set to true
             var database = new Database(name, path, connectionManagerMock.Object, fileMock.Object, processMock.Object, diffCreatorMock.Object, sqlFileTester.Object, initializeData: false);
 
-            connectionManagerMock.Setup(c => c.ExecuteCommandNonQuery(It.IsAny<IDatabase>(), SQLTemplates.CreateDatabase(It.IsAny<string>())));
+            connectionManagerMock.Setup(c => c.ExecuteCommandNonQuery(It.IsAny<IDatabase>(), SQLTemplates.CreateDatabase(name)));
 
             database.Reset();
 

@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
+using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 {
@@ -22,16 +23,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         public static void Parse(PgDatabase database, string statement)
         {
-            Parser parser = new Parser(statement);
+            var parser = new Parser(statement);
             parser.Expect("CREATE");
             parser.ExpectOptional("OR", "REPLACE");
             parser.Expect("VIEW");
 
-            string viewName = parser.ParseIdentifier();
+            var viewName = parser.ParseIdentifier();
 
-            bool columnsExist = parser.ExpectOptional("(");
+            var columnsExist = parser.ExpectOptional("(");
 
-            List<string> columnNames = new List<string>(10);
+            var columnNames = new List<string>(10);
 
             if (columnsExist)
             {
@@ -44,18 +45,21 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             parser.Expect("AS");
 
-            string query = parser.Rest;
+            var query = parser.Rest;
 
-            PgView view = new PgView(ParserUtils.GetObjectName(viewName));
-            view.ColumnNames = columnNames;
-            view.Query = query;
-
-            string schemaName = ParserUtils.GetSchemaName(viewName, database);
+            var view = new PgView(ParserUtils.GetObjectName(viewName))
+            {
+                ColumnNames = columnNames,
+                Query = query,
+            };
+            var schemaName = ParserUtils.GetSchemaName(viewName, database);
 
             PgSchema schema = database.GetSchema(schemaName);
 
             if (schema == null)
-                throw new Exception(string.Format("CannotFindSchema", schemaName, statement));
+            {
+                throw new TeamworkParserException($"CannotFindSchema {schemaName} {statement}");
+            }
 
             schema.AddView(view);
         }

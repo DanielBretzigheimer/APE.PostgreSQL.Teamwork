@@ -1,4 +1,4 @@
-// <copyright file="differencecreator.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+// <copyright file="DifferenceCreator.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using System.IO;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
@@ -23,19 +23,39 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <returns>A bool indicating differences where found.</returns>
         public bool Create(string filePath, string databaseName, string oldDumpFile, string newDumpFile)
         {
+            var result = false;
+            using (var writer = new StreamWriter(filePath))
+            {
+                result = this.Create(writer, databaseName, oldDumpFile, newDumpFile);
+            }
+
+            return result;
+        }
+
+        /// <summary>
+        /// Creates a diff of the database between the two dump files and writes it to the stream writer.
+        /// </summary>
+        /// <returns>A bool indicating differences where found.</returns>
+        public bool Create(Stream stream, string databaseName, string oldDumpFile, string newDumpFile)
+        {
+            var result = false;
+            using (var writer = new StreamWriter(stream))
+            {
+                result = this.Create(writer, databaseName, oldDumpFile, newDumpFile);
+            }
+
+            return result;
+        }
+
+        public bool Create(StreamWriter writer, string databaseName, string oldDumpFile, string newDumpFile)
+        {
             PgDatabase oldDatabase = PgDumpLoader.LoadDatabaseSchema(oldDumpFile, databaseName, false, false);
             PgDatabase newDatabase = PgDumpLoader.LoadDatabaseSchema(newDumpFile, databaseName, false, false);
 
-            bool created = false;
-
-            // write diff file
-            using (StreamWriter writer = new StreamWriter(filePath))
-            {
-                // mark the file as deleteable if no changes where made
-                created = this.DiffDatabaseSchemas(writer, oldDatabase, newDatabase, false);
-                writer.Close();
-            }
-
+            // mark the file as deleteable if no changes where made
+            var created = false;
+            created = this.DiffDatabaseSchemas(writer, oldDatabase, newDatabase, false);
+            writer.Close();
             return created;
         }
 
@@ -45,9 +65,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         private bool DiffDatabaseSchemas(StreamWriter writer, PgDatabase oldDatabase, PgDatabase newDatabase, bool outputIgnoredStatements)
         {
             writer.Flush();
-            long startLength = writer.BaseStream.Length;
+            var startLength = writer.BaseStream.Length;
 
-            if (oldDatabase.Comment == null && newDatabase.Comment != null || oldDatabase.Comment != null && newDatabase.Comment != null && !oldDatabase.Comment.Equals(newDatabase.Comment))
+            if ((oldDatabase.Comment == null && newDatabase.Comment != null) ||
+                (oldDatabase.Comment != null && newDatabase.Comment != null && !oldDatabase.Comment.Equals(newDatabase.Comment)))
             {
                 writer.WriteLine();
                 writer.Write("COMMENT ON DATABASE " + newDatabase.Name + " IS ");
@@ -72,7 +93,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                     writer.Write("/* ");
                     writer.WriteLine("OriginalDatabaseIgnoredStatements");
 
-                    foreach (string statement in oldDatabase.IgnoredStatements)
+                    foreach (var statement in oldDatabase.IgnoredStatements)
                     {
                         writer.WriteLine();
                         writer.WriteLine(statement);
@@ -87,7 +108,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                     writer.Write("/* ");
                     writer.WriteLine("NewDatabaseIgnoredStatements");
 
-                    foreach (string statement in newDatabase.IgnoredStatements)
+                    foreach (var statement in newDatabase.IgnoredStatements)
                     {
                         writer.WriteLine();
                         writer.WriteLine(statement);
@@ -100,10 +121,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             writer.Flush();
 
             // check if new content was written
-            if (writer.BaseStream.Length > startLength)
-                return true;
-            else
-                return false;
+            return writer.BaseStream.Length > startLength;
         }
 
         private void CreateNewSchemas(StreamWriter writer, PgDatabase oldDatabase, PgDatabase newDatabase)
@@ -122,15 +140,19 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         private void DropOldSchemas(StreamWriter writer, PgDatabase oldDatabase, PgDatabase newDatabase)
         {
             foreach (PgSchema oldSchema in oldDatabase.Schemas)
+            {
                 if (newDatabase.GetSchema(oldSchema.Name) == null)
                 {
                     // ignore the teamwork schema, because it is needed to check the version
                     if (oldSchema.Name == SQLTemplates.PostgreSQLTeamworkSchemaName)
+                    {
                         continue;
+                    }
 
                     writer.WriteLine();
                     writer.WriteLine("DROP SCHEMA IF EXISTS " + oldSchema.Name.QuoteName() + " CASCADE;");
                 }
+            }
         }
 
         private void UpdateSchemas(StreamWriter writer, PgDatabase oldDatabase, PgDatabase newDatabase)
@@ -139,15 +161,22 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
 
             foreach (var newSchema in newDatabase.Schemas)
             {
-                // ignore the teamwork schema, because it is automatically created 
+                // ignore the teamwork schema, because it is automatically created
                 if (newSchema.Name == SQLTemplates.PostgreSQLTeamworkSchemaName)
+                {
                     continue;
+                }
 
                 var searchPathHelper = new SearchPathHelper(newSchema);
                 var oldSchema = oldDatabase.GetSchema(newSchema.Name);
+                {
+                }
+                {
+                }
                 if (oldSchema != null)
                 {
-                    if (oldSchema.Comment == null && newSchema.Comment != null || oldSchema.Comment != null && newSchema.Comment != null && !oldSchema.Comment.Equals(newSchema.Comment))
+                    if ((oldSchema.Comment == null && newSchema.Comment != null)
+                        || (oldSchema.Comment != null && newSchema.Comment != null && !oldSchema.Comment.Equals(newSchema.Comment)))
                     {
                         writer.WriteLine();
                         writer.Write("COMMENT ON SCHEMA ");

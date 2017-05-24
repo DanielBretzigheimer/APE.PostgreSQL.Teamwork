@@ -1,4 +1,4 @@
-﻿// <copyright file="settingview.xaml.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+﻿// <copyright file="SettingView.xaml.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,34 +17,36 @@ using MaterialDesignThemes.Wpf;
 
 namespace APE.PostgreSQL.Teamwork.GUI
 {
-	/// <summary>
-	/// A <see cref="UserControl"/> which contains all settings.
-	/// </summary>
-	public partial class SettingView : UserControl
-	{
+    /// <summary>
+    /// A <see cref="UserControl"/> which contains all settings.
+    /// </summary>
+    public partial class SettingView : UserControl
+    {
         private SettingViewModel viewModel = null;
 
-		public SettingView(IConnectionManager connectionManager)
-		{
-			try
-			{
+        public SettingView(IConnectionManager connectionManager)
+        {
+            try
+            {
                 this.viewModel = new SettingViewModel(connectionManager);
                 this.DataContext = this.viewModel;
-				this.InitializeComponent();
+                this.InitializeComponent();
                 this.passwordBox.Password = this.viewModel.Password;
             }
-			catch (Exception e)
-			{
-				var n = new Greg.WPF.Utility.ExceptionMessageBox(e, "Unhandled Exception");
-				n.ShowDialog();
-			}
-		}
+            catch (Exception e)
+            {
+                var n = new Greg.WPF.Utility.ExceptionMessageBox(e, "Unhandled Exception");
+                n.ShowDialog();
+            }
+        }
 
-		private void Close(object sender, RoutedEventArgs e)
-		{
-			if (DialogHost.CloseDialogCommand.CanExecute(true, this))
-				DialogHost.CloseDialogCommand.Execute(true, this);
-		}
+        private void Close(object sender, RoutedEventArgs e)
+        {
+            if (DialogHost.CloseDialogCommand.CanExecute(true, this))
+            {
+                DialogHost.CloseDialogCommand.Execute(true, this);
+            }
+        }
 
         private void PasswordBoxPasswordChanged(object sender, RoutedEventArgs e)
         {

@@ -20,44 +20,47 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// <param name="statement">The SQL statement of the <see cref="PgType"/>.</param>
         public static void Parse(PgDatabase database, string statement)
         {
-            Parser parser = new Parser(statement);
+            var parser = new Parser(statement);
             parser.Expect("CREATE");
             parser.Expect("TYPE");
 
-            string typeName = parser.ParseIdentifier();
+            var typeName = parser.ParseIdentifier();
 
             parser.Expect("AS");
 
             // check if type is enum
             if (parser.ExpectOptional("ENUM"))
             {
-                List<string> enumEntries = new List<string>();
+                var enumEntries = new List<string>();
 
-                bool columnsExist = parser.ExpectOptional("(");
+                var columnsExist = parser.ExpectOptional("(");
 
                 if (columnsExist)
                 {
                     while (!parser.ExpectOptional(")"))
                     {
-                        string entry = parser.ParseString();
+                        var entry = parser.ParseString();
                         enumEntries.Add(ParserUtils.GetObjectName(entry));
                         parser.ExpectOptional(",");
                     }
                 }
 
-                PgType type = new PgType(ParserUtils.GetObjectName(typeName), true);
-                type.EnumEntries = enumEntries;
-
-                string schemaName = ParserUtils.GetSchemaName(typeName, database);
+                var type = new PgType(ParserUtils.GetObjectName(typeName), true)
+                {
+                    EnumEntries = enumEntries,
+                };
+                var schemaName = ParserUtils.GetSchemaName(typeName, database);
                 PgSchema schema = database.GetSchema(schemaName);
                 if (schema == null)
+                {
                     throw new Exception(string.Format("Cannot find schema {0}. Statement {1}", schemaName, statement));
+                }
 
                 schema.AddType(type);
             }
             else
             {
-                PgType type = new PgType(ParserUtils.GetObjectName(typeName), false);
+                var type = new PgType(ParserUtils.GetObjectName(typeName), false);
 
                 var arguments = new List<PgArgument>();
 
@@ -74,19 +77,25 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     arguments.Add(new PgArgument(name, datatype));
 
                     if (parser.ExpectOptional(")"))
+                    {
                         break;
+                    }
                     else
+                    {
                         parser.Expect(",");
+                    }
                 }
 
                 type.AttributeArguments = arguments;
 
                 parser.Expect(";");
 
-                string schemaName = ParserUtils.GetSchemaName(typeName, database);
+                var schemaName = ParserUtils.GetSchemaName(typeName, database);
                 PgSchema schema = database.GetSchema(schemaName);
                 if (schema == null)
+                {
                     throw new Exception(string.Format("Cannot find schema {0}. Statement {1}", schemaName, statement));
+                }
 
                 schema.AddType(type);
             }

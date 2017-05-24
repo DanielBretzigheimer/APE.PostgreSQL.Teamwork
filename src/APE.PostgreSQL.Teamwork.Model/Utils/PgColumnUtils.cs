@@ -21,11 +21,12 @@ namespace APE.PostgreSQL.Teamwork.Model.Utils
         /// </summary>
         /// <param name="type">Column type.</param>
         /// <returns>Found default value or null.</returns>
+        [return: NullGuard.AllowNull]
         public static string GetDefaultValue(string type)
         {
             string defaultValue;
 
-            string adjType = type.ToLower(new CultureInfo("en"));
+            var adjType = type.ToLower(new CultureInfo("en"));
 
             if ("smallint".Equals(adjType)
                 || "integer".Equals(adjType)
@@ -40,17 +41,25 @@ namespace APE.PostgreSQL.Teamwork.Model.Utils
                 || adjType.StartsWith("float")
                 || "double".Equals(adjType)
                 || "money".Equals(adjType))
+            {
                 defaultValue = "0";
+            }
             else if (adjType.StartsWith("character varying")
                 || adjType.StartsWith("varchar")
                 || adjType.StartsWith("character")
                 || adjType.StartsWith("char")
                 || "text".Equals(adjType))
+            {
                 defaultValue = "''";
+            }
             else if ("boolean".Equals(adjType))
+            {
                 defaultValue = "false";
+            }
             else
+            {
                 defaultValue = null;
+            }
 
             return defaultValue;
         }

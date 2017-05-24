@@ -1,4 +1,4 @@
-﻿// <copyright file="PgDiffPrevileges.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+﻿// <copyright file="PgDiffPrivileges.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -17,7 +17,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Adds <see cref="PgPrivilegeCommand.Grant"/> and <see cref="PgPrivilegeCommand.Revoke"/> privileges.
         /// </summary>
-        public static void Create(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Create(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             // Add new sequences
             foreach (var privilege in newSchema.Privileges)
@@ -32,7 +32,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             }
 
             if (oldSchema == null)
+            {
                 return;
+            }
 
             // revert privileges
             foreach (var privilege in oldSchema.Privileges)

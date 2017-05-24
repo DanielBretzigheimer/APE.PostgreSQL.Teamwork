@@ -10,7 +10,7 @@ using log4net;
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {
     /// <summary>
-    /// Base class for all ViewModels which contains a logger and
+    /// Base partial class for all ViewModels which contains a logger and
     /// the possibility to execute a action in an task.
     /// </summary>
     [NotifyPropertySupport]
@@ -38,13 +38,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         // Get basic views
         public static Func<object> GetAddDatabseView { get; set; }
+
         public static Func<object> GetSettingView { get; set; }
 
         /// <summary>
         /// Gets or sets a function which can create a MaterialMessageBox with the given parameters (text, title, buttons).
         /// </summary>
         public static Func<string, string, MessageBoxButton, object> GetMessageBox { get; set; }
+
         public static Action<DatabaseDisplayData> OpenImportWindow { get; set; }
+
         public static Action<SQLFileDisplayData, SQLFileDisplayData> OpenExportWindow { get; set; }
 
         /// <summary>
@@ -60,20 +63,23 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         protected void ExecuteInTask(Action action, Action<bool> setExecuting = null)
         {
             new Task(() =>
+            {
+                try
                 {
-                    try
+                    setExecuting?.Invoke(true);
+                    action();
+                    setExecuting?.Invoke(false);
+                }
+                catch (Exception ex)
+                {
+                    if (Debugger.IsAttached)
                     {
-                        setExecuting?.Invoke(true);
-                        action();
-                        setExecuting?.Invoke(false);
+                        Debugger.Break();
                     }
-                    catch (Exception ex)
-                    {
-                        if (Debugger.IsAttached)
-                            Debugger.Break();
-                        Log.Error("Exception while executing Action in Task", ex);
-                    }
-                }).Start();
+
+                    Log.Error("Exception while executing Action in Task", ex);
+                }
+            }).Start();
         }
     }
 }

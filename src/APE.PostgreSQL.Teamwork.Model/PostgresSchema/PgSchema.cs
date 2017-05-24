@@ -68,11 +68,13 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the authorization for this <see cref="PgSchema"/>
         /// </summary>
+        [NullGuard.AllowNull]
         public string Authorization { get; set; }
 
         /// <summary>
         /// Gets or sets the comment for this <see cref="PgSchema"/>
         /// </summary>
+        [NullGuard.AllowNull]
         public string Comment { get; set; }
 
         /// <summary>
@@ -88,7 +90,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder creationSql = new StringBuilder(50);
+                var creationSql = new StringBuilder(50);
                 creationSql.Append("CREATE SCHEMA ");
                 creationSql.Append(PgDiffStringExtension.QuoteName(this.Name));
 
@@ -220,12 +222,15 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <param name="signature">Signature of the function to be searched.</param>
         /// <returns>Found function or null if no such function has been found.</returns>
+        [return: NullGuard.AllowNull]
         public PgFunction GetFunction(string signature)
         {
             foreach (PgFunction function in this.functions)
             {
                 if (function.Signature.Equals(signature))
+                {
                     return function;
+                }
             }
 
             return null;
@@ -234,12 +239,15 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets the <see cref="PgAggregate"/> with the given signature.
         /// </summary>
+        [return: NullGuard.AllowNull]
         public PgAggregate GetAggregate(string signature)
         {
             foreach (PgAggregate aggregate in this.aggregates)
             {
                 if (aggregate.Signature.Equals(signature))
+                {
                     return aggregate;
+                }
             }
 
             return null;
@@ -248,12 +256,15 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets the <see cref="PgType"/> with the given name.
         /// </summary>
+        [return: NullGuard.AllowNull]
         public PgType GetEnum(string name)
         {
             foreach (PgType type in this.types)
             {
                 if (type.Name == name && type.IsEnum)
+                {
                     return type;
+                }
             }
 
             return null;
@@ -262,12 +273,15 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets the <see cref="PgType"/> with the given signature.
         /// </summary>
+        [return: NullGuard.AllowNull]
         public PgType GetPgType(string signature)
         {
             foreach (PgType type in this.types)
             {
                 if (type.Signature.Equals(signature))
+                {
                     return type;
+                }
             }
 
             return null;
@@ -278,12 +292,15 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <param name="name">Name of the index to be searched.</param>
         /// <returns>Found index or null if no such index has been found.</returns>
+        [return: NullGuard.AllowNull]
         public PgIndex GetIndex(string name)
         {
             foreach (PgIndex index in this.indexes)
             {
                 if (index.Name.Equals(name))
+                {
                     return index;
+                }
             }
 
             return null;
@@ -294,12 +311,15 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <param name="name">Name of the primary key to be searched.</param>
         /// <returns>Found primary key or null if no such primary key has been found.</returns>
+        [return: NullGuard.AllowNull]
         public PgConstraint GetPrimaryKey(string name)
         {
             foreach (PgConstraint constraint in this.primaryKeys)
             {
                 if (constraint.Name.Equals(name))
+                {
                     return constraint;
+                }
             }
 
             return null;
@@ -310,12 +330,15 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <param name="name">Name of the sequence to be searched.</param>
         /// <returns>Found sequence or null if no such sequence has been found.</returns>
+        [return: NullGuard.AllowNull]
         public PgSequence GetSequence(string name)
         {
             foreach (PgSequence sequence in this.sequences)
             {
                 if (sequence.Name.Equals(name))
+                {
                     return sequence;
+                }
             }
 
             return null;
@@ -326,12 +349,15 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <param name="name">Name of the table to be searched.</param>
         /// <returns>Found table or null if no such table has been found.</returns>
+        [return: NullGuard.AllowNull]
         public PgTable GetTable(string name)
         {
             foreach (PgTable table in this.tables)
             {
                 if (table.Name.Equals(name))
+                {
                     return table;
+                }
             }
 
             return null;
@@ -342,12 +368,15 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <param name="name">Name of the view to be searched.</param>
         /// <returns>Found view or null if no such view has been found.</returns>
+        [return: NullGuard.AllowNull]
         public PgView GetView(string name)
         {
             foreach (PgView view in this.views)
             {
                 if (view.Name.Equals(name))
+                {
                     return view;
+                }
             }
 
             return null;
@@ -436,7 +465,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             foreach (PgFunction function in this.functions)
             {
                 if (function.Signature.Equals(signature))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -450,7 +481,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             foreach (PgAggregate aggregate in this.aggregates)
             {
                 if (aggregate.Signature.Equals(signature))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -459,24 +492,29 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets a list of all new entries for the given <see cref="PgType"/> or null if it was not found.
         /// </summary>
+        [return: NullGuard.AllowNull]
         public List<string> TypeEntriesChanged(PgType oldType)
         {
             foreach (PgType type in this.types)
             {
                 if (type.Name == oldType.Name)
                 {
-                    List<string> newEntries = new List<string>();
+                    var newEntries = new List<string>();
 
-                    foreach (string entry in oldType.EnumEntries)
+                    foreach (var entry in oldType.EnumEntries)
                     {
                         if (!type.EnumEntries.Contains(entry))
+                        {
                             return null; // returns null because the old type can't contain more than the new one (means it was deleted and new created)
+                        }
                     }
 
-                    foreach (string entry in type.EnumEntries)
+                    foreach (var entry in type.EnumEntries)
                     {
                         if (!oldType.EnumEntries.Contains(entry))
+                        {
                             newEntries.Add(entry);
+                        }
                     }
 
                     return newEntries;
@@ -496,7 +534,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             foreach (PgType type in this.types)
             {
                 if (type.Signature.Equals(signature))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -512,7 +552,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             foreach (var privilege in this.Privileges)
             {
                 if (privilege.Equals(other))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -528,7 +570,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             foreach (PgSequence sequence in this.sequences)
             {
                 if (sequence.Name.Equals(name))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -542,7 +586,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             foreach (PgTable table in this.tables)
             {
                 if (table.Name.Equals(name))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -556,12 +602,15 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             foreach (PgView view in this.views)
             {
                 if (view.Name.Equals(name))
+                {
                     return true;
+                }
             }
 
             return false;
         }
 
+        [return: NullGuard.AllowNull]
         public override string ToString()
         {
             return $"{this.GetType().Name} {this.Name}";

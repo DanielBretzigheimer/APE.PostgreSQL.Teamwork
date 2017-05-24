@@ -9,25 +9,6 @@ namespace APE.PostgreSQL.Teamwork.GUI
     /// <summary>
     /// This class provides access from framework elements that are not within the visual tree (i.e. in ItemTemplates of ListViews)
     /// </summary>
-    /// <example>
-    /// The following example makes the DataContext of a window accessible from within an ItemTemplate
-    /// <code>
-    /// <![CDATA[
-    ///		<Window>
-    ///			<Window.Resources>
-    ///				<auc:BindingProxy x:Key="viewModelProxy" Data="{Binding}"/>
-    ///			</Window.Resources>
-    ///		
-    ///		<ListView>
-    ///				<ListView.ItemTemplate>
-    ///					<DataTemplate>
-    ///						<TextBox Text="{Binding Data.ViewModelProperty, Source={StaticResource viewModelProxy}}" />
-    ///					</DataTemplate>
-    ///				</ListView.ItemTemplate>
-    ///		</ListView>
-    ///	]]>
-    /// </code>
-    /// </example>
     /// <remarks>Sample taken from <c>http://www.thomaslevesque.com/2011/03/21/wpf-how-to-bind-to-data-when-the-datacontext-is-not-inherited/</c> </remarks>
     public class BindingProxy : Freezable
     {

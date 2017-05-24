@@ -1,6 +1,7 @@
 ﻿// <copyright file="AlterViewParser.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
+using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 {
@@ -21,24 +22,28 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         public static void Parse(PgDatabase database, string statement, bool outputIgnoredStatements)
         {
-            Parser parser = new Parser(statement);
+            var parser = new Parser(statement);
             parser.Expect("ALTER", "VIEW");
 
-            string viewName = parser.ParseIdentifier();
+            var viewName = parser.ParseIdentifier();
 
-            string schemaName = ParserUtils.GetSchemaName(viewName, database);
+            var schemaName = ParserUtils.GetSchemaName(viewName, database);
 
             PgSchema schema = database.GetSchema(schemaName);
 
             if (schema == null)
-                throw new Exception(string.Format("CannotFindSchema", schemaName, statement));
+            {
+                throw new TeamworkParserException($"CannotFindSchema {schemaName} from {statement}");
+            }
 
-            string objectName = ParserUtils.GetObjectName(viewName);
+            var objectName = ParserUtils.GetObjectName(viewName);
 
             PgView view = schema.GetView(objectName);
 
             if (view == null)
-                throw new Exception(string.Format("CannotFindView", viewName, statement));
+            {
+                throw new TeamworkParserException($"CannotFindView {viewName} from {statement}");
+            }
 
             while (!parser.ExpectOptional(";"))
             {
@@ -46,15 +51,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 {
                     parser.ExpectOptional("COLUMN");
 
-                    string columnName = ParserUtils.GetObjectName(parser.ParseIdentifier());
+                    var columnName = ParserUtils.GetObjectName(parser.ParseIdentifier());
 
                     if (parser.ExpectOptional("SET", "DEFAULT"))
                     {
-                        string expression = parser.Expression;
+                        var expression = parser.Expression();
                         view.AddColumnDefaultValue(columnName, expression);
                     }
                     else if (parser.ExpectOptional("DROP", "DEFAULT"))
+                    {
                         view.RemoveColumnDefaultValue(columnName);
+                    }
                     else
                     {
                         parser.ThrowUnsupportedCommand();
@@ -64,12 +71,18 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 {
                     // we do not parse this one so we just consume the identifier
                     if (outputIgnoredStatements)
+                    {
                         database.AddIgnoredStatement("ALTER TABLE " + viewName + " OWNER TO " + parser.ParseIdentifier() + ';');
+                    }
                     else
+                    {
                         parser.ParseIdentifier();
+                    }
                 }
                 else
+                {
                     parser.ThrowUnsupportedCommand();
+                }
             }
         }
     }

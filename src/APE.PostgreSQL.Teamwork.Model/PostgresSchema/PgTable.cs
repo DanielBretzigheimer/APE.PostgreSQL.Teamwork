@@ -49,6 +49,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the name of the index on which the table is clustered.
         /// </summary>
+        [NullGuard.AllowNull]
         public string ClusterIndexName { get; set; }
 
         /// <summary>
@@ -66,6 +67,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the comment for the table.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Comment { get; set; }
 
         /// <summary>
@@ -87,21 +89,25 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder sql = new StringBuilder(1000);
+                var sql = new StringBuilder(1000);
                 sql.Append("CREATE TABLE ");
                 sql.Append(PgDiffStringExtension.QuoteName(this.Name));
                 sql.Append(" (\n");
 
-                bool first = true;
+                var first = true;
 
                 if (this.columns.Count == 0)
+                {
                     sql.Append(')');
+                }
                 else
                 {
                     foreach (PgColumn column in this.columns)
                     {
                         if (first)
+                        {
                             first = false;
+                        }
                         else
                         {
                             sql.Append(",\n");
@@ -120,10 +126,12 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
 
                     first = true;
 
-                    foreach (string tableName in this.inherits)
+                    foreach (var tableName in this.inherits)
                     {
                         if (first)
+                        {
                             first = false;
+                        }
                         else
                         {
                             sql.Append(", ");
@@ -140,13 +148,17 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                     sql.Append("\n");
 
                     if ("OIDS=false".Equals(this.With, StringComparison.CurrentCultureIgnoreCase))
+                    {
                         sql.Append("WITHOUT OIDS");
+                    }
                     else
                     {
                         sql.Append("WITH ");
 
                         if ("OIDS".Equals(this.With, StringComparison.CurrentCultureIgnoreCase) || "OIDS=true".Equals(this.With, StringComparison.CurrentCultureIgnoreCase))
+                        {
                             sql.Append("OIDS");
+                        }
                         else
                         {
                             sql.Append(this.With);
@@ -255,11 +267,13 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// Gets or sets the WITH clause. If value is null then it is not set, otherwise can be set to
         /// OIDS=true, OIDS=false, or storage parameters can be set.
         /// </summary>
+        [NullGuard.AllowNull]
         public string With { get; set; }
 
         /// <summary>
         /// Gets or sets the table space for this <see cref="PgTable"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Tablespace { get; set; }
 
         /// <summary>
@@ -274,7 +288,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 foreach (PgColumn column in this.columns)
                 {
                     if (column.Statistics != null)
+                    {
                         list.Add(column);
+                    }
                 }
 
                 return list;
@@ -286,12 +302,15 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <param name="name">Name of the column to be searched.</param>
         /// <returns>Found column or null if no such column has been found.</returns>
+        [return: NullGuard.AllowNull]
         public PgColumn GetColumn(string name)
         {
             foreach (PgColumn column in this.columns)
             {
                 if (column.Name.Equals(name))
+                {
                     return column;
+                }
             }
 
             return null;
@@ -307,7 +326,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             foreach (PgIndex index in this.indexes)
             {
                 if (index.Name.Equals(name))
+                {
                     return index;
+                }
             }
 
             return null;
@@ -318,12 +339,15 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <param name="name">Name of the trigger to be searched.</param>
         /// <returns>Found trigger or null if no such trigger has been found.</returns>
+        [return: NullGuard.AllowNull]
         public PgTrigger GetTrigger(string name)
         {
             foreach (PgTrigger trigger in this.triggers)
             {
                 if (trigger.Name.Equals(name))
+                {
                     return trigger;
+                }
             }
 
             return null;
@@ -334,12 +358,15 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <param name="name">Name of the constraint to be searched.</param>
         /// <returns>Found constraint or null if no such constraint has been found.</returns>
+        [return: NullGuard.AllowNull]
         public PgConstraint GetConstraint(string name)
         {
             foreach (PgConstraint constraint in this.constraints)
             {
                 if (constraint.Name.Equals(name))
+                {
                     return constraint;
+                }
             }
 
             return null;
@@ -395,7 +422,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             foreach (PgColumn column in this.columns)
             {
                 if (column.Name.Equals(name))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -411,7 +440,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             foreach (PgConstraint constraint in this.constraints)
             {
                 if (constraint.Name.Equals(name))
+                {
                     return true;
+                }
             }
 
             return false;
@@ -427,7 +458,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             foreach (PgIndex index in this.indexes)
             {
                 if (index.Name.Equals(name))
+                {
                     return true;
+                }
             }
 
             return false;

@@ -32,20 +32,20 @@ namespace APE.PostgreSQL.Teamwork.GUI
             switch (buttons)
             {
                 case MessageBoxButton.OKCancel:
-                    btnCancel.Visibility = Visibility.Visible;
-                    btnOk.Visibility = Visibility.Visible;
+                    this.btnCancel.Visibility = Visibility.Visible;
+                    this.btnOk.Visibility = Visibility.Visible;
                     break;
                 case MessageBoxButton.OK:
-                    btnOk.Visibility = Visibility.Visible;
+                    this.btnOk.Visibility = Visibility.Visible;
                     break;
                 case MessageBoxButton.YesNoCancel:
-                    btnYes.Visibility = Visibility.Visible;
-                    btnCancel.Visibility = Visibility.Visible;
-                    btnNo.Visibility = Visibility.Visible;
+                    this.btnYes.Visibility = Visibility.Visible;
+                    this.btnCancel.Visibility = Visibility.Visible;
+                    this.btnNo.Visibility = Visibility.Visible;
                     break;
                 case MessageBoxButton.YesNo:
-                    btnYes.Visibility = Visibility.Visible;
-                    btnNo.Visibility = Visibility.Visible;
+                    this.btnYes.Visibility = Visibility.Visible;
+                    this.btnNo.Visibility = Visibility.Visible;
                     break;
             }
         }
@@ -58,6 +58,17 @@ namespace APE.PostgreSQL.Teamwork.GUI
             get
             {
                 return this.message;
+            }
+        }
+
+        private void CopyMessageClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Clipboard.SetText(this.message.Text);
+            }
+            catch (Exception)
+            {
             }
         }
     }
