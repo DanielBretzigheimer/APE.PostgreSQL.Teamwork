@@ -77,15 +77,20 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         public SQLFile CreateDump(string path, string dumpCreatorPath, string host, string id, string password)
         {
             this.UpdateVersion();
-            var startInfo = new ProcessStartInfo(dumpCreatorPath, "-s -h " + host + " -U " + id + " -w -f \"" + path + "\" " + this.Name)
+            var processArguments = $"-s -h {host} -U {id} -w -f \"{path}\" {this.Name}";
+            var startInfo = new ProcessStartInfo(dumpCreatorPath, processArguments)
             {
                 UseShellExecute = false,
             };
 
-            // set the password (this is mandatory for postgres 9.5)
+            // set the password (this is mandatory for postgres 9.5 and above)
             startInfo.EnvironmentVariables.Add("PGPASSWORD", password);
 
             this.processManager.Execute(startInfo);
+
+            if (!this.fileSystemAccess.FileExists(path))
+                throw new FileNotFoundException($"The dump {path} could not be created. It looks like the PgDump.exe did not work. Check the {dumpCreatorPath} works with this arguments: {processArguments}");
+
             return new SQLFile(path, this, this.fileSystemAccess);
         }
 

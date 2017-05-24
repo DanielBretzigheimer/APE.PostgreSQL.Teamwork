@@ -60,5 +60,16 @@ namespace APE.PostgreSQL.Teamwork.GUI
                 return this.message;
             }
         }
+
+        private void CopyMessageClick(object sender, RoutedEventArgs e)
+        {
+            try
+            {
+                Clipboard.SetText(this.message.Text);
+            }
+            catch (Exception)
+            {
+            }
+        }
     }
 }

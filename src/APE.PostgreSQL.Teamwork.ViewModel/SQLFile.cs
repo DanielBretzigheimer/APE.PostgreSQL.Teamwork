@@ -63,7 +63,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             }
             else
             {
-                throw new FileNotFoundException("The file " + path + "was not found");
+                throw new FileNotFoundException("The file " + path + " was not found");
             }
         }
 

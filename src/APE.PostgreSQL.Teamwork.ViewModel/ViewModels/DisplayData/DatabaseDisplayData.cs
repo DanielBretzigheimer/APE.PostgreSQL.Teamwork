@@ -419,10 +419,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 this.UpdateData();
                 this.ResetTargetVersion();
+
+                // todo db check for conflicts message box
+                ////var messageBox = MainWindowViewModel.GetMessageBox(
+                ////            $"Import changes for database '{this.Database.Name}' to Version {this.Database.LastApplicableVersion}. Do you want to check for import conflicts?",
+                ////            "Import database changes",
+                ////            MessageBoxButton.YesNoCancel);
+
                 var messageBox = MainWindowViewModel.GetMessageBox(
-                            $"Import changes for database '{this.Database.Name}' to Version {this.Database.LastApplicableVersion}. Do you want to check for import conflicts?",
+                            $"Import changes for database '{this.Database.Name}' to Version {this.Database.LastApplicableVersion}.",
                             "Import database changes",
-                            MessageBoxButton.YesNoCancel);
+                            MessageBoxButton.OKCancel);
                 var result = await MainWindowViewModel.ShowDialog(messageBox);
                 if (result == MaterialMessageBoxResult.Cancel)
                 {
@@ -435,20 +442,20 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 try
                 {
                     // check compatibility
-                    if (result == MaterialMessageBoxResult.Yes)
-                    {
-                        if (this.Database.ImportConflicts(
-                           SettingsManager.Get().Setting.PgDumpLocation,
-                           SettingsManager.Get().Setting.Host,
-                           SettingsManager.Get().Setting.Id,
-                           SettingsManager.Get().Setting.Password))
-                        {
-                            // todo add message
-                            var compatibilityMessageBox = MainWindowViewModel.GetMessageBox($"TODO", "Compatibility problems found.", MessageBoxButton.OK);
-                            await MainWindowViewModel.ShowDialog(compatibilityMessageBox);
-                            return;
-                        }
-                    }
+                    ////if (result == MaterialMessageBoxResult.Yes)
+                    ////{
+                    ////    if (this.Database.ImportConflicts(
+                    ////       SettingsManager.Get().Setting.PgDumpLocation,
+                    ////       SettingsManager.Get().Setting.Host,
+                    ////       SettingsManager.Get().Setting.Id,
+                    ////       SettingsManager.Get().Setting.Password))
+                    ////    {
+                    ////        // todo add message
+                    ////        var compatibilityMessageBox = MainWindowViewModel.GetMessageBox($"TODO", "Compatibility problems found.", MessageBoxButton.OK);
+                    ////        await MainWindowViewModel.ShowDialog(compatibilityMessageBox);
+                    ////        return;
+                    ////    }
+                    ////}
 
                     this.UpdateToVersion(this.Database.LastApplicableVersion);
                     var finishedMessageBox = MainWindowViewModel.GetMessageBox("All SQL Files succesfully executed!", "Succesfully Executed", MessageBoxButton.OK);
@@ -560,12 +567,27 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             var result = sfd.ShowDialog();
             if (result == DialogResult.OK)
             {
-                this.Database.CreateDump(
-                    sfd.FileName,
-                    SettingsManager.Get().Setting.PgDumpLocation,
-                    SettingsManager.Get().Setting.Host,
-                    SettingsManager.Get().Setting.Id,
-                    SettingsManager.Get().Setting.Password);
+                try
+                {
+                    this.Database.CreateDump(
+                        sfd.FileName,
+                        SettingsManager.Get().Setting.PgDumpLocation,
+                        SettingsManager.Get().Setting.Host,
+                        SettingsManager.Get().Setting.Id,
+                        SettingsManager.Get().Setting.Password);
+                }
+                catch (Exception ex)
+                {
+                    var title = "Error while creating dump";
+                    var message = ex.Message;
+
+                    Log.Error(string.Format("Error while creating dump {0}", this.Database.Name), ex);
+                    var messageBox = MainWindowViewModel.GetMessageBox(
+                            $"Message: {message}",
+                            title,
+                            MessageBoxButton.OK);
+                    MainWindowViewModel.ShowDialog(messageBox);
+                }
             }
         }
 

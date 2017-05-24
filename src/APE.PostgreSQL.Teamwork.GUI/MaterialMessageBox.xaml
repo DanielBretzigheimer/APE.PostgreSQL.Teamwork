@@ -22,7 +22,13 @@
 
         <!--Message-->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <TextBlock x:Name="message" TextWrapping="Wrap" />
+            <TextBlock x:Name="message" TextWrapping="Wrap" >
+                <TextBlock.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Copy" Click="CopyMessageClick" />
+                    </ContextMenu>
+                </TextBlock.ContextMenu>
+            </TextBlock>
         </ScrollViewer>
 
         <!--Buttons-->
