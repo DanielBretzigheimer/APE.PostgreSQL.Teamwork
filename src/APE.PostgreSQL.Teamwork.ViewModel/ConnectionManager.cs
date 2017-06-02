@@ -76,7 +76,7 @@ namespace APE.PostgreSQL.Teamwork
                 var connectionString = this.GetConnectionString(databaseName);
 
                 // check if connection can be established
-                using (var connection = new NpgsqlConnection(connectionString))
+                using (var connection = new NpgsqlConnection(connectionString.ConnectionString))
                 {
                     connection.Open();
                 }
@@ -151,7 +151,7 @@ namespace APE.PostgreSQL.Teamwork
             {
                 try
                 {
-                    using (var connection = new NpgsqlConnection(this.GetConnectionString(databaseName)))
+                    using (var connection = new NpgsqlConnection(this.GetConnectionString(databaseName).ConnectionString))
                     {
                         connection.Open();
 
@@ -173,24 +173,27 @@ namespace APE.PostgreSQL.Teamwork
 
         private List<T> ExecuteCommand<T>(string databaseName, string sql)
         {
-            var connectionStringBuilder = this.GetConnectionString(databaseName);
-            using (var connection = new NpgsqlConnection(connectionStringBuilder))
+            lock (this.connectionLock)
             {
-                connection.Open();
+                var connectionStringBuilder = this.GetConnectionString(databaseName);
+                using (var connection = new NpgsqlConnection(connectionStringBuilder.ConnectionString))
+                {
+                    connection.Open();
 
-                try
-                {
-                    return connection.Query<T>(sql).ToList();
-                }
-                catch (Exception ex)
-                {
-                    Log.Error(ex);
-                    if (Debugger.IsAttached)
+                    try
                     {
-                        Debugger.Break();
+                        return connection.Query<T>(sql).ToList();
                     }
+                    catch (Exception ex)
+                    {
+                        Log.Error(ex);
+                        if (Debugger.IsAttached)
+                        {
+                            Debugger.Break();
+                        }
 
-                    throw;
+                        throw;
+                    }
                 }
             }
         }

@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -144,6 +145,48 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             SettingsManager.Get().Setting.DatabaseSettings = databaseSettings;
         }
 
+        public async void CheckVersion()
+        {
+            var settings = SettingsManager.Get().Setting;
+            var previousVersionString = settings.ApplicationVersion == null ? "none" : settings.ApplicationVersion.Version.ToString();
+            var assemblyVersion = Assembly.GetAssembly(typeof(MainWindowViewModel)).GetName().Version;
+            if (settings.ApplicationVersion == null || assemblyVersion > settings.ApplicationVersion.Version)
+            {
+                Log.Info($"Version was upgraded from {previousVersionString} to {assemblyVersion.ToString()}");
+                var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\CHANGELOG.md";
+
+                var changelog = string.Empty;
+                try
+                {
+                    using (var streamReader = new StreamReader(path))
+                    {
+                        changelog = streamReader.ReadToEnd();
+                    }
+                }
+                catch (Exception)
+                {
+                    // changelog could not be loaded
+                    changelog = "Could not load changelog!";
+                }
+
+                var sb = new StringBuilder();
+                sb.AppendLine("Your version of the code generation was upgraded.");
+                sb.AppendLine();
+                sb.AppendLine(changelog);
+
+                // upgrade => show change log
+                await ShowDialog(GetMessageBox(sb.ToString(), "Version upgraded", MessageBoxButton.OK));
+            }
+            else if (assemblyVersion < settings.ApplicationVersion.Version)
+            {
+                // downgrade
+                Log.Info($"Version was downgraded from {previousVersionString} to {assemblyVersion.ToString()}");
+                await ShowDialog(GetMessageBox("Your version of the CodeGeneration was downgrade. Check your settings.", "Version downgraded", MessageBoxButton.OK));
+            }
+
+            SettingsManager.Get().UpdateVersion(assemblyVersion);
+        }
+
         /// <summary>
         /// Initializes the settings with default values if they are not set
         /// and starts an async worker which manages the databases.
@@ -186,6 +229,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                         if (this.worker != null && SettingsManager.Get().Setting.AutoRefresh)
                             this.worker.Start();
                     });
+
+            this.CheckVersion();
         }
 
         private async void CheckSettings()

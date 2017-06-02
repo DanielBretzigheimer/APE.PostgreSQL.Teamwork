@@ -40,8 +40,8 @@
     <CodeAnalysisRuleSet>..\..\StyleCop.ruleset</CodeAnalysisRuleSet>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="APE.CodeGeneration.Attributes, Version=1.0.66.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\APE.CodeGeneration.Attributes.1.0.66\lib\net40\APE.CodeGeneration.Attributes.dll</HintPath>
+    <Reference Include="APE.CodeGeneration.Attributes, Version=1.0.79.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>C:\NugetPackages\APE.CodeGeneration.Attributes.1.0.79\lib\net40\APE.CodeGeneration.Attributes.dll</HintPath>
     </Reference>
     <Reference Include="CommandLine, Version=1.9.71.2, Culture=neutral, PublicKeyToken=de6f01bd326f8c32, processorArchitecture=MSIL">
       <HintPath>C:\NugetPackages\CommandLineParser.1.9.71\lib\net45\CommandLine.dll</HintPath>
