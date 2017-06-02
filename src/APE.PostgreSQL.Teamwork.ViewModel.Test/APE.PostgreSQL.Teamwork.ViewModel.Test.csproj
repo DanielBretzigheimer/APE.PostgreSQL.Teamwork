@@ -44,12 +44,11 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="APE.CodeGeneration.Attributes, Version=1.0.66.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\APE.CodeGeneration.Attributes.1.0.66\lib\net40\APE.CodeGeneration.Attributes.dll</HintPath>
+    <Reference Include="APE.CodeGeneration.Attributes, Version=1.0.79.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>C:\NugetPackages\APE.CodeGeneration.Attributes.1.0.79\lib\net40\APE.CodeGeneration.Attributes.dll</HintPath>
     </Reference>
-    <Reference Include="Dapper, Version=1.40.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\Dapper.1.42\lib\net45\Dapper.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Dapper, Version=1.50.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>C:\NugetPackages\Dapper.1.50.2\lib\net45\Dapper.dll</HintPath>
     </Reference>
     <Reference Include="FluentAssertions, Version=4.19.2.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>C:\NugetPackages\FluentAssertions.4.19.2\lib\net45\FluentAssertions.dll</HintPath>
@@ -73,9 +72,8 @@
       <HintPath>C:\NugetPackages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="Npgsql, Version=3.1.6.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\Npgsql.3.1.6\lib\net45\Npgsql.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="Npgsql, Version=3.2.3.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>C:\NugetPackages\Npgsql.3.2.3\lib\net45\Npgsql.dll</HintPath>
     </Reference>
     <Reference Include="NullGuard, Version=1.5.2.0, Culture=neutral, PublicKeyToken=1958ac8092168428, processorArchitecture=MSIL">
       <HintPath>C:\NugetPackages\NullGuard.Fody.1.5.2\Lib\dotnet\NullGuard.dll</HintPath>
@@ -102,6 +100,9 @@
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Threading.Tasks.Extensions, Version=4.1.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>C:\NugetPackages\System.Threading.Tasks.Extensions.4.3.0\lib\portable-net45+win8+wp8+wpa81\System.Threading.Tasks.Extensions.dll</HintPath>
+    </Reference>
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xml" />
     <Reference Include="System.Xml.Linq" />

@@ -6,7 +6,7 @@
              xmlns:materialDesign="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              xmlns:local="clr-namespace:APE.PostgreSQL.Teamwork.GUI"
              xmlns:model="clr-namespace:APE.PostgreSQL.Teamwork.Model;assembly=APE.PostgreSQL.Teamwork.Model"
-             mc:Ignorable="d" Width="400" Height="200"
+             mc:Ignorable="d" Width="400" MinHeight="200" MaxHeight="400"
              d:DesignHeight="300" d:DesignWidth="300">
 
     <Grid Margin="5">

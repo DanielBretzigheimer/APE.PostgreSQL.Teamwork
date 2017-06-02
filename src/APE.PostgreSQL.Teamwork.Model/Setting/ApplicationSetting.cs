@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using APE.CodeGeneration.Model;
 
 namespace APE.PostgreSQL.Teamwork.Model.Setting
 {
@@ -19,6 +20,9 @@ namespace APE.PostgreSQL.Teamwork.Model.Setting
         {
             this.DatabaseSettings = new List<DatabaseSetting>();
         }
+
+        [NullGuard.AllowNull]
+        public ApplicationVersion ApplicationVersion { get; set; }
 
         /// <summary>
         /// Gets or sets a template of the connection string.

@@ -6,14 +6,15 @@ using System.Runtime.InteropServices;
 // Allgemeine Informationen über eine Assembly werden über die folgenden 
 // Attribute gesteuert. Ändern Sie diese Attributwerte, um die Informationen zu ändern,
 // die mit einer Assembly verknüpft sind.
-[assembly: AssemblyTitle("APE.PostgreSQL.Teamwork.GUI")]
-[assembly: AssemblyDescription("Created within Vistual Studio - no RELEASE Version!")]
-[assembly: AssemblyConfiguration("")]
+[assembly: AssemblyTitle("APE.PostgreSQL.Teamwork.ViewModel")]
+[assembly: AssemblyDescription("BuildVersion.txt = <BuildVersion> ; GitHash: <Git-Hash>;")]
+[assembly: AssemblyConfiguration("<Git-Branch>")]
 [assembly: AssemblyCompany("APE Engineering GmbH")]
-[assembly: AssemblyProduct("APE.PostgreSQL.Teamwork.GUI")]
+[assembly: AssemblyProduct("APE.PostgreSQL.Teamwork.ViewModel")]
 [assembly: AssemblyCopyright("Copyright © 2016")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
+[assembly:InternalsVisibleTo("APE.PostgreSQL.Teamwork.ViewModel.Test")]
 
 // Durch Festlegen von ComVisible auf "false" werden die Typen in dieser Assembly unsichtbar 
 // für COM-Komponenten. Wenn Sie auf einen Typ in dieser Assembly von 
@@ -33,7 +34,5 @@ using System.Runtime.InteropServices;
 // Sie können alle Werte angeben oder die standardmäßigen Build- und Revisionsnummern 
 // übernehmen, indem Sie "*" eingeben:
 // [assembly: AssemblyVersion("1.0.*")]
-// DONT USE SUBVERSION VERSION => every time the AssemblyInfo.cs is changed
-// a new config file is created
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: AssemblyVersion("1.0.<BuildVersion>.0")]
+[assembly: AssemblyFileVersion("1.0.<BuildVersion>.0")]

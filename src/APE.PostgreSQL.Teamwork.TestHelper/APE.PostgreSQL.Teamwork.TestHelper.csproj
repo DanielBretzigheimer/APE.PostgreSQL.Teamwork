@@ -39,8 +39,8 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="APE.CodeGeneration.Attributes, Version=1.0.66.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\APE.CodeGeneration.Attributes.1.0.66\lib\net40\APE.CodeGeneration.Attributes.dll</HintPath>
+    <Reference Include="APE.CodeGeneration.Attributes, Version=1.0.79.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>C:\NugetPackages\APE.CodeGeneration.Attributes.1.0.79\lib\net40\APE.CodeGeneration.Attributes.dll</HintPath>
     </Reference>
     <Reference Include="FluentAssertions, Version=4.19.2.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
       <HintPath>C:\NugetPackages\FluentAssertions.4.19.2\lib\net45\FluentAssertions.dll</HintPath>

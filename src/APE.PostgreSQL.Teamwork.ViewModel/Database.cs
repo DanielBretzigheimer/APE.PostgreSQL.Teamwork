@@ -267,15 +267,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             catch (TeamworkConnectionException ex)
             {
                 Log.Warn(string.Format("Error occured while testing exported files."), ex);
+                var message = $"Error occured in file [File] while testing exported files. Diff and Dump files will not be deleted and can be edited manually.Error: {ex.Message}";
 
-                var file = "unknown";
                 if (ex.File != null)
                 {
-                    file = ex.File.Path;
+                    message = message.Replace("[File]", ex.File.Path);
+                    throw new TeamworkTestException(message, ex);
                 }
 
                 // do not delete files if only the test did not work => can be manually fixed by the user
-                throw new Exception(string.Format("Error occured in file {0} while testing exported files. Diff and Dump files will not be deleted and can be edited manually. Error: {1}", file, ex.Message), ex);
+                message = message.Replace("[File]", "unknown");
+                throw new Exception(message, ex);
             }
             catch (Exception ex)
             {
@@ -385,15 +387,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                     catch (TeamworkConnectionException ex)
                     {
                         Log.Warn(string.Format("Error occured while testing exported files."), ex);
+                        var message = $"Error occured in file [File] while testing exported files. Diff and Dump files will not be deleted and can be edited manually.Error: {ex.Message}";
 
-                        var file = "unknown";
                         if (ex.File != null)
                         {
-                            file = ex.File.Path;
+                            message = message.Replace("[File]", ex.File.Path);
+                            throw new TeamworkTestException(message, ex);
                         }
 
                         // do not delete files if only the test did not work => can be manually fixed by the user
-                        throw new Exception(string.Format("Error occured in file {0} while testing exported files. Diff and Dump files will not be deleted and can be edited manually. Error: {1}", file, ex.Message), ex);
+                        message = message.Replace("[File]", "unknown");
+                        throw new Exception(message, ex);
                     }
                     catch (Exception ex)
                     {

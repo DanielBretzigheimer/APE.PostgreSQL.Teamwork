@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Xml;
 using System.Xml.Serialization;
+using APE.CodeGeneration.Model;
 using log4net;
 
 namespace APE.PostgreSQL.Teamwork.Model.Setting
@@ -72,6 +73,12 @@ namespace APE.PostgreSQL.Teamwork.Model.Setting
                 xmlDocument.Load(stream);
                 xmlDocument.Save(settingsPath);
             }
+        }
+
+        public void UpdateVersion(Version assemblyVersion)
+        {
+            this.Setting.ApplicationVersion = new ApplicationVersion(assemblyVersion);
+            this.Save();
         }
 
         private static SettingsManager LoadFile(string path)

@@ -608,7 +608,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         /// Exports the database and shows a message box to the user if a error occurred.
         /// </summary>
-        private void Export()
+        private async void Export()
         {
             this.Exporting = true;
             try
@@ -637,6 +637,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 var title = "Error while exporting database";
                 var message = ex.Message;
+                var buttons = MessageBoxButton.OK;
 
                 if (ex is FileNotFoundException)
                 {
@@ -646,13 +647,24 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 {
                     title = "Info";
                 }
+                else if (ex is TeamworkTestException)
+                {
+                    message += " Do you want to open the diff file with the error?";
+                    buttons = MessageBoxButton.YesNo;
+                }
 
                 Log.Warn(string.Format("Error while exporting database {0}", this.Database.Name), ex);
                 var messageBox = MainWindowViewModel.GetMessageBox(
                         $"Message: {message}",
                         title,
-                        MessageBoxButton.OK);
-                MainWindowViewModel.ShowDialog(messageBox).Wait();
+                        buttons);
+                var result = await MainWindowViewModel.ShowDialog(messageBox);
+
+                // yes applies if the file should be opened
+                if (result == MaterialMessageBoxResult.Yes && ex is TeamworkTestException testException)
+                {
+                    this.processManager.Start(testException.FileWithExceptionSql);
+                }
             }
 
             this.Exporting = false;
