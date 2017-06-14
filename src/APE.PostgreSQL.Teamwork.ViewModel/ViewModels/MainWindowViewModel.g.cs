@@ -420,7 +420,7 @@ public List<DatabaseDisplayData> Databases
         private void OnStarted()
         {
             if (this.IsStarted)
-                throw new InvalidOperationException(this.GetType().Name + " is already started.");
+                throw new System.InvalidOperationException(this.GetType().Name + " is already started.");
 
             this.IsStarted = true;
 
@@ -433,7 +433,7 @@ public List<DatabaseDisplayData> Databases
         public virtual void Stop()
         {
             if (this.IsStarted == false)
-                throw new InvalidOperationException(this.GetType().Name + " is already stopped.");
+                throw new System.InvalidOperationException(this.GetType().Name + " is already stopped.");
 
             this.isStopping = true;
 

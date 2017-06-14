@@ -4,9 +4,9 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 // </auto-generated>
-// <Version>3</Version>
+// <Version>4</Version>
 
-#region UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Database.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Database.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -245,9 +245,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Database.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Database.cs
 
-#region UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\FileSystemAccess.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\FileSystemAccess.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -320,9 +320,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\FileSystemAccess.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\FileSystemAccess.cs
 
-#region UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\SQLFile.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\SQLFile.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -545,9 +545,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\SQLFile.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\SQLFile.cs
 
-#region UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\SQLFileTester.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\SQLFileTester.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -592,9 +592,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\SQLFileTester.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\SQLFileTester.cs
 
-#region UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Statement.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Statement.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -676,9 +676,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Statement.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Statement.cs
 
-#region UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\AddDatabaseViewModel.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\AddDatabaseViewModel.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System.Collections.Generic;
@@ -824,9 +824,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\AddDatabaseViewModel.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\AddDatabaseViewModel.cs
 
-#region UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\BaseViewModel.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\BaseViewModel.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -876,9 +876,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\BaseViewModel.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\BaseViewModel.cs
 
-#region UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\ImportWindowViewModel.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\ImportWindowViewModel.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -1050,9 +1050,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\ImportWindowViewModel.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\ImportWindowViewModel.cs
 
-#region UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\MainWindowViewModel.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\MainWindowViewModel.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -1452,9 +1452,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\MainWindowViewModel.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\MainWindowViewModel.cs
 
-#region UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\SettingViewModel.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\SettingViewModel.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -1649,9 +1649,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\SettingViewModel.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\SettingViewModel.cs
 
-#region UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\DatabaseDisplayData.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\DatabaseDisplayData.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -2292,9 +2292,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\DatabaseDisplayData.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\DatabaseDisplayData.cs
 
-#region UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\SQLFileDisplayData.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\SQLFileDisplayData.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -2324,9 +2324,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\SQLFileDisplayData.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\SQLFileDisplayData.cs
 
-#region UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\StatementDisplayData.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\StatementDisplayData.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System.Text;
@@ -2507,4 +2507,4 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for D:\GIT_Arbeitskopien\APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\StatementDisplayData.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\StatementDisplayData.cs
