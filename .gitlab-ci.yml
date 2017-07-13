@@ -1,3 +1,7 @@
+variables:
+    PROJECTPATH: "src/NugetPackage.sln"
+    DEPLOYCONFIGURATION: "Release"
+
 before_script:
     - REM NuGet     
     - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\RestoreNugetPackages.ps1 
@@ -7,13 +11,13 @@ Build:
         when: on_success
         expire_in: 30 mins
         paths:
-            - src\*\bin\Release
+            - src\*\bin\%DEPLOYCONFIGURATION%
     script: 
         - REM WriteBuildVersionToAssemblyInfo.ps1
         - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\WriteBuildVersionToAssemblyInfo.ps1 %CI_PROJECT_NAME% %CI_BUILD_REF_NAME% %CI_BUILD_REF% %CI_BUILD_REPO%
 
         - REM MSBuild
-        - msbuild src\NugetPackage.sln /verbosity:normal /p:Configuration=Release /maxcpucount:4
+        - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\CallMsBuild.ps1
 
 UnitTest:
     stage: test
