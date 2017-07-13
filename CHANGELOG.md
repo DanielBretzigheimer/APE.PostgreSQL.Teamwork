@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.27.0
+ - Setting TABLE COLUMN to nullable not recognized fixed
+
 ## 1.0.26.0
 - Changelog visible in application
 - Error while writing to stream fixed (hopefully)

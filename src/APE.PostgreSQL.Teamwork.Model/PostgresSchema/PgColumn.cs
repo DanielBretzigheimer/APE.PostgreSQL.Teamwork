@@ -1,8 +1,7 @@
 ﻿// <copyright file="PgColumn.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
+using APE.PostgreSQL.Teamwork.Model.Utils;
 using System.Text;
 using System.Text.RegularExpressions;
-using APE.PostgreSQL.Teamwork.Model.Utils;
 
 namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
 {
@@ -126,8 +125,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 if (PatternNull.Matches(definition).Count != 0)
                 {
                     definition = PatternNull.Matches(definition)[0].Groups[1].ToString().Trim();
-                    this.NullValue = true;
                 }
+
+                this.NullValue = true;
             }
 
             if (PatternDefault.Matches(definition).Count != 0)
