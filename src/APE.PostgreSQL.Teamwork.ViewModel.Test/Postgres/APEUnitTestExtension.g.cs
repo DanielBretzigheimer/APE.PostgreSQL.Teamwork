@@ -6,17 +6,21 @@
 // </auto-generated>
 // <Version>4</Version>
 
-#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Postgres\DifferenceCreator.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\Postgres\DifferenceCreator.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
 {
     using System;
+    using System.Collections.Generic;
     using System.IO;
     using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
     using APE.PostgreSQL.Teamwork.Model.Templates;
     using APE.PostgreSQL.Teamwork.Model.Utils;
     using APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader;
-    using System.Collections.Generic;
     using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
+    using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
 
     internal static class DifferenceCreatorExtension
     {
@@ -77,9 +81,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
         }
     }
 }
-#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Postgres\DifferenceCreator.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\Postgres\DifferenceCreator.cs
 
-#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffConstraints.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffConstraints.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
 {
     using System.Collections.Generic;
@@ -87,6 +91,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
     using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
     using APE.PostgreSQL.Teamwork.Model.Utils;
     using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
+    using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
 
     internal static class PgDiffConstraintsExtension
     {
@@ -119,9 +127,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
         }
     }
 }
-#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffConstraints.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffConstraints.cs
 
-#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffIndexes.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffIndexes.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
 {
     using System.Collections.Generic;
@@ -129,6 +137,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
     using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
     using APE.PostgreSQL.Teamwork.Model.Utils;
     using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
+    using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
 
     internal static class PgDiffIndexesExtension
     {
@@ -161,9 +173,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
         }
     }
 }
-#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffIndexes.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffIndexes.cs
 
-#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffTables.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffTables.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
 {
     using System;
@@ -173,6 +185,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
     using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
     using APE.PostgreSQL.Teamwork.Model.Utils;
     using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
+    using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
 
     internal static class PgDiffTablesExtension
     {
@@ -331,9 +347,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
         }
     }
 }
-#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffTables.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffTables.cs
 
-#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffTriggers.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffTriggers.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
 {
     using System.Collections.Generic;
@@ -341,6 +357,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
     using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
     using APE.PostgreSQL.Teamwork.Model.Utils;
     using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
+    using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
 
     internal static class PgDiffTriggersExtension
     {
@@ -373,9 +393,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
         }
     }
 }
-#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffTriggers.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffTriggers.cs
 
-#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffTypes.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffTypes.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
 {
     using System;
@@ -386,6 +406,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
     using System.Threading.Tasks;
     using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
     using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
+    using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
 
     internal static class PgDiffTypesExtension
     {
@@ -404,9 +428,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
         }
     }
 }
-#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffTypes.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffTypes.cs
 
-#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffViews.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffViews.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
 {
     using System.Collections.Generic;
@@ -414,6 +438,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
     using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
     using APE.PostgreSQL.Teamwork.Model.Utils;
     using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
+    using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
 
     internal static class PgDiffViewsExtension
     {
@@ -446,4 +474,77 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
         }
     }
 }
-#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffViews.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\Postgres\PgDiffViews.cs
+
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\Postgres\SearchPathHelper.cs
+namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
+{
+    using System.IO;
+    using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
+    using APE.PostgreSQL.Teamwork.Model.Utils;
+    using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
+    using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
+
+    internal static class SearchPathHelperExtension
+    {
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static string GetsearchPath(this SearchPathHelper targetClass)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                return (string)po.GetFieldOrProperty("searchPath");
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("searchPath with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static void SetsearchPath(this SearchPathHelper targetClass, string value)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                po.SetFieldOrProperty("searchPath", value);
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("searchPath with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static bool GetwasOutput(this SearchPathHelper targetClass)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                return (bool)po.GetFieldOrProperty("wasOutput");
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("wasOutput with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static void SetwasOutput(this SearchPathHelper targetClass, bool value)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                po.SetFieldOrProperty("wasOutput", value);
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("wasOutput with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+    }
+}
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\Postgres\SearchPathHelper.cs

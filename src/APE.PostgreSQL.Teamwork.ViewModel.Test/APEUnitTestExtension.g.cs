@@ -6,7 +6,7 @@
 // </auto-generated>
 // <Version>4</Version>
 
-#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Database.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\Database.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -24,6 +24,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
     using log4net;
     using Npgsql;
     using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
 
     internal static class DatabaseExtension
     {
@@ -245,9 +248,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Database.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\Database.cs
 
-#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\FileSystemAccess.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\FileSystemAccess.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -260,6 +263,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
     using System.Security.Principal;
     using log4net;
     using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
 
     internal static class FileSystemAccessExtension
     {
@@ -320,9 +326,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\FileSystemAccess.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\FileSystemAccess.cs
 
-#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\SQLFile.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\SQLFile.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -338,6 +344,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
     using log4net;
     using Npgsql;
     using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
 
     internal static class SQLFileExtension
     {
@@ -545,9 +554,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\SQLFile.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\SQLFile.cs
 
-#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\SQLFileTester.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\SQLFileTester.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -560,6 +569,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
     using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
     using APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader;
     using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
 
     internal static class SQLFileTesterExtension
     {
@@ -592,9 +604,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\SQLFileTester.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\SQLFileTester.cs
 
-#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Statement.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\Statement.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -602,6 +614,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
     using APE.CodeGeneration.Attributes;
     using Npgsql;
     using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
 
     internal static class StatementExtension
     {
@@ -676,9 +691,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\Statement.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\Statement.cs
 
-#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\AddDatabaseViewModel.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\ViewModels\AddDatabaseViewModel.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System.Collections.Generic;
@@ -694,6 +709,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
     using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
     using APE.PostgreSQL.Teamwork.ViewModel.TestHelper;
     using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
 
     internal static class AddDatabaseViewModelExtension
     {
@@ -824,9 +842,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\AddDatabaseViewModel.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\ViewModels\AddDatabaseViewModel.cs
 
-#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\BaseViewModel.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\ViewModels\BaseViewModel.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -837,6 +855,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
     using APE.PostgreSQL.Teamwork.Model;
     using log4net;
     using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
 
     internal static class BaseViewModelExtension
     {
@@ -876,9 +897,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\BaseViewModel.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\ViewModels\BaseViewModel.cs
 
-#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\ImportWindowViewModel.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\ViewModels\ImportWindowViewModel.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -892,6 +913,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
     using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
     using APE.PostgreSQL.Teamwork.ViewModel.TestHelper;
     using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
 
     internal static class ImportWindowViewModelExtension
     {
@@ -924,16 +948,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static void CallSuccesfullyExecutedMessageBoxClosing(this ImportWindowViewModel targetClass, MaterialMessageBoxResult result)
+        internal static void CallSuccessfullyExecutedMessageBoxClosing(this ImportWindowViewModel targetClass, MaterialMessageBoxResult result)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
             {
-                po.Invoke("SuccesfullyExecutedMessageBoxClosing", new object[] { result });
+                po.Invoke("SuccessfullyExecutedMessageBoxClosing", new object[] { result });
             }
             catch (System.MissingMethodException missingMethodException)
             {
-                throw new System.NotSupportedException("SuccesfullyExecutedMessageBoxClosing with requested parameters is not found. Rerun code generation.", missingMethodException);
+                throw new System.NotSupportedException("SuccessfullyExecutedMessageBoxClosing with requested parameters is not found. Rerun code generation.", missingMethodException);
             }
         }
 
@@ -1050,9 +1074,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\ImportWindowViewModel.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\ViewModels\ImportWindowViewModel.cs
 
-#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\MainWindowViewModel.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\ViewModels\MainWindowViewModel.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -1060,6 +1084,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
     using System.IO;
     using System.Linq;
     using System.Reflection;
+    using System.Text;
     using System.Windows;
     using System.Windows.Input;
     using System.Windows.Threading;
@@ -1070,6 +1095,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
     using APE.PostgreSQL.Teamwork.ViewModel.TestHelper;
     using APE.PostgreSQL.Teamwork.ViewModel.ViewModels;
     using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
 
     internal static class MainWindowViewModelExtension
     {
@@ -1452,9 +1480,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\MainWindowViewModel.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\ViewModels\MainWindowViewModel.cs
 
-#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\SettingViewModel.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\ViewModels\SettingViewModel.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -1463,6 +1491,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
     using APE.CodeGeneration.Attributes;
     using APE.PostgreSQL.Teamwork.Model.Setting;
     using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
 
     internal static class SettingViewModelExtension
     {
@@ -1649,9 +1680,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\SettingViewModel.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\ViewModels\SettingViewModel.cs
 
-#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\DatabaseDisplayData.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\DatabaseDisplayData.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -1671,8 +1702,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
     using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
     using APE.PostgreSQL.Teamwork.ViewModel.TestHelper;
     using log4net;
+    using Microsoft.VisualBasic;
     using Npgsql;
     using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
 
     internal static class DatabaseDisplayDataExtension
     {
@@ -1763,6 +1798,34 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             catch (System.MissingMethodException missingMethodException)
             {
                 throw new System.NotSupportedException("InitializeCommands with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static void CallAddSchema(this DatabaseDisplayData targetClass)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                po.Invoke("AddSchema", new object[] { });
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("AddSchema with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static void CallRemoveSchema(this DatabaseDisplayData targetClass)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                po.Invoke("RemoveSchema", new object[] { });
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("RemoveSchema with requested parameters is not found. Rerun code generation.", missingMethodException);
             }
         }
 
@@ -2290,11 +2353,67 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
                 throw new System.NotSupportedException("ExpandCommand with requested parameters is not found. Rerun code generation.", missingMethodException);
             }
         }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static ICommand GetAddSchemaCommand(this DatabaseDisplayData targetClass)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                return (ICommand)po.GetFieldOrProperty("AddSchemaCommand");
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("AddSchemaCommand with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static void SetAddSchemaCommand(this DatabaseDisplayData targetClass, ICommand value)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                po.SetFieldOrProperty("AddSchemaCommand", value);
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("AddSchemaCommand with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static ICommand GetRemoveSchemaCommand(this DatabaseDisplayData targetClass)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                return (ICommand)po.GetFieldOrProperty("RemoveSchemaCommand");
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("RemoveSchemaCommand with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static void SetRemoveSchemaCommand(this DatabaseDisplayData targetClass, ICommand value)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                po.SetFieldOrProperty("RemoveSchemaCommand", value);
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("RemoveSchemaCommand with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
     }
 }
-#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\DatabaseDisplayData.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\DatabaseDisplayData.cs
 
-#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\SQLFileDisplayData.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\SQLFileDisplayData.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
@@ -2306,6 +2425,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
     using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
     using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
     using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
 
     internal static class SQLFileDisplayDataExtension
     {
@@ -2324,9 +2446,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\SQLFileDisplayData.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\SQLFileDisplayData.cs
 
-#region UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\StatementDisplayData.cs
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\StatementDisplayData.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System.Text;
@@ -2335,6 +2457,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
     using APE.CodeGeneration.Attributes;
     using Npgsql;
     using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
 
     internal static class StatementDisplayDataExtension
     {
@@ -2507,4 +2632,4 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
     }
 }
-#endregion UnittestExtension for \APE.PostgreSQL.Teamwork\src\APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\StatementDisplayData.cs
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\StatementDisplayData.cs

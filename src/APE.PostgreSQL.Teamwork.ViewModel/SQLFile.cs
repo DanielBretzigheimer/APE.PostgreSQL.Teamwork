@@ -132,7 +132,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 throw new TeamworkConnectionException(this, ex.Message, ex);
             }
 
-            Log.Info(string.Format("File {0} executed succesfully", this.FileName));
+            Log.Info(string.Format("File {0} executed successfully", this.FileName));
         }
 
         public void MarkAsExecuted()

@@ -178,8 +178,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             try
             {
                 this.SelectedDatabase.UpdateToVersion(this.SelectedDatabase.TargetVersion);
-                await BaseViewModel.ShowDialogWithCloseHandler(BaseViewModel.GetMessageBox("All SQL Files succesfully executed! Do you want to close the window?", "Succesfully Executed", MessageBoxButton.YesNo), this.SuccesfullyExecutedMessageBoxClosing);
-                Log.Info("All sql files succesfully executed");
+                await BaseViewModel.ShowDialogWithCloseHandler(BaseViewModel.GetMessageBox("All SQL Files successfully executed! Do you want to close the window?", "Successfully Executed", MessageBoxButton.YesNo), this.SuccessfullyExecutedMessageBoxClosing);
+                Log.Info("All sql files successfully executed");
             }
             catch (Exception ex)
             {
@@ -209,7 +209,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             this.SelectedDatabase.UpdateData();
         }
 
-        private void SuccesfullyExecutedMessageBoxClosing(MaterialMessageBoxResult result)
+        private void SuccessfullyExecutedMessageBoxClosing(MaterialMessageBoxResult result)
         {
             if (result == MaterialMessageBoxResult.Yes)
             {

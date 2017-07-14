@@ -21,6 +21,7 @@ using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
 using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
 using APE.PostgreSQL.Teamwork.ViewModel.TestHelper;
 using log4net;
+using Microsoft.VisualBasic;
 using Npgsql;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
@@ -35,6 +36,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "Undoing", false, "Indicates that the database is undoing changes at the moment")]
     // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "Error", false)]
     // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "ImportableFilesFound", false)]
+    // APE.CodeGeneration.Attribute [AllowNullNotifyProperty(AccessModifier.Public, typeof(string), "SelectedSchema")]
     // APE.CodeGeneration.Attribute [NotifyProperty(typeof(string), "ErrorMessage")]
     // APE.CodeGeneration.Attribute [AllowNullNotifyProperty(typeof(Database), "Database")]
     // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(DatabaseVersion), "TargetVersion")]
@@ -502,6 +504,39 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         //protected virtual void TargetVersionChanging(DatabaseVersion newValue) { }
         //protected virtual void TargetVersionChanged() { }
+
+        protected static readonly System.ComponentModel.PropertyChangedEventArgs SelectedSchemaEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(SelectedSchema));
+        private string selectedSchema;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        [NullGuard.AllowNull]
+public string SelectedSchema
+        {
+            get
+            {
+                return this.selectedSchema;
+            }
+            set
+            {
+                if (!object.Equals(this.selectedSchema, value))
+                {
+                    //this.SelectedSchemaChanging(value);
+                    this.SelectedSchemaBeforeSet(value);
+                    this.selectedSchema = value;
+                    this.OnPropertyChanged(SelectedSchemaEventArgs);
+                    //this.SelectedSchemaChanged();
+                    this.SelectedSchemaAfterSet();
+                }
+            }
+        }
+
+        partial void SelectedSchemaBeforeSet(string newValue);
+        partial void SelectedSchemaAfterSet();
+
+        //protected virtual void SelectedSchemaChanging(string newValue) { }
+        //protected virtual void SelectedSchemaChanged() { }
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs DatabaseEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Database));
         private Database database;

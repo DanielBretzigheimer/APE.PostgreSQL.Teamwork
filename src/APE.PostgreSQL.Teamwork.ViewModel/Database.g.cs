@@ -23,6 +23,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 {
     // APE.CodeGeneration.Attribute [NotifyProperty(typeof(string), "Name")]
     // APE.CodeGeneration.Attribute [NotifyProperty(typeof(string), "Path")]
+    // APE.CodeGeneration.Attribute [NotifyProperty(typeof(ObservableCollection<string>), "IgnoredSchemas")]
     // APE.CodeGeneration.Attribute [AllowNullNotifyProperty(typeof(DatabaseVersion), "CurrentVersion")]
     // APE.CodeGeneration.Attribute [NotifyProperty(typeof(DatabaseVersion), "LastApplicableVersion")]
     // APE.CodeGeneration.Attribute [AllowNullNotifyProperty(typeof(ObservableCollection<SQLFile>), "UndoDiffFiles")]
@@ -31,6 +32,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     // APE.CodeGeneration.Attribute [AllowNullNotifyProperty(AccessModifier.Public, typeof(string), "ProgressInfo", "", "This will be shown to the user as additional info to the current progress.")]
     // APE.CodeGeneration.Attribute [CtorParameter(AccessModifier.Private, typeof(string), "databaseName")]
     // APE.CodeGeneration.Attribute [CtorParameter(AccessModifier.Private, typeof(string), "databasePath")]
+    // APE.CodeGeneration.Attribute [CtorParameter(AccessModifier.Private, typeof(List<string>), "databaseIgnoredSchemas")]
     // APE.CodeGeneration.Attribute [CtorParameter(typeof(IConnectionManager))]
     // APE.CodeGeneration.Attribute [CtorParameter(typeof(IFileSystemAccess))]
     // APE.CodeGeneration.Attribute [CtorParameter(typeof(IProcessManager))]
@@ -56,6 +58,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// 
         /// </summary>
         private string databasePath;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        private List<string> databaseIgnoredSchemas;
 
         /// <summary>
         /// 
@@ -87,7 +94,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         private bool initializeData;
 
-        public Database(string databaseName, string databasePath, IConnectionManager connectionManager, IFileSystemAccess fileSystemAccess, IProcessManager processManager, IDifferenceCreator differenceCreator, ISQLFileTester sqlFileTester, bool initializeData)
+        public Database(string databaseName, string databasePath, List<string> databaseIgnoredSchemas, IConnectionManager connectionManager, IFileSystemAccess fileSystemAccess, IProcessManager processManager, IDifferenceCreator differenceCreator, ISQLFileTester sqlFileTester, bool initializeData)
         {
             if (databaseName == null)
                 throw new System.ArgumentNullException("databaseName", "databaseName == null");
@@ -96,6 +103,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             if (databasePath == null)
                 throw new System.ArgumentNullException("databasePath", "databasePath == null");
             this.databasePath = databasePath;
+
+            if (databaseIgnoredSchemas == null)
+                throw new System.ArgumentNullException("databaseIgnoredSchemas", "databaseIgnoredSchemas == null");
+            this.databaseIgnoredSchemas = databaseIgnoredSchemas;
 
             if (connectionManager == null)
                 throw new System.ArgumentNullException("connectionManager", "connectionManager == null");
@@ -190,6 +201,38 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         //protected virtual void PathChanging(string newValue) { }
         //protected virtual void PathChanged() { }
+
+        protected static readonly System.ComponentModel.PropertyChangedEventArgs IgnoredSchemasEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(IgnoredSchemas));
+        private ObservableCollection<string> ignoredSchemas;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public ObservableCollection<string> IgnoredSchemas
+        {
+            get
+            {
+                return this.ignoredSchemas;
+            }
+            set
+            {
+                if (!object.Equals(this.ignoredSchemas, value))
+                {
+                    //this.IgnoredSchemasChanging(value);
+                    this.IgnoredSchemasBeforeSet(value);
+                    this.ignoredSchemas = value;
+                    this.OnPropertyChanged(IgnoredSchemasEventArgs);
+                    //this.IgnoredSchemasChanged();
+                    this.IgnoredSchemasAfterSet();
+                }
+            }
+        }
+
+        partial void IgnoredSchemasBeforeSet(ObservableCollection<string> newValue);
+        partial void IgnoredSchemasAfterSet();
+
+        //protected virtual void IgnoredSchemasChanging(ObservableCollection<string> newValue) { }
+        //protected virtual void IgnoredSchemasChanged() { }
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs LastApplicableVersionEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(LastApplicableVersion));
         private DatabaseVersion lastApplicableVersion;
