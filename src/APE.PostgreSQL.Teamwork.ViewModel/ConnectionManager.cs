@@ -171,7 +171,7 @@ namespace APE.PostgreSQL.Teamwork
             }
         }
 
-        private List<T> ExecuteCommand<T>(string databaseName, string sql)
+        private List<T> ExecuteCommand<T>(string databaseName, string sql, bool retry = true)
         {
             lock (this.connectionLock)
             {
@@ -183,6 +183,20 @@ namespace APE.PostgreSQL.Teamwork
                     try
                     {
                         return connection.Query<T>(sql).ToList();
+                    }
+                    catch (NpgsqlException ex)
+                    {
+                        Log.Error(ex);
+                        if (Debugger.IsAttached)
+                        {
+                            Debugger.Break();
+                        }
+
+                        // retry connection once
+                        if (retry)
+                            return this.ExecuteCommand<T>(databaseName, sql, false);
+                        else
+                            throw;
                     }
                     catch (Exception ex)
                     {

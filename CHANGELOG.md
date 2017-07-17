@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.29.0
+ - Ignorable Schemas can be specified
+   - APE.PostgreSQL.Teamwork and APE.PostgreSQL.Test.Runner are automatically added
+ - Log when executing files changed from "without errors" to "successfully"
+
+## 1.0.28.0
+ - GitLab Compilation error fixed
+
 ## 1.0.27.0
  - Setting TABLE COLUMN to nullable not recognized fixed
 

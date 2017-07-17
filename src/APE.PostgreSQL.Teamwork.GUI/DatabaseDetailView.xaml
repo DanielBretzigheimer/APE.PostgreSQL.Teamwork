@@ -166,7 +166,7 @@
                         <materialDesign:PackIcon Kind="Delete" RenderOptions.BitmapScalingMode="HighQuality" />
                     </Button>
 
-                    <Grid Grid.Column="5" Width="30" ToolTip="Importable files found. Import them before a new Export can be created." Background="#FAFAFA"
+                    <Grid Grid.Column="5" Width="30" ToolTip="Importable files found. Import them before a new Export can be created." Background="White"
 							Visibility="{Binding ImportableFilesFound, Converter={StaticResource BoolToVisibilityConverter}}">
                         <materialDesign:PackIcon Margin="4" Kind="Alert" RenderOptions.BitmapScalingMode="HighQuality" Foreground="{StaticResource PrimaryHueMidBrush}" />
                     </Grid>
@@ -230,13 +230,13 @@
 
                                 <Grid>
                                     <Button Padding="4" FontSize="20" Command="{Binding EditCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}"
-												IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}" Background="#FAFAFA"
+												IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}" Background="White"
 												ToolTip="Edit" Width="30">
                                         <materialDesign:PackIcon Kind="LeadPencil" RenderOptions.BitmapScalingMode="HighQuality" />
                                     </Button>
                                     <Button Padding="4" FontSize="20" Command="{Binding SaveCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}"
 												Visibility="{Binding EditMode, Converter={StaticResource BoolToVisibilityConverter}}"
-												ToolTip="Save" Width="30" Background="#FAFAFA">
+												ToolTip="Save" Width="30" Background="White">
                                         <materialDesign:PackIcon Kind="Check" RenderOptions.BitmapScalingMode="HighQuality" />
                                     </Button>
                                 </Grid>
@@ -295,6 +295,35 @@
                                     </StackPanel>
                                 </materialDesign:HintAssist.Hint>
                             </TextBox>
+                            
+                            <!-- Ignored Schemas -->
+                            <Expander Header="Ignored database schemas" Background="Transparent">
+                                <Grid>
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="5" />
+                                        <ColumnDefinition Width="auto" />
+                                    </Grid.ColumnDefinitions>
+                                    <ListBox ItemsSource="{Binding IgnoredSchemas}" SelectedItem="{Binding SelectedSchema}" >
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding}" ToolTip="{Binding}" />
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+
+                                    <StackPanel Grid.Column="2" >
+                                        <Button Style="{StaticResource MaterialDesignFlatRoundButton}" Command="{Binding AddSchemaCommand}" ToolTip="Add schema which is ignored"
+                                                IsEnabled="{Binding EditMode}" >
+                                            <materialDesign:PackIcon Kind="Plus" />
+                                        </Button>
+                                        <Button Style="{StaticResource MaterialDesignFlatRoundButton}" Command="{Binding RemoveSchemaCommand}" ToolTip="Remove schema from ignoring"
+                                                IsEnabled="{Binding EditMode}" >
+                                            <materialDesign:PackIcon Kind="Minus" />
+                                        </Button>
+                                    </StackPanel>
+                                </Grid>
+                            </Expander>
                         </StackPanel>
                     </Expander>
 

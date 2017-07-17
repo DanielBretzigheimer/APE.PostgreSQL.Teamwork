@@ -17,12 +17,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// Creates a difference file of the two dumps at the given path.
         /// </summary>
         /// <returns>Boolean indicating whether differences where found or not.</returns>
-        bool Create(string filePath, string databaseName, string oldDumpFile, string newDumpFile);
+        bool Create(string filePath, Database database, string oldDumpFile, string newDumpFile);
 
         /// <summary>
         /// Creates a difference file of the two dumps at the given path.
         /// </summary>
         /// <returns>Boolean indicating whether differences where found or not.</returns>
-        bool Create(Stream stream, string databaseName, string oldDumpFile, string newDumpFile);
+        bool Create(Stream stream, Database database, string oldDumpFile, string newDumpFile);
     }
 }

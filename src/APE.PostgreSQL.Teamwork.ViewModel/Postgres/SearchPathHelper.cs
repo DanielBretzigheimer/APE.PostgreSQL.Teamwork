@@ -1,7 +1,7 @@
 ﻿// <copyright file="SearchPathHelper.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+using System.IO;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 using APE.PostgreSQL.Teamwork.Model.Utils;
-using System.IO;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
 {

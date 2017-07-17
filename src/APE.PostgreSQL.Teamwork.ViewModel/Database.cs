@@ -22,6 +22,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     /// </summary>
     [NotifyProperty(typeof(string), "Name")]
     [NotifyProperty(typeof(string), "Path")]
+    [NotifyProperty(typeof(ObservableCollection<string>), "IgnoredSchemas")]
     [AllowNullNotifyProperty(typeof(DatabaseVersion), "CurrentVersion")]
     [NotifyProperty(typeof(DatabaseVersion), "LastApplicableVersion")]
     [AllowNullNotifyProperty(typeof(ObservableCollection<SQLFile>), "UndoDiffFiles")]
@@ -30,6 +31,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     [AllowNullNotifyProperty(AccessModifier.Public, typeof(string), "ProgressInfo", "", "This will be shown to the user as additional info to the current progress.")]
     [CtorParameter(AccessModifier.Private, typeof(string), "databaseName")]
     [CtorParameter(AccessModifier.Private, typeof(string), "databasePath")]
+    [CtorParameter(AccessModifier.Private, typeof(List<string>), "databaseIgnoredSchemas")]
     [CtorParameter(typeof(IConnectionManager))]
     [CtorParameter(typeof(IFileSystemAccess))]
     [CtorParameter(typeof(IProcessManager))]
@@ -502,7 +504,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             }
 
             // create diff file and throw exception if nothing changed
-            if (!this.differenceCreator.Create(diff, this.Name, firstDump, secondDump))
+            if (!this.differenceCreator.Create(diff, this, firstDump, secondDump))
             {
                 throw TeamworkException.NoChanges(firstDump, secondDump);
             }
@@ -552,7 +554,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 // create temp database
                 this.ExecuteCommandNonQuery(SQLTemplates.CreateDatabase(databaseName));
                 this.SetProgress(this.Progress + progressStepSmall);
-                var managementDatabase = new Database(databaseName, this.Path, this.connectionManager, this.fileSystemAccess, this.processManager, this.differenceCreator, this.sqlFileTester, true);
+                var managementDatabase = new Database(databaseName, this.Path, this.IgnoredSchemas.ToList(), this.connectionManager, this.fileSystemAccess, this.processManager, this.differenceCreator, this.sqlFileTester, true);
                 managementDatabase.UpdateData();
 
                 var updateProgress = new Action<IEnumerable<SQLFile>, SQLFile>((files, file) =>
@@ -590,6 +592,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         {
             this.Name = this.databaseName;
             this.Path = this.databasePath;
+
+            if (this.databaseIgnoredSchemas.Count == 0)
+                this.databaseIgnoredSchemas = DatabaseSetting.DefaultIgnoredSchemas;
+            this.IgnoredSchemas = new ObservableCollection<string>(this.databaseIgnoredSchemas);
 
             this.CreateTeamworkSchema();
 

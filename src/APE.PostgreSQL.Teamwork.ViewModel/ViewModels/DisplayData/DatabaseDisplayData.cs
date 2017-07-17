@@ -16,6 +16,7 @@ using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
 using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
 using APE.PostgreSQL.Teamwork.ViewModel.TestHelper;
 using log4net;
+using Microsoft.VisualBasic;
 using Npgsql;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
@@ -34,6 +35,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     [NotifyProperty(AccessModifier.Public, typeof(bool), "Undoing", false, "Indicates that the database is undoing changes at the moment")]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "Error", false)]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "ImportableFilesFound", false)]
+    [AllowNullNotifyProperty(AccessModifier.Public, typeof(string), "SelectedSchema")]
     [NotifyProperty(typeof(string), "ErrorMessage")]
     [AllowNullNotifyProperty(typeof(Database), "Database")]
     [NotifyProperty(AccessModifier.Public, typeof(DatabaseVersion), "TargetVersion")]
@@ -95,6 +97,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             }
         }
 
+        public ObservableCollection<string> IgnoredSchemas
+        {
+            get
+            {
+                if (this.Database == null)
+                    return new ObservableCollection<string>(DatabaseSetting.GetDatabaseSetting(this.Id).IgnoredSchemas);
+
+                return this.Database.IgnoredSchemas;
+            }
+        }
+
         /// <summary>
         /// Gets or sets a bool which indicates if the <see cref="Database"/> was auto expanded (not expanded by the user). Databases get
         /// auto expanded if the GUI has enough room or get shrunk if the GUI gets smaller.
@@ -130,8 +143,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         public ICommand CreateDatabaseCommand { get; set; }
 
-        // common commands
         public ICommand ExpandCommand { get; private set; }
+
+        public ICommand AddSchemaCommand { get; private set; }
+
+        public ICommand RemoveSchemaCommand { get; private set; }
 
         /// <summary>
         /// Updates the version and the not applied files.
@@ -248,6 +264,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 this.Database = new Database(
                     this.Name,
                     DatabaseSetting.GetDatabaseSetting(this.Id).Path,
+                    DatabaseSetting.GetDatabaseSetting(this.Id).IgnoredSchemas,
                     this.connectionManager,
                     this.fileSystemAccess,
                     this.processManager,
@@ -330,6 +347,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             var newDatabases = DatabaseSetting.GetDatabaseSettings();
             newDatabases.Single(d => d.Id == this.Id).Name = this.Database.Name;
             newDatabases.Single(d => d.Id == this.Id).Path = this.Database.Path;
+            newDatabases.Single(d => d.Id == this.Id).IgnoredSchemas = this.Database.IgnoredSchemas.ToList();
             SettingsManager.Get().Setting.DatabaseSettings = newDatabases;
             SettingsManager.Get().Save();
             this.EditMode = false;
@@ -389,6 +407,32 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             this.UndoCommand = new RelayCommand(this.UndoChanges);
             this.ImportCommand = new RelayCommand(this.StartImport);
             this.CreateDatabaseCommand = new RelayCommand(this.CreateDatabase);
+            this.AddSchemaCommand = new RelayCommand(this.AddSchema);
+            this.RemoveSchemaCommand = new RelayCommand(this.RemoveSchema);
+        }
+
+        private void AddSchema()
+        {
+            if (this.Database == null)
+                return;
+
+            var schemaName = Interaction.InputBox("The name of the schema which should be ignored (without quotation marks)", "Select schema");
+            this.Database.IgnoredSchemas.Add(schemaName);
+        }
+
+        private void RemoveSchema()
+        {
+            if (this.SelectedSchema == null || this.Database == null)
+                return;
+
+            if (DatabaseSetting.DefaultIgnoredSchemas.Contains(this.SelectedSchema))
+            {
+                var messageBox = MainWindowViewModel.GetMessageBox("The default schemas can't be removed.", "Schema not removed", MessageBoxButton.OK);
+                MainWindowViewModel.ShowDialog(messageBox);
+                return;
+            }
+
+            this.Database.IgnoredSchemas.Remove(this.SelectedSchema);
         }
 
         private void CreateDatabase()
@@ -458,9 +502,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                     ////}
 
                     this.UpdateToVersion(this.Database.LastApplicableVersion);
-                    var finishedMessageBox = MainWindowViewModel.GetMessageBox("All SQL Files succesfully executed!", "Succesfully Executed", MessageBoxButton.OK);
+                    var finishedMessageBox = MainWindowViewModel.GetMessageBox("All SQL Files successfully executed!", "Successfully Executed", MessageBoxButton.OK);
                     await MainWindowViewModel.ShowDialog(finishedMessageBox);
-                    Log.Info("All sql files succesfully executed");
+                    Log.Info("All sql files successfully executed");
                 }
                 catch (Exception ex)
                 {
@@ -684,7 +728,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
                     var messageBox = MainWindowViewModel.GetMessageBox(
                         "All sql statements successfully executed!",
-                        "Test succesfully finished",
+                        "Test successfully finished",
                         MessageBoxButton.OK);
                     await MainWindowViewModel.ShowDialog(messageBox);
                     Log.Info("All sql statements successfully executed");

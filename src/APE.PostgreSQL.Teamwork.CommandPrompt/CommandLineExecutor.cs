@@ -30,7 +30,16 @@ namespace APE.PostgreSQL.Teamwork.CommandPrompt
 
             // initilialize connection and database
             connectionManager.Initialize(commandLineArgs.Username, commandLineArgs.Host, commandLineArgs.Password, commandLineArgs.Port);
-            var database = new Database(commandLineArgs.DatabaseName, commandLineArgs.FilePath, connectionManager, fileSystemAccess, processManager, diffCreator, sqlFileTester, true);
+            var database = new Database(
+                commandLineArgs.DatabaseName,
+                commandLineArgs.FilePath,
+                DatabaseSetting.DefaultIgnoredSchemas,
+                connectionManager,
+                fileSystemAccess,
+                processManager,
+                diffCreator,
+                sqlFileTester,
+                true);
             var oldVersion = database.CurrentVersion;
             Console.WriteLine(string.Format("{0}Old Version was {1}", Environment.NewLine, oldVersion));
 

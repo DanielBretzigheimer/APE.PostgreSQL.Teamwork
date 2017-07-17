@@ -68,7 +68,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         {
             this.OkCommand = new RelayCommand(() =>
             {
-                var db = new Database(this.DatabaseName, this.DatabasePath, this.connectionManager, this.fileSystemAccess, this.processManager, this.differenceCreator, this.sQLFileTester, true);
+                var db = new Database(
+                    this.DatabaseName,
+                    this.DatabasePath,
+                    DatabaseSetting.DefaultIgnoredSchemas,
+                    this.connectionManager,
+                    this.fileSystemAccess,
+                    this.processManager,
+                    this.differenceCreator,
+                    this.sQLFileTester,
+                    true);
 
                 // create first dump if none is existing
                 if (db.DiffFiles.Where(x => x.FileType == FileType.Dump).Count() == 0)

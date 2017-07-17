@@ -119,7 +119,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                     this.ExecuteInTask(() => database.UpdateData());
                 }
 
-                Log.Info("Databases succesfully updated");
+                Log.Info("Databases successfully updated");
             }
         }
 

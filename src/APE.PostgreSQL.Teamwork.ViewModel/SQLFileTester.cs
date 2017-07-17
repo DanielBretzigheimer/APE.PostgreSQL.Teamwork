@@ -128,13 +128,37 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             switch (type)
             {
                 case "bigint":
+                case "integer":
+                case "smallint":
+                case "decimal":
+                case "numeric":
+                case "int":
+                case "bit":
+                case "varbit":
+                case "bit varying":
                     return "1";
+                case "bool":
                 case "boolean":
                     return "true";
                 case "double precision":
-                    return "1";
+                case "real":
+                case "money":
+                    return "1.2";
+                case "date":
+                case "timestamp":
+                case "timestamp without time zone":
+                case "time":
+                case "time without time zone":
+                case "time with time zone":
                 case "timestamp with time zone":
                     return "now()";
+                case "char":
+                case "character":
+                    return "C";
+                case "text":
+                case "varchar":
+                case "character varying":
+                    return "testtext";
                 default:
                     throw new TeamworkConnectionException(target, $"Could not create data for file {target.FileName} because the type {type} is not supported!");
             }
