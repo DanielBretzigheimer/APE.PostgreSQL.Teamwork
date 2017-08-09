@@ -46,6 +46,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         public static Func<string, string, MessageBoxButton, object> GetMessageBox { get; set; }
 
+        /// <summary>
+        /// Gets or sets a function which can create a MaterialMessageBox with the given parameters (text, title, buttons, isMarkdown).
+        /// </summary>
+        public static Func<string, string, MessageBoxButton, object> GetMarkdownBox { get; set; }
+
         public static Action<DatabaseDisplayData> OpenImportWindow { get; set; }
 
         public static Action<SQLFileDisplayData, SQLFileDisplayData> OpenExportWindow { get; set; }

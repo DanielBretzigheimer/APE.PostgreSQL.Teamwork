@@ -21,7 +21,7 @@ namespace APE.PostgreSQL.Teamwork
         {
             try
             {
-                this.DataContext = new AddDatabaseViewModel(this.connectionManager, this.fileSystemAccess, this.processManager, this.differenceCreator, this.sQLFileTester);
+                this.DataContext = new AddDatabaseViewModel(this.connectionManager, this.fileSystemAccess, this.processManager, this.differenceCreator, this.sQLFileTester, this.Close);
                 this.InitializeComponent();
             }
             catch (Exception e)
@@ -31,7 +31,7 @@ namespace APE.PostgreSQL.Teamwork
             }
         }
 
-        private void CloseClick(object sender, RoutedEventArgs e)
+        private void Close()
         {
             if (DialogHost.CloseDialogCommand.CanExecute(true, this))
             {

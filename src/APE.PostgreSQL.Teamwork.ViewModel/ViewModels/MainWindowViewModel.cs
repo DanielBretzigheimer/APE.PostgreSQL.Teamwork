@@ -20,8 +20,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     /// <summary>
     /// ViewModel for the MainWindowView which displays a list of databases.
     /// </summary>
-    [NotifyProperty(typeof(string), "ErrorMessage")]
-    [NotifyProperty(typeof(string), "SuccessMessage")]
+    [NotifyProperty(AccessModifier.PublicGetPrivateSet, typeof(string), "ErrorMessage", "")]
+    [NotifyProperty(AccessModifier.PublicGetPrivateSet, typeof(string), "SuccessMessage", "")]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "Editable", false)]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "Loading", false)]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "ShowSearch", false)]
@@ -169,13 +169,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                     changelog = "Could not load changelog!";
                 }
 
-                var sb = new StringBuilder();
-                sb.AppendLine("Your version of the code generation was upgraded.");
-                sb.AppendLine();
-                sb.AppendLine(changelog);
-
                 // upgrade => show change log
-                await ShowDialog(GetMessageBox(sb.ToString(), "Version upgraded", MessageBoxButton.OK));
+                await ShowDialog(GetMarkdownBox(changelog, "Code generation was upgraded", MessageBoxButton.OK));
             }
             else if (assemblyVersion < settings.ApplicationVersion.Version)
             {

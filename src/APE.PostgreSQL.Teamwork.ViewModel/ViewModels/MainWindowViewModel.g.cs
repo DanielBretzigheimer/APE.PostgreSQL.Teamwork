@@ -22,8 +22,8 @@ using APE.PostgreSQL.Teamwork.ViewModel.ViewModels;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {
-    // APE.CodeGeneration.Attribute [NotifyProperty(typeof(string), "ErrorMessage")]
-    // APE.CodeGeneration.Attribute [NotifyProperty(typeof(string), "SuccessMessage")]
+    // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.PublicGetPrivateSet, typeof(string), "ErrorMessage", "")]
+    // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.PublicGetPrivateSet, typeof(string), "SuccessMessage", "")]
     // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "Editable", false)]
     // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "Loading", false)]
     // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "ShowSearch", false)]
@@ -102,7 +102,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         //--------------------------------------------------------------------------------
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs ErrorMessageEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(ErrorMessage));
-        private string errorMessage;
+        private string errorMessage = "";
 
         /// <summary>
         /// 
@@ -113,7 +113,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 return this.errorMessage;
             }
-            set
+            private set
             {
                 if (!object.Equals(this.errorMessage, value))
                 {
@@ -134,7 +134,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         //protected virtual void ErrorMessageChanged() { }
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs SuccessMessageEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(SuccessMessage));
-        private string successMessage;
+        private string successMessage = "";
 
         /// <summary>
         /// 
@@ -145,7 +145,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 return this.successMessage;
             }
-            set
+            private set
             {
                 if (!object.Equals(this.successMessage, value))
                 {

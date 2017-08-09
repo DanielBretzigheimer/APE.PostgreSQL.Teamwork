@@ -149,6 +149,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         public ICommand RemoveSchemaCommand { get; private set; }
 
+        public ICommand CreateMinorCommand { get; private set; }
+
         /// <summary>
         /// Updates the version and the not applied files.
         /// </summary>
@@ -409,6 +411,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             this.CreateDatabaseCommand = new RelayCommand(this.CreateDatabase);
             this.AddSchemaCommand = new RelayCommand(this.AddSchema);
             this.RemoveSchemaCommand = new RelayCommand(this.RemoveSchema);
+            this.CreateMinorCommand = new RelayCommand(this.CreateMinor);
+        }
+
+        /// <summary>
+        /// Opens a popup which allows the creation of a new minor version.
+        /// </summary>
+        private void CreateMinor()
+        {
         }
 
         private void AddSchema()

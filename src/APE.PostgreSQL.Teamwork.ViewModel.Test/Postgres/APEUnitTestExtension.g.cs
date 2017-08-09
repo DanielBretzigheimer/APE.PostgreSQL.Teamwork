@@ -25,12 +25,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
     internal static class DifferenceCreatorExtension
     {
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static bool CallDiffDatabaseSchemas(this DifferenceCreator targetClass, StreamWriter writer, PgDatabase oldDatabase, PgDatabase newDatabase, bool outputIgnoredStatements)
+        internal static bool CallDiffDatabaseSchemas(this DifferenceCreator targetClass, Database database, StreamWriter writer, PgDatabase oldDatabase, PgDatabase newDatabase, bool outputIgnoredStatements)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
             {
-                return (bool)po.Invoke("DiffDatabaseSchemas", new object[] { writer, oldDatabase, newDatabase, outputIgnoredStatements });
+                return (bool)po.Invoke("DiffDatabaseSchemas", new object[] { database, writer, oldDatabase, newDatabase, outputIgnoredStatements });
             }
             catch (System.MissingMethodException missingMethodException)
             {
@@ -39,12 +39,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static void CallCreateNewSchemas(this DifferenceCreator targetClass, StreamWriter writer, PgDatabase oldDatabase, PgDatabase newDatabase)
+        internal static void CallCreateNewSchemas(this DifferenceCreator targetClass, Database database, StreamWriter writer, PgDatabase oldDatabase, PgDatabase newDatabase)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
             {
-                po.Invoke("CreateNewSchemas", new object[] { writer, oldDatabase, newDatabase });
+                po.Invoke("CreateNewSchemas", new object[] { database, writer, oldDatabase, newDatabase });
             }
             catch (System.MissingMethodException missingMethodException)
             {
@@ -53,12 +53,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static void CallDropOldSchemas(this DifferenceCreator targetClass, StreamWriter writer, PgDatabase oldDatabase, PgDatabase newDatabase)
+        internal static void CallDropOldSchemas(this DifferenceCreator targetClass, Database database, StreamWriter writer, PgDatabase oldDatabase, PgDatabase newDatabase)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
             {
-                po.Invoke("DropOldSchemas", new object[] { writer, oldDatabase, newDatabase });
+                po.Invoke("DropOldSchemas", new object[] { database, writer, oldDatabase, newDatabase });
             }
             catch (System.MissingMethodException missingMethodException)
             {
@@ -67,12 +67,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static void CallUpdateSchemas(this DifferenceCreator targetClass, StreamWriter writer, PgDatabase oldDatabase, PgDatabase newDatabase)
+        internal static void CallUpdateSchemas(this DifferenceCreator targetClass, Database database, StreamWriter writer, PgDatabase oldDatabase, PgDatabase newDatabase)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
             {
-                po.Invoke("UpdateSchemas", new object[] { writer, oldDatabase, newDatabase });
+                po.Invoke("UpdateSchemas", new object[] { database, writer, oldDatabase, newDatabase });
             }
             catch (System.MissingMethodException missingMethodException)
             {

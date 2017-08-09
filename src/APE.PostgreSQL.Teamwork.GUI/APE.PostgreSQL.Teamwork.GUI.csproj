@@ -77,11 +77,11 @@
     <SignManifests>false</SignManifests>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="APE.CodeGeneration.Attributes, Version=1.0.79.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\APE.CodeGeneration.Attributes.1.0.79\lib\net40\APE.CodeGeneration.Attributes.dll</HintPath>
+    <Reference Include="APE.CodeGeneration.Attributes, Version=1.0.87.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\APE.CodeGeneration.Attributes.1.0.87\lib\net40\APE.CodeGeneration.Attributes.dll</HintPath>
     </Reference>
-    <Reference Include="Dragablz, Version=0.0.3.186, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\Dragablz.0.0.3.186\lib\net45\Dragablz.dll</HintPath>
+    <Reference Include="Dragablz, Version=0.0.3.191, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\Dragablz.0.0.3.191\lib\net45\Dragablz.dll</HintPath>
     </Reference>
     <Reference Include="Greg.WPF.Utility, Version=0.0.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Greg.WPF.Utility.1.0.0.0\lib\net40\Greg.WPF.Utility.dll</HintPath>
@@ -114,13 +114,8 @@
       <HintPath>..\packages\ServiceStack.Text.3.9.71\lib\net35\ServiceStack.Text.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="StructureMap, Version=4.2.0.402, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\structuremap.4.2.0.402\lib\net40\StructureMap.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="StructureMap.Net4, Version=4.2.0.402, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>..\packages\structuremap.4.2.0.402\lib\net40\StructureMap.Net4.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="StructureMap, Version=4.5.1.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\StructureMap.4.5.1\lib\net45\StructureMap.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
@@ -160,6 +155,9 @@
     <Compile Include="Converter\ConditionalConverter.cs" />
     <Compile Include="Converter\ConverterChain.cs" />
     <Compile Include="Converter\ErrorStatusToColorConverter.cs" />
+    <Compile Include="CreateMinorVersionView.xaml.cs">
+      <DependentUpon>CreateMinorVersionView.xaml</DependentUpon>
+    </Compile>
     <Compile Include="DatabaseDetailView.xaml.cs">
       <DependentUpon>DatabaseDetailView.xaml</DependentUpon>
     </Compile>
@@ -177,6 +175,8 @@
     <Compile Include="Loading\Spinner.xaml.cs">
       <DependentUpon>Spinner.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Markdown\Markdown.cs" />
+    <Compile Include="Markdown\TextToFlowDocumentConverter.cs" />
     <Compile Include="MaterialMessageBox.xaml.cs">
       <DependentUpon>MaterialMessageBox.xaml</DependentUpon>
     </Compile>
@@ -192,6 +192,10 @@
     </Compile>
     <Compile Include="ValidationRule\CheckDatabaseValidationRule.cs" />
     <Page Include="AddDatabaseView.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="CreateMinorVersionView.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -249,23 +253,14 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Resource Include="Images\minor-version.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Resource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
     </EmbeddedResource>
     <Resource Include="FodyWeavers.xml" />
-    <Content Include="Images\backup-export-dark.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\backup-export.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\backup-import-dark.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\backup-import.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="Images\logo-icon.xcf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -307,107 +302,6 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\add-circle-outline.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\check-circle-outline.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\create.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\folder.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\magnify-dark.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\magnify.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\settings.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\warning.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Images\done.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Images\add.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Images\export.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\import.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Images\expand-less.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\expand-more.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Images\more-vert.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Images\content-copy.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\replay.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Images\dark-export.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\dark-import.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Images\dark-add.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\dark-settings.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Images\arrow-drop-down.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Images\dark-refresh.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Images\run.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Images\reset.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.5">
       <Visible>False</Visible>
       <ProductName>Microsoft .NET Framework 4.5 %28x86 and x64%29</ProductName>
@@ -420,16 +314,6 @@
     </BootstrapperPackage>
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Images\warning-dark.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Images\delete.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
     <Content Include="Images\logo-bright.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -440,43 +324,6 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Images\logo.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Images\delete-dark.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Images\add-circle-outline-dark.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\add-dark.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\check-circle-outline-dark.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\content-copy-dark.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\create-dark.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\done-dark.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\folder-dark.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\replay-dark.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\reset-dark.png">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Images\run-dark.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

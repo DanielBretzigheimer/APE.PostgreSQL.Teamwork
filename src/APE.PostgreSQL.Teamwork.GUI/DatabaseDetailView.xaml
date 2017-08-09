@@ -175,22 +175,24 @@
                                   IsExpanded="{Binding ShowDetails}" IsEnabled="{Binding Enabled}">
                         <StackPanel Margin="0,5,0,0">
                             <StackPanel Orientation="Horizontal">
-                                <Button Padding="4" FontSize="20" Command="{Binding CreateDumpCommand}"  Style="{StaticResource MaterialDesignFlatRoundButton}"
-											IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}"
-                                            ToolTip="Create a new dump" Width="30">
+                                <StackPanel.Resources>
+                                    <Style x:Key="DetailButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignFlatRoundButton}">
+                                        <Setter Property="Padding" Value="4" />
+                                        <Setter Property="Width" Value="30" />
+                                        <Setter Property="FontSize" Value="20" />
+                                        <Setter Property="IsEnabled" Value="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}" />
+                                    </Style>
+                                </StackPanel.Resources>
+
+                                <Button Command="{Binding CreateDumpCommand}" Style="{StaticResource DetailButton}" ToolTip="Create a new dump">
                                     <materialDesign:PackIcon Kind="PlusCircleOutline" RenderOptions.BitmapScalingMode="HighQuality" />
                                 </Button>
 
-                                <Button Padding="4" FontSize="20" Command="{Binding OpenPathCommand}" 
-                                        Style="{StaticResource MaterialDesignFlatRoundButton}" 
-											IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}"
-                                            ToolTip="Open diff path" Width="30">
+                                <Button Command="{Binding OpenPathCommand}" Style="{StaticResource DetailButton}" ToolTip="Open diff path" Width="30">
                                     <materialDesign:PackIcon Kind="Folder" RenderOptions.BitmapScalingMode="HighQuality" />
                                 </Button>
 
-                                <Button Padding="4" FontSize="20" Command="{Binding TestCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}"
-											IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}"
-                                            ToolTip="Check sql files for errors" Width="30" >
+                                <Button Command="{Binding TestCommand}" Style="{StaticResource DetailButton}" ToolTip="Check sql files for errors">
                                     <Grid>
                                         <loading:Spinner Visibility="{Binding Testing, Converter={StaticResource BoolToVisibilityConverter}}" />
                                         <materialDesign:PackIcon Kind="CheckboxMarkedCircleOutline" RenderOptions.BitmapScalingMode="HighQuality" 
@@ -198,15 +200,11 @@
                                     </Grid>
                                 </Button>
 
-                                <Button Padding="4" FontSize="20" Command="{Binding RemoveCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}"
-													IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}"
-													ToolTip="Remove database" Width="30" >
+                                <Button Command="{Binding RemoveCommand}" Style="{StaticResource DetailButton}" ToolTip="Remove database">
                                     <materialDesign:PackIcon Kind="Delete" RenderOptions.BitmapScalingMode="HighQuality" />
                                 </Button>
 
-                                <Button Padding="4" FontSize="20" Command="{Binding ResetCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}"
-													IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}"
-													ToolTip="Reset database (deletes all data, tables, schemas,...)" Width="30" >
+                                <Button Command="{Binding ResetCommand}" Style="{StaticResource DetailButton}" ToolTip="Reset database (deletes all data, tables, schemas,...)">
                                     <Grid>
                                         <loading:Spinner Visibility="{Binding Resetting, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                         <materialDesign:PackIcon Kind="BackupRestore" RenderOptions.BitmapScalingMode="HighQuality"
@@ -214,9 +212,7 @@
                                     </Grid>
                                 </Button>
 
-                                <Button Padding="4" FontSize="20" Command="{Binding UndoCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}"
-													IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}"
-													ToolTip="Tries to undo all changes (differences) to the current database version" Width="30" >
+                                <Button Command="{Binding UndoCommand}" Style="{StaticResource DetailButton}" ToolTip="Tries to undo all changes (differences) to the current database version">
                                     <Grid>
                                         <loading:Spinner Visibility="{Binding Undoing, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                         <materialDesign:PackIcon Kind="DebugStepOver" RenderOptions.BitmapScalingMode="HighQuality" RenderTransformOrigin="0.5,0.5"
@@ -228,6 +224,10 @@
                                     </Grid>
                                 </Button>
 
+                                <Button Command="{Binding CreateMinorCommand}" Style="{StaticResource DetailButton}" ToolTip="Open a popup to create a new minor version">
+                                    <Image Source="Images/minor-version.png" RenderOptions.BitmapScalingMode="HighQuality" />
+                                </Button>
+                                
                                 <Grid>
                                     <Button Padding="4" FontSize="20" Command="{Binding EditCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}"
 												IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}" Background="White"

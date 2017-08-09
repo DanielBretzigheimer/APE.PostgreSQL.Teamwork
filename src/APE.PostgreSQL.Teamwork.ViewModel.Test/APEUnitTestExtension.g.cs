@@ -696,6 +696,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 #region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\ViewModels\AddDatabaseViewModel.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
@@ -726,6 +727,20 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             catch (System.MissingMethodException missingMethodException)
             {
                 throw new System.NotSupportedException("SearchDatabaseDirectories with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static void CallCreateDatabase(this AddDatabaseViewModel targetClass)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                po.Invoke("CreateDatabase", new object[] { });
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("CreateDatabase with requested parameters is not found. Rerun code generation.", missingMethodException);
             }
         }
 
