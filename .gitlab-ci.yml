@@ -37,6 +37,8 @@ CreateNugetPackage:
         - REM Copy Executables
         - del /S /Q "C:\NuGetOwncloud\APE Tools\APE.PostgreSQL.Teamwork"
         - xcopy /E /V /Y src\APE.PostgreSQL.Teamwork.GUI\bin\Release\* "C:\NuGetOwncloud\APE Tools\APE.PostgreSQL.Teamwork"
+        - del /S /Q "C:\NuGetOwncloud\APE Tools\APE.PostgreSQL.Teamwork.CommandPrompt"
+        - xcopy /E /V /Y src\APE.PostgreSQL.Teamwork.CommandPrompt\bin\Release\* "C:\NuGetOwncloud\APE Tools\APE.PostgreSQL.Teamwork.CommandPrompt"
         - del /S /Q "C:\NuGetOwncloud\Customer\Loepfe\MillMasterTOP\APE.PostgreSQL.Teamwork"
         - xcopy /E /V /Y src\APE.PostgreSQL.Teamwork.GUI\bin\Release\* "C:\NuGetOwncloud\Customer\Loepfe\MillMasterTOP\APE.PostgreSQL.Teamwork"
     environment:
