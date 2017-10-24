@@ -130,11 +130,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             {
                 // ignore the ignored schemas
                 if (database.IgnoredSchemas.Contains(newSchema.Name))
-                {
                     continue;
-                }
 
-                // ignore the ignored schemas
                 if (oldDatabase.GetSchema(newSchema.Name) == null)
                 {
                     writer.WriteLine();
@@ -205,6 +202,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 (w, newSchema, oldSchema) => { PgDiffAggregate.Drop(w, oldSchema, newSchema, new SearchPathHelper(newSchema)); },
                 (w, newSchema, oldSchema) => { PgDiffFunctions.Drop(w, oldSchema, newSchema, new SearchPathHelper(newSchema)); },
                 (w, newSchema, oldSchema) => { PgDiffViews.Drop(w, oldSchema, newSchema, new SearchPathHelper(newSchema)); },
+                (w, newSchema, oldSchema) => { PgDiffRules.Drop(w, oldSchema, newSchema, new SearchPathHelper(newSchema)); },
                 (w, newSchema, oldSchema) => { PgDiffConstraints.Drop(w, oldSchema, newSchema, true, new SearchPathHelper(newSchema)); },
                 (w, newSchema, oldSchema) => { PgDiffConstraints.Drop(w, oldSchema, newSchema, false, new SearchPathHelper(newSchema)); },
                 (w, newSchema, oldSchema) => { PgDiffIndexes.Drop(w, oldSchema, newSchema, new SearchPathHelper(newSchema)); },
@@ -226,6 +224,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 (w, newSchema, oldSchema) => { PgDiffTriggers.Create(w, oldSchema, newSchema, new SearchPathHelper(newSchema)); },
                 (w, newSchema, oldSchema) => { PgDiffViews.Create(w, oldSchema, newSchema, new SearchPathHelper(newSchema)); },
                 (w, newSchema, oldSchema) => { PgDiffViews.Alter(w, oldSchema, newSchema, new SearchPathHelper(newSchema)); },
+                (w, newSchema, oldSchema) => { PgDiffRules.Create(w, oldSchema, newSchema, new SearchPathHelper(newSchema)); },
                 (w, newSchema, oldSchema) => { PgDiffSequences.Drop(w, oldSchema, newSchema, new SearchPathHelper(newSchema)); },
                 (w, newSchema, oldSchema) => { PgDiffPrivileges.Create(w, oldSchema, newSchema, new SearchPathHelper(newSchema)); },
 
@@ -241,10 +240,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             foreach (var action in schemaActions)
             {
                 foreach (var newAndOldSchema in newAndOldSchemas)
-                {
                     action(writer, newAndOldSchema.Key, newAndOldSchema.Value);
-                }
-            }
-        }
+    }
+}
     }
 }

@@ -94,7 +94,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 throw new Exception($"Cannot find schema {schemaName} for statement {statement}.");
             }
 
-            schema.AddPrivilege(privilege);
+            schema.Add(privilege);
         }
     }
 }

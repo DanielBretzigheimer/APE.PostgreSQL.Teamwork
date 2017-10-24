@@ -21,9 +21,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             // Optional IF NOT EXISTS, irrelevant for our purposes
             parser.ExpectOptional("IF", "NOT", "EXISTS");
 
-            var tableName = parser.ParseIdentifier();
-            var table = new PgTable(ParserUtils.GetObjectName(tableName));
-            var schemaName = ParserUtils.GetSchemaName(tableName, database);
+            var tableIdentifier = parser.ParseIdentifier();
+            var table = new PgTable(ParserUtils.GetObjectName(tableIdentifier));
+            var schemaName = ParserUtils.GetSchemaName(tableIdentifier, database);
 
             PgSchema schema = database.GetSchema(schemaName);
 
@@ -32,7 +32,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 throw new Exception(string.Format("CannotFindSchema {0}. Statement {1}", schemaName, statement));
             }
 
-            schema.AddTable(table);
+            schema.Add(table);
 
             parser.Expect("(");
 
