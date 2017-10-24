@@ -117,7 +117,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             }
 
             parser.Expect("EXECUTE", "PROCEDURE");
-            trigger.Function = parser.Rest;
+            trigger.Function = parser.Rest();
 
             var ignoreSlonyTrigger = ignoreSlonyTriggers && ("_slony_logtrigger".Equals(trigger.Name) || "_slony_denyaccess".Equals(trigger.Name));
 

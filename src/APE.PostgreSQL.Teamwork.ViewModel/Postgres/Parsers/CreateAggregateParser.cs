@@ -46,7 +46,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             {
                 Name = ParserUtils.GetObjectName(aggregateName),
             };
-            schema.AddAggregate(aggregate);
+            schema.Add(aggregate);
 
             parser.Expect("(");
 
@@ -82,11 +82,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             }
 
             foreach (var argument in arguments)
-            {
                 aggregate.Arguments.Add(argument);
-            }
 
-            aggregate.Body = parser.Rest;
+            aggregate.Body = parser.Rest();
         }
     }
 }

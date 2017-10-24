@@ -199,6 +199,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             {
                 return !oldView.Query.Replace(" ", string.Empty).Trim().Equals(newView.Query.Replace(" ", string.Empty).Trim());
             }
+            else if (oldViewColumnNames == null)
+            {
+                return true;
+            }
             else
             {
                 return !oldViewColumnNames.Equals(newViewColumnNames);

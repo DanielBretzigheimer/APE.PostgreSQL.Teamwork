@@ -41,7 +41,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             {
                 Name = ParserUtils.GetObjectName(functionName),
             };
-            schema.AddFunction(function);
+            schema.Add(function);
 
             parser.Expect("(");
 
@@ -115,7 +115,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 }
             }
 
-            function.Body = parser.Rest;
+            function.Body = parser.Rest();
         }
     }
 }

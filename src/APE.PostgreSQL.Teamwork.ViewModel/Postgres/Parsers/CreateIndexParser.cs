@@ -36,7 +36,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             var tableName = parser.ParseIdentifier();
 
-            var definition = parser.Rest;
+            var definition = parser.Rest();
 
             var schemaName = ParserUtils.GetSchemaName(tableName, database);
 
@@ -58,7 +58,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             var index = new PgIndex(indexName);
             table.AddIndex(index);
-            schema.AddIndex(index);
+            schema.Add(index);
             index.Definition = definition.Trim();
             index.TableName = table.Name;
             index.Unique = unique;

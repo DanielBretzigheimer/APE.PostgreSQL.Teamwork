@@ -10,15 +10,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
     /// </summary>
     public sealed class Parser
     {
-        /// <summary>
-        /// String to be parsed.
-        /// </summary>
         private string value;
-
-        /// <summary>
-        /// Current position.
-        /// </summary>
-        private int position;
 
         /// <summary>
         /// Creates new instance of Parser.
@@ -37,45 +29,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         {
             get
             {
-                return (this.position == this.value.Length
-                    || this.position + 1 == this.value.Length)
-                    && this.value[this.position] == ';';
-            }
-        }
-
-        /// <summary>
-        /// Returns rest of the string. If the string ends with ';' then it is
-        /// removed from the string before returned. If there is nothing more in the
-        /// string, null is returned.
-        /// </summary>
-        /// <returns> rest of the string, without trailing ';' if present, or null if
-        /// there is nothing more in the string </returns>
-        [NullGuard.AllowNull]
-        public string Rest
-        {
-            get
-            {
-                string result;
-
-                if (this.value[this.value.Length - 1] == ';')
-                {
-                    if (this.position == this.value.Length - 1)
-                    {
-                        return null;
-                    }
-                    else
-                    {
-                        result = this.value.Substring(this.position, this.value.Length - 1 - this.position);
-                    }
-                }
-                else
-                {
-                    result = this.value.Substring(this.position);
-                }
-
-                this.position = this.value.Length;
-
-                return result;
+                return (this.Position == this.value.Length
+                    || this.Position + 1 == this.value.Length)
+                    && this.value[this.Position] == ';';
             }
         }
 
@@ -83,18 +39,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// Returns current position in the string.
         /// </summary>
         /// <returns> current position in the string </returns>
-        public int Position
-        {
-            get
-            {
-                return this.position;
-            }
-
-            set
-            {
-                this.position = value;
-            }
-        }
+        public int Position { get; set; }
 
         /// <summary>
         /// Returns parsed string.
@@ -109,55 +54,36 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         }
 
         /// <summary>
-        /// Returns position of last character of single command within statement
-        /// (like CREATE TABLE). Last character is either ',' or ')'. If no such
-        /// character is found and method reaches the end of the command then
-        /// position after the last character in the command is returned.
+        /// Returns rest of the string. If the string ends with ';' then it is
+        /// removed from the string before returned. If there is nothing more in the
+        /// string, null is returned.
         /// </summary>
-        /// <returns> end position of the command </returns>
-        private int ExpressionEnd
+        /// <returns> rest of the string, without trailing ';' if present, or null if
+        /// there is nothing more in the string </returns>
+        [return: NullGuard.AllowNull]
+        public string Rest()
         {
-            get
+            string result;
+
+            if (this.value[this.value.Length - 1] == ';')
             {
-                var bracesCount = 0;
-                var singleQuoteOn = false;
-                var charPos = this.position;
-
-                for (; charPos < this.value.Length; charPos++)
+                if (this.Position == this.value.Length - 1)
                 {
-                    var chr = this.value[charPos];
-
-                    if (chr == '(')
-                    {
-                        bracesCount++;
-                    }
-                    else if (chr == ')')
-                    {
-                        if (bracesCount == 0)
-                        {
-                            break;
-                        }
-                        else
-                        {
-                            bracesCount--;
-                        }
-                    }
-                    else if (chr == '\'')
-                    {
-                        singleQuoteOn = !singleQuoteOn;
-                    }
-                    else if ((chr == ',') && !singleQuoteOn && (bracesCount == 0))
-                    {
-                        break;
-                    }
-                    else if (chr == ';' && bracesCount == 0 && !singleQuoteOn)
-                    {
-                        break;
-                    }
+                    return null;
                 }
-
-                return charPos;
+                else
+                {
+                    result = this.value.Substring(this.Position, this.value.Length - 1 - this.Position);
+                }
             }
+            else
+            {
+                result = this.value.Substring(this.Position);
+            }
+
+            this.Position = this.value.Length;
+
+            return result;
         }
 
         /// <summary>
@@ -167,15 +93,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// <returns> expression string </returns>
         public string Expression()
         {
-            var endPos = this.ExpressionEnd;
+            var endPos = this.GetExpressionEnd();
+            if (this.Position == endPos)
+                throw new TeamworkParserException($"Could not find expression in {this.value}.");
 
-            if (this.position == endPos)
-            {
-                throw new TeamworkParserException($"CannotParseStringExpectedExpression");
-            }
-
-            var result = this.value.Substring(this.position, endPos - this.position).Trim();
-            this.position = endPos;
+            var result = this.value.Substring(this.Position, endPos - this.Position).Trim();
+            this.Position = endPos;
             return result;
         }
 
@@ -203,22 +126,21 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// <returns>True if word was found, otherwise false.</returns>
         public bool Expect(string word, bool optional)
         {
-            var wordEnd = this.position + word.Length;
+            var wordEnd = this.Position + word.Length;
 
-            if (wordEnd <= this.value.Length && this.value.Substring(this.position, wordEnd - this.position).Equals(word, StringComparison.CurrentCultureIgnoreCase) && (wordEnd == this.value.Length || char.IsWhiteSpace(this.value[wordEnd]) || this.value[wordEnd] == ';' || this.value[wordEnd] == ')' || this.value[wordEnd] == ',' || this.value[wordEnd] == '[' || "(".Equals(word) || ",".Equals(word) || "[".Equals(word) || "]".Equals(word)))
+            if (wordEnd <= this.value.Length && this.value.Substring(this.Position, wordEnd - this.Position).Equals(word, StringComparison.CurrentCultureIgnoreCase)
+                && (wordEnd == this.value.Length || char.IsWhiteSpace(this.value[wordEnd]) || this.value[wordEnd] == ';' || this.value[wordEnd] == ')' || this.value[wordEnd] == ',' || this.value[wordEnd] == '[' || "(".Equals(word) || ",".Equals(word) || "[".Equals(word) || "]".Equals(word)))
             {
-                this.position = wordEnd;
+                this.Position = wordEnd;
                 this.SkipWhitespace();
 
                 return true;
             }
 
             if (optional)
-            {
                 return false;
-            }
 
-            throw new TeamworkParserException("CannotParseStringExpectedWord");
+            throw new TeamworkParserException($"Expected \"{word}\" as next word in {this.value.Substring(this.Position)}.");
         }
 
         /// <summary>
@@ -249,9 +171,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         public void SkipWhitespace()
         {
-            for (; this.position < this.value.Length; this.position++)
+            for (; this.Position < this.value.Length; this.Position++)
             {
-                if (!char.IsWhiteSpace(this.value[this.position]))
+                if (!char.IsWhiteSpace(this.value[this.Position]))
                 {
                     break;
                 }
@@ -267,9 +189,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         {
             var identifier = this.ParseIdentifierInternal();
 
-            if (this.value[this.position] == '.')
+            if (this.value[this.Position] == '.')
             {
-                this.position++;
+                this.Position++;
                 identifier += '.' + this.ParseIdentifierInternal();
             }
 
@@ -284,7 +206,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// <returns>Parsed integer value.</returns>
         public int ParseInteger()
         {
-            var endPos = this.position;
+            var endPos = this.Position;
 
             for (; endPos < this.value.Length; endPos++)
             {
@@ -296,9 +218,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             try
             {
-                var result = Convert.ToInt32(this.value.Substring(this.position, endPos - this.position));
+                var result = Convert.ToInt32(this.value.Substring(this.Position, endPos - this.Position));
 
-                this.position = endPos;
+                this.Position = endPos;
                 this.SkipWhitespace();
 
                 return result;
@@ -318,12 +240,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// <returns>Parsed string, if quoted then including quotes.</returns>
         public string ParseString()
         {
-            var quoted = this.value[this.position] == '\'';
+            var quoted = this.value[this.Position] == '\'';
 
             if (quoted)
             {
                 var escape = false;
-                var endPos = this.position + 1;
+                var endPos = this.Position + 1;
 
                 for (; endPos < this.value.Length; endPos++)
                 {
@@ -350,21 +272,21 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
                 try
                 {
-                    result = this.value.Substring(this.position, endPos + 1 - this.position);
+                    result = this.value.Substring(this.Position, endPos + 1 - this.Position);
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception("Failed to get substring: " + this.value + " start pos: " + this.position + " end pos: " + (endPos + 1), ex);
+                    throw new Exception("Failed to get substring: " + this.value + " start pos: " + this.Position + " end pos: " + (endPos + 1), ex);
                 }
 
-                this.position = endPos + 1;
+                this.Position = endPos + 1;
                 this.SkipWhitespace();
 
                 return result;
             }
             else
             {
-                var endPos = this.position;
+                var endPos = this.Position;
 
                 for (; endPos < this.value.Length; endPos++)
                 {
@@ -376,14 +298,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     }
                 }
 
-                if (this.position == endPos)
+                if (this.Position == endPos)
                 {
                     throw new TeamworkParserException("CannotParseStringExpectedString");
                 }
 
-                var result = this.value.Substring(this.position, endPos - this.position);
+                var result = this.value.Substring(this.Position, endPos - this.Position);
 
-                this.position = endPos;
+                this.Position = endPos;
                 this.SkipWhitespace();
 
                 return result;
@@ -433,7 +355,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// <returns>Data type string.</returns>
         public string ParseDataType()
         {
-            var endPos = this.position;
+            var endPos = this.Position;
 
             while (endPos < this.value.Length
                 && !char.IsWhiteSpace(this.value[endPos])
@@ -444,14 +366,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 endPos++;
             }
 
-            if (endPos == this.position)
+            if (endPos == this.Position)
             {
                 throw new TeamworkParserException("CannotParseStringExpectedDataType");
             }
 
-            var dataType = this.value.Substring(this.position, endPos - this.position);
+            var dataType = this.value.Substring(this.Position, endPos - this.Position);
 
-            this.position = endPos;
+            this.Position = endPos;
             this.SkipWhitespace();
 
             if ("character".Equals(dataType, StringComparison.CurrentCultureIgnoreCase) && this.ExpectOptional("varying"))
@@ -465,7 +387,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             var timestamp = "timestamp".Equals(dataType, StringComparison.CurrentCultureIgnoreCase) || "time".Equals(dataType, StringComparison.CurrentCultureIgnoreCase);
 
-            if (this.value[this.position] == '(')
+            if (this.value[this.Position] == '(')
             {
                 dataType += this.Expression();
             }
@@ -492,24 +414,73 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         }
 
         /// <summary>
+        /// Returns position of last character of single command within statement
+        /// (like CREATE TABLE). Last character is either ',' or ')'. If no such
+        /// character is found and method reaches the end of the command then
+        /// position after the last character in the command is returned.
+        /// </summary>
+        /// <returns> end position of the command </returns>
+        private int GetExpressionEnd()
+        {
+            var bracesCount = 0;
+            var singleQuoteOn = false;
+            var charPos = this.Position;
+
+            for (; charPos < this.value.Length; charPos++)
+            {
+                var chr = this.value[charPos];
+
+                if (chr == '(')
+                {
+                    bracesCount++;
+                }
+                else if (chr == ')')
+                {
+                    if (bracesCount == 0)
+                    {
+                        break;
+                    }
+                    else
+                    {
+                        bracesCount--;
+                    }
+                }
+                else if (chr == '\'')
+                {
+                    singleQuoteOn = !singleQuoteOn;
+                }
+                else if ((chr == ',') && !singleQuoteOn && (bracesCount == 0))
+                {
+                    break;
+                }
+                else if (chr == ';' && bracesCount == 0 && !singleQuoteOn)
+                {
+                    break;
+                }
+            }
+
+            return charPos;
+        }
+
+        /// <summary>
         /// Parses single part of the identifier.
         /// </summary>
         /// <returns>Parsed identifier.</returns>
         private string ParseIdentifierInternal()
         {
-            var quoted = this.value[this.position] == '"';
+            var quoted = this.value[this.Position] == '"';
 
             if (quoted)
             {
-                var endPos = this.value.IndexOf('"', this.position + 1);
-                var result = this.value.Substring(this.position, endPos + 1 - this.position);
-                this.position = endPos + 1;
+                var endPos = this.value.IndexOf('"', this.Position + 1);
+                var result = this.value.Substring(this.Position, endPos + 1 - this.Position);
+                this.Position = endPos + 1;
 
                 return result;
             }
             else
             {
-                var endPos = this.position;
+                var endPos = this.Position;
 
                 for (; endPos < this.value.Length; endPos++)
                 {
@@ -521,9 +492,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     }
                 }
 
-                var result = this.value.Substring(this.position, endPos - this.position).ToLower(new CultureInfo("en"));
+                var result = this.value.Substring(this.Position, endPos - this.Position).ToLower(new CultureInfo("en"));
 
-                this.position = endPos;
+                this.Position = endPos;
 
                 return result;
             }
