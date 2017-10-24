@@ -38,7 +38,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 throw new TeamworkParserException($"CannotFindSchema {schemaName} from {statement}");
             }
 
-            schema.AddSequence(sequence);
+            schema.Add(sequence);
 
             while (!parser.ExpectOptional(";"))
             {

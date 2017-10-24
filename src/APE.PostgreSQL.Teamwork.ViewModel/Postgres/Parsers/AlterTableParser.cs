@@ -108,6 +108,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 {
                     ParseDisable(parser, outputIgnoredStatements, tableName, database);
                 }
+                else if (parser.ExpectOptional("REPLICA IDENTITY"))
+                {
+                    parser.Expect("NOTHING");
+                }
                 else
                 {
                     parser.ThrowUnsupportedCommand();
@@ -237,7 +241,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             if (parser.ExpectOptional("PRIMARY", "KEY"))
             {
-                schema.AddPrimaryKey(constraint);
+                schema.Add(constraint);
                 constraint.Definition = "PRIMARY KEY " + parser.Expression();
             }
             else

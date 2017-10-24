@@ -45,7 +45,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             parser.Expect("AS");
 
-            var query = parser.Rest;
+            var query = parser.Rest();
 
             var view = new PgView(ParserUtils.GetObjectName(viewName))
             {
@@ -61,7 +61,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 throw new TeamworkParserException($"CannotFindSchema {schemaName} {statement}");
             }
 
-            schema.AddView(view);
+            schema.Add(view);
         }
     }
 }

@@ -121,6 +121,7 @@
     <Compile Include="Postgres\Parsers\CreateAggregateParser.cs" />
     <Compile Include="Postgres\Parsers\CreateFunctionParser.cs" />
     <Compile Include="Postgres\Parsers\CreateIndexParser.cs" />
+    <Compile Include="Postgres\Parsers\CreateRuleParser.cs" />
     <Compile Include="Postgres\Parsers\CreateSchemaParser.cs" />
     <Compile Include="Postgres\Parsers\CreateSequenceParser.cs" />
     <Compile Include="Postgres\Parsers\CreateTableParser.cs" />
@@ -137,6 +138,7 @@
     <Compile Include="Postgres\PgDiffFunctions.cs" />
     <Compile Include="Postgres\PgDiffIndexes.cs" />
     <Compile Include="Postgres\PgDiffPrivileges.cs" />
+    <Compile Include="Postgres\PgDiffRules.cs" />
     <Compile Include="Postgres\PgDiffSequences.cs" />
     <Compile Include="Postgres\PgDiffTables.cs" />
     <Compile Include="Postgres\PgDiffTriggers.cs" />
