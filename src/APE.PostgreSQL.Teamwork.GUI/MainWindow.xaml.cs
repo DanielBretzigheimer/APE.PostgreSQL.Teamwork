@@ -46,6 +46,7 @@ namespace APE.PostgreSQL.Teamwork.GUI
 
                 BaseViewModel.GetAddDatabseView = this.GetAddDatabaseView;
                 BaseViewModel.GetSettingView = this.GetSettingView;
+                BaseViewModel.GetCreateMinorVersionView = this.GetCreateMinorVersionView;
                 BaseViewModel.GetMessageBox = (text, title, buttons) => this.GetMessageBox(text, title, buttons, false);
                 BaseViewModel.GetMarkdownBox = (text, title, buttons) => this.GetMessageBox(text, title, buttons, true);
                 BaseViewModel.OpenImportWindow = this.OpenImportWindow;
@@ -112,6 +113,15 @@ namespace APE.PostgreSQL.Teamwork.GUI
             // start the viewmodel when the dialog host is initialized
             // to ensure that dialogs can be shown
             this.mainWindowViewModel.Start();
+        }
+
+        private CreateMinorVersionView GetCreateMinorVersionView(Database database)
+        {
+            CreateMinorVersionView retval = null;
+
+            this.UIDispatcher.Invoke(() => retval = new CreateMinorVersionView(database));
+
+            return retval;
         }
 
         private SettingView GetSettingView()

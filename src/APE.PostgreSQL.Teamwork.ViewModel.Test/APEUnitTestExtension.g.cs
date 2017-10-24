@@ -701,8 +701,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
     using System.Windows.Forms;
     using System.Windows.Input;
+    using System.Windows.Threading;
     using APE.CodeGeneration.Attributes;
     using APE.PostgreSQL.Teamwork.Model;
     using APE.PostgreSQL.Teamwork.Model.Setting;
@@ -1817,6 +1819,20 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
+        internal static void CallCreateMinor(this DatabaseDisplayData targetClass)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                po.Invoke("CreateMinor", new object[] { });
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("CreateMinor with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
         internal static void CallAddSchema(this DatabaseDisplayData targetClass)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
@@ -2422,6 +2438,34 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             catch (System.MissingMethodException missingMethodException)
             {
                 throw new System.NotSupportedException("RemoveSchemaCommand with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static ICommand GetCreateMinorCommand(this DatabaseDisplayData targetClass)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                return (ICommand)po.GetFieldOrProperty("CreateMinorCommand");
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("CreateMinorCommand with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static void SetCreateMinorCommand(this DatabaseDisplayData targetClass, ICommand value)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                po.SetFieldOrProperty("CreateMinorCommand", value);
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("CreateMinorCommand with requested parameters is not found. Rerun code generation.", missingMethodException);
             }
         }
     }

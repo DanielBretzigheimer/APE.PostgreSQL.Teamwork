@@ -36,10 +36,20 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         public static Func<object, Func<MaterialMessageBoxResult, object>, Task<MaterialMessageBoxResult>> ShowExtendedDialog { get; set; }
 
-        // Get basic views
+        /// <summary>
+        /// Gets a view for adding a database.
+        /// </summary>
         public static Func<object> GetAddDatabseView { get; set; }
 
+        /// <summary>
+        /// Gets a view for managing the settings.
+        /// </summary>
         public static Func<object> GetSettingView { get; set; }
+
+        /// <summary>
+        /// Gets a view for creating a minor version.
+        /// </summary>
+        public static Func<Database, object> GetCreateMinorVersionView { get; set; }
 
         /// <summary>
         /// Gets or sets a function which can create a MaterialMessageBox with the given parameters (text, title, buttons).

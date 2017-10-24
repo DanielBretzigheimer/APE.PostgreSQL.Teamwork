@@ -419,6 +419,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         private void CreateMinor()
         {
+            var view = MainWindowViewModel.GetCreateMinorVersionView(this.Database);
+            MainWindowViewModel.ShowDialog(view);
         }
 
         private void AddSchema()

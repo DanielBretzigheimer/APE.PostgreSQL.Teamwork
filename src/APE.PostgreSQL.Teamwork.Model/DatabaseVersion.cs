@@ -85,6 +85,12 @@ namespace APE.PostgreSQL.Teamwork.Model
             this.Main = mainVersion;
         }
 
+        public DatabaseVersion(int main, string minor)
+            : this(main)
+        {
+            this.Minor = minor.StartsWith(".") ? minor : $".{minor}";
+        }
+
         private DatabaseVersion()
         {
         }
