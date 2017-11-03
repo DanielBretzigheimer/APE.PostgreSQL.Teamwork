@@ -56,7 +56,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     throw new Exception(string.Format("Cannot find schema {0}. Statement {1}", schemaName, statement));
                 }
 
-                schema.AddType(type);
+                schema.Add(type);
             }
             else
             {
@@ -97,7 +97,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     throw new Exception(string.Format("Cannot find schema {0}. Statement {1}", schemaName, statement));
                 }
 
-                schema.AddType(type);
+                schema.Add(type);
             }
         }
     }

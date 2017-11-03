@@ -22,6 +22,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
         private static readonly Regex PatternCreateSchema = new Regex("^CREATE[\\s]+SCHEMA[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
+        /// Regex for testing wheter it is CREATE RULE statement
+        /// </summary>
+        private static readonly Regex PatternCreateRule = new Regex("^CREATE[\\s]+RULE[\\s]+.*$", RegexOptions.Singleline);
+
+        /// <summary>
         /// Regex for parsing default schema (search_path).
         /// </summary>
         private static readonly Regex PatternDefaultSchema = new Regex("^SET[\\s]+search_path[\\s]*=[\\s]*\"?([^,\\s\"]+)\"?" + "(?:,[\\s]+.*)?;$", RegexOptions.Singleline);
@@ -165,6 +170,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
                     {
                         CreateSchemaParser.Parse(database, statement);
                     }
+                    else if (PatternCreateRule.Matches(statement).Count != 0)
+                    {
+                        CreateRuleParser.Parse(database, statement);
+                    }
                     else if (PatternDefaultSchema.Matches(statement).Count != 0)
                     {
                         PatternDefaultSchema.Matches(statement);
@@ -226,7 +235,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
                     {
                         CreateTypeParser.Parse(database, statement);
                     }
-                    else if (PatternSelect.Matches(statement).Count != 0 || PatternInsertInto.Matches(statement).Count != 0 || PatternUpdate.Matches(statement).Count != 0 || PatternDeleteFrom.Matches(statement).Count != 0)
+                    else if (PatternSelect.Matches(statement).Count != 0
+                        || PatternInsertInto.Matches(statement).Count != 0
+                        || PatternUpdate.Matches(statement).Count != 0
+                        || PatternDeleteFrom.Matches(statement).Count != 0)
                     {
                         // these statements are ignored
                     }

@@ -29,8 +29,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 database.AddSchema(schema);
                 schema.Authorization = schema.Name;
 
-                var definition = parser.Rest;
-
+                var definition = parser.Rest();
                 if (definition != null && definition.Length > 0)
                 {
                     schema.Definition = definition;
@@ -46,8 +45,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     schema.Authorization = ParserUtils.GetObjectName(parser.ParseIdentifier());
                 }
 
-                var definition = parser.Rest;
-
+                var definition = parser.Rest();
                 if (definition != null && definition.Length > 0)
                 {
                     schema.Definition = definition;

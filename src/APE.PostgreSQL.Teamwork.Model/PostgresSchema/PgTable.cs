@@ -91,7 +91,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             {
                 var sql = new StringBuilder(1000);
                 sql.Append("CREATE TABLE ");
-                sql.Append(PgDiffStringExtension.QuoteName(this.Name));
+                sql.Append(this.Name.QuoteName());
                 sql.Append(" (\n");
 
                 var first = true;
