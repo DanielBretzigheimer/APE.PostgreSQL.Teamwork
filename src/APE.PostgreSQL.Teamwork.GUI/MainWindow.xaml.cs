@@ -46,7 +46,9 @@ namespace APE.PostgreSQL.Teamwork.GUI
 
                 BaseViewModel.GetAddDatabseView = this.GetAddDatabaseView;
                 BaseViewModel.GetSettingView = this.GetSettingView;
-                BaseViewModel.GetMessageBox = this.GetMessageBox;
+                BaseViewModel.GetCreateMinorVersionView = this.GetCreateMinorVersionView;
+                BaseViewModel.GetMessageBox = (text, title, buttons) => this.GetMessageBox(text, title, buttons, false);
+                BaseViewModel.GetMarkdownBox = (text, title, buttons) => this.GetMessageBox(text, title, buttons, true);
                 BaseViewModel.OpenImportWindow = this.OpenImportWindow;
                 BaseViewModel.OpenExportWindow = this.OpenExportWindow;
                 this.DataContext = this.mainWindowViewModel;
@@ -113,6 +115,15 @@ namespace APE.PostgreSQL.Teamwork.GUI
             this.mainWindowViewModel.Start();
         }
 
+        private CreateMinorVersionView GetCreateMinorVersionView(DatabaseDisplayData database)
+        {
+            CreateMinorVersionView retval = null;
+
+            this.UIDispatcher.Invoke(() => retval = new CreateMinorVersionView(database));
+
+            return retval;
+        }
+
         private SettingView GetSettingView()
         {
             SettingView retVal = null;
@@ -133,12 +144,12 @@ namespace APE.PostgreSQL.Teamwork.GUI
             return retVal;
         }
 
-        private MaterialMessageBox GetMessageBox(string text, string title, MessageBoxButton buttons)
+        private MaterialMessageBox GetMessageBox(string text, string title, MessageBoxButton buttons, bool isMarkdown)
         {
             MaterialMessageBox retVal = null;
 
             // create in ui dispatcher so this method can also be called from an task
-            this.UIDispatcher.Invoke(() => retVal = new MaterialMessageBox(text, title, buttons));
+            this.UIDispatcher.Invoke(() => retVal = new MaterialMessageBox(text, title, buttons, isMarkdown));
 
             return retVal;
         }
@@ -193,10 +204,10 @@ namespace APE.PostgreSQL.Teamwork.GUI
             wpfMaterialDesignLink.RequestNavigate += this.RequestNavigate;
 
             // message is filled with inlines to add links
-            var messageBox = new MaterialMessageBox(string.Empty, "Licenses", MessageBoxButton.OK);
+            var messageBox = new MaterialMessageBox(string.Empty, "Licenses", MessageBoxButton.OK, false);
             messageBox.MessageTextBlock.Inlines.Clear();
             messageBox.MessageTextBlock.Inlines.Add("Postgres Diff Tool" + Environment.NewLine);
-            messageBox.MessageTextBlock.Inlines.Add("This was used as base for this application." + Environment.NewLine);
+            messageBox.MessageTextBlock.Inlines.Add("Was used as base for this application." + Environment.NewLine);
             messageBox.MessageTextBlock.Inlines.Add(apgDiffLink);
             messageBox.MessageTextBlock.Inlines.Add(Environment.NewLine);
             messageBox.MessageTextBlock.Inlines.Add("Material Design for WPF." + Environment.NewLine);

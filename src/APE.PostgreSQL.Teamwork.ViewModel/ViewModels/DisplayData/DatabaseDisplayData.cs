@@ -35,6 +35,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     [NotifyProperty(AccessModifier.Public, typeof(bool), "Undoing", false, "Indicates that the database is undoing changes at the moment")]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "Error", false)]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "ImportableFilesFound", false)]
+    [NotifyProperty(AccessModifier.PublicGetPrivateSet, typeof(bool), "CanCreateMinor", false)]
     [AllowNullNotifyProperty(AccessModifier.Public, typeof(string), "SelectedSchema")]
     [NotifyProperty(typeof(string), "ErrorMessage")]
     [AllowNullNotifyProperty(typeof(Database), "Database")]
@@ -149,6 +150,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         public ICommand RemoveSchemaCommand { get; private set; }
 
+        public ICommand CreateMinorCommand { get; private set; }
+
         /// <summary>
         /// Updates the version and the not applied files.
         /// </summary>
@@ -182,10 +185,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
                 if (this.Database.CurrentVersion < this.Database.LastApplicableVersion)
                 {
+                    this.CanCreateMinor = true;
                     this.ImportableFilesFound = true;
                 }
                 else
                 {
+                    this.CanCreateMinor = false;
                     this.ImportableFilesFound = false;
                 }
 
@@ -239,6 +244,30 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             this.ShowDetails = !this.ShowDetails;
         }
 
+        public void ExportWithoutErrorHandling(DatabaseVersion newVersion)
+        {
+            this.Database.Export(
+                newVersion,
+                SettingsManager.Get().Setting.PgDumpLocation,
+                SettingsManager.Get().Setting.Host,
+                SettingsManager.Get().Setting.Id,
+                SettingsManager.Get().Setting.Password);
+
+            // open the diff files so user can verify them
+            var diff = new SQLFileDisplayData(this.Database.DiffFiles.SingleOrDefault(f => f.Version == newVersion));
+            var undoDiff = new SQLFileDisplayData(this.Database.UndoDiffFiles.SingleOrDefault(f => f.Version == newVersion));
+
+            if (SettingsManager.Get().Setting.OpenFilesInDefaultApplication)
+            {
+                this.processManager.Start(diff.SQLFile.Path);
+                this.processManager.Start(undoDiff.SQLFile.Path);
+            }
+            else
+            {
+                BaseViewModel.OpenExportWindow(diff, undoDiff);
+            }
+        }
+
         /// <summary>
         ///  Returns a string that represents the current object.
         /// </summary>
@@ -246,6 +275,53 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         public override string ToString()
         {
             return this.Database.Name;
+        }
+
+        /// <summary>
+        /// Exports the database and shows a message box to the user if a error occurred.
+        /// </summary>
+        private async void Export()
+        {
+            this.Exporting = true;
+            try
+            {
+                this.ExportWithoutErrorHandling(this.Database.CurrentVersion.Next());
+            }
+            catch (Exception ex)
+            {
+                var title = "Error while exporting database";
+                var message = ex.Message;
+                var buttons = MessageBoxButton.OK;
+
+                if (ex is FileNotFoundException)
+                {
+                    message = $"{message}: {((FileNotFoundException)ex).FileName}";
+                }
+                else if (ex is TeamworkException && !((TeamworkException)ex).ShowAsError)
+                {
+                    title = "Info";
+                }
+                else if (ex is TeamworkTestException)
+                {
+                    message += " Do you want to open the diff file with the error?";
+                    buttons = MessageBoxButton.YesNo;
+                }
+
+                Log.Warn(string.Format("Error while exporting database {0}", this.Database.Name), ex);
+                var messageBox = MainWindowViewModel.GetMessageBox(
+                        $"Message: {message}",
+                        title,
+                        buttons);
+                var result = await MainWindowViewModel.ShowDialog(messageBox);
+
+                // yes applies if the file should be opened
+                if (result == MaterialMessageBoxResult.Yes && ex is TeamworkTestException testException)
+                {
+                    this.processManager.Start(testException.FileWithExceptionSql);
+                }
+            }
+
+            this.Exporting = false;
         }
 
         partial void DatabaseDisplayDataCtor()
@@ -409,6 +485,26 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             this.CreateDatabaseCommand = new RelayCommand(this.CreateDatabase);
             this.AddSchemaCommand = new RelayCommand(this.AddSchema);
             this.RemoveSchemaCommand = new RelayCommand(this.RemoveSchema);
+            this.CreateMinorCommand = new RelayCommand(this.CreateMinor);
+        }
+
+        /// <summary>
+        /// Opens a popup which allows the creation of a new minor version.
+        /// </summary>
+        private void CreateMinor()
+        {
+            try
+            {
+                var view = MainWindowViewModel.GetCreateMinorVersionView(this);
+                MainWindowViewModel.ShowDialog(view);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error while trying to create minor version.", ex);
+                var msgBox = MainWindowViewModel.GetMessageBox($"The minor version cannot be created. Error: {ex.Message}", "Minor Version can't be created", MessageBoxButton.OK);
+                MainWindowViewModel.ShowDialog(msgBox);
+                return;
+            }
         }
 
         private void AddSchema()
@@ -647,71 +743,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 this.Database.ReduceVersion();
             }
-        }
-
-        /// <summary>
-        /// Exports the database and shows a message box to the user if a error occurred.
-        /// </summary>
-        private async void Export()
-        {
-            this.Exporting = true;
-            try
-            {
-                this.Database.Export(
-                    SettingsManager.Get().Setting.PgDumpLocation,
-                    SettingsManager.Get().Setting.Host,
-                    SettingsManager.Get().Setting.Id,
-                    SettingsManager.Get().Setting.Password);
-
-                // open the diff files so user can verify them
-                var diff = new SQLFileDisplayData(this.Database.DiffFiles.Last());
-                var undoDiff = new SQLFileDisplayData(this.Database.UndoDiffFiles.First());
-
-                if (SettingsManager.Get().Setting.OpenFilesInDefaultApplication)
-                {
-                    this.processManager.Start(diff.SQLFile.Path);
-                    this.processManager.Start(undoDiff.SQLFile.Path);
-                }
-                else
-                {
-                    BaseViewModel.OpenExportWindow(diff, undoDiff);
-                }
-            }
-            catch (Exception ex)
-            {
-                var title = "Error while exporting database";
-                var message = ex.Message;
-                var buttons = MessageBoxButton.OK;
-
-                if (ex is FileNotFoundException)
-                {
-                    message = $"{message}: {((FileNotFoundException)ex).FileName}";
-                }
-                else if (ex is TeamworkException && !((TeamworkException)ex).ShowAsError)
-                {
-                    title = "Info";
-                }
-                else if (ex is TeamworkTestException)
-                {
-                    message += " Do you want to open the diff file with the error?";
-                    buttons = MessageBoxButton.YesNo;
-                }
-
-                Log.Warn(string.Format("Error while exporting database {0}", this.Database.Name), ex);
-                var messageBox = MainWindowViewModel.GetMessageBox(
-                        $"Message: {message}",
-                        title,
-                        buttons);
-                var result = await MainWindowViewModel.ShowDialog(messageBox);
-
-                // yes applies if the file should be opened
-                if (result == MaterialMessageBoxResult.Yes && ex is TeamworkTestException testException)
-                {
-                    this.processManager.Start(testException.FileWithExceptionSql);
-                }
-            }
-
-            this.Exporting = false;
         }
 
         /// <summary>

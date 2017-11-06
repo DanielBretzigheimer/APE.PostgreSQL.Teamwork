@@ -70,11 +70,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         /// Exports the changes of the given database.
         /// </summary>
+        /// <param name="newVersion">The new version which is created.</param>
         /// <param name="dumpCreatorPath">Path to the postgres dump exe.</param>
         /// <param name="host">Server host to which is connected.</param>
         /// <param name="id">Server id for the diff creation.</param>
         /// <param name="password">Server password for the dump creation.</param>
-        void Export(string dumpCreatorPath, string host, string id, string password);
+        void Export(DatabaseVersion newVersion, string dumpCreatorPath, string host, string id, string password);
 
         /// <summary>
         /// Reduces the version by 1.

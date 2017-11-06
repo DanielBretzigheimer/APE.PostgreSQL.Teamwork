@@ -1,10 +1,13 @@
 // <copyright file="AddDatabaseViewModel.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Threading;
 using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.Model;
 using APE.PostgreSQL.Teamwork.Model.Setting;
@@ -23,11 +26,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     [NotifyProperty(AccessModifier.Public, typeof(bool), "DataChecked", false)]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "DatabaseExists", false)]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "Loading", false)]
+    [NotifyProperty(AccessModifier.PublicGetPrivateSet, typeof(bool), "CreatingDatabase", false)]
     [CtorParameter(typeof(IConnectionManager))]
     [CtorParameter(typeof(IFileSystemAccess))]
     [CtorParameter(typeof(IProcessManager))]
     [CtorParameter(typeof(IDifferenceCreator))]
     [CtorParameter(typeof(ISQLFileTester))]
+    [CtorParameter(AccessModifier.Private, typeof(Action), "close")]
     public partial class AddDatabaseViewModel : BaseViewModel
     {
         private readonly object databaseDirectoriesLock = new object();
@@ -56,6 +61,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         private void SearchDatabaseDirectories()
         {
+            var defaultDatabaseFolderPath = SettingsManager.Get().Setting.DefaultDatabaseFolderPath;
+
+            if (!this.fileSystemAccess.DirectoryExists(defaultDatabaseFolderPath))
+                return;
+
             this.SearchDatabaseDirectories(SettingsManager.Get().Setting.DefaultDatabaseFolderPath);
 
             if (string.IsNullOrWhiteSpace(this.DatabasePath) && !string.IsNullOrWhiteSpace(this.DatabaseName))
@@ -64,20 +74,23 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             }
         }
 
-        private void InitializeCommands()
+        private void CreateDatabase()
         {
-            this.OkCommand = new RelayCommand(() =>
+            var uiDisp = Dispatcher.CurrentDispatcher;
+            Task.Run(() =>
             {
+                this.CreatingDatabase = true;
+
                 var db = new Database(
-                    this.DatabaseName,
-                    this.DatabasePath,
-                    DatabaseSetting.DefaultIgnoredSchemas,
-                    this.connectionManager,
-                    this.fileSystemAccess,
-                    this.processManager,
-                    this.differenceCreator,
-                    this.sQLFileTester,
-                    true);
+                        this.DatabaseName,
+                        this.DatabasePath,
+                        DatabaseSetting.DefaultIgnoredSchemas,
+                        this.connectionManager,
+                        this.fileSystemAccess,
+                        this.processManager,
+                        this.differenceCreator,
+                        this.sQLFileTester,
+                        true);
 
                 // create first dump if none is existing
                 if (db.DiffFiles.Where(x => x.FileType == FileType.Dump).Count() == 0)
@@ -122,7 +135,15 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 }
 
                 DatabaseSetting.AddDatabaseSetting(db.Name, db.Path);
+
+                this.CreatingDatabase = false;
+                uiDisp.Invoke(this.close);
             });
+        }
+
+        private void InitializeCommands()
+        {
+            this.OkCommand = new RelayCommand(this.CreateDatabase);
 
             this.ChooseDirectoryPathCommand = new RelayCommand(() =>
             {
@@ -131,19 +152,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                     ShowNewFolderButton = true,
                 };
 
-                if (string.IsNullOrEmpty(this.DatabasePath))
-                {
-                    dialog.SelectedPath = SettingsManager.Get().Setting.DefaultDatabaseFolderPath;
-                }
-                else
-                {
-                    dialog.SelectedPath = this.DatabasePath;
-                }
+                dialog.SelectedPath = string.IsNullOrEmpty(this.DatabasePath)
+                    ? SettingsManager.Get().Setting.DefaultDatabaseFolderPath
+                    : this.DatabasePath;
 
                 if (dialog.ShowDialog() != DialogResult.OK)
-                {
                     return;
-                }
 
                 this.DatabasePath = dialog.SelectedPath;
             });

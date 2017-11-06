@@ -146,7 +146,7 @@ namespace APE.PostgreSQL.Teamwork.Model.Templates
         public static string RemoveVersion(DatabaseVersion version)
         {
             return removeVersion
-                .Replace("[LastAppliedVersion]", version.Main.ToString())
+                .Replace("[LastAppliedVersion]", version.Full)
                 .Replace("[Schema]", PostgreSQLTeamworkSchemaName);
         }
 

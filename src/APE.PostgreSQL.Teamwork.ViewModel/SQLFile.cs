@@ -41,21 +41,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 this.FileName = System.IO.Path.GetFileName(path);
 
                 if (this.FileName.Contains(SQLTemplates.DiffFile))
-                {
                     this.FileType = FileType.Diff;
-                }
                 else if (this.FileName.Contains(SQLTemplates.DumpFile))
-                {
                     this.FileType = FileType.Dump;
-                }
                 else if (this.FileName.Contains(SQLTemplates.UndoDiffFile))
-                {
                     this.FileType = FileType.UndoDiff;
-                }
                 else
-                {
                     throw new ArgumentException("The path directs to an unkown file which should not be opened as an SQL File!");
-                }
 
                 this.Path = path;
                 this.Version = new DatabaseVersion(path);

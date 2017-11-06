@@ -1,6 +1,5 @@
 ﻿// <copyright file="AddDatabaseView.xaml.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
-using System.Windows;
 using System.Windows.Controls;
 using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.ViewModel;
@@ -21,7 +20,7 @@ namespace APE.PostgreSQL.Teamwork
         {
             try
             {
-                this.DataContext = new AddDatabaseViewModel(this.connectionManager, this.fileSystemAccess, this.processManager, this.differenceCreator, this.sQLFileTester);
+                this.DataContext = new AddDatabaseViewModel(this.connectionManager, this.fileSystemAccess, this.processManager, this.differenceCreator, this.sQLFileTester, this.Close);
                 this.InitializeComponent();
             }
             catch (Exception e)
@@ -31,7 +30,7 @@ namespace APE.PostgreSQL.Teamwork
             }
         }
 
-        private void CloseClick(object sender, RoutedEventArgs e)
+        private void Close()
         {
             if (DialogHost.CloseDialogCommand.CanExecute(true, this))
             {

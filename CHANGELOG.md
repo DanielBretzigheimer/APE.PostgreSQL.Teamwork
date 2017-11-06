@@ -1,8 +1,15 @@
 # Changelog
 
+## 1.0.32.0
+ - Create minor version
+ - Fixed export bug if last version was minor
+ - Fixed add database delay
+ - Fixed exception when no default database folder is selected
+ - Changelog visually more appealing
+
 ## 1.0.31.0
  - PostgreSQL RULES are now supported
-
+ 
 ## 1.0.29.0
  - Ignorable Schemas can be specified
    - APE.PostgreSQL.Teamwork and APE.PostgreSQL.Test.Runner are automatically added
