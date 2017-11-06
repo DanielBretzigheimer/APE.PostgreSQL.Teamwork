@@ -101,7 +101,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static string CallGenerateFileLocation(this Database targetClass, int version, string extension)
+        internal static string CallGenerateFileLocation(this Database targetClass, DatabaseVersion version, string extension)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
             try
@@ -696,12 +696,15 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 #region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\ViewModels\AddDatabaseViewModel.cs
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
+    using System;
     using System.Collections.Generic;
     using System.IO;
     using System.Linq;
     using System.Text.RegularExpressions;
+    using System.Threading.Tasks;
     using System.Windows.Forms;
     using System.Windows.Input;
+    using System.Windows.Threading;
     using APE.CodeGeneration.Attributes;
     using APE.PostgreSQL.Teamwork.Model;
     using APE.PostgreSQL.Teamwork.Model.Setting;
@@ -726,6 +729,20 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             catch (System.MissingMethodException missingMethodException)
             {
                 throw new System.NotSupportedException("SearchDatabaseDirectories with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static void CallCreateDatabase(this AddDatabaseViewModel targetClass)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                po.Invoke("CreateDatabase", new object[] { });
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("CreateDatabase with requested parameters is not found. Rerun code generation.", missingMethodException);
             }
         }
 
@@ -1718,6 +1735,20 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
+        internal static void CallExport(this DatabaseDisplayData targetClass)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                po.Invoke("Export", new object[] { });
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("Export with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
         internal static void CallConnectDatabase(this DatabaseDisplayData targetClass)
         {
             var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
@@ -1798,6 +1829,20 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             catch (System.MissingMethodException missingMethodException)
             {
                 throw new System.NotSupportedException("InitializeCommands with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static void CallCreateMinor(this DatabaseDisplayData targetClass)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                po.Invoke("CreateMinor", new object[] { });
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("CreateMinor with requested parameters is not found. Rerun code generation.", missingMethodException);
             }
         }
 
@@ -1910,20 +1955,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             catch (System.MissingMethodException missingMethodException)
             {
                 throw new System.NotSupportedException("ReduceVersion with requested parameters is not found. Rerun code generation.", missingMethodException);
-            }
-        }
-
-        [System.Diagnostics.DebuggerStepThrough()]
-        internal static void CallExport(this DatabaseDisplayData targetClass)
-        {
-            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
-            try
-            {
-                po.Invoke("Export", new object[] { });
-            }
-            catch (System.MissingMethodException missingMethodException)
-            {
-                throw new System.NotSupportedException("Export with requested parameters is not found. Rerun code generation.", missingMethodException);
             }
         }
 
@@ -2409,6 +2440,34 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
                 throw new System.NotSupportedException("RemoveSchemaCommand with requested parameters is not found. Rerun code generation.", missingMethodException);
             }
         }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static ICommand GetCreateMinorCommand(this DatabaseDisplayData targetClass)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                return (ICommand)po.GetFieldOrProperty("CreateMinorCommand");
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("CreateMinorCommand with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static void SetCreateMinorCommand(this DatabaseDisplayData targetClass, ICommand value)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                po.SetFieldOrProperty("CreateMinorCommand", value);
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("CreateMinorCommand with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
     }
 }
 #endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\DatabaseDisplayData.cs
@@ -2633,3 +2692,146 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
     }
 }
 #endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\ViewModels\DisplayData\StatementDisplayData.cs
+
+#region UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\CreateMinorVersionViewModel.cs
+namespace APE.PostgreSQL.Teamwork.ViewModel.Test
+{
+    using System;
+    using System.Collections.Generic;
+    using System.IO;
+    using System.Linq;
+    using System.Text;
+    using System.Threading.Tasks;
+    using System.Windows.Input;
+    using APE.CodeGeneration.Attributes;
+    using APE.PostgreSQL.Teamwork.Model;
+    using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
+    using log4net;
+    using APE.PostgreSQL.Teamwork.ViewModel;
+    using APE.PostgreSQL.Teamwork;
+    using APE.PostgreSQL;
+    using APE;
+
+    internal static class CreateMinorVersionViewModelExtension
+    {
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static void CallCreateMinorVersion(this CreateMinorVersionViewModel targetClass)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                po.Invoke("CreateMinorVersion", new object[] { });
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("CreateMinorVersion with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static DatabaseVersion CallGenerateNewVersion(this CreateMinorVersionViewModel targetClass)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                return (DatabaseVersion)po.Invoke("GenerateNewVersion", new object[] { });
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("GenerateNewVersion with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static string CallGetNextMinor(this CreateMinorVersionViewModel targetClass, DatabaseVersion version)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                return (string)po.Invoke("GetNextMinor", new object[] { version });
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("GetNextMinor with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static ILog GetCreateMinorVersionViewModelLog()
+        {
+            var pt = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateType(typeof(CreateMinorVersionViewModel));
+            return (ILog)pt.GetStaticFieldOrProperty("Log");
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static void SetCreateMinorVersionViewModelLog(ILog value)
+        {
+            var pt = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateType(typeof(CreateMinorVersionViewModel));
+            try
+            {
+                pt.SetStaticFieldOrProperty("Log", value);
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("Log with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static string[] Getalphabet(this CreateMinorVersionViewModel targetClass)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                return (string[])po.GetFieldOrProperty("alphabet");
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("alphabet with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static void Setalphabet(this CreateMinorVersionViewModel targetClass, string[] value)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                po.SetFieldOrProperty("alphabet", value);
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("alphabet with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static ICommand GetCreateCommand(this CreateMinorVersionViewModel targetClass)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                return (ICommand)po.GetFieldOrProperty("CreateCommand");
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("CreateCommand with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static void SetCreateCommand(this CreateMinorVersionViewModel targetClass, ICommand value)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                po.SetFieldOrProperty("CreateCommand", value);
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("CreateCommand with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+    }
+}
+#endregion UnittestExtension for \APE.PostgreSQL.Teamwork.ViewModel\CreateMinorVersionViewModel.cs

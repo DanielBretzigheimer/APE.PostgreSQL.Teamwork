@@ -4,12 +4,15 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 // </auto-generated>
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Input;
+using System.Windows.Threading;
 using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.Model;
 using APE.PostgreSQL.Teamwork.Model.Setting;
@@ -25,11 +28,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "DataChecked", false)]
     // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "DatabaseExists", false)]
     // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "Loading", false)]
+    // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.PublicGetPrivateSet, typeof(bool), "CreatingDatabase", false)]
     // APE.CodeGeneration.Attribute [CtorParameter(typeof(IConnectionManager))]
     // APE.CodeGeneration.Attribute [CtorParameter(typeof(IFileSystemAccess))]
     // APE.CodeGeneration.Attribute [CtorParameter(typeof(IProcessManager))]
     // APE.CodeGeneration.Attribute [CtorParameter(typeof(IDifferenceCreator))]
     // APE.CodeGeneration.Attribute [CtorParameter(typeof(ISQLFileTester))]
+    // APE.CodeGeneration.Attribute [CtorParameter(AccessModifier.Private, typeof(Action), "close")]
     public partial class AddDatabaseViewModel  : System.ComponentModel.INotifyPropertyChanged
     {
         //ncrunch: no coverage start
@@ -64,7 +69,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         private ISQLFileTester sQLFileTester;
 
-        public AddDatabaseViewModel(IConnectionManager connectionManager, IFileSystemAccess fileSystemAccess, IProcessManager processManager, IDifferenceCreator differenceCreator, ISQLFileTester sQLFileTester)
+        /// <summary>
+        /// 
+        /// </summary>
+        private Action close;
+
+        public AddDatabaseViewModel(IConnectionManager connectionManager, IFileSystemAccess fileSystemAccess, IProcessManager processManager, IDifferenceCreator differenceCreator, ISQLFileTester sQLFileTester, Action close)
         {
             if (connectionManager == null)
                 throw new System.ArgumentNullException("connectionManager", "connectionManager == null");
@@ -85,6 +95,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             if (sQLFileTester == null)
                 throw new System.ArgumentNullException("sQLFileTester", "sQLFileTester == null");
             this.sQLFileTester = sQLFileTester;
+
+            if (close == null)
+                throw new System.ArgumentNullException("close", "close == null");
+            this.close = close;
 
             this.AddDatabaseViewModelCtor();
         }
@@ -285,6 +299,38 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         //protected virtual void LoadingChanging(bool newValue) { }
         //protected virtual void LoadingChanged() { }
+
+        protected static readonly System.ComponentModel.PropertyChangedEventArgs CreatingDatabaseEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(CreatingDatabase));
+        private bool creatingDatabase = false;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool CreatingDatabase
+        {
+            get
+            {
+                return this.creatingDatabase;
+            }
+            private set
+            {
+                if (!object.Equals(this.creatingDatabase, value))
+                {
+                    //this.CreatingDatabaseChanging(value);
+                    this.CreatingDatabaseBeforeSet(value);
+                    this.creatingDatabase = value;
+                    this.OnPropertyChanged(CreatingDatabaseEventArgs);
+                    //this.CreatingDatabaseChanged();
+                    this.CreatingDatabaseAfterSet();
+                }
+            }
+        }
+
+        partial void CreatingDatabaseBeforeSet(bool newValue);
+        partial void CreatingDatabaseAfterSet();
+
+        //protected virtual void CreatingDatabaseChanging(bool newValue) { }
+        //protected virtual void CreatingDatabaseChanged() { }
 
         //ncrunch: no coverage end
     }

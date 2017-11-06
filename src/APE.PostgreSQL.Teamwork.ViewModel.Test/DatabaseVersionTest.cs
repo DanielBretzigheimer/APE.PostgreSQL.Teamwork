@@ -37,7 +37,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
         public void OperatorTest()
         {
             var dv1 = new DatabaseVersion("\\0001.diff.sql");
+            var dv1beforea = new DatabaseVersion("\\0001.9.diff.sql");
             var dv1a = new DatabaseVersion("\\0001.a.diff.sql");
+            var dv1aa = new DatabaseVersion("\\0001.aa.diff.sql");
+            var dv1ab = new DatabaseVersion("\\0001.ab.diff.sql");
             var dv1b = new DatabaseVersion("\\0001.b.diff.sql");
             var dv2 = new DatabaseVersion("\\0002.diff.sql");
             var dv2a = new DatabaseVersion("\\0002.a.diff.sql");
@@ -54,6 +57,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             (dv2 < dv3).Should().BeTrue();
             (dv2a < dv3).Should().BeTrue();
             (dv2a > dv2).Should().BeTrue();
+            (dv1aa > dv1a).Should().BeTrue();
+            (dv1aa < dv1b).Should().BeTrue();
+            (dv1ab > dv1a).Should().BeTrue();
+            (dv1ab < dv1b).Should().BeTrue();
+            (dv1ab > dv1aa).Should().BeTrue();
+            (dv1beforea < dv1a).Should().BeTrue();
+            (dv1beforea > dv1).Should().BeTrue();
 
             (dv1 != dv1a).Should().BeTrue();
             (dv2 != dv1).Should().BeTrue();

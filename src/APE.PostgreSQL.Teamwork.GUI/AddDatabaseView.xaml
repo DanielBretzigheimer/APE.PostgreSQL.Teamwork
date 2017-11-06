@@ -9,7 +9,7 @@
              xmlns:loading="clr-namespace:APE.PostgreSQL.Teamwork.GUI.Loading"
              mc:Ignorable="d" Width="300" Foreground="Black">
 
-    <Grid Margin="5">
+    <Grid Margin="5" IsEnabled="{Binding CreatingDatabase, Converter={StaticResource BoolInversionConverter}}">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto" />
             <RowDefinition Height="auto" />
@@ -62,8 +62,12 @@
                 <ColumnDefinition Width="auto"/>
                 <ColumnDefinition Width="auto"/>
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="1" Content="OK" Width="100" IsEnabled="{Binding DataChecked}" Command="{Binding OkCommand}" 
-							Click="CloseClick" Style="{StaticResource MaterialDesignFlatRoundButton}" />
+            <Button Grid.Column="1" Width="100" IsEnabled="{Binding DataChecked}" Command="{Binding OkCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}" >
+                <StackPanel Orientation="Horizontal">
+                    <loading:Spinner Margin="0 0 5 0" Visibility="{Binding CreatingDatabase, Converter={StaticResource BoolToVisibilityConverter}}" />
+                    <TextBlock VerticalAlignment="Center" Text="OK" />
+                </StackPanel>
+            </Button>
             <Button Grid.Column="2" Width="100" Content="Cancel" IsCancel="True"
 									Style="{StaticResource MaterialDesignFlatRoundButton}"
 									Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" >

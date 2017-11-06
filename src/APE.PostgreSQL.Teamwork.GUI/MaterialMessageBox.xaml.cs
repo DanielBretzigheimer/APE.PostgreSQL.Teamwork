@@ -22,12 +22,22 @@ namespace APE.PostgreSQL.Teamwork.GUI
     /// </summary>
     public partial class MaterialMessageBox : UserControl
     {
-        public MaterialMessageBox(string text, string title, MessageBoxButton buttons)
+        public MaterialMessageBox(string text, string title, MessageBoxButton buttons, bool isMarkdown)
         {
+            this.Markdown = text;
             this.InitializeComponent();
 
             this.title.Text = title;
-            this.message.Text = text;
+
+            if (isMarkdown)
+            {
+                this.flowDocument.Visibility = Visibility.Visible;
+                this.message.Visibility = Visibility.Collapsed;
+            }
+            else
+            {
+                this.message.Text = text;
+            }
 
             switch (buttons)
             {
@@ -49,6 +59,8 @@ namespace APE.PostgreSQL.Teamwork.GUI
                     break;
             }
         }
+
+        public string Markdown { get; private set; }
 
         /// <summary>
         /// Gets the <see cref="TextBlock"/> which shows the message content to the user.

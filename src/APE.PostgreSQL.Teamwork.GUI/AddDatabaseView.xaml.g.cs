@@ -5,7 +5,6 @@
 //     the code is regenerated.
 // </auto-generated>
 using System;
-using System.Windows;
 using System.Windows.Controls;
 using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.ViewModel;

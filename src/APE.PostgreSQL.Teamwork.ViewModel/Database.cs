@@ -71,7 +71,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         /// Gets the location of the dump for the <see cref="CurrentVersion"/>.
         /// </summary>
-        public string CurrentDumpLocation => this.GenerateFileLocation(this.CurrentVersion.Main, SQLTemplates.DumpFile);
+        public string CurrentDumpLocation => this.GenerateFileLocation(this.CurrentVersion, SQLTemplates.DumpFile);
 
         /// <summary>
         /// Creates a dump file for the given database at the given path.
@@ -101,7 +101,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         public SQLFile CreateDump(string dumpCreatorPath, string host, string id, string password)
         {
-            var dumpfileLocation = this.GenerateFileLocation(this.CurrentVersion.Main + 1, SQLTemplates.DumpFile);
+            var dumpfileLocation = this.GenerateFileLocation(this.CurrentVersion.Next(), SQLTemplates.DumpFile);
             return this.CreateDump(dumpfileLocation, dumpCreatorPath, host, id, password);
         }
 
@@ -236,7 +236,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             this.UpdateVersion();
 
             // file paths
-            var previousDump = this.GenerateFileLocation(this.CurrentVersion.Main, SQLTemplates.DumpFile);
+            var previousDump = this.GenerateFileLocation(this.CurrentVersion, SQLTemplates.DumpFile);
             var dump = this.GenerateFileLocation($"{DatabaseVersion.TempDumpName}{this.CurrentVersion}", SQLTemplates.DumpFile);
             var undoDiff = this.GenerateFileLocation($"{DatabaseVersion.TempUndoDiffName}{this.CurrentVersion}", SQLTemplates.UndoDiffFile);
 
@@ -334,109 +334,91 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// Creates a dump file and compares it to the dump file of the old version.
         /// all changes will be written to a diff and undo diff file.
         /// </summary>
-        public void Export(string dumpCreatorPath, string host, string id, string password)
+        public void Export(DatabaseVersion newVersion, string dumpCreatorPath, string host, string id, string password)
         {
             lock (this.updateLock)
             {
-                Log.Info(string.Format("Start exporting Database {0}", this.Name));
+                Log.Info($"Start exporting Database {this.Name}");
                 this.SearchFiles(true);
 
                 this.SetProgress(0, "Start the export");
-                if (this.DiffFiles.Where(f => f.Version > this.CurrentVersion).Count() > 0)
+
+                this.UpdateVersion();
+
+                // file paths
+                Log.Debug($"New Version for exported files is {newVersion}");
+
+                var previousDump = this.CurrentDumpLocation;
+                var dump = this.GenerateFileLocation(newVersion, SQLTemplates.DumpFile);
+                var diff = this.GenerateFileLocation(newVersion, SQLTemplates.DiffFile);
+                var undoDiff = this.GenerateFileLocation(newVersion, SQLTemplates.UndoDiffFile);
+
+                this.exporting = true;
+
+                try
                 {
-                    throw new TeamworkConnectionException(null, "Newer Versions found which must be imported before an export.");
+                    // update version before creating dump, so the new dump contains the next version
+                    this.SetProgress(10, "Creating a new dump");
+                    this.CreateDump(dump, dumpCreatorPath, host, id, password);
+
+                    if (this.fileSystemAccess.GetFileSize(previousDump) == this.fileSystemAccess.GetFileSize(dump))
+                    {
+                        // check files byte by byte
+                        var oldDump = this.fileSystemAccess.ReadAllLines(previousDump);
+                        var newDump = this.fileSystemAccess.ReadAllLines(dump);
+
+                        if (oldDump.SequenceEqual(newDump))
+                            throw TeamworkException.NoChanges(previousDump, dump);
+                    }
+
+                    // diff only original dumps
+                    this.SetProgress(20, "Finding differences and creating files");
+                    this.CreateDiffs(previousDump, dump, diff, undoDiff);
+
+                    // test the new diff with all previous
+                    this.TestSQLFiles(40, 100);
+                    Log.Info(string.Format("Finished exporting version {0}", newVersion));
                 }
-                else
+                catch (TeamworkConnectionException ex)
                 {
-                    this.UpdateVersion();
+                    Log.Warn(string.Format("Error occured while testing exported files."), ex);
+                    var message = $"Error occured in file [File] while testing exported files. Diff and Dump files will not be deleted and can be edited manually.Error: {ex.Message}";
 
-                    // file paths
-                    var newVersion = this.CurrentVersion.Main + 1;
-                    Log.Debug(string.Format("New Version for exported files is {0}", newVersion));
-                    var previousDump = this.CurrentDumpLocation;
-                    var dump = this.GenerateFileLocation(newVersion, SQLTemplates.DumpFile);
-                    var diff = this.GenerateFileLocation(newVersion, SQLTemplates.DiffFile);
-                    var undoDiff = this.GenerateFileLocation(newVersion, SQLTemplates.UndoDiffFile);
-
-                    this.exporting = true;
-
-                    try
+                    if (ex.File != null)
                     {
-                        // update version before creating dump, so the new dump contains the next version
-                        this.SetProgress(10, "Creating a new dump");
-                        this.CreateDump(dumpCreatorPath, host, id, password);
-
-                        if (this.fileSystemAccess.GetFileSize(previousDump) == this.fileSystemAccess.GetFileSize(dump))
-                        {
-                            // check files byte by byte
-                            var oldDump = this.fileSystemAccess.ReadAllLines(previousDump);
-                            var newDump = this.fileSystemAccess.ReadAllLines(dump);
-
-                            if (oldDump.SequenceEqual(newDump))
-                            {
-                                throw TeamworkException.NoChanges(previousDump, dump);
-                            }
-                        }
-
-                        // diff only original dumps
-                        this.SetProgress(20, "Finding differences and creating files");
-                        this.CreateDiffs(previousDump, dump, diff, undoDiff);
-
-                        // test the new diff with all previous
-                        this.TestSQLFiles(40, 100);
-                        Log.Info(string.Format("Finished exporting version {0}", newVersion));
+                        message = message.Replace("[File]", ex.File.Path);
+                        throw new TeamworkTestException(message, ex);
                     }
-                    catch (TeamworkConnectionException ex)
-                    {
-                        Log.Warn(string.Format("Error occured while testing exported files."), ex);
-                        var message = $"Error occured in file [File] while testing exported files. Diff and Dump files will not be deleted and can be edited manually.Error: {ex.Message}";
 
-                        if (ex.File != null)
-                        {
-                            message = message.Replace("[File]", ex.File.Path);
-                            throw new TeamworkTestException(message, ex);
-                        }
-
-                        // do not delete files if only the test did not work => can be manually fixed by the user
-                        message = message.Replace("[File]", "unknown");
-                        throw new Exception(message, ex);
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error("Error occured while exporting new version", ex);
-
-                        // delete new files if an error occured
-                        if (this.fileSystemAccess.FileExists(dump))
-                        {
-                            this.fileSystemAccess.DeleteFile(dump);
-                        }
-
-                        if (this.fileSystemAccess.FileExists(diff))
-                        {
-                            this.fileSystemAccess.DeleteFile(diff);
-                        }
-
-                        if (this.fileSystemAccess.FileExists(undoDiff))
-                        {
-                            this.fileSystemAccess.DeleteFile(undoDiff);
-                        }
-
-                        if (newVersion == this.CurrentVersion.Main)
-                        {
-                            this.ReduceVersion();
-                        }
-
-                        throw;
-                    }
-                    finally
-                    {
-                        this.exporting = false;
-                        this.SetProgress(100);
-                    }
+                    // do not delete files if only the test did not work => can be manually fixed by the user
+                    message = message.Replace("[File]", "unknown");
+                    throw new Exception(message, ex);
                 }
+                catch (Exception ex)
+                {
+                    Log.Error("Error occured while exporting new version", ex);
 
-                this.UpdateData();
+                    // delete new files if an error occured
+                    if (this.fileSystemAccess.FileExists(dump))
+                        this.fileSystemAccess.DeleteFile(dump);
+                    if (this.fileSystemAccess.FileExists(diff))
+                        this.fileSystemAccess.DeleteFile(diff);
+                    if (this.fileSystemAccess.FileExists(undoDiff))
+                        this.fileSystemAccess.DeleteFile(undoDiff);
+
+                    if (newVersion == this.CurrentVersion)
+                        this.ReduceVersion();
+
+                    throw;
+                }
+                finally
+                {
+                    this.exporting = false;
+                    this.SetProgress(100);
+                }
             }
+
+            this.UpdateData();
         }
 
         /// <summary>
@@ -736,9 +718,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         /// <param name="version">The version of the file.</param>
         /// <param name="extension">The filename behind the version (should be a constant from SQL Path).</param>
-        private string GenerateFileLocation(int version, string extension)
+        private string GenerateFileLocation(DatabaseVersion version, string extension)
         {
-            return this.GenerateFileLocation(version.ToString().PadLeft(4, '0'), extension);
+            return this.GenerateFileLocation(version.Full, extension);
         }
 
         /// <summary>
