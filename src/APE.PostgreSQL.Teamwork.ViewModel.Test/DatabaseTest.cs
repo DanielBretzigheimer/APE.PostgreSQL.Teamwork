@@ -299,23 +299,21 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             });
 
             database.CurrentVersion = DatabaseVersion.StartVersion;
-            new Action(() => database.Export(string.Empty, string.Empty, string.Empty, string.Empty)).ShouldThrow<TeamworkConnectionException>();
-
             connectionManagerMock.Setup(c => c.ExecuteCommand<ExecutedFile>(It.IsAny<IDatabase>(), It.IsAny<string>())).Returns(new List<ExecutedFile>() { new ExecutedFile() { Version = "0004" } });
             database.UpdateData();
 
-            new Action(() => database.Export(string.Empty, string.Empty, string.Empty, string.Empty)).ShouldThrow<TeamworkException>();
+            new Action(() => database.Export(database.CurrentVersion.Next(), string.Empty, string.Empty, string.Empty, string.Empty)).ShouldThrow<TeamworkException>();
 
             fileMock.Setup(f => f.ReadAllLines("testpfad\\0004.dump.sql")).Returns(new string[1]);
-            database.Export(string.Empty, string.Empty, string.Empty, string.Empty);
+            database.Export(database.CurrentVersion.Next(), string.Empty, string.Empty, string.Empty, string.Empty);
 
             diffCreatorMock.Setup(d => d.Create(It.IsAny<string>(), It.IsAny<Database>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Throws(new TeamworkConnectionException(new SQLFile("\\0001.diff.sql", database, fileMock.Object), string.Empty));
-            new Action(() => database.Export(string.Empty, string.Empty, string.Empty, string.Empty)).ShouldThrow<Exception>();
+            new Action(() => database.Export(database.CurrentVersion.Next(), string.Empty, string.Empty, string.Empty, string.Empty)).ShouldThrow<Exception>();
 
             diffCreatorMock.Setup(d => d.Create(It.IsAny<string>(), It.IsAny<Database>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Throws(new Exception());
-            new Action(() => database.Export(string.Empty, string.Empty, string.Empty, string.Empty)).ShouldThrow<Exception>();
+            new Action(() => database.Export(database.CurrentVersion.Next(), string.Empty, string.Empty, string.Empty, string.Empty)).ShouldThrow<Exception>();
         }
 
         [TestMethod]

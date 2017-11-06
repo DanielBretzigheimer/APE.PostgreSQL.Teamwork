@@ -53,7 +53,7 @@ namespace APE.PostgreSQL.Teamwork.Model
                 else if (path.EndsWith(SQLTemplates.UndoDiffFile))
                     collection = RegexUndoDiffFile.Matches(path);
 
-                if (collection == null || collection.Count != 0)
+                if (collection != null && collection.Count != 0)
                 {
                     this.Main = int.Parse(collection[0].Groups["Version"].Value);
                     this.Minor = collection[0].Groups["SubVersion"].Value;
@@ -205,6 +205,11 @@ namespace APE.PostgreSQL.Teamwork.Model
         public static bool operator !=([NullGuard.AllowNull] DatabaseVersion a, [NullGuard.AllowNull] DatabaseVersion b)
         {
             return !(a == b);
+        }
+
+        public DatabaseVersion Next()
+        {
+            return new DatabaseVersion(this.Main + 1);
         }
 
         /// <summary>

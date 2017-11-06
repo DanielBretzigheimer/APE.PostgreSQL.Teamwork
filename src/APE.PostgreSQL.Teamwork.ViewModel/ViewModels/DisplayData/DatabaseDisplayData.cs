@@ -285,7 +285,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             this.Exporting = true;
             try
             {
-                this.ExportWithoutErrorHandling(this.Database.CurrentVersion++);
+                this.ExportWithoutErrorHandling(this.Database.CurrentVersion.Next());
             }
             catch (Exception ex)
             {

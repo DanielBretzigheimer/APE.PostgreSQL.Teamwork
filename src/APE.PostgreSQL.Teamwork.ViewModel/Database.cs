@@ -101,7 +101,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         public SQLFile CreateDump(string dumpCreatorPath, string host, string id, string password)
         {
-            var dumpfileLocation = this.GenerateFileLocation(this.CurrentVersion++, SQLTemplates.DumpFile);
+            var dumpfileLocation = this.GenerateFileLocation(this.CurrentVersion.Next(), SQLTemplates.DumpFile);
             return this.CreateDump(dumpfileLocation, dumpCreatorPath, host, id, password);
         }
 
