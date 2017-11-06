@@ -36,6 +36,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "Undoing", false, "Indicates that the database is undoing changes at the moment")]
     // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "Error", false)]
     // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "ImportableFilesFound", false)]
+    // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.PublicGetPrivateSet, typeof(bool), "CanCreateMinor", false)]
     // APE.CodeGeneration.Attribute [AllowNullNotifyProperty(AccessModifier.Public, typeof(string), "SelectedSchema")]
     // APE.CodeGeneration.Attribute [NotifyProperty(typeof(string), "ErrorMessage")]
     // APE.CodeGeneration.Attribute [AllowNullNotifyProperty(typeof(Database), "Database")]
@@ -440,6 +441,38 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         //protected virtual void ImportableFilesFoundChanging(bool newValue) { }
         //protected virtual void ImportableFilesFoundChanged() { }
+
+        protected static readonly System.ComponentModel.PropertyChangedEventArgs CanCreateMinorEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(CanCreateMinor));
+        private bool canCreateMinor = false;
+
+        /// <summary>
+        /// 
+        /// </summary>
+        public bool CanCreateMinor
+        {
+            get
+            {
+                return this.canCreateMinor;
+            }
+            private set
+            {
+                if (!object.Equals(this.canCreateMinor, value))
+                {
+                    //this.CanCreateMinorChanging(value);
+                    this.CanCreateMinorBeforeSet(value);
+                    this.canCreateMinor = value;
+                    this.OnPropertyChanged(CanCreateMinorEventArgs);
+                    //this.CanCreateMinorChanged();
+                    this.CanCreateMinorAfterSet();
+                }
+            }
+        }
+
+        partial void CanCreateMinorBeforeSet(bool newValue);
+        partial void CanCreateMinorAfterSet();
+
+        //protected virtual void CanCreateMinorChanging(bool newValue) { }
+        //protected virtual void CanCreateMinorChanged() { }
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs ErrorMessageEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(ErrorMessage));
         private string errorMessage;

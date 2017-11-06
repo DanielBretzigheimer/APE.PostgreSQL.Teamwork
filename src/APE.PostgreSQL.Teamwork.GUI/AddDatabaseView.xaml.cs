@@ -1,6 +1,5 @@
 ﻿// <copyright file="AddDatabaseView.xaml.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
-using System.Windows;
 using System.Windows.Controls;
 using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.ViewModel;

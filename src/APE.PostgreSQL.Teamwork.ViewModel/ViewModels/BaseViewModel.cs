@@ -49,7 +49,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         /// Gets a view for creating a minor version.
         /// </summary>
-        public static Func<Database, object> GetCreateMinorVersionView { get; set; }
+        public static Func<DatabaseDisplayData, object> GetCreateMinorVersionView { get; set; }
 
         /// <summary>
         /// Gets or sets a function which can create a MaterialMessageBox with the given parameters (text, title, buttons).

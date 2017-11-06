@@ -115,7 +115,7 @@ namespace APE.PostgreSQL.Teamwork.GUI
             this.mainWindowViewModel.Start();
         }
 
-        private CreateMinorVersionView GetCreateMinorVersionView(Database database)
+        private CreateMinorVersionView GetCreateMinorVersionView(DatabaseDisplayData database)
         {
             CreateMinorVersionView retval = null;
 

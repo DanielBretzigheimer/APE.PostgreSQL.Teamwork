@@ -1,6 +1,6 @@
 # Changelog
 
-## 1.0.88.0
+## 1.0.32.0
  - Create minor version
  - Fixed export bug if last version was minor
  - Fixed add database delay

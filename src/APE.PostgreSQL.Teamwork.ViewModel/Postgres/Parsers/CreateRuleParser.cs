@@ -1,4 +1,6 @@
-﻿using System;
+﻿// <copyright file="CreateRuleParser.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;

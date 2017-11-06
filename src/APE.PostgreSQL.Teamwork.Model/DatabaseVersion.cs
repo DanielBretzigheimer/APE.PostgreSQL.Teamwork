@@ -12,7 +12,7 @@ namespace APE.PostgreSQL.Teamwork.Model
     /// <summary>
     /// Represents one database version which contains of a main and minor version and one combined full version.
     /// </summary>
-    public class DatabaseVersion
+    public class DatabaseVersion : IComparable<DatabaseVersion>
     {
         /// <summary>
         /// The temporary name of an dump file which is used for undoing a version.
@@ -29,7 +29,7 @@ namespace APE.PostgreSQL.Teamwork.Model
             v => v.Minor);
 
         private static readonly Regex RegexDiffVersion = new Regex(@"\\(?<Version>[0-9][0-9][0-9][0-9])(?<SubVersion>\..*)?\" + SQLTemplates.DiffFile);
-        private static readonly Regex RegexDumpVersion = new Regex(@"\\(?<Version>....)\" + SQLTemplates.DumpFile);
+        private static readonly Regex RegexDumpVersion = new Regex(@"\\(?<Version>[0-9][0-9][0-9][0-9])(?<SubVersion>\..*)?\" + SQLTemplates.DumpFile);
         private static readonly Regex RegexUndoDiffFile = new Regex(@"\\(?<Version>[0-9][0-9][0-9][0-9])(?<SubVersion>\..*)?\" + SQLTemplates.UndoDiffFile);
 
         /// <summary>
@@ -45,18 +45,15 @@ namespace APE.PostgreSQL.Teamwork.Model
             }
             else
             {
-                MatchCollection collection = RegexDiffVersion.Matches(path);
-                if (collection.Count == 0)
-                {
+                MatchCollection collection = null;
+                if (path.EndsWith(SQLTemplates.DiffFile))
+                    collection = RegexDiffVersion.Matches(path);
+                else if (path.EndsWith(SQLTemplates.DumpFile))
                     collection = RegexDumpVersion.Matches(path);
-                }
-
-                if (collection.Count == 0)
-                {
+                else if (path.EndsWith(SQLTemplates.UndoDiffFile))
                     collection = RegexUndoDiffFile.Matches(path);
-                }
 
-                if (collection.Count != 0)
+                if (collection == null || collection.Count != 0)
                 {
                     this.Main = int.Parse(collection[0].Groups["Version"].Value);
                     this.Minor = collection[0].Groups["SubVersion"].Value;
@@ -234,6 +231,14 @@ namespace APE.PostgreSQL.Teamwork.Model
         public override string ToString()
         {
             return this.Full;
+        }
+
+        public int CompareTo(DatabaseVersion other)
+        {
+            if (other == null)
+                return 1;
+
+            return this.Full.CompareTo(other.Full);
         }
 
         internal static DatabaseVersion CommandLineVersion(string version)

@@ -10,7 +10,7 @@ namespace APE.PostgreSQL.Teamwork.GUI
     /// </summary>
     public partial class CreateMinorVersionView : UserControl
     {
-        public CreateMinorVersionView(Database database)
+        public CreateMinorVersionView(DatabaseDisplayData database)
         {
             this.DataContext = new CreateMinorVersionViewModel(database);
             this.InitializeComponent();

@@ -405,40 +405,39 @@ public List<DatabaseDisplayData> Databases
 
         public bool IsStarted { get; private set; }
 
-        partial void StartCore();
-        partial void StopCore();
+        partial void StartGenerated();
+        partial void StopGenerated();
 
-        //this needs to be virtual for child classes (because StartCore cannot be overriden.)
         [System.Diagnostics.DebuggerStepThrough()]
-        public virtual void Start()
+        public void Start()
         {
+            if (this.IsStarted)
+                throw new System.InvalidOperationException(this.GetType().Name + " is already started -> cannot start it twice.");
             this.isStarting = true;
-            this.StartCore();
+
+            this.StartGenerated();
+
             this.OnStarted();
             this.isStarting = false;
         }
 
         private void OnStarted()
         {
-            if (this.IsStarted)
-                throw new System.InvalidOperationException(this.GetType().Name + " is already started.");
-
             this.IsStarted = true;
 
             if (this.Started != null)
                 this.Started(this, System.EventArgs.Empty);
         }
 
-        //this needs to be virtual for child classes (because StopCore cannot be overriden.)
         [System.Diagnostics.DebuggerStepThrough()]
-        public virtual void Stop()
+        public void Stop()
         {
             if (this.IsStarted == false)
-                throw new System.InvalidOperationException(this.GetType().Name + " is already stopped.");
+                throw new System.InvalidOperationException(this.GetType().Name + " is not started -> cannot stop it.");
 
             this.isStopping = true;
 
-            this.StopCore();
+            this.StopGenerated();
 
             this.IsStarted = false;
             this.isStopping = false;

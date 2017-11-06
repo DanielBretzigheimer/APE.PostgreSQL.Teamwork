@@ -14,9 +14,11 @@
         <Grid.RowDefinitions>
             <RowDefinition />
             <RowDefinition />
+            <RowDefinition />
+            <RowDefinition />
         </Grid.RowDefinitions>
 
-        <Grid>
+        <Grid Margin="10">
             <Grid.RowDefinitions>
                 <RowDefinition />
                 <RowDefinition />
@@ -24,47 +26,66 @@
             </Grid.RowDefinitions>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition />
-                <ColumnDefinition />
+                <ColumnDefinition Width="auto" />
+                <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-            
-            <TextBlock Text="Base Version" />
 
-            <StackPanel Grid.Column="1" Orientation="Horizontal">
-                <TextBlock Text="{Binding Database.CurrentVersion}" />
+            <TextBlock Text="Base Version" VerticalAlignment="Center" />
+            <TextBlock Grid.Column="1" Text="{Binding DatabaseDisplayData.Database.CurrentVersion}" VerticalAlignment="Center" />
+            <Grid Width="20" Height="20" Margin="5" Grid.Column="2"
+                  ToolTip="The base version is always the current version of the database. To change it open the imports window and go to a specific version.">
+                <Ellipse Fill="#006CC9" />
+                <TextBlock Text="?" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13" Margin="0,-1,0,0"/>
+            </Grid>
 
-                <Grid Width="20" Height="20" Margin="5" ToolTip="The base version is always the current version of the database. To change it open the imports window and go to a specific version.">
-                    <Ellipse Fill="#006CC9" />
-                    <TextBlock Text="?" Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="13" Margin="0,-1,0,0"/>
-                </Grid>
-            </StackPanel>
-            
 
             <TextBlock Grid.Row="1" Text="New Version" />
             <TextBlock Grid.Row="1" Grid.Column="1" Text="{Binding NewVersion}" />
 
-            <TextBlock Grid.Row="2" Grid.ColumnSpan="2" Text="ATTENTION: All following dumps have to be updated to include the database changes from this minor version!" 
+            <TextBlock Grid.Row="2" Grid.ColumnSpan="3" Text="ATTENTION: All following dumps have to be updated to include the database changes from this minor version!" 
                        Foreground="Red" TextWrapping="Wrap" />
         </Grid>
 
-        <Grid Grid.Row="1">
+        <Grid Grid.Row="1" Margin="10">
+            <TextBlock Visibility="{Binding ShowErrorMessage, Converter={StaticResource BoolToVisibilityConverter}}" Text="{Binding Message}" Foreground="Red" FontWeight="Bold"
+                       TextWrapping="Wrap" />
+            <TextBlock Visibility="{Binding ShowSuccessMessage, Converter={StaticResource BoolToVisibilityConverter}}" Text="{Binding Message}"
+                       TextWrapping="Wrap" />
+        </Grid>
+
+        <ProgressBar Grid.Row="2" Value="{Binding DatabaseDisplayData.Database.Progress}" Style="{StaticResource MaterialDesignLinearProgressBar}" 
+                     ToolTip="{Binding Database.ProgressInfo}" Margin="10" />
+
+        <Grid Grid.Row="3" IsEnabled="{Binding Loading, Converter={StaticResource BoolInversionConverter}}">
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
-                <ColumnDefinition Width="auto"/>
-                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto" />
             </Grid.ColumnDefinitions>
-            <Button Grid.Column="1" Width="100" Style="{StaticResource MaterialDesignFlatRoundButton}" >
-                <StackPanel Orientation="Horizontal">
-                    <loading:Spinner Margin="0 0 5 0" Visibility="{Binding Loading, Converter={StaticResource BoolToVisibilityConverter}}" />
-                    <TextBlock VerticalAlignment="Center" Text="Create" />
-                </StackPanel>
-            </Button>
-            <Button Grid.Column="2" Width="100" Content="Cancel" IsCancel="True"
+
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Visibility="{Binding ShowSuccessMessage, Converter={StaticResource BoolToVisibilityConverter}}">
+                <Button Width="100" Content="OK" Style="{StaticResource MaterialDesignFlatRoundButton}"
+                        Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}">
+                    <Button.CommandParameter>
+                        <system:Boolean>True</system:Boolean>
+                    </Button.CommandParameter>
+                </Button>
+            </StackPanel>
+            <StackPanel Grid.Column="1" Orientation="Horizontal" Visibility="{Binding ShowSuccessMessage, Converter={StaticResource InvertedBoolToVisibilityConverter}}">
+                <Button Width="100" Style="{StaticResource MaterialDesignFlatRoundButton}" Command="{Binding CreateCommand}" ToolTip="{Binding Database.ProgressInfo}"
+                        ToolTipService.ShowOnDisabled="True">
+                    <StackPanel Orientation="Horizontal">
+                        <loading:Spinner Margin="0 0 5 0" Visibility="{Binding Loading, Converter={StaticResource BoolToVisibilityConverter}}" />
+                        <TextBlock VerticalAlignment="Center" Text="Create" />
+                    </StackPanel>
+                </Button>
+                <Button Width="100" Content="Cancel" IsCancel="True"
 									Style="{StaticResource MaterialDesignFlatRoundButton}"
 									Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}" >
-                <Button.CommandParameter>
-                    <system:Boolean>False</system:Boolean>
-                </Button.CommandParameter>
-            </Button>
+                    <Button.CommandParameter>
+                        <system:Boolean>False</system:Boolean>
+                    </Button.CommandParameter>
+                </Button>
+            </StackPanel>
         </Grid>
     </Grid>
 </UserControl>

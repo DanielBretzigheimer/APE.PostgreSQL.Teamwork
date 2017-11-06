@@ -4,6 +4,7 @@ using System;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Exceptions
 {
+    [Serializable]
     public class TeamworkTestException : Exception
     {
         public TeamworkTestException(string message, TeamworkConnectionException ex)

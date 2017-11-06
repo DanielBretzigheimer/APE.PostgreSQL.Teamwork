@@ -214,7 +214,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         /// Starts the async worker which updates the databases.
         /// </summary>
-        partial void StartCore()
+        partial void StartGenerated()
         {
             this.CheckSettings();
 
@@ -329,7 +329,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         /// Stops the async worker which updates the databases.
         /// </summary>
-        partial void StopCore()
+        partial void StopGenerated()
         {
             if (this.worker != null)
                 this.worker.Stop();

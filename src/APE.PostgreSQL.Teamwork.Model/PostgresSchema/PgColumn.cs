@@ -1,7 +1,7 @@
 ﻿// <copyright file="PgColumn.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using APE.PostgreSQL.Teamwork.Model.Utils;
 using System.Text;
 using System.Text.RegularExpressions;
+using APE.PostgreSQL.Teamwork.Model.Utils;
 
 namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
 {

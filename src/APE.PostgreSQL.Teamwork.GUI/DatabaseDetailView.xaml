@@ -224,7 +224,8 @@
                                     </Grid>
                                 </Button>
 
-                                <Button Command="{Binding CreateMinorCommand}" Style="{StaticResource DetailButton}" ToolTip="Open a popup to create a new minor version">
+                                <Button Command="{Binding CreateMinorCommand}" Style="{StaticResource DetailButton}" ToolTip="Open a popup to create a new minor version"
+                                        IsEnabled="{Binding CanCreateMinor}" ToolTipService.ShowOnDisabled="True" >
                                     <Image Source="Images/minor-version.png" RenderOptions.BitmapScalingMode="HighQuality" />
                                 </Button>
                                 
