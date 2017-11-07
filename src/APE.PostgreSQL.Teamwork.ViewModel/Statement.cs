@@ -1,6 +1,7 @@
 // <copyright file="Statement.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using System.IO;
+using System.Text;
 using APE.CodeGeneration.Attributes;
 using Npgsql;
 
@@ -21,18 +22,23 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         public Statement(string searchPath, string sql, IDatabase database)
         {
+            this.SearchPath = searchPath;
+
             if (sql.ToLower().Contains("alter type")
                 && sql.ToLower().Contains("add value"))
             {
                 this.SupportsTransaction = false;
+                var sb = new StringBuilder();
+                sb.AppendLine(this.SearchPath);
+                sb.AppendLine(sql);
+                this.SQL = sb.ToString();
             }
             else
             {
                 this.SupportsTransaction = true;
+                this.SQL = sql;
             }
 
-            this.SearchPath = searchPath;
-            this.SQL = sql;
             this.Title = this.GetTitle(sql);
             this.database = database;
         }
