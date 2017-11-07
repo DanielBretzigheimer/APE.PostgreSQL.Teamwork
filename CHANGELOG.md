@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.33.0
+ - Fixed ALTER TYPE in different schemas
+
 ## 1.0.32.0
  - Create minor version
  - Fixed export bug if last version was minor
