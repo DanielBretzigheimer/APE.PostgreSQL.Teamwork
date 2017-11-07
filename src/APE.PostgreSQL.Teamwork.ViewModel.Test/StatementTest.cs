@@ -27,7 +27,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             sql = "ALTER TYPE \"TestType\" ADD VALUE newVal;";
             statement = new Statement(searchPath, sql, databaseMock.Object);
             statement.Should().NotBeNull();
-            statement.SQL.Should().Be(sql);
+            statement.SQL.Should().Contain(sql);
             statement.SupportsTransaction.Should().BeFalse();
             statement.SearchPath.Should().Be(searchPath);
         }
@@ -38,8 +38,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             var databaseMock = new Mock<IDatabase>();
 
             var searchPath = "-- search path";
-            string sql = "SELECT * FROM \"TEST\"";
-            Statement statement = new Statement(searchPath, sql, databaseMock.Object);
+            var sql = "SELECT * FROM \"TEST\"";
+            var statement = new Statement(searchPath, sql, databaseMock.Object);
             statement.Execute();
             databaseMock.Setup(d => d.ExecuteCommandNonQuery(sql)).Throws(new Exception());
             new Action(() => statement.Execute()).ShouldThrow<Exception>();
