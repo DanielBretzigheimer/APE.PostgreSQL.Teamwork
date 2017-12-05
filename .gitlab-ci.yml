@@ -4,7 +4,7 @@ variables:
 
 before_script:
     - REM NuGet     
-    - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\RestoreNugetPackages.ps1 
+    - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\Build\RestoreNugetPackages.ps1
 Build:
     stage: build
     artifacts:
@@ -14,17 +14,17 @@ Build:
             - src\*\bin\%DEPLOYCONFIGURATION%
     script: 
         - REM WriteBuildVersionToAssemblyInfo.ps1
-        - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\WriteBuildVersionToAssemblyInfo.ps1 %CI_PROJECT_NAME% %CI_BUILD_REF_NAME% %CI_BUILD_REF% %CI_BUILD_REPO%
+        - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\Build\WriteBuildVersionToAssemblyInfo.ps1 %CI_PROJECT_NAME% %CI_COMMIT_REF_NAME% %CI_COMMIT_SHA% %CI_REPOSITORY_URL%
 
         - REM MSBuild
-        - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\CallMsBuild.ps1
+        - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\Build\CallMsBuild.ps1
 
 UnitTest:
     stage: test
     script: 
         - REM MSTest 
         - echo on
-        - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\RunUnittests.ps1
+        - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\UnitTests\RunUnittests.ps1
 
 CreateNugetPackage:
     stage: deploy
@@ -32,7 +32,8 @@ CreateNugetPackage:
         - master
     #when: manual
     script:
-        - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\BuildNugetPakages.ps1
+        - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\Build\BuildNugetPakages.ps1
+
 
         - REM Copy Executables
         - del /S /Q "C:\NuGetOwncloud\APE Tools\APE.PostgreSQL.Teamwork"
