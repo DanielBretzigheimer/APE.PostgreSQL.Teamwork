@@ -17,7 +17,7 @@ Build:
         - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\Build\WriteBuildVersionToAssemblyInfo.ps1 %CI_PROJECT_NAME% %CI_COMMIT_REF_NAME% %CI_COMMIT_SHA% %CI_REPOSITORY_URL%
 
         - REM MSBuild
-        - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\Build\CallMsBuild.ps1
+        - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\Build\CallMsBuild.ps1 -treatWarningAsErrors true -codeAnalysisTreatWarningsAsErrors true
 
 UnitTest:
     stage: test

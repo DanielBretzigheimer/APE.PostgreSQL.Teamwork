@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.39.0
+- Treat warnings as errors activated
+
 ## 1.0.38.0
 - Task.Extension NUGET downgrade to avoid errors with Npgsql
 
