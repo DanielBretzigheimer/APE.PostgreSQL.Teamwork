@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.38.0
+- Task.Extension NUGET downgrade to avoid errors with Npgsql
+
 ## 1.0.37.0
 - Updated NUGET packages
 
