@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -201,9 +200,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
             // disable buttons until a database is selected
             this.EditButtonEnabled = false;
-            this.worker = new DispatcherTimer();
-            this.worker.Interval = new TimeSpan(TimeSpan.TicksPerSecond * 2);
-            this.worker.Tick += UpdateWorkerTick;
+            this.worker = new DispatcherTimer
+            {
+                Interval = new TimeSpan(TimeSpan.TicksPerSecond * 2),
+            };
+            this.worker.Tick += this.UpdateWorkerTick;
         }
 
         private void UpdateWorkerTick(object sender, EventArgs e)
