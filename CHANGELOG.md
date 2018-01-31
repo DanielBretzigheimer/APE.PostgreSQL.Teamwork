@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.37.0
+- Updated NUGET packages
+
 ## 1.0.33.0
  - Fixed ALTER TYPE in different schemas
 
