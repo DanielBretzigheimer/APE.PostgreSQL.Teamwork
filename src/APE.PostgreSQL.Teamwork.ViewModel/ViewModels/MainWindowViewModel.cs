@@ -204,6 +204,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 Interval = new TimeSpan(TimeSpan.TicksPerSecond * 2),
             };
+
             this.worker.Tick += this.UpdateWorkerTick;
         }
 
