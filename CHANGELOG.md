@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.40.0
+- Task.Extension NUGET upgraded
+
 ## 1.0.39.0
 - Treat warnings as errors activated
 
