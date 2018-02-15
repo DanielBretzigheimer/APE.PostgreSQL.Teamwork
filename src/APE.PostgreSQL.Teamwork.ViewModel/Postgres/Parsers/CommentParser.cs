@@ -364,7 +364,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         [return: NullGuard.AllowNull]
         private static string GetComment(Parser parser)
         {
+#pragma warning disable CS0618 // Type or member is obsolete
             var comment = parser.ParseStringCompat();
+#pragma warning restore CS0618 // Type or member is obsolete
 
             if ("null".Equals(comment, StringComparison.CurrentCultureIgnoreCase))
             {
