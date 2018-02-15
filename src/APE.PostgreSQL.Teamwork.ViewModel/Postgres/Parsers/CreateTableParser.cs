@@ -1,6 +1,5 @@
 ﻿// <copyright file="CreateTableParser.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
-using APE.PostgreSQL.Teamwork;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
@@ -84,7 +83,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 }
                 else if (parser.ExpectOptional("TABLESPACE"))
                 {
+#pragma warning disable CS0618 // Type or member is obsolete
                     table.Tablespace = parser.ParseStringCompat();
+#pragma warning restore CS0618 // Type or member is obsolete
                 }
                 else
                 {

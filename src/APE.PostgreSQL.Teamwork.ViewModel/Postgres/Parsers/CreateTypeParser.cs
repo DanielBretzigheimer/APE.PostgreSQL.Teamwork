@@ -37,7 +37,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 {
                     while (!parser.ExpectOptional(")"))
                     {
+#pragma warning disable CS0618 // Type or member is obsolete
                         var entry = parser.ParseStringCompat();
+#pragma warning restore CS0618 // Type or member is obsolete
                         enumEntries.Add(ParserUtils.GetObjectName(entry));
                         parser.ExpectOptional(",");
                     }

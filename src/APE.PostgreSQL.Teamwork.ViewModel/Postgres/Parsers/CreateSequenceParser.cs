@@ -1,5 +1,4 @@
 ﻿// <copyright file="CreateSequenceParser.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
 
@@ -45,24 +44,34 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 if (parser.ExpectOptional("INCREMENT"))
                 {
                     parser.ExpectOptional("BY");
+#pragma warning disable CS0618 // Type or member is obsolete
                     sequence.Increment = parser.ParseStringCompat();
+#pragma warning restore CS0618 // Type or member is obsolete
                 }
                 else if (parser.ExpectOptional("MINVALUE"))
                 {
+#pragma warning disable CS0618 // Type or member is obsolete
                     sequence.MinValue = parser.ParseStringCompat();
+#pragma warning restore CS0618 // Type or member is obsolete
                 }
                 else if (parser.ExpectOptional("MAXVALUE"))
                 {
+#pragma warning disable CS0618 // Type or member is obsolete
                     sequence.MaxValue = parser.ParseStringCompat();
+#pragma warning restore CS0618 // Type or member is obsolete
                 }
                 else if (parser.ExpectOptional("START"))
                 {
                     parser.ExpectOptional("WITH");
+#pragma warning disable CS0618 // Type or member is obsolete
                     sequence.StartWith = parser.ParseStringCompat();
+#pragma warning restore CS0618 // Type or member is obsolete
                 }
                 else if (parser.ExpectOptional("CACHE"))
                 {
+#pragma warning disable CS0618 // Type or member is obsolete
                     sequence.Cache = parser.ParseStringCompat();
+#pragma warning restore CS0618 // Type or member is obsolete
                 }
                 else if (parser.ExpectOptional("CYCLE"))
                 {
