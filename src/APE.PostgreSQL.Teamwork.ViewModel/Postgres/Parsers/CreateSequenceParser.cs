@@ -45,24 +45,24 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 if (parser.ExpectOptional("INCREMENT"))
                 {
                     parser.ExpectOptional("BY");
-                    sequence.Increment = parser.ParseString();
+                    sequence.Increment = parser.ParseStringCompat();
                 }
                 else if (parser.ExpectOptional("MINVALUE"))
                 {
-                    sequence.MinValue = parser.ParseString();
+                    sequence.MinValue = parser.ParseStringCompat();
                 }
                 else if (parser.ExpectOptional("MAXVALUE"))
                 {
-                    sequence.MaxValue = parser.ParseString();
+                    sequence.MaxValue = parser.ParseStringCompat();
                 }
                 else if (parser.ExpectOptional("START"))
                 {
                     parser.ExpectOptional("WITH");
-                    sequence.StartWith = parser.ParseString();
+                    sequence.StartWith = parser.ParseStringCompat();
                 }
                 else if (parser.ExpectOptional("CACHE"))
                 {
-                    sequence.Cache = parser.ParseString();
+                    sequence.Cache = parser.ParseStringCompat();
                 }
                 else if (parser.ExpectOptional("CYCLE"))
                 {

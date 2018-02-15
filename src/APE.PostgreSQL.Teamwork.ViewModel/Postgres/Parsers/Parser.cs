@@ -115,11 +115,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         }
 
         /// <summary>
-        /// Checks whether the string contains given word on current position. If not
-        /// and expectation is optional then position is not changed and method
-        /// returns true. If expectation is not optional, exception with error
-        /// description is thrown. If word is found, position is moved at first
-        /// non-whitespace character following the word.
+        /// Checks whether the string contains given word on current position. If not and expectation is optional then position is not changed and method returns true. If expectation is
+        /// not optional, exception with error description is thrown. If word is found, position is moved at first non-whitespace character following the word.
         /// </summary>
         /// <param name="word">Word to expect.</param>
         /// <param name="optional">True if word is optional, otherwise false.</param>
@@ -128,13 +125,24 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         {
             var wordEnd = this.Position + word.Length;
 
-            if (wordEnd <= this.value.Length && this.value.Substring(this.Position, wordEnd - this.Position).Equals(word, StringComparison.CurrentCultureIgnoreCase)
-                && (wordEnd == this.value.Length || char.IsWhiteSpace(this.value[wordEnd]) || this.value[wordEnd] == ';' || this.value[wordEnd] == ')' || this.value[wordEnd] == ',' || this.value[wordEnd] == '[' || "(".Equals(word) || ",".Equals(word) || "[".Equals(word) || "]".Equals(word)))
+            if (wordEnd <= this.value.Length
+                && this.value.Substring(this.Position, wordEnd - this.Position).Equals(word, StringComparison.CurrentCultureIgnoreCase))
             {
-                this.Position = wordEnd;
-                this.SkipWhitespace();
+                var isEnd = wordEnd == this.value.Length;
+                var followingChar = isEnd ? char.MinValue : this.value[wordEnd];
+                var followedByWhiteSpace = char.IsWhiteSpace(followingChar);
+                var followedBySemicolon = followingChar == ';';
+                var followedByEndParentheses = followingChar == ')';
+                var followedByComma = followingChar == ',';
+                var followedByEndSquareBracket = followingChar == '[';
+                if (isEnd || followedByWhiteSpace || followedBySemicolon || followedByEndParentheses || followedByComma || followedByEndSquareBracket
+                    || "(".Equals(word) || ",".Equals(word) || "[".Equals(word) || "]".Equals(word))
+                {
+                    this.Position = wordEnd;
+                    this.SkipWhitespace();
 
-                return true;
+                    return true;
+                }
             }
 
             if (optional)
@@ -174,9 +182,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             for (; this.Position < this.value.Length; this.Position++)
             {
                 if (!char.IsWhiteSpace(this.value[this.Position]))
-                {
                     break;
-                }
             }
         }
 
@@ -238,7 +244,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// empty, exception is thrown.
         /// </summary>
         /// <returns>Parsed string, if quoted then including quotes.</returns>
-        public string ParseString()
+        [Obsolete("Use ParseString instead.")]
+        public string ParseStringCompat()
         {
             var quoted = this.value[this.Position] == '\'';
 
@@ -376,9 +383,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             this.Position = endPos;
             this.SkipWhitespace();
 
-            if ("character".Equals(dataType, StringComparison.CurrentCultureIgnoreCase) && this.ExpectOptional("varying"))
+            if ("character".Equals(dataType, StringComparison.CurrentCultureIgnoreCase))
             {
-                dataType = "character varying";
+                if (this.ExpectOptional("varying"))
+                {
+                    dataType = $"{dataType} varying";
+                }
+                else
+                {
+                    var varyingSuffix = this.ParseString();
+                    dataType = $"{dataType} {varyingSuffix}";
+                }
             }
             else if ("double".Equals(dataType, StringComparison.CurrentCultureIgnoreCase) && this.ExpectOptional("precision"))
             {
@@ -411,6 +426,23 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             }
 
             return dataType;
+        }
+
+        /// <summary>
+        /// Returns the next string after <see cref="Position"/> until a whitespace is found or the string is at its end.
+        /// </summary>
+        private string ParseString()
+        {
+            var retval = string.Empty;
+            for (; this.Position < this.value.Length; this.Position++)
+            {
+                var c = this.value[this.Position];
+                if (char.IsWhiteSpace(c))
+                    break;
+                retval += c;
+            }
+
+            return retval;
         }
 
         /// <summary>

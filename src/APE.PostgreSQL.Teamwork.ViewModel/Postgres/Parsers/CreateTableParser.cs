@@ -84,7 +84,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 }
                 else if (parser.ExpectOptional("TABLESPACE"))
                 {
-                    table.Tablespace = parser.ParseString();
+                    table.Tablespace = parser.ParseStringCompat();
                 }
                 else
                 {
