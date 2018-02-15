@@ -364,7 +364,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         [return: NullGuard.AllowNull]
         private static string GetComment(Parser parser)
         {
-            var comment = parser.ParseString();
+            var comment = parser.ParseStringCompat();
 
             if ("null".Equals(comment, StringComparison.CurrentCultureIgnoreCase))
             {

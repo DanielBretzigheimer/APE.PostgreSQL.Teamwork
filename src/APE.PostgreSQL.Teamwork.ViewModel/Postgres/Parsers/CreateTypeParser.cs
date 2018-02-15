@@ -1,9 +1,7 @@
 ﻿// <copyright file="CreateTypeParser.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
@@ -39,7 +37,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 {
                     while (!parser.ExpectOptional(")"))
                     {
-                        var entry = parser.ParseString();
+                        var entry = parser.ParseStringCompat();
                         enumEntries.Add(ParserUtils.GetObjectName(entry));
                         parser.ExpectOptional(",");
                     }
@@ -76,14 +74,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
                     arguments.Add(new PgArgument(name, datatype));
 
+                    parser.SkipWhitespace();
                     if (parser.ExpectOptional(")"))
-                    {
                         break;
-                    }
                     else
-                    {
                         parser.Expect(",");
-                    }
                 }
 
                 type.AttributeArguments = arguments;
