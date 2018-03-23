@@ -6,7 +6,7 @@ using APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres.Parser
+namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres.Parsers
 {
     [TestClass]
     public class PrivilegeParserTest

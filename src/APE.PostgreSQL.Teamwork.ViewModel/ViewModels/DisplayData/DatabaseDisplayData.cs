@@ -251,7 +251,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 SettingsManager.Get().Setting.PgDumpLocation,
                 SettingsManager.Get().Setting.Host,
                 SettingsManager.Get().Setting.Id,
-                SettingsManager.Get().Setting.Password);
+                SettingsManager.Get().Setting.Password,
+                SettingsManager.Get().Setting.Port);
 
             // open the diff files so user can verify them
             var diff = new SQLFileDisplayData(this.Database.DiffFiles.SingleOrDefault(f => f.Version == newVersion));
@@ -646,7 +647,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                        SettingsManager.Get().Setting.PgDumpLocation,
                        SettingsManager.Get().Setting.Host,
                        SettingsManager.Get().Setting.Id,
-                       SettingsManager.Get().Setting.Password);
+                       SettingsManager.Get().Setting.Password,
+                       SettingsManager.Get().Setting.Port);
                 }
                 catch (Exception ex)
                 {
@@ -714,7 +716,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                         SettingsManager.Get().Setting.PgDumpLocation,
                         SettingsManager.Get().Setting.Host,
                         SettingsManager.Get().Setting.Id,
-                        SettingsManager.Get().Setting.Password);
+                        SettingsManager.Get().Setting.Password,
+                        SettingsManager.Get().Setting.Port);
                 }
                 catch (Exception ex)
                 {

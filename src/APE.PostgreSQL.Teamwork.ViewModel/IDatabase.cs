@@ -52,8 +52,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <param name="host">Server host to which is connected.</param>
         /// <param name="id">Server id for the dump creation.</param>
         /// <param name="password">Server password for the dump creation.</param>
+        /// <param name="port">The port of the server.</param>
         /// <returns>The created dump as <see cref="SQLFile"/>.</returns>
-        SQLFile CreateDump(string path, string dumpCreatorPath, string host, string id, string password);
+        SQLFile CreateDump(string path, string dumpCreatorPath, string host, string id, string password, int port);
 
         /// <summary>
         /// Gets all <see cref="SQLFile"/>s which needs to be applied to get to a given version.
@@ -75,7 +76,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <param name="host">Server host to which is connected.</param>
         /// <param name="id">Server id for the diff creation.</param>
         /// <param name="password">Server password for the dump creation.</param>
-        void Export(DatabaseVersion newVersion, string dumpCreatorPath, string host, string id, string password);
+        /// <param name="port">The port of the server.</param>
+        void Export(DatabaseVersion newVersion, string dumpCreatorPath, string host, string id, string password, int port);
 
         /// <summary>
         /// Reduces the version by 1.

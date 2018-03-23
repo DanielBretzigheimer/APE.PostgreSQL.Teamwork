@@ -24,7 +24,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// <returns>Name of the object.</returns>
         public static string GetObjectName(string name)
         {
-            string[] names = SplitNames(name);
+            var names = SplitNames(name);
 
             return names[names.Length - 1];
         }
@@ -36,7 +36,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// <returns>Name of the object.</returns>
         public static string GetSecondObjectName(string name)
         {
-            string[] names = SplitNames(name);
+            var names = SplitNames(name);
 
             return names[names.Length - 2];
         }
@@ -49,7 +49,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         [return: NullGuard.AllowNull]
         public static string GetThirdObjectName(string name)
         {
-            string[] names = SplitNames(name);
+            var names = SplitNames(name);
 
             return names.Length >= 3 ? names[names.Length - 3] : null;
         }
@@ -59,7 +59,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         public static string GetSchemaName(string name, PgDatabase database)
         {
-            string[] names = SplitNames(name);
+            var names = SplitNames(name);
 
             if (names.Length < 2)
             {
