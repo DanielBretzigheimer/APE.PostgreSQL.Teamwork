@@ -99,7 +99,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                         SettingsManager.Get().Setting.PgDumpLocation,
                         SettingsManager.Get().Setting.Host,
                         SettingsManager.Get().Setting.Id,
-                        SettingsManager.Get().Setting.Password);
+                        SettingsManager.Get().Setting.Password,
+                        SettingsManager.Get().Setting.Port);
 
                     // workaround to remove the Teamwork Schema from the first dump. This is needed
                     // to avoid conflicts when the teamwork schema is already created and the first

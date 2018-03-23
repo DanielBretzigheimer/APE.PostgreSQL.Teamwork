@@ -114,7 +114,8 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Postgres\Parser\PrivilegeParserTest.cs" />
+    <Compile Include="Postgres\Parsers\ParserTest.cs" />
+    <Compile Include="Postgres\Parsers\PrivilegeParserTest.cs" />
     <Compile Include="Postgres\APEUnitTestExtension.g.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="APEUnitTestExtension.g.cs" />

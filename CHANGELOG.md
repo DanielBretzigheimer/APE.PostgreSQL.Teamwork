@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.42.0
+- PostgreSQL 10 Support
+- Dump is now created with the port defined in the settings
+
 ## 1.0.41.0
 - Create Type Exception fixed
 

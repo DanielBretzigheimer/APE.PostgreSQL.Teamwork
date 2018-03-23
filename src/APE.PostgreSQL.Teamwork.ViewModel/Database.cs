@@ -76,10 +76,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         /// Creates a dump file for the given database at the given path.
         /// </summary>
-        public SQLFile CreateDump(string path, string dumpCreatorPath, string host, string id, string password)
+        public SQLFile CreateDump(string path, string dumpCreatorPath, string host, string id, string password, int port)
         {
             this.UpdateVersion();
-            var processArguments = $"-s -h {host} -U {id} -w -f \"{path}\" {this.Name}";
+            var processArguments = $"-s -h {host} -p {port} -U {id} -w -f \"{path}\" {this.Name}";
             var startInfo = new ProcessStartInfo(dumpCreatorPath, processArguments)
             {
                 UseShellExecute = false,
@@ -99,10 +99,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         /// Creates a dump file for the given database in its directory path.
         /// </summary>
-        public SQLFile CreateDump(string dumpCreatorPath, string host, string id, string password)
+        public SQLFile CreateDump(string dumpCreatorPath, string host, string id, string password, int port)
         {
             var dumpfileLocation = this.GenerateFileLocation(this.CurrentVersion.Next(), SQLTemplates.DumpFile);
-            return this.CreateDump(dumpfileLocation, dumpCreatorPath, host, id, password);
+            return this.CreateDump(dumpfileLocation, dumpCreatorPath, host, id, password, port);
         }
 
         /// <summary>
@@ -227,7 +227,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         /// Undoes all changes which were made to this database by creating an undo diff and executing it.
         /// </summary>
-        public void UndoChanges(string dumpCreatorPath, string host, string id, string password)
+        public void UndoChanges(string dumpCreatorPath, string host, string id, string password, int port)
         {
             Log.Info($"Start undoing Database {this.Name} to version {this.CurrentVersion}");
 
@@ -244,7 +244,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 // update version before creating dump, so the new dump contains the next version
                 this.SetProgress(10, "Creating dump with changes which should be undone");
-                this.CreateDump(dump, dumpCreatorPath, host, id, password);
+                this.CreateDump(dump, dumpCreatorPath, host, id, password, port);
 
                 if (this.fileSystemAccess.GetFileSize(previousDump) == this.fileSystemAccess.GetFileSize(dump))
                 {
@@ -334,7 +334,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// Creates a dump file and compares it to the dump file of the old version.
         /// all changes will be written to a diff and undo diff file.
         /// </summary>
-        public void Export(DatabaseVersion newVersion, string dumpCreatorPath, string host, string id, string password)
+        public void Export(DatabaseVersion newVersion, string dumpCreatorPath, string host, string id, string password, int port)
         {
             lock (this.updateLock)
             {
@@ -359,7 +359,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 {
                     // update version before creating dump, so the new dump contains the next version
                     this.SetProgress(10, "Creating a new dump");
-                    this.CreateDump(dump, dumpCreatorPath, host, id, password);
+                    this.CreateDump(dump, dumpCreatorPath, host, id, password, port);
 
                     if (this.fileSystemAccess.GetFileSize(previousDump) == this.fileSystemAccess.GetFileSize(dump))
                     {
@@ -425,14 +425,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// Checks if the current database contains changes and checks if this changes are in conflict with the not imported
         /// diff files.
         /// </summary>
-        public bool ImportConflicts(string dumpCreatorPath, string host, string id, string password)
+        public bool ImportConflicts(string dumpCreatorPath, string host, string id, string password, int port)
         {
             var tmpDumpPath = System.IO.Path.Combine(this.Path, $"{DatabaseVersion.TempDumpName}{SQLTemplates.DumpFile}");
 
             try
             {
                 // check if database contains changes
-                this.CreateDump(tmpDumpPath, dumpCreatorPath, host, id, password);
+                this.CreateDump(tmpDumpPath, dumpCreatorPath, host, id, password, port);
 
                 if (this.fileSystemAccess.GetFileSize(tmpDumpPath) == this.fileSystemAccess.GetFileSize(this.CurrentDumpLocation))
                 {
