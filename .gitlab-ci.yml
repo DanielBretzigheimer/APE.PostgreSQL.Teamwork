@@ -1,5 +1,5 @@
 variables:
-    PROJECTPATH: "src/NugetPackage.sln"
+    PROJECTPATH: "src/APE.PostgreSQL.Teamwork.sln"
     DEPLOYCONFIGURATION: "Release"
 
 before_script:
