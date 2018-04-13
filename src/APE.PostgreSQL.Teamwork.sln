@@ -20,6 +20,11 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APE.PostgreSQL.Teamwork.Vie
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APE.PostgreSQL.Teamwork.TestHelper", "APE.PostgreSQL.Teamwork.TestHelper\APE.PostgreSQL.Teamwork.TestHelper.csproj", "{F5DA55B2-31D4-40C5-A6BE-B7E35D9F00F4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{FB5C8473-7B01-4012-ABDD-2007E7A5C8DF}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitlab-ci.yml = ..\.gitlab-ci.yml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Alle Erstellen - DEBUG|Any CPU = Alle Erstellen - DEBUG|Any CPU
