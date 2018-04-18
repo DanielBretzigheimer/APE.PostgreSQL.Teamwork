@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.43.0
+- support for package reference in NuGet package
+
 ## 1.0.42.0
 - PostgreSQL 10 Support
 - Dump is now created with the port defined in the settings
