@@ -10,8 +10,15 @@
     <description>$description$</description>
     <copyright>Copyright APE Engineering GmbH 2017</copyright>
     <tags>APE CSharp PostgreSQL Teamwork</tags>
+    <contentFiles>
+      <files include="any/any/APE.PostgreSQL.Teamwork.CommandPrompt.exe.log4net.config" buildAction="None" copyToOutput="true" flatten="false" />
+    </contentFiles>
   </metadata>
   <files>
-	<file src="APE.PostgreSQL.Teamwork.CommandPrompt.targets" target="build"/>
+    <file src="APE.PostgreSQL.Teamwork.CommandPrompt.targets" target="build"/>
+
+    <!--This is doubled in case somebody changes the property in the IDE-->
+    <file src="APE.PostgreSQL.Teamwork.CommandPrompt.exe.log4net.config" target="content"/>
+    <file src="APE.PostgreSQL.Teamwork.CommandPrompt.exe.log4net.config" target="contentFiles\any\any"/>
   </files>
 </package>
