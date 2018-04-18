@@ -87,6 +87,8 @@
     <AdditionalFiles Include="..\..\stylecop.json">
       <Link>stylecop.json</Link>
     </AdditionalFiles>
+    <None Include="APE.PostgreSQL.Teamwork.CommandPrompt.nuspec" />
+    <None Include="APE.PostgreSQL.Teamwork.CommandPrompt.targets" />
     <None Include="FodyWeavers.xml" />
     <None Include="..\..\StyleCop.ruleset">
       <Link>StyleCop.ruleset</Link>
