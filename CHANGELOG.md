@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.44.0
+- Logo changed
+
 ## 1.0.43.0
 - support for package reference in NuGet package
 
