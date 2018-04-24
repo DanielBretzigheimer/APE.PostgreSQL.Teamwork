@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.45.0
+- Logo changed - again
+
 ## 1.0.44.0
 - Logo changed
 
