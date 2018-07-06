@@ -1,6 +1,7 @@
 ﻿// <copyright file="PgSchema.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using System.Text;
 using APE.PostgreSQL.Teamwork.Model.Utils;
 
@@ -358,6 +359,13 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         public void Add(PgView view)
         {
+            // check if view is overriden in dump
+            if (this.Views.Any(v => v.Name == view.Name))
+            {
+                var oldView = this.Views.Single(v => v.Name == view.Name);
+                this.Views.Remove(oldView);
+            }
+
             this.Views.Add(view);
         }
 
