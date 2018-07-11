@@ -1,5 +1,12 @@
 # Changelog
 
+## 1.0.49.0
+**New Features**
+- RENAME CONSTRAINT
+
+## 1.0.48.0
+- Bug fixed if view is created multiple times in one dump
+
 ## 1.0.45.0
 - Logo changed - again
 

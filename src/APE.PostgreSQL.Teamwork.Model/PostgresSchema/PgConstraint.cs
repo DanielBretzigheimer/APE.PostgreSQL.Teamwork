@@ -77,8 +77,8 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             {
                 var dropSql = new StringBuilder(100);
                 dropSql.Append("ALTER TABLE ");
-                dropSql.Append(PgDiffStringExtension.QuoteName(this.TableName));
-                dropSql.Append("\n\tDROP CONSTRAINT ");
+                dropSql.AppendLine(PgDiffStringExtension.QuoteName(this.TableName));
+                dropSql.Append("\tDROP CONSTRAINT ");
                 dropSql.Append(PgDiffStringExtension.QuoteName(this.Name));
                 dropSql.Append(';');
 
@@ -118,25 +118,49 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         public string TableName { get; set; }
 
+        public string RenameToSql(string newName)
+        {
+            var renameSql = new StringBuilder("ALTER TABLE ");
+            renameSql.Append(PgDiffStringExtension.QuoteName(this.TableName));
+            renameSql.Append("\tRENAME CONSTRAINT ");
+            renameSql.Append(PgDiffStringExtension.QuoteName(this.Name));
+            renameSql.Append(" TO ");
+            renameSql.Append(PgDiffStringExtension.QuoteName(newName));
+            renameSql.Append(';');
+
+            return renameSql.ToString();
+        }
+
+        public bool IsRenamed(PgConstraint constraint)
+        {
+            if (this.Definition.Equals(constraint.Definition)
+                && this.TableName.Equals(constraint.TableName))
+                return true;
+            else
+                return false;
+        }
+
         /// <summary>
         /// Determines whether the specified object is equal to the current object.
         /// </summary>
         public override bool Equals([NullGuard.AllowNull] object obj)
         {
-            var equals = false;
-
             if (this == obj)
+                return true;
+
+            if (obj is PgConstraint constraint)
             {
-                equals = true;
-            }
-            else if (obj is PgConstraint constraint)
-            {
-                equals = this.Definition.Equals(constraint.Definition)
+                return this.Definition.Equals(constraint.Definition)
                     && this.Name.Equals(constraint.Name)
                     && this.TableName.Equals(constraint.TableName);
             }
 
-            return equals;
+            return false;
+        }
+
+        public override string ToString()
+        {
+            return $"{this.GetType().Name} {this.Name} for {this.TableName}";
         }
 
         /// <summary>
