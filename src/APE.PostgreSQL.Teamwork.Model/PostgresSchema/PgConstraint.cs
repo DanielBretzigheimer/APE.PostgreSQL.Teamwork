@@ -160,7 +160,14 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
 
         public override string ToString()
         {
-            return $"{this.GetType().Name} {this.Name} for {this.TableName}";
+            try
+            {
+                return $"{this.GetType().Name} {this.Name} for {this.TableName}";
+            }
+            catch (System.Exception)
+            {
+                return base.ToString();
+            }
         }
 
         /// <summary>
