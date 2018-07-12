@@ -158,16 +158,10 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             return false;
         }
 
+        [return: NullGuard.AllowNull]
         public override string ToString()
         {
-            try
-            {
-                return $"{this.GetType().Name} {this.Name} for {this.TableName}";
-            }
-            catch (System.Exception)
-            {
-                return base.ToString();
-            }
+            return $"{this.GetType().Name} {this.Name} for {this.TableName}";
         }
 
         /// <summary>
