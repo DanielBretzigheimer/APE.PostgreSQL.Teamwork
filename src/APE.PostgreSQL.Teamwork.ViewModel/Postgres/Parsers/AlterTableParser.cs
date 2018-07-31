@@ -23,20 +23,22 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         public static void Parse(PgDatabase database, string statement, bool outputIgnoredStatements)
         {
-            Parser parser = new Parser(statement);
+            var parser = new Parser(statement);
             parser.Expect("ALTER", "TABLE");
             parser.ExpectOptional("ONLY");
 
-            string tableName = parser.ParseIdentifier();
+            var tableName = parser.ParseIdentifier();
 
-            string schemaName = ParserUtils.GetSchemaName(tableName, database);
+            var schemaName = ParserUtils.GetSchemaName(tableName, database);
 
             PgSchema schema = database.GetSchema(schemaName);
 
             if (schema == null)
-                throw new Exception(string.Format("CannotFindSchema", schemaName, statement));
+            {
+                throw new TeamworkParserException($"CannotFindSchema {schemaName} from {statement}");
+            }
 
-            string objectName = ParserUtils.GetObjectName(tableName);
+            var objectName = ParserUtils.GetObjectName(tableName);
 
             PgTable table = schema.GetTable(objectName);
 
@@ -58,20 +60,26 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     return;
                 }
 
-                throw new Exception(string.Format("CannotFindObject", tableName, statement));
+                throw new TeamworkParserException($"CannotFindObject in {tableName} from {statement}");
             }
 
             while (!parser.ExpectOptional(";"))
             {
                 if (parser.ExpectOptional("ALTER"))
+                {
                     ParseAlterColumn(parser, table);
+                }
                 else if (parser.ExpectOptional("CLUSTER", "ON"))
+                {
                     table.ClusterIndexName = ParserUtils.GetObjectName(parser.ParseIdentifier());
+                }
                 else if (parser.ExpectOptional("OWNER", "TO"))
                 {
                     // we do not parse this one so we just consume the identifier
                     if (outputIgnoredStatements)
+                    {
                         database.AddIgnoredStatement("ALTER TABLE " + tableName + " OWNER TO " + parser.ParseIdentifier() + ';');
+                    }
                     else
                     {
                         parser.ParseIdentifier();
@@ -80,25 +88,39 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 else if (parser.ExpectOptional("ADD"))
                 {
                     if (parser.ExpectOptional("FOREIGN", "KEY"))
+                    {
                         ParseAddForeignKey(parser, table);
+                    }
                     else if (parser.ExpectOptional("CONSTRAINT"))
+                    {
                         ParseAddConstraint(parser, table, schema);
+                    }
                     else
                     {
                         parser.ThrowUnsupportedCommand();
                     }
                 }
                 else if (parser.ExpectOptional("ENABLE"))
+                {
                     ParseEnable(parser, outputIgnoredStatements, tableName, database);
+                }
                 else if (parser.ExpectOptional("DISABLE"))
+                {
                     ParseDisable(parser, outputIgnoredStatements, tableName, database);
+                }
+                else if (parser.ExpectOptional("REPLICA IDENTITY"))
+                {
+                    parser.Expect("NOTHING");
+                }
                 else
                 {
                     parser.ThrowUnsupportedCommand();
                 }
 
                 if (parser.ExpectOptional(";"))
+                {
                     break;
+                }
                 else
                 {
                     parser.Expect(",");
@@ -116,7 +138,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 if (parser.ExpectOptional("TRIGGER"))
                 {
                     if (outputIgnoredStatements)
+                    {
                         database.AddIgnoredStatement("ALTER TABLE " + tableName + " ENABLE REPLICA TRIGGER " + parser.ParseIdentifier() + ';');
+                    }
                     else
                     {
                         parser.ParseIdentifier();
@@ -125,7 +149,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 else if (parser.ExpectOptional("RULE"))
                 {
                     if (outputIgnoredStatements)
+                    {
                         database.AddIgnoredStatement("ALTER TABLE " + tableName + " ENABLE REPLICA RULE " + parser.ParseIdentifier() + ';');
+                    }
                     else
                     {
                         parser.ParseIdentifier();
@@ -141,7 +167,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 if (parser.ExpectOptional("TRIGGER"))
                 {
                     if (outputIgnoredStatements)
+                    {
                         database.AddIgnoredStatement("ALTER TABLE " + tableName + " ENABLE ALWAYS TRIGGER " + parser.ParseIdentifier() + ';');
+                    }
                     else
                     {
                         parser.ParseIdentifier();
@@ -150,7 +178,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 else if (parser.ExpectOptional("RULE"))
                 {
                     if (outputIgnoredStatements)
+                    {
                         database.AddIgnoredStatement("ALTER TABLE " + tableName + " ENABLE RULE " + parser.ParseIdentifier() + ';');
+                    }
                     else
                     {
                         parser.ParseIdentifier();
@@ -171,7 +201,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             if (parser.ExpectOptional("TRIGGER"))
             {
                 if (outputIgnoredStatements)
+                {
                     database.AddIgnoredStatement("ALTER TABLE " + tableName + " DISABLE TRIGGER " + parser.ParseIdentifier() + ';');
+                }
                 else
                 {
                     parser.ParseIdentifier();
@@ -180,7 +212,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             else if (parser.ExpectOptional("RULE"))
             {
                 if (outputIgnoredStatements)
+                {
                     database.AddIgnoredStatement("ALTER TABLE " + tableName + " DISABLE RULE " + parser.ParseIdentifier() + ';');
+                }
                 else
                 {
                     parser.ParseIdentifier();
@@ -197,20 +231,22 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         private static void ParseAddConstraint(Parser parser, PgTable table, PgSchema schema)
         {
-            string constraintName = ParserUtils.GetObjectName(parser.ParseIdentifier());
+            var constraintName = ParserUtils.GetObjectName(parser.ParseIdentifier());
 
-            PgConstraint constraint = new PgConstraint(constraintName);
-            constraint.TableName = table.Name;
+            var constraint = new PgConstraint(constraintName)
+            {
+                TableName = table.Name,
+            };
             table.AddConstraint(constraint);
 
             if (parser.ExpectOptional("PRIMARY", "KEY"))
             {
-                schema.AddPrimaryKey(constraint);
-                constraint.Definition = "PRIMARY KEY " + parser.Expression;
+                schema.Add(constraint);
+                constraint.Definition = "PRIMARY KEY " + parser.Expression();
             }
             else
             {
-                constraint.Definition = parser.Expression;
+                constraint.Definition = parser.Expression();
             }
         }
 
@@ -221,7 +257,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         {
             parser.ExpectOptional("COLUMN");
 
-            string columnName = ParserUtils.GetObjectName(parser.ParseIdentifier());
+            var columnName = ParserUtils.GetObjectName(parser.ParseIdentifier());
 
             if (parser.ExpectOptional("SET"))
             {
@@ -230,26 +266,30 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     PgColumn column = table.GetColumn(columnName);
 
                     if (column == null)
-                        throw new Exception(string.Format("CannotFindTableColumn", columnName, table.Name, parser.String));
+                    {
+                        throw new TeamworkParserException($"CannotFindTableColumn {columnName} in table {table.Name} from {parser.String}");
+                    }
 
                     column.Statistics = parser.ParseInteger();
                 }
                 else if (parser.ExpectOptional("DEFAULT"))
                 {
-                    string defaultValue = parser.Expression;
+                    var defaultValue = parser.Expression();
 
                     if (table.ContainsColumn(columnName))
                     {
                         PgColumn column = table.GetColumn(columnName);
 
                         if (column == null)
-                            throw new Exception(string.Format("CannotFindTableColumn", columnName, table.Name, parser.String));
+                        {
+                            throw new TeamworkParserException($"CannotFindTableColumn {columnName} in table {table.Name} from {parser.String}");
+                        }
 
                         column.DefaultValue = defaultValue;
                     }
                     else
                     {
-                        throw new TeamworkParserException(string.Format("CannotFindColumnInTable", columnName, table.Name));
+                        throw new TeamworkParserException($"CannotFindColumnInTable {columnName} in table {table.Name}");
                     }
                 }
                 else if (parser.ExpectOptional("STORAGE"))
@@ -257,16 +297,26 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     PgColumn column = table.GetColumn(columnName);
 
                     if (column == null)
-                        throw new Exception(string.Format("CannotFindTableColumn", columnName, table.Name, parser.String));
+                    {
+                        throw new TeamworkParserException($"CannotFindTableColumn {columnName} in table {table.Name} from {parser.String}");
+                    }
 
                     if (parser.ExpectOptional("PLAIN"))
+                    {
                         column.Storage = "PLAIN";
+                    }
                     else if (parser.ExpectOptional("EXTERNAL"))
+                    {
                         column.Storage = "EXTERNAL";
+                    }
                     else if (parser.ExpectOptional("EXTENDED"))
+                    {
                         column.Storage = "EXTENDED";
+                    }
                     else if (parser.ExpectOptional("MAIN"))
+                    {
                         column.Storage = "MAIN";
+                    }
                     else
                     {
                         parser.ThrowUnsupportedCommand();
@@ -296,18 +346,20 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 columnNames.Add(ParserUtils.GetObjectName(parser.ParseIdentifier()));
 
                 if (parser.ExpectOptional(")"))
+                {
                     break;
+                }
                 else
                 {
                     parser.Expect(",");
                 }
             }
 
-            string constraintName = ParserUtils.GenerateName(table.Name + "_", columnNames, "_fkey");
+            var constraintName = ParserUtils.GenerateName(table.Name + "_", columnNames, "_fkey");
 
-            PgConstraint constraint = new PgConstraint(constraintName);
+            var constraint = new PgConstraint(constraintName);
             table.AddConstraint(constraint);
-            constraint.Definition = parser.Expression;
+            constraint.Definition = parser.Expression();
             constraint.TableName = table.Name;
         }
 
@@ -322,15 +374,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 {
                     parser.ExpectOptional("COLUMN");
 
-                    string columnName = ParserUtils.GetObjectName(parser.ParseIdentifier());
+                    var columnName = ParserUtils.GetObjectName(parser.ParseIdentifier());
 
                     if (parser.ExpectOptional("SET", "DEFAULT"))
                     {
-                        string expression = parser.Expression;
+                        var expression = parser.Expression();
                         view.AddColumnDefaultValue(columnName, expression);
                     }
                     else if (parser.ExpectOptional("DROP", "DEFAULT"))
+                    {
                         view.RemoveColumnDefaultValue(columnName);
+                    }
                     else
                     {
                         parser.ThrowUnsupportedCommand();
@@ -340,7 +394,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 {
                     // we do not parse this one so we just consume the identifier
                     if (outputIgnoredStatements)
+                    {
                         database.AddIgnoredStatement("ALTER TABLE " + viewName + " OWNER TO " + parser.ParseIdentifier() + ';');
+                    }
                     else
                     {
                         parser.ParseIdentifier();
@@ -364,7 +420,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 {
                     // we do not parse this one so we just consume the identifier
                     if (outputIgnoredStatements)
+                    {
                         database.AddIgnoredStatement("ALTER TABLE " + sequenceName + " OWNER TO " + parser.ParseIdentifier() + ';');
+                    }
                     else
                     {
                         parser.ParseIdentifier();

@@ -1,4 +1,4 @@
-// <copyright file="test.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+// <copyright file="Test.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -49,70 +49,92 @@ namespace APE.PostgreSQL.Teamwork.TestHelper
             this.AutoMocker.Inject(typeof(TMock), instance);
         }
 
-        public void Raise<TMock>(Action<TMock> eventExpression, EventArgs args) where TMock : class
+        public void Raise<TMock>(Action<TMock> eventExpression, EventArgs args)
+            where TMock : class
         {
             Mock.Get(this.AutoMocker.Get<TMock>()).Raise(eventExpression, args);
         }
 
-        public ISetupGetter<TMock, TProperty> SetupGet<TMock, TProperty>(Expression<Func<TMock, TProperty>> exp) where TMock : class
+        public ISetupGetter<TMock, TProperty> SetupGet<TMock, TProperty>(Expression<Func<TMock, TProperty>> exp)
+            where TMock : class
         {
             var mock = Mock.Get(this.AutoMocker.Get<TMock>());
             if (!this.knownMocks.Contains(mock))
+            {
                 this.knownMocks.Add(mock);
+            }
 
             return mock.SetupGet(exp);
         }
 
-        public ISetup<TMock> Setup<TMock>(Expression<Action<TMock>> exp) where TMock : class
+        public ISetup<TMock> Setup<TMock>(Expression<Action<TMock>> exp)
+            where TMock : class
         {
             var mock = Mock.Get(this.AutoMocker.Get<TMock>());
             if (!this.knownMocks.Contains(mock))
+            {
                 this.knownMocks.Add(mock);
+            }
 
             return mock.Setup(exp);
         }
 
-        public ISetup<TMock, TResult> Setup<TMock, TResult>(Expression<Func<TMock, TResult>> exp) where TMock : class
+        public ISetup<TMock, TResult> Setup<TMock, TResult>(Expression<Func<TMock, TResult>> exp)
+            where TMock : class
         {
             var mock = Mock.Get(this.AutoMocker.Get<TMock>());
             if (!this.knownMocks.Contains(mock))
+            {
                 this.knownMocks.Add(mock);
+            }
 
             return mock.Setup(exp);
         }
 
-        public void ShouldNotHaveCalled<TMock>(Expression<Action<TMock>> exp) where TMock : class
+        public void ShouldNotHaveCalled<TMock>(Expression<Action<TMock>> exp)
+            where TMock : class
         {
             var mock = Mock.Get(this.AutoMocker.Get<TMock>());
             if (!this.knownMocks.Contains(mock))
+            {
                 this.knownMocks.Add(mock);
+            }
 
             mock.Verify(exp, Times.Never());
         }
 
-        public void ShouldHaveCalled<TMock>(Expression<Action<TMock>> exp, int times) where TMock : class
+        public void ShouldHaveCalled<TMock>(Expression<Action<TMock>> exp, int times)
+            where TMock : class
         {
             var mock = Mock.Get(this.AutoMocker.Get<TMock>());
             if (!this.knownMocks.Contains(mock))
+            {
                 this.knownMocks.Add(mock);
+            }
 
             mock.Verify(exp, Times.Exactly(times));
         }
 
-        public void ShouldNotHaveCalled<TMock, TResult>(Expression<Func<TMock, TResult>> exp) where TMock : class
+        public void ShouldNotHaveCalled<TMock, TResult>(Expression<Func<TMock, TResult>> exp)
+            where TMock : class
         {
             var mock = Mock.Get(this.AutoMocker.Get<TMock>());
             if (!this.knownMocks.Contains(mock))
+            {
                 this.knownMocks.Add(mock);
+            }
 
             mock.Verify(exp, Times.Never());
         }
 
-        public void ShouldHaveCalled<TMock, TResult>(Expression<Func<TMock, TResult>> exp, int times) where TMock : class
+        public void ShouldHaveCalled<TMock, TResult>(Expression<Func<TMock, TResult>> exp, int times)
+            where TMock : class
         {
             var mock = Mock.Get(this.AutoMocker.Get<TMock>());
             if (!this.knownMocks.Contains(mock))
+            {
                 this.knownMocks.Add(mock);
+            }
 
             mock.Verify(exp, Times.Exactly(times));
         }
@@ -122,20 +144,26 @@ namespace APE.PostgreSQL.Teamwork.TestHelper
             this.knownMocks.ForEach(x => x.Verify());
         }
 
-        public ISetup<TMock> SetupSet<TMock>(Action<TMock> exp) where TMock : class
+        public ISetup<TMock> SetupSet<TMock>(Action<TMock> exp)
+            where TMock : class
         {
             var mock = Mock.Get(this.AutoMocker.Get<TMock>());
             if (!this.knownMocks.Contains(mock))
+            {
                 this.knownMocks.Add(mock);
+            }
 
             return mock.SetupSet(exp);
         }
 
-        public TMock Get<TMock>() where TMock : class
+        public TMock Get<TMock>()
+            where TMock : class
         {
             var mock = Mock.Get(this.AutoMocker.Get<TMock>());
             if (!this.knownMocks.Contains(mock))
+            {
                 this.knownMocks.Add(mock);
+            }
 
             return mock.Object;
         }
@@ -169,7 +197,7 @@ namespace APE.PostgreSQL.Teamwork.TestHelper
 
         /* Objects */
 
-        public void Set(string name, object value)
+        public void Set(string name, [NullGuard.AllowNull] object value)
         {
             this.objects[name] = value;
         }
@@ -177,14 +205,20 @@ namespace APE.PostgreSQL.Teamwork.TestHelper
         public TVal Get<TVal>(string name)
         {
             if (!this.objects.ContainsKey(name))
+            {
                 throw new InvalidOperationException(string.Format("'{0}' is not set", name));
+            }
 
             var value = this.objects[name];
             if (value == null && default(TVal) == null)
+            {
                 return (TVal)value;
+            }
 
             if (value is TVal)
+            {
                 return (TVal)value;
+            }
 
             throw new InvalidOperationException(string.Format("Expected '{0}' to be a '{1}' but it's a '{2}'", name, typeof(TVal).Name, value.GetType().Name));
         }
@@ -195,8 +229,7 @@ namespace APE.PostgreSQL.Teamwork.TestHelper
 
             if (threadSpecificCleanup)
             {
-                var disposable = this.Target as IDisposable;
-                if (disposable != null)
+                if (this.Target is IDisposable disposable)
                     disposable.Dispose();
             }
         }

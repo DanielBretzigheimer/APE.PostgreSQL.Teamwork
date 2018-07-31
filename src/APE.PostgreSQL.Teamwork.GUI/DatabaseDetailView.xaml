@@ -8,6 +8,7 @@
 			 xmlns:system="clr-namespace:System;assembly=System"
              x:Class="APE.PostgreSQL.Teamwork.GUI.DatabaseDetailView"
              xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
+             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
 			 xmlns:sys="clr-namespace:System;assembly=mscorlib"
 			 xmlns:lib="http://schemas.thinkpixellab.com/2011/xaml/presentation"
 			 xmlns:materialDesign="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
@@ -165,7 +166,7 @@
                         <materialDesign:PackIcon Kind="Delete" RenderOptions.BitmapScalingMode="HighQuality" />
                     </Button>
 
-                    <Grid Grid.Column="5" Width="30" ToolTip="Importable files found. Import them before a new Export can be created." Background="#FAFAFA"
+                    <Grid Grid.Column="5" Width="30" ToolTip="Importable files found. Import them before a new Export can be created." Background="White"
 							Visibility="{Binding ImportableFilesFound, Converter={StaticResource BoolToVisibilityConverter}}">
                         <materialDesign:PackIcon Margin="4" Kind="Alert" RenderOptions.BitmapScalingMode="HighQuality" Foreground="{StaticResource PrimaryHueMidBrush}" />
                     </Grid>
@@ -174,21 +175,24 @@
                                   IsExpanded="{Binding ShowDetails}" IsEnabled="{Binding Enabled}">
                         <StackPanel Margin="0,5,0,0">
                             <StackPanel Orientation="Horizontal">
-                                <Button Padding="4" FontSize="20" Command="{Binding CreateDumpCommand}"  Style="{StaticResource MaterialDesignFlatRoundButton}"
-											IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}"
-                                            ToolTip="Create a new dump" Width="30">
+                                <StackPanel.Resources>
+                                    <Style x:Key="DetailButton" TargetType="{x:Type Button}" BasedOn="{StaticResource MaterialDesignFlatRoundButton}">
+                                        <Setter Property="Padding" Value="4" />
+                                        <Setter Property="Width" Value="30" />
+                                        <Setter Property="FontSize" Value="20" />
+                                        <Setter Property="IsEnabled" Value="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}" />
+                                    </Style>
+                                </StackPanel.Resources>
+
+                                <Button Command="{Binding CreateDumpCommand}" Style="{StaticResource DetailButton}" ToolTip="Create a new dump">
                                     <materialDesign:PackIcon Kind="PlusCircleOutline" RenderOptions.BitmapScalingMode="HighQuality" />
                                 </Button>
 
-                                <Button Padding="4" FontSize="20" Command="{Binding OpenPathCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}" 
-											IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}"
-                                            ToolTip="Open diff path" Width="30">
+                                <Button Command="{Binding OpenPathCommand}" Style="{StaticResource DetailButton}" ToolTip="Open diff path" Width="30">
                                     <materialDesign:PackIcon Kind="Folder" RenderOptions.BitmapScalingMode="HighQuality" />
                                 </Button>
 
-                                <Button Padding="4" FontSize="20" Command="{Binding TestCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}"
-											IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}"
-                                            ToolTip="Check sql files for errors" Width="30" >
+                                <Button Command="{Binding TestCommand}" Style="{StaticResource DetailButton}" ToolTip="Check sql files for errors">
                                     <Grid>
                                         <loading:Spinner Visibility="{Binding Testing, Converter={StaticResource BoolToVisibilityConverter}}" />
                                         <materialDesign:PackIcon Kind="CheckboxMarkedCircleOutline" RenderOptions.BitmapScalingMode="HighQuality" 
@@ -196,15 +200,11 @@
                                     </Grid>
                                 </Button>
 
-                                <Button Padding="4" FontSize="20" Command="{Binding RemoveCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}"
-													IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}"
-													ToolTip="Remove database" Width="30" >
+                                <Button Command="{Binding RemoveCommand}" Style="{StaticResource DetailButton}" ToolTip="Remove database">
                                     <materialDesign:PackIcon Kind="Delete" RenderOptions.BitmapScalingMode="HighQuality" />
                                 </Button>
 
-                                <Button Padding="4" FontSize="20" Command="{Binding ResetCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}"
-													IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}"
-													ToolTip="Reset database (deletes all data, tables, schemas,...)" Width="30" >
+                                <Button Command="{Binding ResetCommand}" Style="{StaticResource DetailButton}" ToolTip="Reset database (deletes all data, tables, schemas,...)">
                                     <Grid>
                                         <loading:Spinner Visibility="{Binding Resetting, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                         <materialDesign:PackIcon Kind="BackupRestore" RenderOptions.BitmapScalingMode="HighQuality"
@@ -212,9 +212,7 @@
                                     </Grid>
                                 </Button>
 
-                                <Button Padding="4" FontSize="20" Command="{Binding UndoCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}"
-													IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}"
-													ToolTip="Tries to undo all changes (differences) to the current database version" Width="30" >
+                                <Button Command="{Binding UndoCommand}" Style="{StaticResource DetailButton}" ToolTip="Tries to undo all changes (differences) to the current database version">
                                     <Grid>
                                         <loading:Spinner Visibility="{Binding Undoing, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                         <materialDesign:PackIcon Kind="DebugStepOver" RenderOptions.BitmapScalingMode="HighQuality" RenderTransformOrigin="0.5,0.5"
@@ -226,15 +224,20 @@
                                     </Grid>
                                 </Button>
 
+                                <Button Command="{Binding CreateMinorCommand}" Style="{StaticResource DetailButton}" ToolTip="Open a popup to create a new minor version"
+                                        IsEnabled="{Binding CanCreateMinor}" ToolTipService.ShowOnDisabled="True" >
+                                    <Image Source="Images/minor-version.png" RenderOptions.BitmapScalingMode="HighQuality" />
+                                </Button>
+                                
                                 <Grid>
                                     <Button Padding="4" FontSize="20" Command="{Binding EditCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}"
-												IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}" Background="#FAFAFA"
+												IsEnabled="{Binding EditMode, Converter={StaticResource BoolInversionConverter}}" Background="White"
 												ToolTip="Edit" Width="30">
                                         <materialDesign:PackIcon Kind="LeadPencil" RenderOptions.BitmapScalingMode="HighQuality" />
                                     </Button>
                                     <Button Padding="4" FontSize="20" Command="{Binding SaveCommand}" Style="{StaticResource MaterialDesignFlatRoundButton}"
 												Visibility="{Binding EditMode, Converter={StaticResource BoolToVisibilityConverter}}"
-												ToolTip="Save" Width="30" Background="#FAFAFA">
+												ToolTip="Save" Width="30" Background="White">
                                         <materialDesign:PackIcon Kind="Check" RenderOptions.BitmapScalingMode="HighQuality" />
                                     </Button>
                                 </Grid>
@@ -246,15 +249,30 @@
                                     <ColumnDefinition Width="30" />
                                 </Grid.ColumnDefinitions>
                                 <TextBox VerticalAlignment="Center" IsEnabled="False" Text="{Binding Database.CurrentVersion, Mode=OneWay}"
-										 materialDesign:HintAssist.Hint="Version" Style="{StaticResource MaterialDesignFloatingHintTextBox}" />
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}" >
+                                    <materialDesign:HintAssist.Hint>
+                                        <StackPanel Orientation="Horizontal">
+                                            <materialDesign:PackIcon Kind="Information" Margin="0 0 5 0"
+                                                 Foreground="{Binding Path=BorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=TextBox}}" />
+                                            <TextBlock VerticalAlignment="Center" Text="Version" Foreground="{Binding Path=BorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=TextBox}}" />
+                                        </StackPanel>
+                                    </materialDesign:HintAssist.Hint>
+                                </TextBox>
+                                
                                 <Button Padding="0" Grid.Column="1" Height="30" Width="30" Command="{Binding ReduceVersionCommand}"
-                            Style="{StaticResource MaterialDesignFlatRoundButton}" Background="Transparent" >
+                                        Style="{StaticResource MaterialDesignFlatRoundButton}" Background="Transparent" >
                                     <materialDesign:PackIcon Kind="MenuDown" RenderOptions.BitmapScalingMode="HighQuality" />
                                 </Button>
                             </Grid>
 
-                            <TextBox Margin="0 8 0 8" IsEnabled="{Binding EditMode}"
-										 materialDesign:HintAssist.Hint="Database name" Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                            <TextBox Margin="0 8 0 8" IsEnabled="{Binding EditMode}" Style="{StaticResource MaterialDesignFloatingHintTextBox}">
+                                <materialDesign:HintAssist.Hint>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="Database" Margin="0 0 5 0"
+                                                 Foreground="{Binding Path=BorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=TextBox}}" />
+                                        <TextBlock VerticalAlignment="Center" Text="Database Name" Foreground="{Binding Path=BorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=TextBox}}" />
+                                    </StackPanel>
+                                </materialDesign:HintAssist.Hint>
                                 <Binding Path="Database.Name" UpdateSourceTrigger="PropertyChanged">
                                     <Binding.ValidationRules>
                                         <local:CheckDatabaseValidationRule ValidatesOnTargetUpdated="True" />
@@ -262,18 +280,51 @@
                                 </Binding>
                             </TextBox>
 
-                            <TextBlock Text="Path" FontSize="10" Foreground="Gray" />
-                            <Button IsEnabled="{Binding EditMode}" Command="{Binding EditPathCommand}" ToolTip="Datenbank Verzeichnis wählen">
+                            <TextBox IsReadOnly="True" Text="{Binding Database.Path}"
+                                         Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                                         IsEnabled="{Binding EditMode}" >
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
+                                        <i:InvokeCommandAction Command="{Binding EditPathCommand}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <materialDesign:HintAssist.Hint>
+                                    <StackPanel Orientation="Horizontal">
+                                        <materialDesign:PackIcon Kind="Folder" Margin="0 0 5 0"
+                                                 Foreground="{Binding Path=BorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=TextBox}}" />
+                                        <TextBlock VerticalAlignment="Center" Text="Path" Foreground="{Binding Path=BorderBrush, RelativeSource={RelativeSource FindAncestor, AncestorType=TextBox}}" />
+                                    </StackPanel>
+                                </materialDesign:HintAssist.Hint>
+                            </TextBox>
+                            
+                            <!-- Ignored Schemas -->
+                            <Expander Header="Ignored database schemas" Background="Transparent">
                                 <Grid>
                                     <Grid.ColumnDefinitions>
-                                        <ColumnDefinition Width="*" />
-                                        <ColumnDefinition Width="10" />
+                                        <ColumnDefinition />
+                                        <ColumnDefinition Width="5" />
                                         <ColumnDefinition Width="auto" />
                                     </Grid.ColumnDefinitions>
-                                    <TextBlock VerticalAlignment="Center" Text="{Binding Database.Path}" IsEnabled="False" TextTrimming="CharacterEllipsis" />
-                                    <materialDesign:PackIcon Grid.Column="2" Kind="Folder" RenderOptions.BitmapScalingMode="HighQuality" />
+                                    <ListBox ItemsSource="{Binding IgnoredSchemas}" SelectedItem="{Binding SelectedSchema}" >
+                                        <ListBox.ItemTemplate>
+                                            <DataTemplate>
+                                                <TextBlock Text="{Binding}" ToolTip="{Binding}" />
+                                            </DataTemplate>
+                                        </ListBox.ItemTemplate>
+                                    </ListBox>
+
+                                    <StackPanel Grid.Column="2" >
+                                        <Button Style="{StaticResource MaterialDesignFlatRoundButton}" Command="{Binding AddSchemaCommand}" ToolTip="Add schema which is ignored"
+                                                IsEnabled="{Binding EditMode}" >
+                                            <materialDesign:PackIcon Kind="Plus" />
+                                        </Button>
+                                        <Button Style="{StaticResource MaterialDesignFlatRoundButton}" Command="{Binding RemoveSchemaCommand}" ToolTip="Remove schema from ignoring"
+                                                IsEnabled="{Binding EditMode}" >
+                                            <materialDesign:PackIcon Kind="Minus" />
+                                        </Button>
+                                    </StackPanel>
                                 </Grid>
-                            </Button>
+                            </Expander>
                         </StackPanel>
                     </Expander>
 

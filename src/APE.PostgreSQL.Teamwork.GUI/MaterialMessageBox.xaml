@@ -6,9 +6,104 @@
              xmlns:materialDesign="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              xmlns:local="clr-namespace:APE.PostgreSQL.Teamwork.GUI"
              xmlns:model="clr-namespace:APE.PostgreSQL.Teamwork.Model;assembly=APE.PostgreSQL.Teamwork.Model"
-             mc:Ignorable="d" Width="400" Height="200"
+             xmlns:markdown="clr-namespace:APE.PostgreSQL.Teamwork.GUI.Markdown"
+             xmlns:system="clr-namespace:System;assembly=mscorlib"
+             mc:Ignorable="d" MinWidth="300" MaxWidth="500" MinHeight="200" MaxHeight="400"
              d:DesignHeight="300" d:DesignWidth="300">
 
+    <UserControl.Resources>
+        <Style TargetType="FlowDocument" x:Key="DocumentStyle">
+            <Setter Property="FontFamily"
+                Value="Calibri" />
+            <Setter Property="TextAlignment"
+                Value="Left" />
+        </Style>
+
+        <Style x:Key="H1Style"
+               TargetType="Paragraph">
+            <Setter Property="FontSize"
+                    Value="38" />
+            <Setter Property="Foreground"
+                    Value="#ff000000" />
+            <Setter Property="FontWeight"
+                    Value="Light" />
+        </Style>
+
+        <Style x:Key="H2Style"
+               TargetType="Paragraph">
+            <Setter Property="FontSize"
+                    Value="20" />
+            <Setter Property="Foreground"
+                    Value="#ff000000" />
+            <Setter Property="FontWeight"
+                    Value="Light" />
+        </Style>
+
+        <Style x:Key="H3Style"
+               TargetType="Paragraph">
+            <Setter Property="FontSize"
+                    Value="20" />
+            <Setter Property="Foreground"
+                    Value="#99000000" />
+            <Setter Property="FontWeight"
+                    Value="Light" />
+        </Style>
+
+        <Style x:Key="H4Style"
+               TargetType="Paragraph">
+            <Setter Property="FontSize"
+                    Value="14" />
+            <Setter Property="Foreground"
+                    Value="#99000000" />
+            <Setter Property="FontWeight"
+                    Value="Light" />
+        </Style>
+
+        <Style x:Key="LinkStyle"
+               TargetType="Hyperlink">
+            <Setter Property="TextDecorations"
+                    Value="None" />
+        </Style>
+
+        <Style x:Key="ImageStyle"
+               TargetType="Image">
+            <Setter Property="RenderOptions.BitmapScalingMode"
+                  Value="NearestNeighbor" />
+            <Style.Triggers>
+                <Trigger Property="Tag"
+                       Value="imageright">
+                    <Setter Property="Margin" 
+                          Value="20,0,0,0" />
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <Style x:Key="SeparatorStyle"
+             TargetType="Line">
+            <Setter Property="X2"
+                  Value="{Binding ActualWidth, RelativeSource={RelativeSource AncestorType=FlowDocumentScrollViewer}}" />
+            <Setter Property="Stroke"
+                  Value="#99000000" />
+            <Setter Property="StrokeThickness"
+                  Value="2" />
+        </Style>
+
+
+        <markdown:Markdown x:Key="Markdown"
+                        DocumentStyle="{StaticResource DocumentStyle}"
+                        Heading1Style="{StaticResource H1Style}"
+                        Heading2Style="{StaticResource H2Style}"
+                        Heading3Style="{StaticResource H3Style}"
+                        Heading4Style="{StaticResource H4Style}"
+                        LinkStyle="{StaticResource LinkStyle}"
+                        ImageStyle="{StaticResource ImageStyle}"
+                        SeparatorStyle="{StaticResource SeparatorStyle}"
+                        AssetPathRoot="{x:Static system:Environment.CurrentDirectory}"/>
+
+        <markdown:TextToFlowDocumentConverter x:Key="TextToFlowDocumentConverter" 
+                                           Markdown="{StaticResource Markdown}"/>
+    </UserControl.Resources>
+    
     <Grid Margin="5">
         <Grid.RowDefinitions>
             <RowDefinition Height="auto"/>
@@ -22,9 +117,18 @@
 
         <!--Message-->
         <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
-            <TextBlock x:Name="message" TextWrapping="Wrap" />
+            <TextBlock x:Name="message" TextWrapping="Wrap" >
+                <TextBlock.ContextMenu>
+                    <ContextMenu>
+                        <MenuItem Header="Copy" Click="CopyMessageClick" />
+                    </ContextMenu>
+                </TextBlock.ContextMenu>
+            </TextBlock>
         </ScrollViewer>
 
+        <FlowDocumentScrollViewer Grid.Row="1" x:Name="flowDocument" Visibility="Collapsed"
+                                  Document="{Binding Markdown, RelativeSource={RelativeSource Mode=FindAncestor, AncestorType={x:Type UserControl}}, Converter={StaticResource TextToFlowDocumentConverter}}" />
+        
         <!--Buttons-->
         <StackPanel Grid.Row="2" Orientation="Horizontal" HorizontalAlignment="Right">
             <Button Visibility="Collapsed" Width="100" x:Name="btnOk"  Content="OK"

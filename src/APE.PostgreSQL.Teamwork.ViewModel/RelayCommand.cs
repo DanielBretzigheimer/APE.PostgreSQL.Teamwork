@@ -10,11 +10,13 @@ using log4net;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {
+#pragma warning disable SA1402 // File may only contain a single type
     /// <summary>
     /// Implementation of an ICommand that represents a command with a typed CommandParameter
     /// </summary>
     /// <typeparam name="T">CommandParameter type</typeparam>
     public class RelayCommand<T> : ICommand
+#pragma warning restore SA1402 // File may only contain a single type
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
@@ -25,9 +27,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         public RelayCommand(Action<T> executeAction)
             : this()
         {
-            if (executeAction == null)
-                throw new ArgumentNullException("executeAction");
-            this.ExecuteAction = executeAction;
+            this.ExecuteAction = executeAction ?? throw new ArgumentNullException("executeAction");
         }
 
         /// <summary>
@@ -37,12 +37,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <param name="canExecuteFunc">Function that is evaluated when the CanExecute method is executed</param>
         public RelayCommand(Action<T> executeAction, Func<T, bool> canExecuteFunc)
         {
-            if (executeAction == null)
-                throw new ArgumentNullException("executeAction");
-            if (canExecuteFunc == null)
-                throw new ArgumentNullException("canExecuteFunc");
-            this.ExecuteAction = executeAction;
-            this.CanExecuteFunc = canExecuteFunc;
+            this.ExecuteAction = executeAction ?? throw new ArgumentNullException("executeAction");
+            this.CanExecuteFunc = canExecuteFunc ?? throw new ArgumentNullException("canExecuteFunc");
         }
 
         /// <summary>
@@ -74,12 +70,15 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         /// <param name="parameter">Command parameter</param>
         /// <returns>true if this command can be executed</returns>
-        public virtual bool CanExecute(object parameter)
+        public virtual bool CanExecute([NullGuard.AllowNull] object parameter)
         {
             try
             {
                 if (parameter is T)
+                {
                     return this.CanExecuteFunc((T)parameter);
+                }
+
                 return this.CanExecuteFunc(default(T));
             }
             catch (Exception ex)
@@ -93,7 +92,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// Implementation of the ICommand interface: Execute this command
         /// </summary>
         /// <param name="parameter">Command parameter</param>
-        public virtual void Execute(object parameter)
+        public virtual void Execute([NullGuard.AllowNull] object parameter)
         {
             if (this.CanExecute(parameter))
             {
@@ -127,9 +126,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             if (this.CanExecuteChanged != null)
             {
                 if (Application.Current != null && Application.Current.Dispatcher != Dispatcher.CurrentDispatcher)
+                {
                     Application.Current.Dispatcher.Invoke(() => this.CanExecuteChanged(this, new EventArgs()));
+                }
                 else
+                {
                     this.CanExecuteChanged(this, new EventArgs());
+                }
             }
         }
 
@@ -137,7 +140,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// Is called before the action is executed.
         /// </summary>
         /// <param name="parameter">Parameter the action is invoked with</param>
-        protected virtual void OnBeforeExecute(T parameter)
+        protected virtual void OnBeforeExecute([NullGuard.AllowNull] T parameter)
         {
         }
 
@@ -146,10 +149,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         /// <param name="parameter">Parameter the action is invoked with.</param>
         /// <param name="ex">Exception if thrown by the action. Null if no exception is thrown.</param>
-        protected virtual void OnAfterExecute(T parameter, Exception ex)
+        protected virtual void OnAfterExecute([NullGuard.AllowNull] T parameter, Exception ex)
         {
             if (ex != null)
+            {
                 Log.Error("Exception while RelayCommand.Execute", ex);
+            }
         }
     }
 

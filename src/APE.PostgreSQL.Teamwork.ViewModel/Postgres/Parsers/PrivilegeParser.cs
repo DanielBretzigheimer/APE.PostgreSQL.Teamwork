@@ -22,7 +22,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         static PrivilegeParser()
         {
             foreach (PgPrivilegeKind entry in Enum.GetValues(typeof(PgPrivilegeKind)))
+            {
                 enumEntries.Add(entry);
+            }
         }
 
         public static void Parse(PgDatabase database, string statement, PgPrivilegeCommand command)
@@ -47,13 +49,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     name += $"{argumentName} {dataType}";
 
                     if (parser.ExpectOptional(")"))
+                    {
                         break;
+                    }
                     else
                     {
                         parser.Expect(",");
                         name += ", ";
                     }
                 }
+
                 name += ")";
             }
 
@@ -81,13 +86,15 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 Role = role,
             };
 
-            string schemaName = ParserUtils.GetSchemaName(nameWithSchema, database);
+            var schemaName = ParserUtils.GetSchemaName(nameWithSchema, database);
             PgSchema schema = database.GetSchema(schemaName);
 
             if (schema == null)
+            {
                 throw new Exception($"Cannot find schema {schemaName} for statement {statement}.");
+            }
 
-            schema.AddPrivilege(privilege);
+            schema.Add(privilege);
         }
     }
 }

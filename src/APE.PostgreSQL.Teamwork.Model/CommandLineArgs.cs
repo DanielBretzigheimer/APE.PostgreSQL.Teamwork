@@ -52,12 +52,14 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// Gets or sets the target version to which the database will be upgraded or downgraded. This is a simple number. If not set the last applicable version will be set.
         /// </summary>
         [Option('v', "targetversion", Required = false, HelpText = "The target version to which the database will be upgraded or downgraded. This is a simple number. If not set the last applicable version will be set.")]
+        [NullGuard.AllowNull]
         public int? TargetVersion { get; set; }
 
         /// <summary>
         /// Gets or sets the full target version to which the database will be upgraded or downgraded. Should look e.g. like \"0000.a\". If not set the last applicable version will be set.
         /// </summary>
         [Option('t', "fulltargetversion", Required = false, HelpText = "The full target version to which the database will be upgraded or downgraded. Should look e.g. like \"0000.a\". If not set the last applicable version will be set.")]
+        [NullGuard.AllowNull]
         public string FullTargetVersion { get; set; }
 
         /// <summary>
@@ -74,9 +76,10 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// <summary>
         /// Returns a string that represents the current object.
         /// </summary>
+        [return: NullGuard.AllowNull]
         public override string ToString()
         {
-            StringBuilder builder = new StringBuilder();
+            var builder = new StringBuilder();
             builder.AppendLine("DatabaseName: " + this.DatabaseName);
             builder.AppendLine("Username: " + this.Username);
             builder.AppendLine("Password: ***HIDDEN***");
@@ -85,9 +88,13 @@ namespace APE.PostgreSQL.Teamwork.Model
             builder.AppendLine("FilePath: " + this.FilePath);
 
             if (this.FullTargetVersion == null)
+            {
                 builder.AppendLine("TargetVersion: " + this.TargetVersion);
+            }
             else
+            {
                 builder.AppendLine("FullTargetVersion: " + this.FullTargetVersion);
+            }
 
             return builder.ToString();
         }

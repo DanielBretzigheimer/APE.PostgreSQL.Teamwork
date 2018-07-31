@@ -22,31 +22,53 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         public static void Parse(PgDatabase database, string statement, bool outputIgnoredStatements)
         {
-            Parser parser = new Parser(statement);
+            var parser = new Parser(statement);
             parser.Expect("COMMENT", "ON");
 
             if (parser.ExpectOptional("TABLE"))
+            {
                 ParseTable(parser, database);
+            }
             else if (parser.ExpectOptional("COLUMN"))
+            {
                 ParseColumn(parser, database);
+            }
             else if (parser.ExpectOptional("CONSTRAINT"))
+            {
                 ParseConstraint(parser, database);
+            }
             else if (parser.ExpectOptional("DATABASE"))
+            {
                 ParseDatabase(parser, database);
+            }
             else if (parser.ExpectOptional("FUNCTION"))
+            {
                 ParseFunction(parser, database);
+            }
             else if (parser.ExpectOptional("INDEX"))
+            {
                 ParseIndex(parser, database);
+            }
             else if (parser.ExpectOptional("SCHEMA"))
+            {
                 ParseSchema(parser, database);
+            }
             else if (parser.ExpectOptional("SEQUENCE"))
+            {
                 ParseSequence(parser, database);
+            }
             else if (parser.ExpectOptional("TRIGGER"))
+            {
                 ParseTrigger(parser, database);
+            }
             else if (parser.ExpectOptional("VIEW"))
+            {
                 ParseView(parser, database);
+            }
             else if (outputIgnoredStatements)
+            {
                 database.AddIgnoredStatement(statement);
+            }
         }
 
         /// <summary>
@@ -54,11 +76,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         private static void ParseTable(Parser parser, PgDatabase database)
         {
-            string tableName = parser.ParseIdentifier();
+            var tableName = parser.ParseIdentifier();
 
-            string objectName = ParserUtils.GetObjectName(tableName);
+            var objectName = ParserUtils.GetObjectName(tableName);
 
-            string schemaName = ParserUtils.GetSchemaName(tableName, database);
+            var schemaName = ParserUtils.GetSchemaName(tableName, database);
 
             PgTable table = database.GetSchema(schemaName).GetTable(objectName);
 
@@ -72,13 +94,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         private static void ParseConstraint(Parser parser, PgDatabase database)
         {
-            string constraintName = ParserUtils.GetObjectName(parser.ParseIdentifier());
+            var constraintName = ParserUtils.GetObjectName(parser.ParseIdentifier());
 
             parser.Expect("ON");
 
-            string tableName = parser.ParseIdentifier();
-            string objectName = ParserUtils.GetObjectName(tableName);
-            string schemaName = ParserUtils.GetSchemaName(constraintName, database);
+            var tableName = parser.ParseIdentifier();
+            var objectName = ParserUtils.GetObjectName(tableName);
+            var schemaName = ParserUtils.GetSchemaName(constraintName, database);
             PgConstraint constraint = database.GetSchema(schemaName).GetTable(objectName).GetConstraint(constraintName);
 
             parser.Expect("IS");
@@ -102,11 +124,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         private static void ParseIndex(Parser parser, PgDatabase database)
         {
-            string indexName = parser.ParseIdentifier();
+            var indexName = parser.ParseIdentifier();
 
-            string objectName = ParserUtils.GetObjectName(indexName);
+            var objectName = ParserUtils.GetObjectName(indexName);
 
-            string schemaName = ParserUtils.GetSchemaName(indexName, database);
+            var schemaName = ParserUtils.GetSchemaName(indexName, database);
 
             PgSchema schema = database.GetSchema(schemaName);
 
@@ -132,7 +154,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         private static void ParseSchema(Parser parser, PgDatabase database)
         {
-            string schemaName = ParserUtils.GetObjectName(parser.ParseIdentifier());
+            var schemaName = ParserUtils.GetObjectName(parser.ParseIdentifier());
 
             PgSchema schema = database.GetSchema(schemaName);
 
@@ -146,11 +168,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         private static void ParseSequence(Parser parser, PgDatabase database)
         {
-            string sequenceName = parser.ParseIdentifier();
+            var sequenceName = parser.ParseIdentifier();
 
-            string objectName = ParserUtils.GetObjectName(sequenceName);
+            var objectName = ParserUtils.GetObjectName(sequenceName);
 
-            string schemaName = ParserUtils.GetSchemaName(sequenceName, database);
+            var schemaName = ParserUtils.GetSchemaName(sequenceName, database);
 
             PgSequence sequence = database.GetSchema(schemaName).GetSequence(objectName);
 
@@ -164,15 +186,15 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         private static void ParseTrigger(Parser parser, PgDatabase database)
         {
-            string triggerName = ParserUtils.GetObjectName(parser.ParseIdentifier());
+            var triggerName = ParserUtils.GetObjectName(parser.ParseIdentifier());
 
             parser.Expect("ON");
 
-            string tableName = parser.ParseIdentifier();
+            var tableName = parser.ParseIdentifier();
 
-            string objectName = ParserUtils.GetObjectName(tableName);
+            var objectName = ParserUtils.GetObjectName(tableName);
 
-            string schemaName = ParserUtils.GetSchemaName(triggerName, database);
+            var schemaName = ParserUtils.GetSchemaName(triggerName, database);
 
             PgTrigger trigger = database.GetSchema(schemaName).GetTable(objectName).GetTrigger(triggerName);
 
@@ -186,11 +208,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         private static void ParseView(Parser parser, PgDatabase database)
         {
-            string viewName = parser.ParseIdentifier();
+            var viewName = parser.ParseIdentifier();
 
-            string objectName = ParserUtils.GetObjectName(viewName);
+            var objectName = ParserUtils.GetObjectName(viewName);
 
-            string schemaName = ParserUtils.GetSchemaName(viewName, database);
+            var schemaName = ParserUtils.GetSchemaName(viewName, database);
 
             PgView view = database.GetSchema(schemaName).GetView(objectName);
 
@@ -204,13 +226,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         private static void ParseColumn(Parser parser, PgDatabase database)
         {
-            string columnName = parser.ParseIdentifier();
+            var columnName = parser.ParseIdentifier();
 
-            string objectName = ParserUtils.GetObjectName(columnName);
+            var objectName = ParserUtils.GetObjectName(columnName);
 
-            string tableName = ParserUtils.GetSecondObjectName(columnName);
+            var tableName = ParserUtils.GetSecondObjectName(columnName);
 
-            string schemaName = ParserUtils.GetThirdObjectName(columnName);
+            var schemaName = ParserUtils.GetThirdObjectName(columnName);
 
             PgSchema schema = database.GetSchema(schemaName);
 
@@ -221,10 +243,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 PgView view = schema.GetView(tableName);
                 parser.Expect("IS");
 
-                string comment = GetComment(parser);
+                var comment = GetComment(parser);
 
                 if (comment == null)
+                {
                     view.RemoveColumnComment(objectName);
+                }
                 else
                 {
                     view.AddColumnComment(objectName, comment);
@@ -237,7 +261,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 PgColumn column = table.GetColumn(objectName);
 
                 if (column == null)
-                    throw new TeamworkParserException(string.Format("CannotFindColumnInTable", columnName, table.Name));
+                {
+                    throw new TeamworkParserException($"CannotFindColumnInTable {columnName} from table {table.Name}");
+                }
 
                 parser.Expect("IS");
                 column.Comment = GetComment(parser);
@@ -250,41 +276,50 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         private static void ParseFunction(Parser parser, PgDatabase database)
         {
-            string functionName = parser.ParseIdentifier();
+            var functionName = parser.ParseIdentifier();
 
-            string objectName = ParserUtils.GetObjectName(functionName);
+            var objectName = ParserUtils.GetObjectName(functionName);
 
-            string schemaName = ParserUtils.GetSchemaName(functionName, database);
+            var schemaName = ParserUtils.GetSchemaName(functionName, database);
 
             PgSchema schema = database.GetSchema(schemaName);
 
             parser.Expect("(");
 
-            PgFunction tmpFunction = new PgFunction();
-            tmpFunction.Name = objectName;
-
+            var tmpFunction = new PgFunction()
+            {
+                Name = objectName,
+            };
             while (!parser.ExpectOptional(")"))
             {
                 string mode;
 
                 if (parser.ExpectOptional("IN"))
+                {
                     mode = "IN";
+                }
                 else if (parser.ExpectOptional("OUT"))
+                {
                     mode = "OUT";
+                }
                 else if (parser.ExpectOptional("INOUT"))
+                {
                     mode = "INOUT";
+                }
                 else if (parser.ExpectOptional("VARIADIC"))
+                {
                     mode = "VARIADIC";
+                }
                 else
                 {
                     mode = null;
                 }
 
-                int position = parser.Position;
+                var position = parser.Position;
                 string argumentName = null;
-                string dataType = parser.ParseDataType();
+                var dataType = parser.ParseDataType();
 
-                int position2 = parser.Position;
+                var position2 = parser.Position;
 
                 if (!parser.ExpectOptional(")") && !parser.ExpectOptional(","))
                 {
@@ -297,14 +332,18 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     parser.Position = position2;
                 }
 
-                PgFunction.Argument argument = new PgFunction.Argument();
-                argument.DataType = dataType;
-                argument.Mode = mode;
-                argument.Name = argumentName;
+                var argument = new PgFunction.Argument()
+                {
+                    DataType = dataType,
+                    Mode = mode,
+                    Name = argumentName,
+                };
                 tmpFunction.AddArgument(argument);
 
                 if (parser.ExpectOptional(")"))
+                {
                     break;
+                }
                 else
                 {
                     parser.Expect(",");
@@ -322,12 +361,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// Parses comment from parser. If comment is "null" string then null is
         /// returned, otherwise the parsed string is returned.
         /// </summary>
+        [return: NullGuard.AllowNull]
         private static string GetComment(Parser parser)
         {
-            string comment = parser.ParseString();
+#pragma warning disable CS0618 // Type or member is obsolete
+            var comment = parser.ParseStringCompat();
+#pragma warning restore CS0618 // Type or member is obsolete
 
             if ("null".Equals(comment, StringComparison.CurrentCultureIgnoreCase))
+            {
                 return null;
+            }
 
             return comment;
         }

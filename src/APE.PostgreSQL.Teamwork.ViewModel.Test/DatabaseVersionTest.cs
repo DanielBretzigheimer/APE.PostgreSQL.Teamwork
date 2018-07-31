@@ -6,38 +6,41 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
-	[TestClass]
-	public class DatabaseVersionTest
-	{
-		[TestMethod]
-		public void ConstructorTest()
-		{
-			DatabaseVersion dv = new DatabaseVersion("\\Test\\Path\\0001.diff.sql");
-			dv.Should().NotBeNull();
-			dv.Main.Should().Be(1);
-			dv.Minor.Should().Be(string.Empty);
-			dv.Full.Should().Be("0001");
+    [TestClass]
+    public class DatabaseVersionTest
+    {
+        [TestMethod]
+        public void ConstructorTest()
+        {
+            var dv = new DatabaseVersion("\\Test\\Path\\0001.diff.sql");
+            dv.Should().NotBeNull();
+            dv.Main.Should().Be(1);
+            dv.Minor.Should().Be(string.Empty);
+            dv.Full.Should().Be("0001");
 
-			dv = new DatabaseVersion("\\Test\\Path\\8534.a.diff.sql");
-			dv.Should().NotBeNull();
-			dv.Main.Should().Be(8534);
-			dv.Minor.Should().Be(".a");
-			dv.Full.Should().Be("8534.a");
+            dv = new DatabaseVersion("\\Test\\Path\\8534.a.diff.sql");
+            dv.Should().NotBeNull();
+            dv.Main.Should().Be(8534);
+            dv.Minor.Should().Be(".a");
+            dv.Full.Should().Be("8534.a");
 
-			dv = new DatabaseVersion("\\Test0002\\Path\\0008.diff.sql");
-			dv.Should().NotBeNull();
-			dv.Main.Should().Be(8);
-			dv.Minor.Should().Be(string.Empty);
-			dv.Full.Should().Be("0008");
+            dv = new DatabaseVersion("\\Test0002\\Path\\0008.diff.sql");
+            dv.Should().NotBeNull();
+            dv.Main.Should().Be(8);
+            dv.Minor.Should().Be(string.Empty);
+            dv.Full.Should().Be("0008");
 
-			new Action(() => new DatabaseVersion(string.Empty)).ShouldThrow<ArgumentException>();
-		}
+            new Action(() => new DatabaseVersion(string.Empty)).ShouldThrow<ArgumentException>();
+        }
 
         [TestMethod]
         public void OperatorTest()
         {
             var dv1 = new DatabaseVersion("\\0001.diff.sql");
+            var dv1beforea = new DatabaseVersion("\\0001.9.diff.sql");
             var dv1a = new DatabaseVersion("\\0001.a.diff.sql");
+            var dv1aa = new DatabaseVersion("\\0001.aa.diff.sql");
+            var dv1ab = new DatabaseVersion("\\0001.ab.diff.sql");
             var dv1b = new DatabaseVersion("\\0001.b.diff.sql");
             var dv2 = new DatabaseVersion("\\0002.diff.sql");
             var dv2a = new DatabaseVersion("\\0002.a.diff.sql");
@@ -54,10 +57,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             (dv2 < dv3).Should().BeTrue();
             (dv2a < dv3).Should().BeTrue();
             (dv2a > dv2).Should().BeTrue();
+            (dv1aa > dv1a).Should().BeTrue();
+            (dv1aa < dv1b).Should().BeTrue();
+            (dv1ab > dv1a).Should().BeTrue();
+            (dv1ab < dv1b).Should().BeTrue();
+            (dv1ab > dv1aa).Should().BeTrue();
+            (dv1beforea < dv1a).Should().BeTrue();
+            (dv1beforea > dv1).Should().BeTrue();
 
             (dv1 != dv1a).Should().BeTrue();
             (dv2 != dv1).Should().BeTrue();
             (dv3 == dv3alternative).Should().BeTrue();
         }
-	}
+    }
 }

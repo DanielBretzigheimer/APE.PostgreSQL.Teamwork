@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using APE.PostgreSQL.Teamwork.Model.Setting;
+using APE.PostgreSQL.Teamwork.Model.Templates;
 
 namespace APE.PostgreSQL.Teamwork.Model
 {
@@ -13,12 +14,11 @@ namespace APE.PostgreSQL.Teamwork.Model
     /// </summary>
     public class DatabaseSetting
     {
-        /// <summary>
-        /// This is used for serializing the <see cref="DatabaseSetting"/>.
-        /// </summary>
-        protected DatabaseSetting()
+        public static readonly List<string> DefaultIgnoredSchemas = new List<string>()
         {
-        }
+            SQLTemplates.PostgreSQLTeamworkSchemaName,
+            "APE.PostgreSQL.Test.Runner",
+        };
 
         /// <summary>
         /// Creates a new <see cref="DatabaseSetting"/>.
@@ -31,6 +31,13 @@ namespace APE.PostgreSQL.Teamwork.Model
             this.Id = id;
             this.Path = path;
             this.Name = name;
+        }
+
+        /// <summary>
+        /// This is used for serializing the <see cref="DatabaseSetting"/>.
+        /// </summary>
+        protected DatabaseSetting()
+        {
         }
 
         /// <summary>
@@ -47,6 +54,11 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// Gets or sets the path to the diffs and dumps.
         /// </summary>
         public string Path { get; set; }
+
+        /// <summary>
+        /// Gets or sets the ignored schemas.
+        /// </summary>
+        public List<string> IgnoredSchemas { get; set; } = new List<string>();
 
         /// <summary>
         /// Removes the database with the given id.
@@ -104,6 +116,7 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// <summary>
         /// Creates a string of the <see cref="DatabaseSetting"/> which contains the <see cref="Id"/> and <see cref="Name"/>.
         /// </summary>
+        [return: NullGuard.AllowNull]
         public override string ToString()
         {
             return $"{this.Id} {this.Name}";

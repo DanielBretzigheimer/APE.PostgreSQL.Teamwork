@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
@@ -8,7 +8,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>APE.PostgreSQL.Teamwork.ViewModel.Test</RootNamespace>
     <AssemblyName>APE.PostgreSQL.Teamwork.ViewModel.Test</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
@@ -17,6 +17,9 @@
     <IsCodedUITest>False</IsCodedUITest>
     <TestProjectType>UnitTest</TestProjectType>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -26,6 +29,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\StyleCop.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <DocumentationFile>bin\Debug\APE.PostgreSQL.Teamwork.ViewModel.Test.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -34,62 +40,33 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\StyleCop.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>bin\Debug\APE.PostgreSQL.Teamwork.ViewModel.Test\APE.PostgreSQL.Teamwork.ViewModel.Test.xml</DocumentationFile>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="1.50.2" />
+    <PackageReference Include="FluentAssertions" Version="4.19.4" />
+    <PackageReference Include="Fody" Version="2.1.2" />
+    <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="Moq" Version="4.0.10827" />
+    <PackageReference Include="Npgsql" Version="3.2.6" />
+    <PackageReference Include="NullGuard.Fody" Version="1.5.2" />
+    <PackageReference Include="ServiceStack.Text" Version="3.9.71" />
+    <PackageReference Include="SharpZipLib" Version="0.86.0" />
+    <PackageReference Include="StructureMap" Version="4.5.1" />
+    <PackageReference Include="structuremap.automocking.moq" Version="4.0.0.315" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta001" />
+    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.4.0" />
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="APE.CodeGeneration.Attributes">
       <HintPath>..\..\lib\APE.CodeGeneration.Attributes.dll</HintPath>
     </Reference>
-    <Reference Include="Dapper, Version=1.40.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\Dapper.1.42\lib\net45\Dapper.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FluentAssertions, Version=4.8.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\FluentAssertions.4.8.0\lib\net45\FluentAssertions.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="FluentAssertions.Core, Version=4.8.0.0, Culture=neutral, PublicKeyToken=33f2691a05b67b6a, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\FluentAssertions.4.8.0\lib\net45\FluentAssertions.Core.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="LZ4, Version=1.0.10.93, Culture=neutral, PublicKeyToken=62e1b5ec1eec9bdd, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\lz4net.1.0.10.93\lib\net4-client\LZ4.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="Microsoft.CSharp" />
-    <Reference Include="Moq, Version=4.0.10827.0, Culture=neutral, PublicKeyToken=69f491c39445e920, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\Moq.4.0.10827\lib\NET40\Moq.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Npgsql, Version=3.1.6.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\Npgsql.3.1.6\lib\net45\Npgsql.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="ServiceStack.Text, Version=3.9.71.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\ServiceStack.Text.3.9.71\lib\net35\ServiceStack.Text.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="StructureMap, Version=4.2.0.402, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\structuremap.4.2.0.402\lib\net40\StructureMap.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="StructureMap.AutoMocking.Moq, Version=4.0.0.315, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\structuremap.automocking.moq.4.0.0.315\lib\net40\StructureMap.AutoMocking.Moq.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="StructureMap.Net4, Version=4.2.0.402, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\structuremap.4.2.0.402\lib\net40\StructureMap.Net4.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -113,7 +90,9 @@
     </Otherwise>
   </Choose>
   <ItemGroup>
-    <Compile Include="Postgres\Parser\PrivilegeParserTest.cs" />
+    <Compile Include="Postgres\Parsers\ParserTest.cs" />
+    <Compile Include="Postgres\Parsers\PrivilegeParserTest.cs" />
+    <Compile Include="Postgres\APEUnitTestExtension.g.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="APEUnitTestExtension.g.cs" />
     <Compile Include="DatabaseTest.cs" />
@@ -140,9 +119,17 @@
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
+    <AdditionalFiles Include="..\..\stylecop.json">
+      <Link>stylecop.json</Link>
+    </AdditionalFiles>
+    <None Include="..\..\StyleCop.ruleset">
+      <Link>StyleCop.ruleset</Link>
+    </None>
     <None Include="APE.PostgreSQL.Teamwork.ViewModel.Test.licenseheader" />
     <None Include="app.config" />
-    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FodyWeavers.xml" />
   </ItemGroup>
   <Choose>
     <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
@@ -159,6 +146,9 @@
         <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
           <Private>False</Private>
         </Reference>
+        <AdditionalFiles Include="..\stylecop.json">
+          <Link>stylecop.json</Link>
+        </AdditionalFiles>
       </ItemGroup>
     </When>
   </Choose>

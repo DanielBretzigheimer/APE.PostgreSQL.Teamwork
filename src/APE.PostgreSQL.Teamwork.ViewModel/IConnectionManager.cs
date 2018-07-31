@@ -1,5 +1,5 @@
 ﻿// <copyright file="IConnectionManager.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
+
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {
     public interface IConnectionManager
@@ -44,7 +44,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         /// Executes the given SQL command without a return value on the default database defined in the settings.
         /// </summary>
-		/// <remarks>Max time is 10 minutes, after that a timeout exception is thrown.</remarks>
+        /// <remarks>Max time is 10 minutes, after that a timeout exception is thrown.</remarks>
         /// <param name="sql">SQL Command which is executed.</param>
         void ExecuteCommandNonQuery(string sql);
 

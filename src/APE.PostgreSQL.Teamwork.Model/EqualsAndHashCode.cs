@@ -9,60 +9,73 @@ namespace APE.PostgreSQL.Teamwork.Model
 {
     /// <summary>
     /// Generic implementation of equals and GetHashCode.
-    /// 
+    ///
     /// <remarks>HashCode is implemented like: A * 31 + B * 31 + C ...</remarks>
-    /// Usage: 
+    /// Usage:
     /// <code>
-    /// 	private static readonly EqualsAndHashCode&lt;LotIdentification&gt; EqualsAndHashCode = new EqualsAndHashCode&lt;LotIdentification&gt;(
-    /// 	    m => m.Name,
+    ///     private static readonly EqualsAndHashCode&lt;LotIdentification&gt; EqualsAndHashCode = new EqualsAndHashCode&lt;LotIdentification&gt;(
+    ///         m => m.Name,
     ///       m => m.TkGeneration,
     ///       m => m.PMode);
-    ///       
-    /// 		public override bool Equals(object obj)
-    ///   	{
-    ///   		return EqualsAndHashCode.AreEqual(this, obj);
-    ///   	}
-    ///   
-    ///   	public override int GetHashCode()
-    ///   	{
-    ///   		return EqualsAndHashCode.GetHashCode(this);
-    ///   	}
+    ///
+    ///         public override bool Equals(object obj)
+    ///     {
+    ///         return EqualsAndHashCode.AreEqual(this, obj);
+    ///     }
+    ///
+    ///     public override int GetHashCode()
+    ///     {
+    ///         return EqualsAndHashCode.GetHashCode(this);
+    ///     }
     ///  </code>
     /// </summary>
     public class EqualsAndHashCode<T>
         where T : class
     {
-        private Expression<Func<T, object>>[] properties;
         private readonly Func<T, T, bool> equals;
         private readonly Func<T, int> getHashCode;
+        private Expression<Func<T, object>>[] properties;
 
         public EqualsAndHashCode(params Expression<Func<T, object>>[] properties)
         {
             // Expression<Func<TProperty>>
             if (properties == null)
+            {
                 throw new ArgumentNullException("properties", "properties == null");
+            }
+
             if (properties.Length == 0)
+            {
                 throw new ArgumentOutOfRangeException("properties", "properties.Length == 0");
+            }
+
             this.properties = properties;
 
             this.equals = this.BuildEquals(properties);
             this.getHashCode = this.BuildGetHashCode(properties);
         }
 
-        public bool AreEqual(T source, object target)
+        public bool AreEqual([NullGuard.AllowNull] T source, [NullGuard.AllowNull] object target)
         {
             if (source == null || target == null)
+            {
                 return false;
+            }
+
             if (target as T == null)
+            {
                 return false;
+            }
 
             return this.equals(source, (T)target);
         }
 
-        public int GetHashCode(T source)
+        public int GetHashCode([NullGuard.AllowNull] T source)
         {
             if (source == null)
+            {
                 throw new ArgumentNullException("source", "source == null");
+            }
 
             return this.getHashCode(source);
         }
@@ -119,20 +132,28 @@ namespace APE.PostgreSQL.Teamwork.Model
                 if (equalsExpression == null)
                 {
                     if (memberType.IsValueType)
+                    {
                         equalsExpression = Expression.Equal(leftGetterExpression, rightGetterExpression); // test equality with ==
+                    }
                     else
+                    {
                         equalsExpression = Expression.Call(equalsMethodInfo, leftGetterExpression, rightGetterExpression); // test equality with object.Equals(..)
+                    }
                 }
                 else
                 {
                     if (memberType.IsValueType)
+                    {
                         equalsExpression = Expression.AndAlso(
                             equalsExpression,
                             Expression.Equal(leftGetterExpression, rightGetterExpression)); // test equality with ==
+                    }
                     else
+                    {
                         equalsExpression = Expression.AndAlso(
                             equalsExpression,
                             Expression.Call(equalsMethodInfo, leftGetterExpression, rightGetterExpression)); // test equality with object.Equals(..)
+                    }
                 }
             }
 

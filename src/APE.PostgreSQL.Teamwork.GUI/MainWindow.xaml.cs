@@ -1,4 +1,4 @@
-﻿// <copyright file="mainwindow.xaml.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+﻿// <copyright file="MainWindow.xaml.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,7 +30,9 @@ namespace APE.PostgreSQL.Teamwork.GUI
             get
             {
                 if (this.dialogHost == null)
+                {
                     throw new InvalidOperationException("Can not show a dialog before the dialog host was initialized");
+                }
 
                 return this.dialogHost.Identifier;
             }
@@ -44,7 +46,9 @@ namespace APE.PostgreSQL.Teamwork.GUI
 
                 BaseViewModel.GetAddDatabseView = this.GetAddDatabaseView;
                 BaseViewModel.GetSettingView = this.GetSettingView;
-                BaseViewModel.GetMessageBox = this.GetMessageBox;
+                BaseViewModel.GetCreateMinorVersionView = this.GetCreateMinorVersionView;
+                BaseViewModel.GetMessageBox = (text, title, buttons) => this.GetMessageBox(text, title, buttons, false);
+                BaseViewModel.GetMarkdownBox = (text, title, buttons) => this.GetMessageBox(text, title, buttons, true);
                 BaseViewModel.OpenImportWindow = this.OpenImportWindow;
                 BaseViewModel.OpenExportWindow = this.OpenExportWindow;
                 this.DataContext = this.mainWindowViewModel;
@@ -77,7 +81,9 @@ namespace APE.PostgreSQL.Teamwork.GUI
             if (e.NewOrder == null
                 || e.PreviousOrder == null
                 || e.NewOrder.Count() != e.PreviousOrder.Count())
+            {
                 return;
+            }
 
             var oldDatabases = e.PreviousOrder.Cast<DatabaseDisplayData>().ToList();
             var newDatabases = e.NewOrder.Cast<DatabaseDisplayData>().ToList();
@@ -85,15 +91,19 @@ namespace APE.PostgreSQL.Teamwork.GUI
             var oldDatabaseNames = oldDatabases.Select(d => d.Name).ToList();
             var newDatabaseNames = newDatabases.Select(d => d.Name).ToList();
             var orderEquals = true;
-            for (int i = 0; i < oldDatabaseNames.Count(); i++)
+            for (var i = 0; i < oldDatabaseNames.Count(); i++)
             {
                 if (oldDatabaseNames[i] != newDatabaseNames[i])
+                {
                     orderEquals = false;
+                }
             }
 
             // no change in order
             if (orderEquals)
+            {
                 return;
+            }
 
             this.lastOrder = newDatabases;
         }
@@ -103,6 +113,15 @@ namespace APE.PostgreSQL.Teamwork.GUI
             // start the viewmodel when the dialog host is initialized
             // to ensure that dialogs can be shown
             this.mainWindowViewModel.Start();
+        }
+
+        private CreateMinorVersionView GetCreateMinorVersionView(DatabaseDisplayData database)
+        {
+            CreateMinorVersionView retval = null;
+
+            this.UIDispatcher.Invoke(() => retval = new CreateMinorVersionView(database));
+
+            return retval;
         }
 
         private SettingView GetSettingView()
@@ -125,12 +144,12 @@ namespace APE.PostgreSQL.Teamwork.GUI
             return retVal;
         }
 
-        private MaterialMessageBox GetMessageBox(string text, string title, MessageBoxButton buttons)
+        private MaterialMessageBox GetMessageBox(string text, string title, MessageBoxButton buttons, bool isMarkdown)
         {
             MaterialMessageBox retVal = null;
 
             // create in ui dispatcher so this method can also be called from an task
-            this.UIDispatcher.Invoke(() => retVal = new MaterialMessageBox(text, title, buttons));
+            this.UIDispatcher.Invoke(() => retVal = new MaterialMessageBox(text, title, buttons, isMarkdown));
 
             return retVal;
         }
@@ -175,7 +194,7 @@ namespace APE.PostgreSQL.Teamwork.GUI
 
         private async void ShowLicensesClick(object sender, RoutedEventArgs e)
         {
-            StringBuilder licenseText = new StringBuilder();
+            var licenseText = new StringBuilder();
 
             var apgDiffLink = new Hyperlink() { NavigateUri = new Uri("http://www.apgdiff.com/index.php") };
             apgDiffLink.Inlines.Add("http://www.apgdiff.com/index.php");
@@ -185,10 +204,10 @@ namespace APE.PostgreSQL.Teamwork.GUI
             wpfMaterialDesignLink.RequestNavigate += this.RequestNavigate;
 
             // message is filled with inlines to add links
-            var messageBox = new MaterialMessageBox(string.Empty, "Licenses", MessageBoxButton.OK);
+            var messageBox = new MaterialMessageBox(string.Empty, "Licenses", MessageBoxButton.OK, false);
             messageBox.MessageTextBlock.Inlines.Clear();
             messageBox.MessageTextBlock.Inlines.Add("Postgres Diff Tool" + Environment.NewLine);
-            messageBox.MessageTextBlock.Inlines.Add("This was used as base for this application." + Environment.NewLine);
+            messageBox.MessageTextBlock.Inlines.Add("Was used as base for this application." + Environment.NewLine);
             messageBox.MessageTextBlock.Inlines.Add(apgDiffLink);
             messageBox.MessageTextBlock.Inlines.Add(Environment.NewLine);
             messageBox.MessageTextBlock.Inlines.Add("Material Design for WPF." + Environment.NewLine);

@@ -1,5 +1,7 @@
 ﻿// <copyright file="SearchPathHelper.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System.IO;
+using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
+using APE.PostgreSQL.Teamwork.Model.Utils;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
 {
@@ -18,12 +20,25 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// </summary>
         private bool wasOutput;
 
+        public SearchPathHelper()
+        {
+            this.searchPath = null;
+        }
+
         /// <summary>
-        /// Creates new instance of SearchPathHelper.
+        /// Creates new instance of SearchPathHelper with the given search path.
         /// </summary>
         public SearchPathHelper(string searchPath)
         {
             this.searchPath = searchPath;
+        }
+
+        /// <summary>
+        /// Creates new instance of SearchPathHelper with the search path set to the given schema.
+        /// </summary>
+        public SearchPathHelper(PgSchema schema)
+            : this("SET search_path = " + schema.Name.GetQuotedName(true) + ", pg_catalog;")
+        {
         }
 
         /// <summary>

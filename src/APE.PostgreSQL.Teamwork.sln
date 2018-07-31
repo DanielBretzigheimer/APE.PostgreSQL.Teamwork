@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 14
-VisualStudioVersion = 14.0.25420.1
+# Visual Studio 15
+VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APE.PostgreSQL.Teamwork.GUI", "APE.PostgreSQL.Teamwork.GUI\APE.PostgreSQL.Teamwork.GUI.csproj", "{E9A43C83-45D8-4B05-AFA4-0E3FAF0EC57F}"
 EndProject
@@ -14,6 +14,13 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APE.PostgreSQL.Teamwork.ViewModel.Test", "APE.PostgreSQL.Teamwork.ViewModel.Test\APE.PostgreSQL.Teamwork.ViewModel.Test.csproj", "{6402AD8B-4F11-418E-827B-F413F823D339}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APE.PostgreSQL.Teamwork.TestHelper", "APE.PostgreSQL.Teamwork.TestHelper\APE.PostgreSQL.Teamwork.TestHelper.csproj", "{F5DA55B2-31D4-40C5-A6BE-B7E35D9F00F4}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{FB5C8473-7B01-4012-ABDD-2007E7A5C8DF}"
+	ProjectSection(SolutionItems) = preProject
+		..\.gitlab-ci.yml = ..\.gitlab-ci.yml
+		..\CHANGELOG.md = ..\CHANGELOG.md
+		..\README.md = ..\README.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,5 +68,8 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C5C3EA64-66CD-4FB5-998B-23F886C111C7}
 	EndGlobalSection
 EndGlobal

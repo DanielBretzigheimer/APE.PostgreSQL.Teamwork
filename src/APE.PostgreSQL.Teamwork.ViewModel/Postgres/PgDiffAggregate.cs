@@ -22,7 +22,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <param name="oldSchema">Original schema.</param>
         /// <param name="newSchema">New schema.</param>
         /// <param name="searchPathHelper">Search path helper.</param>
-        public static void Create(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Create(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             // Add new aggregates and replace modified aggregates
             foreach (PgAggregate newAggregate in newSchema.Aggregates)
@@ -30,9 +30,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 PgAggregate oldAggregate;
 
                 if (oldSchema == null)
+                {
                     oldAggregate = null;
+                }
                 else
+                {
                     oldAggregate = oldSchema.GetAggregate(newAggregate.Signature);
+                }
 
                 if ((oldAggregate == null) || !newAggregate.Equals(oldAggregate))
                 {
@@ -50,10 +54,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <param name="oldSchema">Original schema.</param>
         /// <param name="newSchema">New schema.</param>
         /// <param name="searchPathHelper">Search path helper.</param>
-        public static void Drop(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Drop(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
+            {
                 return;
+            }
 
             // Drop aggregates that exist no more
             foreach (PgAggregate oldAggregate in oldSchema.Aggregates)
@@ -70,19 +76,24 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for aggregate comments that have changed.
         /// </summary>
-        public static void AlterComments(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void AlterComments(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
+            {
                 return;
+            }
 
             foreach (PgAggregate oldAggregate in oldSchema.Aggregates)
             {
                 PgAggregate newAggregate = newSchema.GetAggregate(oldAggregate.Signature);
 
                 if (newAggregate == null)
+                {
                     continue;
+                }
 
-                if (oldAggregate.Comment == null && newAggregate.Comment != null || oldAggregate.Comment != null && newAggregate.Comment != null && !oldAggregate.Comment.Equals(newAggregate.Comment))
+                if ((oldAggregate.Comment == null && newAggregate.Comment != null)
+                    || (oldAggregate.Comment != null && newAggregate.Comment != null && !oldAggregate.Comment.Equals(newAggregate.Comment)))
                 {
                     searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();
@@ -91,14 +102,18 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                     writer.Write(PgDiffStringExtension.QuoteName(newAggregate.Name));
                     writer.Write('(');
 
-                    bool addComma = false;
+                    var addComma = false;
 
                     foreach (PgAggregate.Argument argument in newAggregate.Arguments)
                     {
                         if (addComma)
+                        {
                             writer.Write(", ");
+                        }
                         else
+                        {
                             addComma = true;
+                        }
 
                         writer.Write(argument.DataType);
                     }
@@ -116,14 +131,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                     writer.Write(PgDiffStringExtension.QuoteName(newAggregate.Name));
                     writer.Write('(');
 
-                    bool addComma = false;
-
+                    var addComma = false;
                     foreach (PgAggregate.Argument argument in newAggregate.Arguments)
                     {
                         if (addComma)
+                        {
                             writer.Write(", ");
+                        }
                         else
+                        {
                             addComma = true;
+                        }
 
                         writer.Write(argument.DataType);
                     }

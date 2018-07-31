@@ -1,5 +1,5 @@
 ﻿// <copyright file="IStatement.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
+
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {
     /// <summary>
@@ -18,7 +18,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         string SearchPath { get; }
 
         /// <summary>
-        /// Gets a bool, indicating that this <see cref="IStatement"/> contains an alter type which means it cannot 
+        /// Gets a bool, indicating that this <see cref="IStatement"/> contains an alter type which means it cannot
         /// be executed in transaction.
         /// </summary>
         bool SupportsTransaction { get; }

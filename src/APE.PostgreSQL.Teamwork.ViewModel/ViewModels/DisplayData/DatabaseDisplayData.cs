@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
+using System.Windows.Forms;
 using System.Windows.Input;
 using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.Model;
@@ -15,6 +16,7 @@ using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
 using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
 using APE.PostgreSQL.Teamwork.ViewModel.TestHelper;
 using log4net;
+using Microsoft.VisualBasic;
 using Npgsql;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
@@ -33,11 +35,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     [NotifyProperty(AccessModifier.Public, typeof(bool), "Undoing", false, "Indicates that the database is undoing changes at the moment")]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "Error", false)]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "ImportableFilesFound", false)]
+    [NotifyProperty(AccessModifier.PublicGetPrivateSet, typeof(bool), "CanCreateMinor", false)]
+    [AllowNullNotifyProperty(AccessModifier.Public, typeof(string), "SelectedSchema")]
     [NotifyProperty(typeof(string), "ErrorMessage")]
-    [NotifyProperty(typeof(Database), "Database")]
+    [AllowNullNotifyProperty(typeof(Database), "Database")]
     [NotifyProperty(AccessModifier.Public, typeof(DatabaseVersion), "TargetVersion")]
-    [NotifyProperty(AccessModifier.Public, typeof(List<DatabaseVersion>), "Versions")]
-    [NotifyProperty(typeof(ObservableCollection<SQLFileDisplayData>), "ApplicableSQLFiles")]
+    [AllowNullNotifyProperty(AccessModifier.Public, typeof(List<DatabaseVersion>), "Versions")]
+    [AllowNullNotifyProperty(typeof(ObservableCollection<SQLFileDisplayData>), "ApplicableSQLFiles")]
     [CtorParameter(typeof(IConnectionManager))]
     [CtorParameter(typeof(IFileSystemAccess))]
     [CtorParameter(typeof(IProcessManager))]
@@ -53,29 +57,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         private bool dataInitialized = false;
 
-        // todo db make name notify property and make Database.Name/Path a normal property and use only these in GUI
-        public string Name
-        {
-            get
-            {
-                if (this.Database == null)
-                    return DatabaseSetting.GetDatabaseSetting(this.Id).Name;
-
-                return this.Database.Name;
-            }
-        }
-
-        public string Path
-        {
-            get
-            {
-                if (this.Database == null)
-                    return DatabaseSetting.GetDatabaseSetting(this.Id).Path;
-
-                return this.Database.Path;
-            }
-        }
-
         /// <summary>
         /// Design time constructor.
         /// </summary>
@@ -90,6 +71,44 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         public event EventHandler<EventArgs> Removed;
 
+        // todo db make name notify property and make Database.Name/Path a normal property and use only these in GUI
+        public string Name
+        {
+            get
+            {
+                if (this.Database == null)
+                {
+                    return DatabaseSetting.GetDatabaseSetting(this.Id).Name;
+                }
+
+                return this.Database.Name;
+            }
+        }
+
+        public string Path
+        {
+            get
+            {
+                if (this.Database == null)
+                {
+                    return DatabaseSetting.GetDatabaseSetting(this.Id).Path;
+                }
+
+                return this.Database.Path;
+            }
+        }
+
+        public ObservableCollection<string> IgnoredSchemas
+        {
+            get
+            {
+                if (this.Database == null)
+                    return new ObservableCollection<string>(DatabaseSetting.GetDatabaseSetting(this.Id).IgnoredSchemas);
+
+                return this.Database.IgnoredSchemas;
+            }
+        }
+
         /// <summary>
         /// Gets or sets a bool which indicates if the <see cref="Database"/> was auto expanded (not expanded by the user). Databases get
         /// auto expanded if the GUI has enough room or get shrunk if the GUI gets smaller.
@@ -98,22 +117,40 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         // Database Commands
         public ICommand ExportCommand { get; private set; }
+
         public ICommand OpenImportWindowCommand { get; private set; }
+
         public ICommand CreateDumpCommand { get; private set; }
+
         public ICommand ReduceVersionCommand { get; private set; }
+
         public ICommand TestCommand { get; private set; }
+
         public ICommand OpenPathCommand { get; private set; }
+
         public ICommand EditCommand { get; private set; }
+
         public ICommand SaveCommand { get; private set; }
+
         public ICommand EditPathCommand { get; private set; }
+
         public ICommand RemoveCommand { get; private set; }
+
         public ICommand ResetCommand { get; private set; }
+
         public ICommand UndoCommand { get; set; }
+
         public ICommand ImportCommand { get; set; }
+
         public ICommand CreateDatabaseCommand { get; set; }
 
-        // common commands
         public ICommand ExpandCommand { get; private set; }
+
+        public ICommand AddSchemaCommand { get; private set; }
+
+        public ICommand RemoveSchemaCommand { get; private set; }
+
+        public ICommand CreateMinorCommand { get; private set; }
 
         /// <summary>
         /// Updates the version and the not applied files.
@@ -122,7 +159,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         public void UpdateData(bool force = false)
         {
             if (this.Resetting || this.Error)
+            {
                 return;
+            }
 
             try
             {
@@ -131,18 +170,29 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 this.UpdateApplicableSQLFiles();
 
                 // add all available versions to which the user can up or downgrade
-                var versions = new List<DatabaseVersion>();
-                versions.Add(DatabaseVersion.StartVersion); // undo all
+                var versions = new List<DatabaseVersion>
+                {
+                    DatabaseVersion.StartVersion, // undo all
+                };
+
                 versions.AddRange(this.Database.DiffFiles.Select(f => f.Version));
 
                 // only update versions if they are changed
                 if (this.Versions == null || versions == null || !versions.SequenceEqual(this.Versions))
+                {
                     this.Versions = versions;
+                }
 
                 if (this.Database.CurrentVersion < this.Database.LastApplicableVersion)
+                {
+                    this.CanCreateMinor = true;
                     this.ImportableFilesFound = true;
+                }
                 else
+                {
+                    this.CanCreateMinor = false;
                     this.ImportableFilesFound = false;
+                }
 
                 // activate after ImportableFilesFound is set
                 if (!this.dataInitialized)
@@ -186,23 +236,98 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         {
             // user has shown the detail so we do not automatically close it
             if (autoExpand && this.AutoExpanded == false)
+            {
                 return;
+            }
 
             this.AutoExpanded = autoExpand;
             this.ShowDetails = !this.ShowDetails;
         }
 
+        public void ExportWithoutErrorHandling(DatabaseVersion newVersion)
+        {
+            this.Database.Export(
+                newVersion,
+                SettingsManager.Get().Setting.PgDumpLocation,
+                SettingsManager.Get().Setting.Host,
+                SettingsManager.Get().Setting.Id,
+                SettingsManager.Get().Setting.Password,
+                SettingsManager.Get().Setting.Port);
+
+            // open the diff files so user can verify them
+            var diff = new SQLFileDisplayData(this.Database.DiffFiles.SingleOrDefault(f => f.Version == newVersion));
+            var undoDiff = new SQLFileDisplayData(this.Database.UndoDiffFiles.SingleOrDefault(f => f.Version == newVersion));
+
+            if (SettingsManager.Get().Setting.OpenFilesInDefaultApplication)
+            {
+                this.processManager.Start(diff.SQLFile.Path);
+                this.processManager.Start(undoDiff.SQLFile.Path);
+            }
+            else
+            {
+                BaseViewModel.OpenExportWindow(diff, undoDiff);
+            }
+        }
+
         /// <summary>
         ///  Returns a string that represents the current object.
         /// </summary>
+        [return: NullGuard.AllowNull]
         public override string ToString()
         {
             return this.Database.Name;
         }
 
+        /// <summary>
+        /// Exports the database and shows a message box to the user if a error occurred.
+        /// </summary>
+        private async void Export()
+        {
+            this.Exporting = true;
+            try
+            {
+                this.ExportWithoutErrorHandling(this.Database.CurrentVersion.Next());
+            }
+            catch (Exception ex)
+            {
+                var title = "Error while exporting database";
+                var message = ex.Message;
+                var buttons = MessageBoxButton.OK;
+
+                if (ex is FileNotFoundException)
+                {
+                    message = $"{message}: {((FileNotFoundException)ex).FileName}";
+                }
+                else if (ex is TeamworkException && !((TeamworkException)ex).ShowAsError)
+                {
+                    title = "Info";
+                }
+                else if (ex is TeamworkTestException)
+                {
+                    message += " Do you want to open the diff file with the error?";
+                    buttons = MessageBoxButton.YesNo;
+                }
+
+                Log.Warn(string.Format("Error while exporting database {0}", this.Database.Name), ex);
+                var messageBox = MainWindowViewModel.GetMessageBox(
+                        $"Message: {message}",
+                        title,
+                        buttons);
+                var result = await MainWindowViewModel.ShowDialog(messageBox);
+
+                // yes applies if the file should be opened
+                if (result == MaterialMessageBoxResult.Yes && ex is TeamworkTestException testException)
+                {
+                    this.processManager.Start(testException.FileWithExceptionSql);
+                }
+            }
+
+            this.Exporting = false;
+        }
+
         partial void DatabaseDisplayDataCtor()
         {
-            this._TargetVersion = DatabaseVersion.StartVersion;
+            this.targetVersion = DatabaseVersion.StartVersion;
             this.InitializeCommands();
             this.AutoExpanded = true;
             this.ConnectDatabase();
@@ -211,11 +336,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         private void ConnectDatabase()
         {
             // first check if database can be reached
-            if (connectionManager.CheckConnection(this.Name))
+            if (this.connectionManager.CheckConnection(this.Name))
             {
                 this.Database = new Database(
                     this.Name,
                     DatabaseSetting.GetDatabaseSetting(this.Id).Path,
+                    DatabaseSetting.GetDatabaseSetting(this.Id).IgnoredSchemas,
                     this.connectionManager,
                     this.fileSystemAccess,
                     this.processManager,
@@ -259,12 +385,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         {
             var applicableSQLFiles = new ObservableCollection<SQLFileDisplayData>();
             foreach (var file in this.Database.GetToBeAppliedSQLFiles(this.TargetVersion))
+            {
                 applicableSQLFiles.Add(new SQLFileDisplayData(file));
+            }
 
             if (this.ApplicableSQLFiles == null
                 || this.ApplicableSQLFiles.Count != applicableSQLFiles.Count
                 || applicableSQLFiles.Any(f => this.ApplicableSQLFiles.FirstOrDefault((oldFile) => oldFile.SQLFile.Version.Full == f.SQLFile.Version.Full) == null))
+            {
                 this.ApplicableSQLFiles = applicableSQLFiles;
+            }
         }
 
         /// <summary>
@@ -294,23 +424,28 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             var newDatabases = DatabaseSetting.GetDatabaseSettings();
             newDatabases.Single(d => d.Id == this.Id).Name = this.Database.Name;
             newDatabases.Single(d => d.Id == this.Id).Path = this.Database.Path;
+            newDatabases.Single(d => d.Id == this.Id).IgnoredSchemas = this.Database.IgnoredSchemas.ToList();
             SettingsManager.Get().Setting.DatabaseSettings = newDatabases;
             SettingsManager.Get().Save();
             this.EditMode = false;
         }
 
         /// <summary>
-        /// Shows a <see cref="FolderBrowserDialog"/> to the user and
-        /// saves the selected path as the new database path.
+        /// Shows a <see cref="FolderBrowserDialog"/> to the user and saves the selected path as the new database path.
         /// </summary>
         private void EditPath()
         {
             // todo db implement material folder browser
-            System.Windows.Forms.FolderBrowserDialog dialog = new System.Windows.Forms.FolderBrowserDialog();
-            dialog.ShowNewFolderButton = true;
-            dialog.SelectedPath = this.Database.Path;
-            if (dialog.ShowDialog() != System.Windows.Forms.DialogResult.OK)
+            var dialog = new FolderBrowserDialog()
+            {
+                ShowNewFolderButton = true,
+                SelectedPath = this.Database.Path,
+            };
+
+            if (dialog.ShowDialog() != DialogResult.OK)
+            {
                 return;
+            }
 
             this.Database.Path = dialog.SelectedPath;
         }
@@ -323,8 +458,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             this.ExpandCommand = new RelayCommand(() => this.ToggleExpansion(false));
             this.OpenPathCommand = new RelayCommand(async () =>
             {
-                if (fileSystemAccess.DirectoryExists(this.Database.Path))
+                if (this.fileSystemAccess.DirectoryExists(this.Database.Path))
+                {
                     this.processManager.Start(this.Database.Path);
+                }
                 else
                 {
                     var messageBox = MainWindowViewModel.GetMessageBox(
@@ -335,7 +472,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 }
             });
             this.SaveCommand = new RelayCommand(() => this.Save());
-            this.EditCommand = new RelayCommand(() => EditMode = true);
+            this.EditCommand = new RelayCommand(() => this.EditMode = true);
             this.EditPathCommand = new RelayCommand(() => this.EditPath());
             this.ExportCommand = new RelayCommand(() => this.ExecuteInTask(() => this.Export()));
             this.OpenImportWindowCommand = new RelayCommand(() => MainWindowViewModel.OpenImportWindow(this));
@@ -347,6 +484,52 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             this.UndoCommand = new RelayCommand(this.UndoChanges);
             this.ImportCommand = new RelayCommand(this.StartImport);
             this.CreateDatabaseCommand = new RelayCommand(this.CreateDatabase);
+            this.AddSchemaCommand = new RelayCommand(this.AddSchema);
+            this.RemoveSchemaCommand = new RelayCommand(this.RemoveSchema);
+            this.CreateMinorCommand = new RelayCommand(this.CreateMinor);
+        }
+
+        /// <summary>
+        /// Opens a popup which allows the creation of a new minor version.
+        /// </summary>
+        private void CreateMinor()
+        {
+            try
+            {
+                var view = MainWindowViewModel.GetCreateMinorVersionView(this);
+                MainWindowViewModel.ShowDialog(view);
+            }
+            catch (Exception ex)
+            {
+                Log.Error("Error while trying to create minor version.", ex);
+                var msgBox = MainWindowViewModel.GetMessageBox($"The minor version cannot be created. Error: {ex.Message}", "Minor Version can't be created", MessageBoxButton.OK);
+                MainWindowViewModel.ShowDialog(msgBox);
+                return;
+            }
+        }
+
+        private void AddSchema()
+        {
+            if (this.Database == null)
+                return;
+
+            var schemaName = Interaction.InputBox("The name of the schema which should be ignored (without quotation marks)", "Select schema");
+            this.Database.IgnoredSchemas.Add(schemaName);
+        }
+
+        private void RemoveSchema()
+        {
+            if (this.SelectedSchema == null || this.Database == null)
+                return;
+
+            if (DatabaseSetting.DefaultIgnoredSchemas.Contains(this.SelectedSchema))
+            {
+                var messageBox = MainWindowViewModel.GetMessageBox("The default schemas can't be removed.", "Schema not removed", MessageBoxButton.OK);
+                MainWindowViewModel.ShowDialog(messageBox);
+                return;
+            }
+
+            this.Database.IgnoredSchemas.Remove(this.SelectedSchema);
         }
 
         private void CreateDatabase()
@@ -377,30 +560,58 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 this.UpdateData();
                 this.ResetTargetVersion();
+
+                // todo db check for conflicts message box
+                ////var messageBox = MainWindowViewModel.GetMessageBox(
+                ////            $"Import changes for database '{this.Database.Name}' to Version {this.Database.LastApplicableVersion}. Do you want to check for import conflicts?",
+                ////            "Import database changes",
+                ////            MessageBoxButton.YesNoCancel);
+
                 var messageBox = MainWindowViewModel.GetMessageBox(
-                            $"Are you sure you want to import changes for '{this.Database.Name}' to Version {this.Database.LastApplicableVersion}?",
+                            $"Import changes for database '{this.Database.Name}' to Version {this.Database.LastApplicableVersion}.",
                             "Import database changes",
-                            MessageBoxButton.YesNo);
+                            MessageBoxButton.OKCancel);
                 var result = await MainWindowViewModel.ShowDialog(messageBox);
-                if (result == MaterialMessageBoxResult.No)
+                if (result == MaterialMessageBoxResult.Cancel)
+                {
                     return;
+                }
 
                 this.Importing = true;
                 var oldVersion = this.Database.CurrentVersion;
 
                 try
                 {
+                    // check compatibility
+                    ////if (result == MaterialMessageBoxResult.Yes)
+                    ////{
+                    ////    if (this.Database.ImportConflicts(
+                    ////       SettingsManager.Get().Setting.PgDumpLocation,
+                    ////       SettingsManager.Get().Setting.Host,
+                    ////       SettingsManager.Get().Setting.Id,
+                    ////       SettingsManager.Get().Setting.Password))
+                    ////    {
+                    ////        // todo add message
+                    ////        var compatibilityMessageBox = MainWindowViewModel.GetMessageBox($"TODO", "Compatibility problems found.", MessageBoxButton.OK);
+                    ////        await MainWindowViewModel.ShowDialog(compatibilityMessageBox);
+                    ////        return;
+                    ////    }
+                    ////}
+
                     this.UpdateToVersion(this.Database.LastApplicableVersion);
-                    var finishedMessageBox = MainWindowViewModel.GetMessageBox("All SQL Files succesfully executed!", "Succesfully Executed", MessageBoxButton.OK);
+                    var finishedMessageBox = MainWindowViewModel.GetMessageBox("All SQL Files successfully executed!", "Successfully Executed", MessageBoxButton.OK);
                     await MainWindowViewModel.ShowDialog(finishedMessageBox);
-                    Log.Info("All sql files succesfully executed");
+                    Log.Info("All sql files successfully executed");
                 }
                 catch (Exception ex)
                 {
                     var errorFile = this.ApplicableSQLFiles.FirstOrDefault(f => f.Status == ErrorStatus.Error);
-                    string path = "unknown";
+                    var path = "unknown";
                     if (errorFile != null)
+                    {
                         path = errorFile.SQLFile.Path;
+                    }
+
                     var message = $"Error in file {path}: {ex.Message}\n\nStart rolling back to version {oldVersion}";
                     MainWindowViewModel.ShowDialog(MainWindowViewModel.GetMessageBox(message, "Execution failed", MessageBoxButton.OK)).Wait();
                     Log.Info(string.Format("Error while executing files. Rolling back to version {0}", oldVersion), ex);
@@ -425,7 +636,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                                 MessageBoxButton.YesNo);
                 var result = await MainWindowViewModel.ShowDialog(messageBox);
                 if (result == MaterialMessageBoxResult.No)
+                {
                     return;
+                }
 
                 this.Undoing = true;
                 try
@@ -434,7 +647,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                        SettingsManager.Get().Setting.PgDumpLocation,
                        SettingsManager.Get().Setting.Host,
                        SettingsManager.Get().Setting.Id,
-                       SettingsManager.Get().Setting.Password);
+                       SettingsManager.Get().Setting.Password,
+                       SettingsManager.Get().Setting.Port);
                 }
                 catch (Exception ex)
                 {
@@ -463,7 +677,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                                 MessageBoxButton.YesNo);
                     var result = await MainWindowViewModel.ShowDialog(messageBox);
                     if (result == MaterialMessageBoxResult.No)
+                    {
                         return;
+                    }
 
                     this.Resetting = true;
                     try
@@ -486,17 +702,36 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         private void CreateDump()
         {
-            System.Windows.Forms.SaveFileDialog sfd = new System.Windows.Forms.SaveFileDialog();
-            sfd.Filter = DumpExtension;
-
+            var sfd = new SaveFileDialog()
+            {
+                Filter = DumpExtension,
+            };
             var result = sfd.ShowDialog();
-            if (result == System.Windows.Forms.DialogResult.OK)
-                this.Database.CreateDump(
-                    sfd.FileName,
-                    SettingsManager.Get().Setting.PgDumpLocation,
-                    SettingsManager.Get().Setting.Host,
-                    SettingsManager.Get().Setting.Id,
-                    SettingsManager.Get().Setting.Password);
+            if (result == DialogResult.OK)
+            {
+                try
+                {
+                    this.Database.CreateDump(
+                        sfd.FileName,
+                        SettingsManager.Get().Setting.PgDumpLocation,
+                        SettingsManager.Get().Setting.Host,
+                        SettingsManager.Get().Setting.Id,
+                        SettingsManager.Get().Setting.Password,
+                        SettingsManager.Get().Setting.Port);
+                }
+                catch (Exception ex)
+                {
+                    var title = "Error while creating dump";
+                    var message = ex.Message;
+
+                    Log.Error(string.Format("Error while creating dump {0}", this.Database.Name), ex);
+                    var messageBox = MainWindowViewModel.GetMessageBox(
+                            $"Message: {message}",
+                            title,
+                            MessageBoxButton.OK);
+                    MainWindowViewModel.ShowDialog(messageBox);
+                }
+            }
         }
 
         private async void ReduceVersion()
@@ -508,54 +743,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             var result = await MainWindowViewModel.ShowDialog(messageBox);
 
             if (result == MaterialMessageBoxResult.Yes)
+            {
                 this.Database.ReduceVersion();
-        }
-
-        /// <summary>
-        /// Exports the database and shows a message box to the user if a error occurred.
-        /// </summary>
-        private void Export()
-        {
-            this.Exporting = true;
-            try
-            {
-                this.Database.Export(
-                    SettingsManager.Get().Setting.PgDumpLocation,
-                    SettingsManager.Get().Setting.Host,
-                    SettingsManager.Get().Setting.Id,
-                    SettingsManager.Get().Setting.Password);
-
-                // open the diff files so user can verify them
-                var diff = new SQLFileDisplayData(this.Database.DiffFiles.Last());
-                var undoDiff = new SQLFileDisplayData(this.Database.UndoDiffFiles.First());
-
-                if (SettingsManager.Get().Setting.OpenFilesInDefaultApplication)
-                {
-                    this.processManager.Start(diff.SQLFile.Path);
-                    this.processManager.Start(undoDiff.SQLFile.Path);
-                }
-                else
-                    MainWindowViewModel.OpenExportWindow(diff, undoDiff);
             }
-            catch (Exception ex)
-            {
-                var title = "Error while exporting database";
-                var message = ex.Message;
-
-                if (ex is FileNotFoundException)
-                    message = $"{message}: {((FileNotFoundException)ex).FileName}";
-                else if (ex is TeamworkException && !((TeamworkException)ex).ShowAsError)
-                    title = "Info";
-
-                Log.Warn(string.Format("Error while exporting database {0}", this.Database.Name), ex);
-                var messageBox = MainWindowViewModel.GetMessageBox(
-                        $"Message: {message}",
-                        title,
-                        MessageBoxButton.OK);
-                MainWindowViewModel.ShowDialog(messageBox).Wait();
-            }
-
-            this.Exporting = false;
         }
 
         /// <summary>
@@ -572,7 +762,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
                     var messageBox = MainWindowViewModel.GetMessageBox(
                         "All sql statements successfully executed!",
-                        "Test succesfully finished",
+                        "Test successfully finished",
                         MessageBoxButton.OK);
                     await MainWindowViewModel.ShowDialog(messageBox);
                     Log.Info("All sql statements successfully executed");

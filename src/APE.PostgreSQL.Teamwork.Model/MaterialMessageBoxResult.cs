@@ -15,26 +15,26 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// <summary>
         /// The dialog was canceled by clicking the corresponding button or dismissing the dialog by another user action (e.g. pressing escape).
         /// </summary>
-		Cancel,
+        Cancel,
 
         /// <summary>
         /// The user pressed the "no" button.
         /// </summary>
-		No,
+        No,
 
         /// <summary>
         /// No result at all.
         /// </summary>
-		None,
+        None,
 
         /// <summary>
         /// The user pressed the "ok" button.
         /// </summary>
-		OK,
+        OK,
 
         /// <summary>
         /// The user pressed the "yes" button.
         /// </summary>
-		Yes
+        Yes
     }
 }

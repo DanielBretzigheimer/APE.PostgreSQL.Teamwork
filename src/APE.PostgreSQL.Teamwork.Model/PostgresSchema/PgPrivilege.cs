@@ -64,10 +64,12 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             return $"{command} {privilege} ON {this.OnType} {this.OnName} {tofrom} {this.Role};";
         }
 
-        public override bool Equals(object obj)
+        public override bool Equals([NullGuard.AllowNull] object obj)
         {
             if (obj == null || obj.GetType() != typeof(PgPrivilege))
+            {
                 return false;
+            }
 
             var other = (PgPrivilege)obj;
             return this.Command == other.Command
@@ -77,6 +79,12 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 && this.Role == other.Role;
         }
 
+        public override int GetHashCode()
+        {
+            return base.GetHashCode();
+        }
+
+        [return: NullGuard.AllowNull]
         public override string ToString()
         {
             return $"{this.GetType().Name} {this.Create()}";

@@ -1,4 +1,4 @@
-﻿// <copyright file="commandlineexecutor.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+﻿// <copyright file="CommandLineExecutor.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using APE.PostgreSQL.Teamwork.Model;
 using APE.PostgreSQL.Teamwork.ViewModel;
@@ -30,7 +30,16 @@ namespace APE.PostgreSQL.Teamwork.CommandPrompt
 
             // initilialize connection and database
             connectionManager.Initialize(commandLineArgs.Username, commandLineArgs.Host, commandLineArgs.Password, commandLineArgs.Port);
-            Database database = new Database(commandLineArgs.DatabaseName, commandLineArgs.FilePath, connectionManager, fileSystemAccess, processManager, diffCreator, sqlFileTester, true);
+            var database = new Database(
+                commandLineArgs.DatabaseName,
+                commandLineArgs.FilePath,
+                DatabaseSetting.DefaultIgnoredSchemas,
+                connectionManager,
+                fileSystemAccess,
+                processManager,
+                diffCreator,
+                sqlFileTester,
+                true);
             var oldVersion = database.CurrentVersion;
             Console.WriteLine(string.Format("{0}Old Version was {1}", Environment.NewLine, oldVersion));
 
@@ -40,9 +49,13 @@ namespace APE.PostgreSQL.Teamwork.CommandPrompt
             {
                 var targetVersion = database.LastApplicableVersion;
                 if (commandLineArgs.FullTargetVersion != null)
+                {
                     targetVersion = DatabaseVersion.CommandLineVersion(commandLineArgs.FullTargetVersion);
+                }
                 else if (commandLineArgs.TargetVersion != null)
+                {
                     targetVersion = new DatabaseVersion((int)commandLineArgs.TargetVersion);
+                }
 
                 if (targetVersion == database.CurrentVersion)
                 {
@@ -64,11 +77,12 @@ namespace APE.PostgreSQL.Teamwork.CommandPrompt
             {
                 Console.WriteLine(string.Format("Exception occured: {0}", ex.Message));
 
-                if (ex is TeamworkConnectionException)
+                if (ex is TeamworkConnectionException teamworkException)
                 {
-                    TeamworkConnectionException teamworkException = (TeamworkConnectionException)ex;
                     if (teamworkException.File != null)
+                    {
                         Console.WriteLine(string.Format("In file: {0}", teamworkException.File.Path));
+                    }
                 }
 
                 try
@@ -103,7 +117,9 @@ namespace APE.PostgreSQL.Teamwork.CommandPrompt
             var commandLineArgs = new CommandLineArgs();
 
             if (Parser.Default.ParseArguments(args, commandLineArgs))
+            {
                 return this.Execute(commandLineArgs);
+            }
 
             // 1 means an error occured for the setup
             Console.WriteLine("Could not parse arguments");

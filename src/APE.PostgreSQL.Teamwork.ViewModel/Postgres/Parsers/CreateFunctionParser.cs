@@ -1,6 +1,7 @@
 ﻿// <copyright file="CreateFunctionParser.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
+using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 {
@@ -21,22 +22,26 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         public static void Parse(PgDatabase database, string statement)
         {
-            Parser parser = new Parser(statement);
+            var parser = new Parser(statement);
             parser.Expect("CREATE");
             parser.ExpectOptional("OR", "REPLACE");
             parser.Expect("FUNCTION");
 
-            string functionName = parser.ParseIdentifier();
-            string schemaName = ParserUtils.GetSchemaName(functionName, database);
+            var functionName = parser.ParseIdentifier();
+            var schemaName = ParserUtils.GetSchemaName(functionName, database);
 
             PgSchema schema = database.GetSchema(schemaName);
 
             if (schema == null)
-                throw new Exception(string.Format("CannotFindSchema", schemaName, statement));
+            {
+                throw new TeamworkParserException($"CannotFindSchema {schemaName} {statement}");
+            }
 
-            PgFunction function = new PgFunction();
-            function.Name = ParserUtils.GetObjectName(functionName);
-            schema.AddFunction(function);
+            var function = new PgFunction()
+            {
+                Name = ParserUtils.GetObjectName(functionName),
+            };
+            schema.Add(function);
 
             parser.Expect("(");
 
@@ -44,21 +49,31 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             {
                 string mode;
                 if (parser.ExpectOptional("IN"))
+                {
                     mode = "IN";
+                }
                 else if (parser.ExpectOptional("OUT"))
+                {
                     mode = "OUT";
+                }
                 else if (parser.ExpectOptional("INOUT"))
+                {
                     mode = "INOUT";
+                }
                 else if (parser.ExpectOptional("VARIADIC"))
+                {
                     mode = "VARIADIC";
+                }
                 else
+                {
                     mode = null;
+                }
 
-                int position = parser.Position;
+                var position = parser.Position;
                 string argumentName = null;
-                string dataType = parser.ParseDataType();
+                var dataType = parser.ParseDataType();
 
-                int position2 = parser.Position;
+                var position2 = parser.Position;
 
                 if (!parser.ExpectOptional(")") && !parser.ExpectOptional(",") && !parser.ExpectOptional("=") && !parser.ExpectOptional("DEFAULT"))
                 {
@@ -67,30 +82,40 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     dataType = parser.ParseDataType();
                 }
                 else
+                {
                     parser.Position = position2;
+                }
 
                 string defaultExpression;
                 if (parser.ExpectOptional("=") || parser.ExpectOptional("DEFAULT"))
-                    defaultExpression = parser.Expression;
+                {
+                    defaultExpression = parser.Expression();
+                }
                 else
+                {
                     defaultExpression = null;
+                }
 
-                PgFunction.Argument argument = new PgFunction.Argument();
-                argument.DataType = dataType;
-                argument.DefaultExpression = defaultExpression;
-                argument.Mode = mode;
-                argument.Name = argumentName;
+                var argument = new PgFunction.Argument()
+                {
+                    DataType = dataType,
+                    DefaultExpression = defaultExpression,
+                    Mode = mode,
+                    Name = argumentName,
+                };
                 function.AddArgument(argument);
 
                 if (parser.ExpectOptional(")"))
+                {
                     break;
+                }
                 else
                 {
                     parser.Expect(",");
                 }
             }
 
-            function.Body = parser.Rest;
+            function.Body = parser.Rest();
         }
     }
 }

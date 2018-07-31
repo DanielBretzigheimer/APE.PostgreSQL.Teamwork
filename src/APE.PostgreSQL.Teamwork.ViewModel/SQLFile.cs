@@ -33,12 +33,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <param name="fileSystemAccess">The file system access.</param>
         public SQLFile(string path, IDatabase database, IFileSystemAccess fileSystemAccess)
         {
-            if (fileSystemAccess == null)
-                throw new ArgumentNullException("file", "file == null");
-            this.file = fileSystemAccess;
-            if (database == null)
-                throw new ArgumentNullException("database", "database == null");
-            this.database = database;
+            this.file = fileSystemAccess ?? throw new ArgumentNullException("file", "file == null");
+            this.database = database ?? throw new ArgumentNullException("database", "database == null");
 
             if (this.file.FileExists(path))
             {
@@ -58,13 +54,19 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 this.SQLStatements = this.GetSQLStatements();
             }
             else
-                throw new FileNotFoundException("The file " + path + "was not found");
+            {
+                throw new FileNotFoundException("The file " + path + " was not found");
+            }
         }
 
         public string Path { get; private set; }
+
         public string FileName { get; private set; }
+
         public DatabaseVersion Version { get; private set; }
+
         public FileType FileType { get; private set; }
+
         public IEnumerable<IStatement> SQLStatements { get; set; }
 
         /// <summary>
@@ -86,18 +88,24 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 // execute statements which dont support transaction at the beginning
                 foreach (var statement in this.SQLStatements.Where(s => !s.SupportsTransaction))
+                {
                     statement.Execute();
+                }
 
                 var sb = new StringBuilder();
                 foreach (var statement in this.SQLStatements.Where(s => s.SupportsTransaction))
+                {
                     sb.AppendLine(statement.SQL);
+                }
 
                 // execute other statements in transaction
                 var sql = sb.ToString();
                 this.database.ExecuteCommandNonQuery(sql);
 
                 if (this.FileType == FileType.UndoDiff)
+                {
                     this.database.ExecuteCommandNonQuery(SQLTemplates.RemoveVersion(this.Version));
+                }
 
                 this.database.ExecuteCommandNonQuery(SQLTemplates.AddExecutedFileSql(this.Version, this.FileType));
             }
@@ -116,7 +124,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 throw new TeamworkConnectionException(this, ex.Message, ex);
             }
 
-            Log.Info(string.Format("File {0} executed without errors", this.FileName));
+            Log.Info(string.Format("File {0} executed successfully", this.FileName));
         }
 
         public void MarkAsExecuted()
@@ -128,6 +136,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         ///  Returns a string that represents the current object.
         /// </summary>
+        [return: NullGuard.AllowNull]
         public override string ToString()
         {
             return string.Format("{0} Path: {1} Statements {2}", this.GetType().Name.ToString(), this.Path, this.SQLStatements.Count());
@@ -136,81 +145,98 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         /// Scans the file at the given path for SQL Statements and returns them in a list.
         /// </summary>
-        /// <param name="reader">The stream reader of the file which is read.</param>
-        /// <param name="database">Forwarded to the Statements for there connection when executed.</param>
         /// <param name="ignoreTeamworkExecution">Ignores if no Teamwork Execution is found => can result in no version change or other behavior.</param>
-        /// <exception cref="TeamworkExecutionException">Is thrown when the teamwork execution was not used in the diff file and inserts it.</exception>
         private List<IStatement> GetSQLStatements(bool ignoreTeamworkExecution = false)
         {
-            List<IStatement> retVal = new List<IStatement>();
+            var retVal = new List<IStatement>();
 
-            bool isFunction = false;
-            bool isTransaction = false;
-            StringBuilder statement = new StringBuilder();
+            var isFunction = false;
+            var isTransaction = false;
+            var statement = new StringBuilder();
 
-            var lines = this.file.ReadAllLines(this.Path);
-            var currentSearchPath = string.Empty;
-
-            foreach (var line in lines)
+            try
             {
-                if (line.StartsWith("SET search_path = "))
-                    currentSearchPath = line;
-
-                // checks if a function begins in this line
-                if (new Regex("CREATE.+FUNCTION").Matches(line.ToUpper()).Count != 0)
-                    isFunction = true;
-                if (!isTransaction && line.Contains("BEGIN;"))
-                    isTransaction = true;
-                else if (isTransaction && line.Contains("COMMIT;"))
-                    isTransaction = false;
-
-                // no possible end in line
-                int endPosition = line.IndexOf(";");
-                int commentStart = line.IndexOf(SQLTemplates.Comment);
-
-                // checks if the line is in a function
-                if (isFunction)
+                var lines = this.file.ReadAllLines(this.Path);
+                var currentSearchPath = string.Empty;
+                foreach (var line in lines)
                 {
-                    endPosition = -1;
-
-                    // possible function endings
-                    if (line.Contains("$$;"))
-                        endPosition = line.IndexOf("$$;") + 3;
-                    else if (line.Contains("$_$;"))
-                        endPosition = line.IndexOf("$_$;") + 4;
-                    else if (line.Contains("OWNER TO") && line.Contains(";"))
+                    if (line.StartsWith("SET search_path = "))
                     {
-                        // OWNER TO ...; marks the end of an function if its copied from the pgadmin
-                        endPosition = line.IndexOf(";") + 1;
+                        currentSearchPath = line;
+                    }
+
+                    // checks if a function begins in this line
+                    if (new Regex("CREATE.+FUNCTION").Matches(line.ToUpper()).Count != 0)
+                    {
+                        isFunction = true;
+                    }
+
+                    if (!isTransaction && line.Contains("BEGIN;"))
+                    {
+                        isTransaction = true;
+                    }
+                    else if (isTransaction && line.Contains("COMMIT;"))
+                    {
+                        isTransaction = false;
+                    }
+
+                    // no possible end in line
+                    var endPosition = line.IndexOf(";");
+                    var commentStart = line.IndexOf(SQLTemplates.Comment);
+
+                    // checks if the line is in a function
+                    if (isFunction)
+                    {
+                        endPosition = -1;
+
+                        // possible function endings
+                        if (line.Contains("$$;"))
+                        {
+                            endPosition = line.IndexOf("$$;") + 3;
+                        }
+                        else if (line.Contains("$_$;"))
+                        {
+                            endPosition = line.IndexOf("$_$;") + 4;
+                        }
+                        else if (line.Contains("OWNER TO") && line.Contains(";"))
+                        {
+                            // OWNER TO ...; marks the end of an function if its copied from the pgadmin
+                            endPosition = line.IndexOf(";") + 1;
+                        }
+                    }
+
+                    statement.AppendLine(line);
+
+                    // checks if statment ends
+                    if (endPosition > -1
+                            && (commentStart == -1 || endPosition < commentStart))
+                    {
+                        isFunction = false;
+
+                        if (!isTransaction)
+                        {
+                            var sqlStatement = new Statement(currentSearchPath, statement.ToString().Trim(), this.database);
+                            retVal.Add(sqlStatement);
+                            statement.Clear();
+                        }
                     }
                 }
 
-                statement.AppendLine(line);
-
-                // checks if statment ends
-                if (endPosition > -1
-                        && (commentStart == -1 || endPosition < commentStart))
+                // add ending even if its not a statement
+                if (statement.ToString().Trim() != string.Empty)
                 {
-                    isFunction = false;
-
-                    if (!isTransaction)
-                    {
-                        Statement sqlStatement = new Statement(currentSearchPath, statement.ToString().Trim(), this.database);
-                        retVal.Add(sqlStatement);
-                        statement.Clear();
-                    }
+                    var sqlStatement = new Statement(currentSearchPath, statement.ToString().Trim(), this.database);
+                    retVal.Add(sqlStatement);
+                    statement.Clear();
                 }
-            }
 
-            // add ending even if its not a statement
-            if (statement.ToString().Trim() != string.Empty)
+                return retVal;
+            }
+            catch (Exception)
             {
-                Statement sqlStatement = new Statement(currentSearchPath, statement.ToString().Trim(), this.database);
-                retVal.Add(sqlStatement);
-                statement.Clear();
+                // file could not be read maybe because its already opened
+                return new List<IStatement>();
             }
-
-            return retVal;
         }
     }
 }

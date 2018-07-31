@@ -28,7 +28,9 @@ namespace APE.PostgreSQL.Teamwork.Model
             get
             {
                 if (this.version == null)
+                {
                     this.version = new DatabaseVersion(this);
+                }
 
                 return this.version;
             }
@@ -39,6 +41,7 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// <summary>
         ///  Returns a string that represents the current object.
         /// </summary>
+        [return: NullGuard.AllowNull]
         public override string ToString()
         {
             return $"{this.GetType().Name} Version: {this.DatabaseVersion.Full} Executed: {this.ExecutionDate}";

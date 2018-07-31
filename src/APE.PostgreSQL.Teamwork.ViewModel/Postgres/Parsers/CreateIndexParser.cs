@@ -1,6 +1,7 @@
 ﻿// <copyright file="CreateIndexParser.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
+using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 {
@@ -21,39 +22,43 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         public static void Parse(PgDatabase database, string statement)
         {
-            Parser parser = new Parser(statement);
+            var parser = new Parser(statement);
             parser.Expect("CREATE");
 
-            bool unique = parser.ExpectOptional("UNIQUE");
+            var unique = parser.ExpectOptional("UNIQUE");
 
             parser.Expect("INDEX");
             parser.ExpectOptional("CONCURRENTLY");
 
-            string indexName = ParserUtils.GetObjectName(parser.ParseIdentifier());
+            var indexName = ParserUtils.GetObjectName(parser.ParseIdentifier());
 
             parser.Expect("ON");
 
-            string tableName = parser.ParseIdentifier();
+            var tableName = parser.ParseIdentifier();
 
-            string definition = parser.Rest;
+            var definition = parser.Rest();
 
-            string schemaName = ParserUtils.GetSchemaName(tableName, database);
+            var schemaName = ParserUtils.GetSchemaName(tableName, database);
 
             PgSchema schema = database.GetSchema(schemaName);
 
             if (schema == null)
-                throw new Exception(string.Format("CannotFindSchema", schemaName, statement));
+            {
+                throw new TeamworkParserException($"CannotFindSchema {schemaName} from  {statement}");
+            }
 
-            string objectName = ParserUtils.GetObjectName(tableName);
+            var objectName = ParserUtils.GetObjectName(tableName);
 
             PgTable table = schema.GetTable(objectName);
 
             if (table == null)
-                throw new Exception(string.Format("CannotFindTable", tableName, statement));
+            {
+                throw new TeamworkParserException($"CannotFindTable {tableName} from {statement}");
+            }
 
-            PgIndex index = new PgIndex(indexName);
+            var index = new PgIndex(indexName);
             table.AddIndex(index);
-            schema.AddIndex(index);
+            schema.Add(index);
             index.Definition = definition.Trim();
             index.TableName = table.Name;
             index.Unique = unique;

@@ -19,13 +19,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     /// <summary>
     /// ViewModel for the MainWindowView which displays a list of databases.
     /// </summary>
-    [NotifyProperty(typeof(string), "ErrorMessage")]
-    [NotifyProperty(typeof(string), "SuccessMessage")]
+    [NotifyProperty(AccessModifier.PublicGetPrivateSet, typeof(string), "ErrorMessage", "")]
+    [NotifyProperty(AccessModifier.PublicGetPrivateSet, typeof(string), "SuccessMessage", "")]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "Editable", false)]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "Loading", false)]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "ShowSearch", false)]
     [NotifyProperty(AccessModifier.Public, typeof(string), "FilterText", "")]
-    [NotifyProperty(typeof(List<DatabaseDisplayData>), "Databases")]
+    [AllowNullNotifyProperty(typeof(List<DatabaseDisplayData>), "Databases")]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "EditButtonEnabled", true)]
     [NotifyProperty(AccessModifier.Public, typeof(Visibility), "SaveButtonVisibility", Visibility.Hidden)]
     [Startable]
@@ -92,8 +92,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 {
                     // unregister the old events
                     if (this.unfilteredDatabases != null)
+                    {
                         foreach (var database in this.unfilteredDatabases)
+                        {
                             database.Removed -= this.DatabaseRemoved;
+                        }
+                    }
 
                     this.unfilteredDatabases = new List<DatabaseDisplayData>();
                     foreach (var setting in DatabaseSetting.GetDatabaseSettings())
@@ -110,9 +114,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 // update each database in its own task so the slow ones don't
                 // delay the others
                 foreach (var database in this.unfilteredDatabases)
+                {
                     this.ExecuteInTask(() => database.UpdateData());
+                }
 
-                Log.Info("Databases succesfully updated");
+                Log.Info("Databases successfully updated");
             }
         }
 
@@ -131,9 +137,48 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
             var databaseSettings = new List<DatabaseSetting>();
             foreach (var database in newDatabaseOrder)
+            {
                 databaseSettings.Add(new DatabaseSetting(database.Id, database.Name, database.Path));
+            }
 
             SettingsManager.Get().Setting.DatabaseSettings = databaseSettings;
+        }
+
+        public async void CheckVersion()
+        {
+            var settings = SettingsManager.Get().Setting;
+            var previousVersionString = settings.ApplicationVersion == null ? "none" : settings.ApplicationVersion.Version.ToString();
+            var assemblyVersion = Assembly.GetAssembly(typeof(MainWindowViewModel)).GetName().Version;
+            if (settings.ApplicationVersion == null || assemblyVersion > settings.ApplicationVersion.Version)
+            {
+                Log.Info($"Version was upgraded from {previousVersionString} to {assemblyVersion.ToString()}");
+                var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\CHANGELOG.md";
+
+                var changelog = string.Empty;
+                try
+                {
+                    using (var streamReader = new StreamReader(path))
+                    {
+                        changelog = streamReader.ReadToEnd();
+                    }
+                }
+                catch (Exception)
+                {
+                    // changelog could not be loaded
+                    changelog = "Could not load changelog!";
+                }
+
+                // upgrade => show change log
+                await ShowDialog(GetMarkdownBox(changelog, "Code generation was upgraded", MessageBoxButton.OK));
+            }
+            else if (assemblyVersion < settings.ApplicationVersion.Version)
+            {
+                // downgrade
+                Log.Info($"Version was downgraded from {previousVersionString} to {assemblyVersion.ToString()}");
+                await ShowDialog(GetMessageBox("Your version of the CodeGeneration was downgrade. Check your settings.", "Version downgraded", MessageBoxButton.OK));
+            }
+
+            SettingsManager.Get().UpdateVersion(assemblyVersion);
         }
 
         /// <summary>
@@ -155,9 +200,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
             // disable buttons until a database is selected
             this.EditButtonEnabled = false;
-            this.worker = new DispatcherTimer();
-            this.worker.Interval = new TimeSpan(TimeSpan.TicksPerSecond * 2);
-            this.worker.Tick += UpdateWorkerTick;
+            this.worker = new DispatcherTimer
+            {
+                Interval = new TimeSpan(TimeSpan.TicksPerSecond * 2),
+            };
+
+            this.worker.Tick += this.UpdateWorkerTick;
         }
 
         private void UpdateWorkerTick(object sender, EventArgs e)
@@ -168,7 +216,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         /// Starts the async worker which updates the databases.
         /// </summary>
-        partial void StartCore()
+        partial void StartGenerated()
         {
             this.CheckSettings();
 
@@ -178,6 +226,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                         if (this.worker != null && SettingsManager.Get().Setting.AutoRefresh)
                             this.worker.Start();
                     });
+
+            this.CheckVersion();
         }
 
         private async void CheckSettings()
@@ -191,7 +241,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
                 var message = string.Empty;
                 if (connectionError)
+                {
                     message = "Connection to the Database Server could not be established";
+                }
                 else if (dumpCreatorNotFound)
                 {
                     var path = this.SearchFileRecursivly("pg_dump.exe", "C:\\Program Files\\PostgreSQL\\"); // todo db move it to settings
@@ -204,7 +256,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                         continue;
                     }
                     else
+                    {
                         message = "PgDump.exe was not found. Please set the correct path in the Settings";
+                    }
                 }
                 else if (defaultPathNotFound)
                 {
@@ -214,14 +268,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                     continue;
                 }
                 else
+                {
                     break;
+                }
 
                 var messageBox = GetMessageBox(
                     $"{message}. Do you want to change your settings? If not the application will shut down.",
                     "Verify Settings",
                     MessageBoxButton.YesNo);
 
-                await BaseViewModel.ShowExtendedDialog(messageBox, this.ConnectionMessageBoxClosingEventHandler);
+                await MainWindowViewModel.ShowExtendedDialog(messageBox, this.ConnectionMessageBoxClosingEventHandler);
             }
         }
 
@@ -230,28 +286,36 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         /// <remarks>If one folder of the path contains a number the highest is chosen.</remarks>
         /// <returns>The path to the file or null if the file was not found.</returns>
+        [return: NullGuard.AllowNull]
         private string SearchFileRecursivly(string filename, string path)
         {
             if (!Directory.Exists(path))
+            {
                 return null;
+            }
 
             foreach (var file in Directory.GetFiles(path))
             {
                 if (Path.GetFileName(file) == filename)
+                {
                     return file;
+                }
             }
 
             var directories = Directory.GetDirectories(path);
-            for (int i = directories.Count() - 1; i >= 0; i--)
+            for (var i = directories.Count() - 1; i >= 0; i--)
             {
                 var file = this.SearchFileRecursivly(filename, directories.ElementAt(i));
                 if (file != null)
+                {
                     return file;
+                }
             }
 
             return null;
         }
 
+        [return: NullGuard.AllowNull]
         private object ConnectionMessageBoxClosingEventHandler(MaterialMessageBoxResult result)
         {
             if (result == MaterialMessageBoxResult.No)
@@ -261,13 +325,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             }
 
             // update content of the session
-            return BaseViewModel.GetSettingView();
+            return MainWindowViewModel.GetSettingView();
         }
 
         /// <summary>
         /// Stops the async worker which updates the databases.
         /// </summary>
-        partial void StopCore()
+        partial void StopGenerated()
         {
             if (this.worker != null)
                 this.worker.Stop();
@@ -292,17 +356,23 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         private void OpenSettings()
         {
-            BaseViewModel.ShowDialog(BaseViewModel.GetSettingView());
+            MainWindowViewModel.ShowDialog(MainWindowViewModel.GetSettingView());
 
             //// todo db this.CheckSettings();
 
             if (this.worker == null)
+            {
                 return;
+            }
 
             if (SettingsManager.Get().Setting.AutoRefresh)
+            {
                 this.worker.Start();
+            }
             else
+            {
                 this.worker.Stop();
+            }
         }
 
         private void CreateCommands()
@@ -318,7 +388,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 this.ShowSearch = !this.ShowSearch;
                 if (!this.ShowSearch)
+                {
                     this.FilterText = string.Empty;
+                }
             });
 
             this.SizeChangedCommand = new RelayCommand<SizeChangedEventArgs>(this.SizeChanged);
@@ -328,11 +400,19 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         {
             // expand databases if window is bigger
             if (args.NewSize.Height > 600 && args.NewSize.Width > 650)
+            {
                 foreach (var d in this.Databases.Where(d => !d.ShowDetails))
+                {
                     d.ToggleExpansion(true);
+                }
+            }
             else
+            {
                 foreach (var d in this.Databases.Where(d => d.ShowDetails))
+                {
                     d.ToggleExpansion(true);
+                }
+            }
         }
     }
 }

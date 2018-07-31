@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using APE.PostgreSQL.Teamwork.Model;
+using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {
@@ -46,12 +47,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         /// Creates a new dump of the database.
         /// </summary>
+        /// <param name="path">The path at which the dump is created.</param>
         /// <param name="dumpCreatorPath">Path to the postgres dump exe with which a dump is created.</param>
         /// <param name="host">Server host to which is connected.</param>
         /// <param name="id">Server id for the dump creation.</param>
         /// <param name="password">Server password for the dump creation.</param>
+        /// <param name="port">The port of the server.</param>
         /// <returns>The created dump as <see cref="SQLFile"/>.</returns>
-        SQLFile CreateDump(string path, string dumpCreatorPath, string host, string id, string password);
+        SQLFile CreateDump(string path, string dumpCreatorPath, string host, string id, string password, int port);
 
         /// <summary>
         /// Gets all <see cref="SQLFile"/>s which needs to be applied to get to a given version.
@@ -68,11 +71,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         /// Exports the changes of the given database.
         /// </summary>
+        /// <param name="newVersion">The new version which is created.</param>
         /// <param name="dumpCreatorPath">Path to the postgres dump exe.</param>
         /// <param name="host">Server host to which is connected.</param>
         /// <param name="id">Server id for the diff creation.</param>
         /// <param name="password">Server password for the dump creation.</param>
-        void Export(string dumpCreatorPath, string host, string id, string password);
+        /// <param name="port">The port of the server.</param>
+        void Export(DatabaseVersion newVersion, string dumpCreatorPath, string host, string id, string password, int port);
 
         /// <summary>
         /// Reduces the version by 1.
@@ -99,7 +104,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// diffs or undo diffs.
         /// </summary>
         /// <param name="version">To which the database gets up or downgraded.</param>
-        /// <param name="afterFileExecution">Action which is called after a file was executed with a List of all SQLFiles 
+        /// <param name="afterFileExecution">Action which is called after a file was executed with a List of all SQLFiles
         /// (<see cref="IEnumerable{SQLFile}"/>) and the index of the currently executed one.</param>
         /// <exception cref="TeamworkConnectionException">Is thrown when an error occurred while executing the SQL Statements.</exception>
         void UpdateToVersion(DatabaseVersion version, Action<IEnumerable<SQLFile>, SQLFile> afterFileExecution = null);
@@ -108,7 +113,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// Executes the given SQL command on the given database.
         /// </summary>
         /// <typeparam name="T">Database type to which the returned data can be parsed.</typeparam>
-        /// <param name="database">Database on which the SQL gets executed.</param>
         /// <param name="sql">SQL which is executed.</param>
         /// <returns>The parsed data from the database.</returns>
         List<T> ExecuteCommand<T>(string sql);
@@ -116,7 +120,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         /// Executes the given command without requesting a return value.
         /// </summary>
-        /// <param name="database">Database on which the SQL gets executed.</param>
         /// <param name="sql">SQL which is executed.</param>
         void ExecuteCommandNonQuery(string sql);
     }

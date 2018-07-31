@@ -1,4 +1,4 @@
-// <copyright file="importwindowviewmodel.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+// <copyright file="ImportWindowViewModel.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -18,7 +18,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     /// which the user can execute.
     /// </summary>
     [NotifyProperty(typeof(List<SQLFileDisplayData>), "DiffFiles")]
-    [NotifyProperty(typeof(SQLFileDisplayData), "SelectedDiffFile")]
+    [AllowNullNotifyProperty(typeof(SQLFileDisplayData), "SelectedDiffFile")]
     [NotifyProperty(typeof(bool), "ExecuteButtonEnabled")]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "ExecuteButtonVisible", true)]
     [NotifyProperty(AccessModifier.Public, typeof(bool), "Loading", false)]
@@ -128,7 +128,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 var selectedFiles = this.SelectedDatabase.ApplicableSQLFiles.Where(f => f.IsSelected);
                 foreach (var file in selectedFiles)
+                {
                     this.processManager.Start(file.SQLFile.Path);
+                }
             });
 
             this.RefreshFileCommand = new RelayCommand(() =>
@@ -137,7 +139,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 {
                     var selectedFiles = this.SelectedDatabase.ApplicableSQLFiles.Where(f => f.IsSelected);
                     foreach (var file in selectedFiles)
+                    {
                         uiDispatcher.Invoke(() => file.Refresh());
+                    }
                 });
             });
 
@@ -145,7 +149,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 var selectedFiles = this.SelectedDatabase.ApplicableSQLFiles.Where(f => f.IsSelected);
                 foreach (var file in selectedFiles)
+                {
                     file.SQLFile.MarkAsExecuted();
+                }
 
                 this.SelectedDatabase.UpdateData();
             });
@@ -172,15 +178,18 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             try
             {
                 this.SelectedDatabase.UpdateToVersion(this.SelectedDatabase.TargetVersion);
-                await BaseViewModel.ShowDialogWithCloseHandler(BaseViewModel.GetMessageBox("All SQL Files succesfully executed! Do you want to close the window?", "Succesfully Executed", MessageBoxButton.YesNo), this.SuccesfullyExecutedMessageBoxClosing);
-                Log.Info("All sql files succesfully executed");
+                await BaseViewModel.ShowDialogWithCloseHandler(BaseViewModel.GetMessageBox("All SQL Files successfully executed! Do you want to close the window?", "Successfully Executed", MessageBoxButton.YesNo), this.SuccessfullyExecutedMessageBoxClosing);
+                Log.Info("All sql files successfully executed");
             }
             catch (Exception ex)
             {
                 var errorFile = this.SelectedDatabase.ApplicableSQLFiles.FirstOrDefault(f => f.Status == ErrorStatus.Error);
-                string path = "unknown";
+                var path = "unknown";
                 if (errorFile != null)
+                {
                     path = errorFile.SQLFile.Path;
+                }
+
                 var message = string.Format("Error in file {0}: {1}\n\nStart rolling back to version {2}", path, ex.Message, oldVersion);
                 BaseViewModel.ShowDialog(BaseViewModel.GetMessageBox(message, "Execution failed", MessageBoxButton.OK)).Wait();
                 Log.Warn(string.Format("Error while executing files. Rolling back to version {0}", oldVersion), ex);
@@ -200,10 +209,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             this.SelectedDatabase.UpdateData();
         }
 
-        private void SuccesfullyExecutedMessageBoxClosing(MaterialMessageBoxResult result)
+        private void SuccessfullyExecutedMessageBoxClosing(MaterialMessageBoxResult result)
         {
             if (result == MaterialMessageBoxResult.Yes)
+            {
                 ImportWindowViewModel.CloseView();
+            }
         }
     }
 }

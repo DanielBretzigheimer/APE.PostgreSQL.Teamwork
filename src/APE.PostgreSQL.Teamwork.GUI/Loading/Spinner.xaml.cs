@@ -45,11 +45,13 @@ namespace APE.PostgreSQL.Teamwork.GUI.Loading
         {
             if (this.Color == null)
             {
-                arc.Stroke = new SolidColorBrush(DefaultColors[0]);
+                this.arc.Stroke = new SolidColorBrush(DefaultColors[0]);
                 this.ColorAnimationCompleted();
             }
             else
-                arc.Stroke = this.Color;
+            {
+                this.arc.Stroke = this.Color;
+            }
         }
 
         private void ColorAnimationCompleted(object sender = null, EventArgs e = null)
@@ -62,13 +64,17 @@ namespace APE.PostgreSQL.Teamwork.GUI.Loading
 
             var colorAnimation = new ColorAnimation(DefaultColors[this.actualColor], new Duration(TimeSpan.FromSeconds(2)), FillBehavior.HoldEnd);
             colorAnimation.Completed += this.ColorAnimationCompleted;
-            arc.Stroke.ApplyAnimationClock(SolidColorBrush.ColorProperty, colorAnimation.CreateClock(), HandoffBehavior.Compose);
+            this.arc.Stroke.ApplyAnimationClock(SolidColorBrush.ColorProperty, colorAnimation.CreateClock(), HandoffBehavior.Compose);
             this.oldAnimation = colorAnimation;
 
             if (this.actualColor == DefaultColors.Count - 1)
+            {
                 this.actualColor = 0;
+            }
             else
+            {
                 this.actualColor++;
+            }
         }
     }
 }

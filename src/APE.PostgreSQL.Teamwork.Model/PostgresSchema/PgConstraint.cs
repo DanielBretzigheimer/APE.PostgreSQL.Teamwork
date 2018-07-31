@@ -33,7 +33,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder creationSql = new StringBuilder(100);
+                var creationSql = new StringBuilder(100);
                 creationSql.Append("ALTER TABLE ");
                 creationSql.Append(PgDiffStringExtension.QuoteName(this.TableName));
                 creationSql.Append("\n\tADD CONSTRAINT ");
@@ -60,6 +60,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the comment of the <see cref="PgConstraint"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Comment { get; set; }
 
         /// <summary>
@@ -74,10 +75,10 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder dropSql = new StringBuilder(100);
+                var dropSql = new StringBuilder(100);
                 dropSql.Append("ALTER TABLE ");
-                dropSql.Append(PgDiffStringExtension.QuoteName(this.TableName));
-                dropSql.Append("\n\tDROP CONSTRAINT ");
+                dropSql.AppendLine(PgDiffStringExtension.QuoteName(this.TableName));
+                dropSql.Append("\tDROP CONSTRAINT ");
                 dropSql.Append(PgDiffStringExtension.QuoteName(this.Name));
                 dropSql.Append(';');
 
@@ -117,24 +118,50 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         public string TableName { get; set; }
 
+        public string RenameToSql(string newName)
+        {
+            var renameSql = new StringBuilder("ALTER TABLE ");
+            renameSql.Append(PgDiffStringExtension.QuoteName(this.TableName));
+            renameSql.Append("\tRENAME CONSTRAINT ");
+            renameSql.Append(PgDiffStringExtension.QuoteName(this.Name));
+            renameSql.Append(" TO ");
+            renameSql.Append(PgDiffStringExtension.QuoteName(newName));
+            renameSql.Append(';');
+
+            return renameSql.ToString();
+        }
+
+        public bool IsRenamed(PgConstraint constraint)
+        {
+            if (this.Definition.Equals(constraint.Definition)
+                && this.TableName.Equals(constraint.TableName))
+                return true;
+            else
+                return false;
+        }
+
         /// <summary>
         /// Determines whether the specified object is equal to the current object.
         /// </summary>
-        public override bool Equals(object obj)
+        public override bool Equals([NullGuard.AllowNull] object obj)
         {
-            bool equals = false;
-
             if (this == obj)
-                equals = true;
-            else if (obj is PgConstraint)
+                return true;
+
+            if (obj is PgConstraint constraint)
             {
-                PgConstraint constraint = (PgConstraint)obj;
-                equals = this.Definition.Equals(constraint.Definition)
+                return this.Definition.Equals(constraint.Definition)
                     && this.Name.Equals(constraint.Name)
                     && this.TableName.Equals(constraint.TableName);
             }
 
-            return equals;
+            return false;
+        }
+
+        [return: NullGuard.AllowNull]
+        public override string ToString()
+        {
+            return $"{this.GetType().Name} {this.Name} for {this.TableName}";
         }
 
         /// <summary>

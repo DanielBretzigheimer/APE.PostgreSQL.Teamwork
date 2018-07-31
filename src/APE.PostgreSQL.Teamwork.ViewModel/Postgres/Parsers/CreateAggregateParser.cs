@@ -27,28 +27,32 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         public static void Parse(PgDatabase database, string statement)
         {
-            Parser parser = new Parser(statement);
+            var parser = new Parser(statement);
             parser.Expect("CREATE");
             parser.Expect("AGGREGATE");
 
-            string aggregateName = parser.ParseIdentifier();
+            var aggregateName = parser.ParseIdentifier();
 
-            string schemaName = ParserUtils.GetSchemaName(aggregateName, database);
+            var schemaName = ParserUtils.GetSchemaName(aggregateName, database);
 
             PgSchema schema = database.GetSchema(schemaName);
 
             if (schema == null)
+            {
                 throw new Exception(string.Format("CannotFindSchema {0} for {1}", schemaName, statement));
+            }
 
-            PgAggregate aggregate = new PgAggregate();
-            aggregate.Name = ParserUtils.GetObjectName(aggregateName);
-            schema.AddAggregate(aggregate);
+            var aggregate = new PgAggregate()
+            {
+                Name = ParserUtils.GetObjectName(aggregateName),
+            };
+            schema.Add(aggregate);
 
             parser.Expect("(");
 
-            List<PgAggregate.Argument> arguments = new List<PgAggregate.Argument>();
+            var arguments = new List<PgAggregate.Argument>();
 
-            bool first = true;
+            var first = true;
             while (!parser.ExpectOptional(")"))
             {
                 if (!first)
@@ -67,10 +71,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     }
                 }
 
-                string dataType = parser.ParseDataType();
+                var dataType = parser.ParseDataType();
 
-                PgAggregate.Argument argument = new PgAggregate.Argument();
-                argument.DataType = dataType;
+                var argument = new PgAggregate.Argument()
+                {
+                    DataType = dataType,
+                };
                 arguments.Add(argument);
                 first = false;
             }
@@ -78,7 +84,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             foreach (var argument in arguments)
                 aggregate.Arguments.Add(argument);
 
-            aggregate.Body = parser.Rest;
+            aggregate.Body = parser.Rest();
         }
     }
 }

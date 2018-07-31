@@ -1,4 +1,5 @@
 ﻿// <copyright file="PgDatabase.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using APE.PostgreSQL.Teamwork.Model.Utils;
@@ -33,6 +34,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the comment of the <see cref="PgDatabase"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Comment { get; set; }
 
         /// <summary>
@@ -80,14 +82,21 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <param name="name">Schema name or null which means default schema.</param>
         /// <returns>Found schema or null.</returns>
-        public PgSchema GetSchema(string name)
+        [return: NullGuard.AllowNull]
+        public PgSchema GetSchema([NullGuard.AllowNull] string name)
         {
             if (name == null)
+            {
                 return this.DefaultSchema;
+            }
 
             foreach (PgSchema schema in this.schemas)
+            {
                 if (schema.Name.Equals(name))
+                {
                     return schema;
+                }
+            }
 
             return null;
         }

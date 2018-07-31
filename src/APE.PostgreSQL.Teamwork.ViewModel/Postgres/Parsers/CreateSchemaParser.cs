@@ -20,32 +20,36 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         public static void Parse(PgDatabase database, string statement)
         {
-            Parser parser = new Parser(statement);
+            var parser = new Parser(statement);
             parser.Expect("CREATE", "SCHEMA");
 
             if (parser.ExpectOptional("AUTHORIZATION"))
             {
-                PgSchema schema = new PgSchema(ParserUtils.GetObjectName(parser.ParseIdentifier()));
+                var schema = new PgSchema(ParserUtils.GetObjectName(parser.ParseIdentifier()));
                 database.AddSchema(schema);
                 schema.Authorization = schema.Name;
 
-                string definition = parser.Rest;
-
+                var definition = parser.Rest();
                 if (definition != null && definition.Length > 0)
+                {
                     schema.Definition = definition;
+                }
             }
             else
             {
-                PgSchema schema = new PgSchema(ParserUtils.GetObjectName(parser.ParseIdentifier()));
+                var schema = new PgSchema(ParserUtils.GetObjectName(parser.ParseIdentifier()));
                 database.AddSchema(schema);
 
                 if (parser.ExpectOptional("AUTHORIZATION"))
+                {
                     schema.Authorization = ParserUtils.GetObjectName(parser.ParseIdentifier());
+                }
 
-                string definition = parser.Rest;
-
+                var definition = parser.Rest();
                 if (definition != null && definition.Length > 0)
+                {
                     schema.Definition = definition;
+                }
             }
         }
     }

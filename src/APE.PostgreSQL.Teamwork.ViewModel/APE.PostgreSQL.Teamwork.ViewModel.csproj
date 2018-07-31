@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -9,9 +9,12 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>APE.PostgreSQL.Teamwork.ViewModel</RootNamespace>
     <AssemblyName>APE.PostgreSQL.Teamwork.ViewModel</AssemblyName>
-    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -21,6 +24,9 @@
     <DefineConstants>DEBUG;TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <CodeAnalysisRuleSet>..\..\StyleCop.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
+    <DocumentationFile>bin\Debug\APE.PostgreSQL.Teamwork.ViewModel.xml</DocumentationFile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -30,45 +36,29 @@
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
     <DocumentationFile>bin\Release\APE.PostgreSQL.Teamwork.ViewModel.xml</DocumentationFile>
+    <CodeAnalysisRuleSet>..\..\StyleCop.ruleset</CodeAnalysisRuleSet>
+    <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="1.50.2" />
+    <PackageReference Include="Fody" Version="2.1.2" />
+    <PackageReference Include="log4net" Version="2.0.8" />
+    <PackageReference Include="Npgsql" Version="3.2.6" />
+    <PackageReference Include="NullGuard.Fody" Version="1.5.2" />
+    <PackageReference Include="ServiceStack.Text" Version="3.9.71" />
+    <PackageReference Include="SharpZipLib" Version="0.86.0" />
+    <PackageReference Include="StructureMap" Version="4.5.1" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta001" />
+    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.4.0" />
+  </ItemGroup>
   <ItemGroup>
     <Reference Include="APE.CodeGeneration.Attributes">
       <HintPath>..\..\lib\APE.CodeGeneration.Attributes.dll</HintPath>
     </Reference>
-    <Reference Include="Dapper, Version=1.40.0.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\Dapper.1.42\lib\net45\Dapper.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="ICSharpCode.SharpZipLib, Version=0.86.0.518, Culture=neutral, PublicKeyToken=1b03e6acf1164f73, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\SharpZipLib.0.86.0\lib\20\ICSharpCode.SharpZipLib.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="log4net, Version=1.2.15.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\log4net.2.0.5\lib\net45-full\log4net.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="LZ4, Version=1.0.10.93, Culture=neutral, PublicKeyToken=62e1b5ec1eec9bdd, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\lz4net.1.0.10.93\lib\net4-client\LZ4.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="Npgsql, Version=3.1.6.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\Npgsql.3.1.6\lib\net45\Npgsql.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
-    <Reference Include="ServiceStack.Text, Version=3.9.71.0, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\ServiceStack.Text.3.9.71\lib\net35\ServiceStack.Text.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="StructureMap, Version=4.2.0.402, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\structuremap.4.2.0.402\lib\net40\StructureMap.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
-    <Reference Include="StructureMap.Net4, Version=4.2.0.402, Culture=neutral, processorArchitecture=MSIL">
-      <HintPath>C:\NugetPackages\structuremap.4.2.0.402\lib\net40\StructureMap.Net4.dll</HintPath>
-      <Private>True</Private>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
@@ -86,12 +76,18 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConnectionManager.cs" />
+    <Compile Include="CreateMinorVersionViewModel.cs" />
+    <Compile Include="CreateMinorVersionViewModel.g.cs">
+      <DependentUpon>CreateMinorVersionViewModel.cs</DependentUpon>
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Database.cs" />
     <Compile Include="Database.g.cs">
       <DependentUpon>Database.cs</DependentUpon>
     </Compile>
     <Compile Include="Exceptions\TeamworkException.cs" />
     <Compile Include="Exceptions\TeamworkConnectionException.cs" />
+    <Compile Include="Exceptions\TeamworkTestException.cs" />
     <Compile Include="FileSystemAccess.cs" />
     <Compile Include="IConnectionManager.cs" />
     <Compile Include="IDatabase.cs" />
@@ -108,6 +104,7 @@
     <Compile Include="Postgres\Parsers\CreateAggregateParser.cs" />
     <Compile Include="Postgres\Parsers\CreateFunctionParser.cs" />
     <Compile Include="Postgres\Parsers\CreateIndexParser.cs" />
+    <Compile Include="Postgres\Parsers\CreateRuleParser.cs" />
     <Compile Include="Postgres\Parsers\CreateSchemaParser.cs" />
     <Compile Include="Postgres\Parsers\CreateSequenceParser.cs" />
     <Compile Include="Postgres\Parsers\CreateTableParser.cs" />
@@ -124,12 +121,14 @@
     <Compile Include="Postgres\PgDiffFunctions.cs" />
     <Compile Include="Postgres\PgDiffIndexes.cs" />
     <Compile Include="Postgres\PgDiffPrivileges.cs" />
+    <Compile Include="Postgres\PgDiffRules.cs" />
     <Compile Include="Postgres\PgDiffSequences.cs" />
     <Compile Include="Postgres\PgDiffTables.cs" />
     <Compile Include="Postgres\PgDiffTriggers.cs" />
     <Compile Include="Postgres\PgDiffTypes.cs" />
     <Compile Include="Postgres\PgDiffViews.cs" />
     <Compile Include="Postgres\SearchPathHelper.cs" />
+    <Compile Include="Properties\AssemblyInfo.g.cs" />
     <Compile Include="RelayCommand.cs" />
     <Compile Include="SQLFile.cs" />
     <Compile Include="SQLFile.g.cs">
@@ -172,7 +171,6 @@
     <Compile Include="ViewModels\MainWindowViewModel.g.cs">
       <DependentUpon>MainWindowViewModel.cs</DependentUpon>
     </Compile>
-    <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="ViewModels\SettingViewModel.cs" />
     <Compile Include="ViewModels\SettingViewModel.g.cs">
       <DependentUpon>SettingViewModel.cs</DependentUpon>
@@ -188,12 +186,20 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <AdditionalFiles Include="..\..\stylecop.json">
+      <Link>stylecop.json</Link>
+    </AdditionalFiles>
+    <None Include="..\..\CHANGELOG.md">
+      <Link>CHANGELOG.md</Link>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Include="..\..\StyleCop.ruleset">
+      <Link>StyleCop.ruleset</Link>
+    </None>
     <None Include="APE.PostgreSQL.Teamwork.ViewModel.licenseheader" />
     <None Include="app.config" />
-    <None Include="packages.config">
-      <SubType>Designer</SubType>
-    </None>
     <None Include="Postgres\_PgDiff.cd" />
+    <None Include="Properties\AssemblyInfo.g.cs.Template" />
     <None Include="_CommandLine.cd" />
     <None Include="_ViewModelDiagram.cd" />
   </ItemGroup>
@@ -202,6 +208,9 @@
       <Project>{c3df1f15-e4c9-4052-9535-af39ff0e2191}</Project>
       <Name>APE.PostgreSQL.Teamwork.Model</Name>
     </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="FodyWeavers.xml" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

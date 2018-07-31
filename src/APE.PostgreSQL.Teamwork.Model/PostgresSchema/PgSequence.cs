@@ -20,11 +20,13 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the cache of the <see cref="PgSequence"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Cache { get; set; }
 
         /// <summary>
         /// Gets or sets the comment of the <see cref="PgSequence"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Comment { get; set; }
 
         /// <summary>
@@ -35,7 +37,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder createSequenceSQL = new StringBuilder(100);
+                var createSequenceSQL = new StringBuilder(100);
                 createSequenceSQL.Append("CREATE SEQUENCE ");
                 createSequenceSQL.Append(PgDiffStringExtension.QuoteName(this.Name));
 
@@ -54,7 +56,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 createSequenceSQL.Append("\n\t");
 
                 if (this.MaxValue == null)
+                {
                     createSequenceSQL.Append("NO MAXVALUE");
+                }
                 else
                 {
                     createSequenceSQL.Append("MAXVALUE ");
@@ -64,7 +68,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 createSequenceSQL.Append("\n\t");
 
                 if (this.MinValue == null)
+                {
                     createSequenceSQL.Append("NO MINVALUE");
+                }
                 else
                 {
                     createSequenceSQL.Append("MINVALUE ");
@@ -78,7 +84,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 }
 
                 if (this.Cycle)
+                {
                     createSequenceSQL.Append("\n\tCYCLE");
+                }
 
                 createSequenceSQL.Append(';');
 
@@ -103,7 +111,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             get
             {
-                StringBuilder ownedBySql = new StringBuilder(100);
+                var ownedBySql = new StringBuilder(100);
 
                 ownedBySql.Append("ALTER SEQUENCE ");
                 ownedBySql.Append(PgDiffStringExtension.QuoteName(this.Name));
@@ -140,16 +148,19 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the increment of the <see cref="PgSequence"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Increment { get; set; }
 
         /// <summary>
         /// Gets or sets the max value of the <see cref="PgSequence"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string MaxValue { get; set; }
 
         /// <summary>
         /// Gets or sets the min value of the <see cref="PgSequence"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string MinValue { get; set; }
 
         /// <summary>
@@ -160,11 +171,13 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the start value of the <see cref="PgSequence"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string StartWith { get; set; }
 
         /// <summary>
         /// Gets or sets the owner of the <see cref="PgSequence"/>.
         /// </summary>
+        [NullGuard.AllowNull]
         public string Owner { get; set; }
     }
 }
