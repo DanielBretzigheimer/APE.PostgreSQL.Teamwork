@@ -30,8 +30,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             var schemaName = ParserUtils.GetSchemaName(sequenceName, database);
 
-            PgSchema schema = database.GetSchema(schemaName);
+            if (database.SchemaIsIgnored(schemaName))
+                return;
 
+            var schema = database.GetSchema(schemaName);
             if (schema == null)
             {
                 throw new TeamworkParserException($"CannotFindSchema {schemaName} from statement {statement}");
@@ -61,7 +63,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 }
                 else
                 {
-                    parser.ThrowUnsupportedCommand();
+                    throw new TeamworkParserException("CannotParseStringUnsupportedCommand");
                 }
             }
         }

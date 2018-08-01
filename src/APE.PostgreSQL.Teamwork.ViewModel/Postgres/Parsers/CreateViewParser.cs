@@ -54,6 +54,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             };
             var schemaName = ParserUtils.GetSchemaName(viewName, database);
 
+            if (database.SchemaIsIgnored(schemaName))
+                return;
+
             PgSchema schema = database.GetSchema(schemaName);
 
             if (schema == null)

@@ -1,5 +1,6 @@
 ﻿// <copyright file="CreateTriggerParser.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
+using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 {
@@ -79,7 +80,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 }
                 else
                 {
-                    parser.ThrowUnsupportedCommand();
+                    throw new TeamworkParserException("CannotParseStringUnsupportedCommand");
                 }
 
                 first = false;
@@ -105,7 +106,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 }
                 else
                 {
-                    parser.ThrowUnsupportedCommand();
+                    throw new TeamworkParserException("CannotParseStringUnsupportedCommand");
                 }
             }
 

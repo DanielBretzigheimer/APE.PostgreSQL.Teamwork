@@ -22,6 +22,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             var rule = new PgRule(ParserUtils.GetObjectName(ruleIdentifier));
             var schemaName = ParserUtils.GetSchemaName(ruleIdentifier, database);
 
+            if (database.SchemaIsIgnored(schemaName))
+                return;
+
             parser.Expect("AS", "ON");
             rule.EventType = parser.ExpectOptionalOneOf("SELECT", "INSERT", "UPDATE", "DELETE");
             parser.Expect("TO");

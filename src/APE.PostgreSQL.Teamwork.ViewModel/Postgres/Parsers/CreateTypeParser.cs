@@ -50,6 +50,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     EnumEntries = enumEntries,
                 };
                 var schemaName = ParserUtils.GetSchemaName(typeName, database);
+
+                if (database.SchemaIsIgnored(schemaName))
+                    return;
+
                 PgSchema schema = database.GetSchema(schemaName);
                 if (schema == null)
                 {

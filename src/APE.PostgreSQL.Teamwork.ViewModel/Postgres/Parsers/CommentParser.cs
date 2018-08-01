@@ -82,6 +82,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             var schemaName = ParserUtils.GetSchemaName(tableName, database);
 
+            if (database.SchemaIsIgnored(schemaName))
+                return;
+
             PgTable table = database.GetSchema(schemaName).GetTable(objectName);
 
             parser.Expect("IS");
@@ -101,6 +104,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             var tableName = parser.ParseIdentifier();
             var objectName = ParserUtils.GetObjectName(tableName);
             var schemaName = ParserUtils.GetSchemaName(constraintName, database);
+
+            if (database.SchemaIsIgnored(schemaName))
+                return;
+
             PgConstraint constraint = database.GetSchema(schemaName).GetTable(objectName).GetConstraint(constraintName);
 
             parser.Expect("IS");
@@ -129,6 +136,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             var objectName = ParserUtils.GetObjectName(indexName);
 
             var schemaName = ParserUtils.GetSchemaName(indexName, database);
+
+            if (database.SchemaIsIgnored(schemaName))
+                return;
 
             PgSchema schema = database.GetSchema(schemaName);
 
@@ -174,6 +184,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             var schemaName = ParserUtils.GetSchemaName(sequenceName, database);
 
+            if (database.SchemaIsIgnored(schemaName))
+                return;
+
             PgSequence sequence = database.GetSchema(schemaName).GetSequence(objectName);
 
             parser.Expect("IS");
@@ -196,6 +209,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             var schemaName = ParserUtils.GetSchemaName(triggerName, database);
 
+            if (database.SchemaIsIgnored(schemaName))
+                return;
+
             PgTrigger trigger = database.GetSchema(schemaName).GetTable(objectName).GetTrigger(triggerName);
 
             parser.Expect("IS");
@@ -213,6 +229,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             var objectName = ParserUtils.GetObjectName(viewName);
 
             var schemaName = ParserUtils.GetSchemaName(viewName, database);
+
+            if (database.SchemaIsIgnored(schemaName))
+                return;
 
             PgView view = database.GetSchema(schemaName).GetView(objectName);
 
@@ -233,6 +252,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             var tableName = ParserUtils.GetSecondObjectName(columnName);
 
             var schemaName = ParserUtils.GetThirdObjectName(columnName);
+
+            if (database.SchemaIsIgnored(schemaName))
+                return;
 
             PgSchema schema = database.GetSchema(schemaName);
 
@@ -281,6 +303,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             var objectName = ParserUtils.GetObjectName(functionName);
 
             var schemaName = ParserUtils.GetSchemaName(functionName, database);
+
+            if (database.SchemaIsIgnored(schemaName))
+                return;
 
             PgSchema schema = database.GetSchema(schemaName);
 

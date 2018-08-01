@@ -3,6 +3,8 @@ using System;
 using System.IO;
 using System.Text;
 using APE.CodeGeneration.Attributes;
+using APE.PostgreSQL.Teamwork.Model.Templates;
+using APE.PostgreSQL.Teamwork.Model.Utils;
 using Npgsql;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
@@ -23,6 +25,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         public Statement(string searchPath, string sql, IDatabase database)
         {
             this.SearchPath = searchPath;
+
+            if (sql.Contains($"{SQLTemplates.PostgreSQLTeamworkSchemaName.QuoteName()}.")
+                || searchPath.Contains(SQLTemplates.PostgreSQLTeamworkSchemaName.QuoteName()))
+                this.IsTeamworkSchema = true;
 
             if (sql.ToLower().Contains("alter type")
                 && sql.ToLower().Contains("add value"))
@@ -46,6 +52,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         public string SearchPath { get; private set; }
 
         public bool SupportsTransaction { get; set; }
+
+        public bool IsTeamworkSchema { get; private set; }
 
         /// <summary>
         /// Executes the SQL statement on the database which was set through the constructor.

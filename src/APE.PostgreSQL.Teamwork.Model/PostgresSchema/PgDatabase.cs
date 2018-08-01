@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Linq;
 using APE.PostgreSQL.Teamwork.Model.Utils;
 
 namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
@@ -11,24 +12,17 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
     /// </summary>
     public class PgDatabase
     {
-        /// <summary>
-        /// List of database schemas.
-        /// </summary>
-        private readonly List<PgSchema> schemas = new List<PgSchema>();
-
-        /// <summary>
-        /// Array of ignored statements.
-        /// </summary>
-        private readonly List<string> ignoredStatements = new List<string>();
+        private readonly List<string> ignoredSchemas = new List<string>();
 
         /// <summary>
         /// Creates a new <see cref="PgDatabase"/> object.
         /// </summary>
-        public PgDatabase(string name)
+        public PgDatabase(string name, List<string> ignoredSchemas)
         {
-            this.schemas.Add(new PgSchema("public"));
-            this.DefaultSchema = this.schemas[0];
-            this.Name = PgDiffStringExtension.QuoteName(name);
+            this.Schemas.Add(PgSchema.Public);
+            this.DefaultSchema = this.Schemas[0];
+            this.Name = name.QuoteName();
+            this.ignoredSchemas = ignoredSchemas;
         }
 
         /// <summary>
@@ -48,33 +42,23 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         public PgSchema DefaultSchema { get; private set; }
 
         /// <summary>
-        /// Gets a <see cref="ReadOnlyCollection{String}"/> with all ignored statements.
+        /// List of database schemas.
         /// </summary>
-        public IList<string> IgnoredStatements
-        {
-            get
-            {
-                return new ReadOnlyCollection<string>(this.ignoredStatements);
-            }
-        }
+        public List<PgSchema> Schemas { get; } = new List<PgSchema>();
 
         /// <summary>
-        /// Gets a <see cref="ReadOnlyCollection{PgSchema}"/> of all <see cref="PgSchema"/>s which belong to this database.
+        /// Array of ignored statements.
         /// </summary>
-        public IList<PgSchema> Schemas
-        {
-            get
-            {
-                return new ReadOnlyCollection<PgSchema>(this.schemas);
-            }
-        }
+        public List<string> IgnoredStatements { get; } = new List<string>();
+
+        public bool SchemaIsIgnored(string schemaName) => this.ignoredSchemas.Contains(schemaName);
 
         /// <summary>
         /// Adds ignored statement to the list of ignored statements.
         /// </summary>
         public void AddIgnoredStatement(string ignoredStatement)
         {
-            this.ignoredStatements.Add(ignoredStatement);
+            this.IgnoredStatements.Add(ignoredStatement);
         }
 
         /// <summary>
@@ -86,19 +70,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         public PgSchema GetSchema([NullGuard.AllowNull] string name)
         {
             if (name == null)
-            {
                 return this.DefaultSchema;
-            }
 
-            foreach (PgSchema schema in this.schemas)
-            {
-                if (schema.Name.Equals(name))
-                {
-                    return schema;
-                }
-            }
-
-            return null;
+            return this.Schemas.SingleOrDefault(s => s.Name == name);
         }
 
         /// <summary>
@@ -114,7 +88,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         public void AddSchema(PgSchema schema)
         {
-            this.schemas.Add(schema);
+            this.Schemas.Add(schema);
         }
     }
 }

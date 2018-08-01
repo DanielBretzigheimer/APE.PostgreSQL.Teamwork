@@ -312,14 +312,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         }
 
         /// <summary>
-        /// Throws exception about unsupported command in statement.
-        /// </summary>
-        public void ThrowUnsupportedCommand()
-        {
-            throw new TeamworkParserException("CannotParseStringUnsupportedCommand");
-        }
-
-        /// <summary>
         /// Checks whether one of the words is present at current position. If the
         /// word is present then the word is returned and position is updated.
         /// </summary>

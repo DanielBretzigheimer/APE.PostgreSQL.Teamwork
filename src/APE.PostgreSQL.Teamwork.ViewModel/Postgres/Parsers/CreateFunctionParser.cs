@@ -32,6 +32,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             PgSchema schema = database.GetSchema(schemaName);
 
+            if (database.SchemaIsIgnored(schemaName))
+                return;
+
             if (schema == null)
             {
                 throw new TeamworkParserException($"CannotFindSchema {schemaName} {statement}");

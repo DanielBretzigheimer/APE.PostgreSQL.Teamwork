@@ -49,8 +49,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
 
         public bool Create(StreamWriter writer, Database database, string oldDumpFile, string newDumpFile)
         {
-            PgDatabase oldDatabase = PgDumpLoader.LoadDatabaseSchema(oldDumpFile, database.Name, false, false);
-            PgDatabase newDatabase = PgDumpLoader.LoadDatabaseSchema(newDumpFile, database.Name, false, false);
+            var oldDatabase = PgDumpLoader.LoadDatabaseSchema(oldDumpFile, database, false, false);
+            var newDatabase = PgDumpLoader.LoadDatabaseSchema(newDumpFile, database, false, false);
 
             // mark the file as deleteable if no changes where made
             var created = false;
@@ -241,7 +241,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             {
                 foreach (var newAndOldSchema in newAndOldSchemas)
                     action(writer, newAndOldSchema.Key, newAndOldSchema.Value);
-    }
-}
+            }
+        }
     }
 }

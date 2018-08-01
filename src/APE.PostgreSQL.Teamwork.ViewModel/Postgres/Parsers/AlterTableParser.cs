@@ -31,6 +31,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             var schemaName = ParserUtils.GetSchemaName(tableName, database);
 
+            if (database.SchemaIsIgnored(schemaName))
+                return;
+
             PgSchema schema = database.GetSchema(schemaName);
 
             if (schema == null)
@@ -97,7 +100,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     }
                     else
                     {
-                        parser.ThrowUnsupportedCommand();
+                        throw new TeamworkParserException("CannotParseStringUnsupportedCommand");
                     }
                 }
                 else if (parser.ExpectOptional("ENABLE"))
@@ -114,7 +117,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 }
                 else
                 {
-                    parser.ThrowUnsupportedCommand();
+                    throw new TeamworkParserException("CannotParseStringUnsupportedCommand");
                 }
 
                 if (parser.ExpectOptional(";"))
@@ -159,7 +162,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 }
                 else
                 {
-                    parser.ThrowUnsupportedCommand();
+                    throw new TeamworkParserException("CannotParseStringUnsupportedCommand");
                 }
             }
             else if (parser.ExpectOptional("ALWAYS"))
@@ -188,7 +191,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 }
                 else
                 {
-                    parser.ThrowUnsupportedCommand();
+                    throw new TeamworkParserException("CannotParseStringUnsupportedCommand");
                 }
             }
         }
@@ -222,7 +225,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             }
             else
             {
-                parser.ThrowUnsupportedCommand();
+                throw new TeamworkParserException("CannotParseStringUnsupportedCommand");
             }
         }
 
@@ -319,17 +322,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     }
                     else
                     {
-                        parser.ThrowUnsupportedCommand();
+                        throw new TeamworkParserException("CannotParseStringUnsupportedCommand");
                     }
                 }
                 else
                 {
-                    parser.ThrowUnsupportedCommand();
+                    throw new TeamworkParserException("CannotParseStringUnsupportedCommand");
                 }
             }
             else
             {
-                parser.ThrowUnsupportedCommand();
+                throw new TeamworkParserException("CannotParseStringUnsupportedCommand");
             }
         }
 
@@ -387,7 +390,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     }
                     else
                     {
-                        parser.ThrowUnsupportedCommand();
+                        throw new TeamworkParserException("CannotParseStringUnsupportedCommand");
                     }
                 }
                 else if (parser.ExpectOptional("OWNER", "TO"))
@@ -404,7 +407,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 }
                 else
                 {
-                    parser.ThrowUnsupportedCommand();
+                    throw new TeamworkParserException("CannotParseStringUnsupportedCommand");
                 }
             }
         }
@@ -430,7 +433,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 }
                 else
                 {
-                    parser.ThrowUnsupportedCommand();
+                    throw new TeamworkParserException("CannotParseStringUnsupportedCommand");
                 }
             }
         }

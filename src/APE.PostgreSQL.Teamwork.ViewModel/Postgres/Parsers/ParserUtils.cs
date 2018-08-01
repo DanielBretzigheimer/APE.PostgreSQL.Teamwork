@@ -117,7 +117,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
         private static string[] Split(string self, string regexDelimiter, bool trimTrailingEmptyStrings)
         {
-            string[] splitArray = System.Text.RegularExpressions.Regex.Split(self, regexDelimiter);
+            var splitArray = System.Text.RegularExpressions.Regex.Split(self, regexDelimiter);
 
             if (trimTrailingEmptyStrings)
             {

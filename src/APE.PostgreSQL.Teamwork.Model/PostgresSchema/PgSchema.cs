@@ -12,6 +12,8 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
     /// </summary>
     public class PgSchema
     {
+        private const string PublicSchemaName = "public";
+
         /// <summary>
         /// Creates a new <see cref="PgSchema"/> object.
         /// </summary>
@@ -20,6 +22,8 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             this.Name = name;
         }
+
+        public static PgSchema Public => new PgSchema(PublicSchemaName);
 
         /// <summary>
         /// Gets or sets the authorization for this <see cref="PgSchema"/>
