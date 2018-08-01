@@ -229,8 +229,7 @@ namespace APE.PostgreSQL.Teamwork.TestHelper
 
             if (threadSpecificCleanup)
             {
-                var disposable = this.Target as IDisposable;
-                if (disposable != null)
+                if (this.Target is IDisposable disposable)
                     disposable.Dispose();
             }
         }

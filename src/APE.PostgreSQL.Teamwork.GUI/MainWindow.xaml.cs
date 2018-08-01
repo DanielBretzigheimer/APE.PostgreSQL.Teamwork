@@ -112,7 +112,8 @@ namespace APE.PostgreSQL.Teamwork.GUI
         {
             // start the viewmodel when the dialog host is initialized
             // to ensure that dialogs can be shown
-            this.mainWindowViewModel.Start();
+            if (!this.mainWindowViewModel.IsStarted)
+                this.mainWindowViewModel.Start();
         }
 
         private CreateMinorVersionView GetCreateMinorVersionView(DatabaseDisplayData database)
