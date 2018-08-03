@@ -21,6 +21,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.ViewModels
         bool IsStarted { get; }
 
         /// <summary>
+        /// Gets or sets a <see cref="bool"/> indicating if the search bar should be shown.
+        /// </summary>
+        bool ShowSearch { get; set; }
+
+        /// <summary>
         /// Starts the view model and lets it search for databases.
         /// </summary>
         void Start();

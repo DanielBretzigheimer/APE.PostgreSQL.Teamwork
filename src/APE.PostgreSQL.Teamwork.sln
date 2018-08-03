@@ -27,6 +27,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{FB5C
 		..\README.md = ..\README.md
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APE.PostgreSQL.Teamwork.Model.Test", "APE.PostgreSQL.Teamwork.Model.Test\APE.PostgreSQL.Teamwork.Model.Test.csproj", "{3568A34C-158E-4139-9BE2-A1780B49562E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Alle Erstellen - DEBUG|Any CPU = Alle Erstellen - DEBUG|Any CPU
@@ -70,6 +72,12 @@ Global
 		{F5DA55B2-31D4-40C5-A6BE-B7E35D9F00F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F5DA55B2-31D4-40C5-A6BE-B7E35D9F00F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F5DA55B2-31D4-40C5-A6BE-B7E35D9F00F4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3568A34C-158E-4139-9BE2-A1780B49562E}.Alle Erstellen - DEBUG|Any CPU.ActiveCfg = Release|Any CPU
+		{3568A34C-158E-4139-9BE2-A1780B49562E}.Alle Erstellen - DEBUG|Any CPU.Build.0 = Release|Any CPU
+		{3568A34C-158E-4139-9BE2-A1780B49562E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3568A34C-158E-4139-9BE2-A1780B49562E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3568A34C-158E-4139-9BE2-A1780B49562E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3568A34C-158E-4139-9BE2-A1780B49562E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

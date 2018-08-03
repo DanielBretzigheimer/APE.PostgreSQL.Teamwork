@@ -45,7 +45,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Creates and returns SQL for creation of the view.
         /// </summary>
-        /// <returns> created SQL statement </returns>
+        /// <returns> created SQL statement. </returns>
         public string CreationSQL
         {
             get
@@ -114,7 +114,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Creates and returns SQL statement for dropping the view.
         /// </summary>
-        /// <returns> created SQL statement </returns>
+        /// <returns> created SQL statement. </returns>
         public string DropSQL
         {
             get

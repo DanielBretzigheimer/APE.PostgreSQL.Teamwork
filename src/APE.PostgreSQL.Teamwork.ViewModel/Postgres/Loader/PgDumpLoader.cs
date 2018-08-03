@@ -23,7 +23,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
         private static readonly Regex PatternCreateSchema = new Regex("^CREATE[\\s]+SCHEMA[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
-        /// Regex for testing wheter it is CREATE RULE statement
+        /// Regex for testing wheter it is CREATE RULE statement.
         /// </summary>
         private static readonly Regex PatternCreateRule = new Regex("^CREATE[\\s]+RULE[\\s]+.*$", RegexOptions.Singleline);
 
@@ -94,12 +94,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
         private static readonly Regex PatternCreateFunction = new Regex("^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?FUNCTION[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
-        /// Regex for testing whether it is a GRANT PRIVILEGE statement
+        /// Regex for testing whether it is a GRANT PRIVILEGE statement.
         /// </summary>
         private static readonly Regex PatternPrivilegeGrant = new Regex("GRANT.+?TO.+?;", RegexOptions.Singleline);
 
         /// <summary>
-        /// Regex for testing whether it is a REVOKE PRIVILEGE statement
+        /// Regex for testing whether it is a REVOKE PRIVILEGE statement.
         /// </summary>
         private static readonly Regex PatternPrivilegeRevoke = new Regex("REVOKE.+?FROM.+?;", RegexOptions.Singleline);
 

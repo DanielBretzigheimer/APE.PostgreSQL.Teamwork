@@ -8,7 +8,7 @@ using System.Windows.Data;
 namespace APE.PostgreSQL.Teamwork.GUI.Converter
 {
     /// <summary>
-    /// Simple WPF 'if'
+    /// Simple WPF 'if'.
     /// </summary>
     public class ConditionalConverter : IValueConverter
     {

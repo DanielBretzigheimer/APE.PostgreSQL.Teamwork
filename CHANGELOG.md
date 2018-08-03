@@ -2,7 +2,7 @@
 
 ## 1.0.51.0
 **New Features**
-
+- STRG + F to search added
 
 **Bug Fixes**
 - Application Start crash fixed

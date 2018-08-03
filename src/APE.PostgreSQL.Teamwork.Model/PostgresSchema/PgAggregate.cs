@@ -25,7 +25,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Returns creation SQL of the aggregate.
         /// </summary>
-        /// <returns> creation SQL </returns>
+        /// <returns> creation SQL.</returns>
         public string CreationSQL
         {
             get
@@ -87,7 +87,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Creates and returns SQL for dropping the aggregate.
         /// </summary>
-        /// <returns> created SQL </returns>
+        /// <returns> created SQL. </returns>
         public string DropSQL
         {
             get
@@ -141,7 +141,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// Returns aggregate signature. It consists of unquoted name and argument
         /// data types.
         /// </summary>
-        /// <returns> aggregate signature </returns>
+        /// <returns> aggregate signature. </returns>
         public string Signature
         {
             get

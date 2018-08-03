@@ -30,7 +30,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             dv.Minor.Should().Be(string.Empty);
             dv.Full.Should().Be("0008");
 
-            new Action(() => new DatabaseVersion(string.Empty)).ShouldThrow<ArgumentException>();
+            new Action(() => new DatabaseVersion(string.Empty)).Should().Throw<ArgumentException>();
         }
 
         [TestMethod]

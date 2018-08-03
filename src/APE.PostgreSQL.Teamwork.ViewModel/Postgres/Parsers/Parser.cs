@@ -22,7 +22,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// <summary>
         /// Checks whether the whole string has been consumed.
         /// </summary>
-        /// <returns> true if there is nothing left to parse, otherwise false </returns>
+        /// <returns> true if there is nothing left to parse, otherwise false. </returns>
         public bool Consumed
         {
             get
@@ -36,13 +36,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// <summary>
         /// Returns current position in the string.
         /// </summary>
-        /// <returns> current position in the string </returns>
+        /// <returns> current position in the string. </returns>
         public int Position { get; set; }
 
         /// <summary>
         /// Returns parsed string.
         /// </summary>
-        /// <returns> parsed string </returns>
+        /// <returns> parsed string. </returns>
         public string String { get; }
 
         /// <summary>
@@ -51,7 +51,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// string, null is returned.
         /// </summary>
         /// <returns> rest of the string, without trailing ';' if present, or null if
-        /// there is nothing more in the string </returns>
+        /// there is nothing more in the string. </returns>
         [return: NullGuard.AllowNull]
         public string Rest()
         {
@@ -82,7 +82,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// Returns expression that is ended either with ',', ')' or with end of the
         /// string. If expression is empty then exception is thrown.
         /// </summary>
-        /// <returns> expression string </returns>
+        /// <returns> expression string. </returns>
         public string Expression()
         {
             var endPos = this.GetExpressionEnd();
@@ -435,7 +435,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// character is found and method reaches the end of the command then
         /// position after the last character in the command is returned.
         /// </summary>
-        /// <returns> end position of the command </returns>
+        /// <returns> end position of the command. </returns>
         private int GetExpressionEnd()
         {
             var bracesCount = 0;

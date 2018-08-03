@@ -27,7 +27,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         }
 
         /// <summary>
-        /// Gets or sets the name of the <see cref="PgType"/>
+        /// Gets or sets the name of the <see cref="PgType"/>.
         /// </summary>
         public string Name { get; set; }
 

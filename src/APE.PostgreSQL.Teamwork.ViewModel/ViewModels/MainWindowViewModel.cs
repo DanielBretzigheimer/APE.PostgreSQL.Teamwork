@@ -107,7 +107,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                         this.uiDispatcher.Invoke(() => this.unfilteredDatabases.Add(databaseDisplayData));
                     }
 
-                    var databases = this.unfilteredDatabases.Where(d => string.IsNullOrWhiteSpace(this.FilterText) || d.Database.Name.Contains(this.FilterText));
+                    var databases = this.unfilteredDatabases.Where(d => string.IsNullOrWhiteSpace(this.FilterText) || d.Database.Name.ToLower().Contains(this.FilterText.ToLower()));
                     this.Databases = new List<DatabaseDisplayData>(databases);
                 }
 
@@ -339,7 +339,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void FilterTextAfterSet()
         {
-            var databases = this.unfilteredDatabases.Where(d => string.IsNullOrWhiteSpace(this.FilterText) || d.Database.Name.Contains(this.FilterText));
+            var databases = this.unfilteredDatabases.Where(d => string.IsNullOrWhiteSpace(this.FilterText) || d.Database.Name.ToLower().Contains(this.FilterText.ToLower()));
             this.Databases = new List<DatabaseDisplayData>(databases);
         }
 
@@ -388,9 +388,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 this.ShowSearch = !this.ShowSearch;
                 if (!this.ShowSearch)
-                {
                     this.FilterText = string.Empty;
-                }
             });
 
             this.SizeChangedCommand = new RelayCommand<SizeChangedEventArgs>(this.SizeChanged);

@@ -11,7 +11,7 @@ using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {
     /// <summary>
-    /// Displays an SQL File and contains a list of <see cref="StatementDisplayData"/>
+    /// Displays an SQL File and contains a list of <see cref="StatementDisplayData"/>.
     /// </summary>
     [NotifyProperty(typeof(ObservableCollection<StatementDisplayData>), "SQLStatements")]
     [NotifyProperty(typeof(SQLFile), "SQLFile")]

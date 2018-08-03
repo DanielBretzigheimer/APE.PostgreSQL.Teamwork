@@ -220,5 +220,14 @@ namespace APE.PostgreSQL.Teamwork.GUI
         {
             System.Diagnostics.Process.Start(e.Uri.ToString());
         }
+
+        private void DialogWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            if ((Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) && e.Key == Key.F)
+            {
+                this.mainWindowViewModel.ShowSearch = true;
+                this.searchBar.Focus();
+            }
+        }
     }
 }

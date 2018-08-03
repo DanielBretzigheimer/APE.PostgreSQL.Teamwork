@@ -6,7 +6,7 @@ using APE.PostgreSQL.Teamwork.ViewModel;
 namespace APE.PostgreSQL.Teamwork.GUI
 {
     /// <summary>
-    /// Interaction logic for CreateMinorVersionView.xaml
+    /// Interaction logic for CreateMinorVersionView.xaml.
     /// </summary>
     public partial class CreateMinorVersionView : UserControl
     {

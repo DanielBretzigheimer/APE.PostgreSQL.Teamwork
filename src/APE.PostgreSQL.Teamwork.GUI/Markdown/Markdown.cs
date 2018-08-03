@@ -58,32 +58,21 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
             DependencyProperty.Register("AssetPathRootRoot", typeof(string), typeof(Markdown), new PropertyMetadata(null));
 
         /// <summary>
-        /// maximum nested depth of [] and () supported by the transform; implementation detail
+        /// maximum nested depth of [] and () supported by the transform; implementation detail.
         /// </summary>
         private const int NestDepth = 6;
 
         /// <summary>
         /// Tabs are automatically converted to spaces as part of the transform
-        /// this constant determines how "wide" those tabs become in spaces
+        /// this constant determines how "wide" those tabs become in spaces.
         /// </summary>
         private const int TabWidth = 4;
 
         private const string MarkerUL = @"[*+-]";
         private const string MarkerOL = @"\d+[.]";
 
-        private static Regex newlinesLeadingTrailing = new Regex(@"^\n+|\n+\z", RegexOptions.Compiled);
-        private static Regex newlinesMultiple = new Regex(@"\n{2,}", RegexOptions.Compiled);
-        private static Regex leadingWhitespace = new Regex(@"^[ ]*", RegexOptions.Compiled);
-
-        private static Regex eoln = new Regex("\\s+");
-
-        private static string nestedBracketsPattern;
-        private static string nestedParensPattern;
-        private static string nestedParensPatternWithWhiteSpace;
-
-        private static Regex outDent = new Regex(@"^[ ]{1," + TabWidth + @"}", RegexOptions.Multiline | RegexOptions.Compiled);
-
-        private static Regex headerSetext = new Regex(
+        private static readonly Regex LeadingWhitespace = new Regex(@"^[ ]*", RegexOptions.Compiled);
+        private static readonly Regex HeaderSetext = new Regex(
             @"
                 ^(.+?)
                 [ ]*
@@ -93,7 +82,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
                 \n+",
             RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
-        private static Regex headerAtx = new Regex(
+        private static readonly Regex HeaderAtx = new Regex(
             @"
                 ^(\#{1,6})  # $1 = string of #'s
                 [ ]*
@@ -103,7 +92,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
                 \n+",
             RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
-        private static Regex horizontalRules = new Regex(
+        private static readonly Regex HorizontalRules = new Regex(
             @"
             ^[ ]{0,3}         # Leading space
                 ([-*_])       # $1: First marker
@@ -115,7 +104,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
                 $             # End of line.
             ", RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
-        private static string wholeList = string.Format(
+        private static readonly string WholeList = string.Format(
             @"
             (                               # $1 = whole list
               (                             # $2
@@ -138,15 +127,15 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
             string.Format("(?:{0}|{1})", MarkerUL, MarkerOL),
             TabWidth - 1);
 
-        private static Regex listNested = new Regex(
-            @"^" + wholeList,
+        private static readonly Regex ListNested = new Regex(
+            @"^" + WholeList,
             RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
-        private static Regex listTopLevel = new Regex(
-            @"(?:(?<=\n\n)|\A\n?)" + wholeList,
+        private static readonly Regex ListTopLevel = new Regex(
+            @"(?:(?<=\n\n)|\A\n?)" + WholeList,
             RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
-        private static Regex codeSpan = new Regex(
+        private static readonly Regex CodeSpan = new Regex(
             @"
                     (?<!\\)   # Character before opening ` can't be a backslash
                     (`+)      # $1 = Opening run of `
@@ -155,19 +144,19 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
                     \1
                     (?!`)", RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline | RegexOptions.Compiled);
 
-        private static Regex bold = new Regex(
+        private static readonly Regex Bold = new Regex(
             @"(\*\*|__) (?=\S) (.+?[*_]*) (?<=\S) \1",
             RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline | RegexOptions.Compiled);
 
-        private static Regex strictBold = new Regex(
+        private static readonly Regex StrictBold = new Regex(
             @"([\W_]|^) (\*\*|__) (?=\S) ([^\r]*?\S[\*_]*) \2 ([\W_]|$)",
             RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline | RegexOptions.Compiled);
 
-        private static Regex italic = new Regex(
+        private static readonly Regex Italic = new Regex(
             @"(\*|_) (?=\S) (.+?) (?<=\S) \1",
             RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline | RegexOptions.Compiled);
 
-        private static Regex strictItalic = new Regex(
+        private static readonly Regex StrictItalic = new Regex(
             @"([\W_]|^) (\*|_) (?=\S) ([^\r\*_]*?\S) \2 ([\W_]|$)",
             RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline | RegexOptions.Compiled);
 
@@ -217,6 +206,17 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
             GetNestedParensPattern()),
             RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
+        private static Regex newlinesLeadingTrailing = new Regex(@"^\n+|\n+\z", RegexOptions.Compiled);
+        private static Regex newlinesMultiple = new Regex(@"\n{2,}", RegexOptions.Compiled);
+
+        private static Regex eoln = new Regex("\\s+");
+
+        private static string nestedBracketsPattern;
+        private static string nestedParensPattern;
+        private static string nestedParensPatternWithWhiteSpace;
+
+        private static Regex outDent = new Regex(@"^[ ]{1," + TabWidth + @"}", RegexOptions.Multiline | RegexOptions.Compiled);
+
         private int listLevel;
 
         public Markdown()
@@ -232,7 +232,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
 
         /// <summary>
         /// when true, bold and italic require non-word characters on either side
-        /// WARNING: this is a significant deviation from the markdown spec
+        /// WARNING: this is a significant deviation from the markdown spec.
         /// </summary>
         public bool StrictBoldItalic { get; set; }
 
@@ -294,8 +294,8 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
 
         public string AssetPathRoot
         {
-          get { return (string)this.GetValue(AssetPathRootProperty); }
-          set { this.SetValue(AssetPathRootProperty, value); }
+            get { return (string)this.GetValue(AssetPathRootProperty); }
+            set { this.SetValue(AssetPathRootProperty, value); }
         }
 
         public FlowDocument Transform(string text)
@@ -379,7 +379,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         }
 
         /// <summary>
-        /// this is to emulate what's evailable in PHP
+        /// this is to emulate what's evailable in PHP.
         /// </summary>
         private static string RepeatString(string text, int count)
         {
@@ -513,7 +513,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         }
 
         /// <summary>
-        /// splits on two or more newlines, to form "paragraphs";
+        /// splits on two or more newlines, to form "paragraphs";.
         /// </summary>
         private IEnumerable<Block> FormParagraphs(string text)
         {
@@ -523,7 +523,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
             }
 
             // split on two or more newlines
-            string[] grafs = newlinesMultiple.Split(newlinesLeadingTrailing.Replace(text, string.Empty));
+            var grafs = newlinesMultiple.Split(newlinesLeadingTrailing.Replace(text, string.Empty));
 
             foreach (var g in grafs)
             {
@@ -532,10 +532,10 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         }
 
         /// <summary>
-        /// Turn Markdown images into images
+        /// Turn Markdown images into images.
         /// </summary>
         /// <remarks>
-        /// ![image alt](url)
+        /// ![image alt](url).
         /// </remarks>
         private IEnumerable<Inline> DoImages(string text, Func<string, IEnumerable<Inline>> defaultHandler)
         {
@@ -590,14 +590,14 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
                     Mode = BindingMode.OneWay,
                 };
 
-                BindingExpressionBase bindingExpression = BindingOperations.SetBinding(image, Image.WidthProperty, binding);
-                EventHandler downloadCompletedHandler = null;
-                downloadCompletedHandler = (sender, e) =>
-                    {
-                        imgSource.DownloadCompleted -= downloadCompletedHandler;
-                        bindingExpression.UpdateTarget();
-                    };
-                imgSource.DownloadCompleted += downloadCompletedHandler;
+                var bindingExpression = BindingOperations.SetBinding(image, FrameworkElement.WidthProperty, binding);
+                void DownloadCompletedHandler(object sender, EventArgs e)
+                {
+                    imgSource.DownloadCompleted -= DownloadCompletedHandler;
+                    bindingExpression.UpdateTarget();
+                }
+
+                imgSource.DownloadCompleted += DownloadCompletedHandler;
             }
             else
             {
@@ -608,10 +608,10 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         }
 
         /// <summary>
-        /// Turn Markdown link shortcuts into hyperlinks
+        /// Turn Markdown link shortcuts into hyperlinks.
         /// </summary>
         /// <remarks>
-        /// [link text](url "title")
+        /// [link text](url "title").
         /// </remarks>
         private IEnumerable<Inline> DoAnchors(string text, Func<string, IEnumerable<Inline>> defaultHandler)
         {
@@ -647,7 +647,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         }
 
         /// <summary>
-        /// Turn Markdown headers into HTML header tags
+        /// Turn Markdown headers into HTML header tags.
         /// </summary>
         /// <remarks>
         /// Header 1
@@ -660,7 +660,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         /// ## Header 2
         /// ## Header 2 with closing hashes ##
         /// ...
-        /// ###### Header 6
+        /// ###### Header 6.
         /// </remarks>
         private IEnumerable<Block> DoHeaders(string text, Func<string, IEnumerable<Block>> defaultHandler)
         {
@@ -671,9 +671,9 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
 
             return this.Evaluate(
                 text,
-                headerSetext,
+                HeaderSetext,
                 m => this.SetextHeaderEvaluator(m),
-                s => this.Evaluate(s, headerAtx, m => this.AtxHeaderEvaluator(m), defaultHandler));
+                s => this.Evaluate(s, HeaderAtx, m => this.AtxHeaderEvaluator(m), defaultHandler));
         }
 
         private Block SetextHeaderEvaluator(Match match)
@@ -703,13 +703,13 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         }
 
         /// <summary>
-        /// Turn Markdown horizontal rules into HTML hr tags
+        /// Turn Markdown horizontal rules into HTML hr tags.
         /// </summary>
         /// <remarks>
         /// ***
         /// * * *
         /// ---
-        /// - - -
+        /// - - -.
         /// </remarks>
         private IEnumerable<Block> DoHorizontalRules(string text, Func<string, IEnumerable<Block>> defaultHandler)
         {
@@ -718,7 +718,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
                 throw new ArgumentNullException("text");
             }
 
-            return this.Evaluate(text, horizontalRules, this.RuleEvaluator, defaultHandler);
+            return this.Evaluate(text, HorizontalRules, this.RuleEvaluator, defaultHandler);
         }
 
         private Block RuleEvaluator(Match match)
@@ -736,7 +736,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
             }
             else
             {
-              line.Style = this.SeparatorStyle;
+                line.Style = this.SeparatorStyle;
             }
 
             var container = new BlockUIContainer(line);
@@ -744,7 +744,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         }
 
         /// <summary>
-        /// Turn Markdown lists into HTML ul and ol and li tags
+        /// Turn Markdown lists into HTML ul and ol and li tags.
         /// </summary>
         private IEnumerable<Block> DoLists(string text, Func<string, IEnumerable<Block>> defaultHandler)
         {
@@ -756,9 +756,9 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
             // We use a different prefix before nested lists than top-level lists.
             // See extended comment in _ProcessListItems().
             if (this.listLevel > 0)
-                return this.Evaluate(text, listNested, this.ListEvaluator, defaultHandler);
+                return this.Evaluate(text, ListNested, this.ListEvaluator, defaultHandler);
             else
-                return this.Evaluate(text, listTopLevel, this.ListEvaluator, defaultHandler);
+                return this.Evaluate(text, ListTopLevel, this.ListEvaluator, defaultHandler);
         }
 
         private Block ListEvaluator(Match match)
@@ -858,7 +858,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         }
 
         /// <summary>
-        /// Turn Markdown `code spans` into HTML code tags
+        /// Turn Markdown `code spans` into HTML code tags.
         /// </summary>
         private IEnumerable<Inline> DoCodeSpans(string text, Func<string, IEnumerable<Inline>> defaultHandler)
         {
@@ -889,7 +889,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
             ////          ... type <code>`bar`</code> ...
             ////
 
-            return this.Evaluate(text, codeSpan, this.CodeSpanEvaluator, defaultHandler);
+            return this.Evaluate(text, CodeSpan, this.CodeSpanEvaluator, defaultHandler);
         }
 
         private Inline CodeSpanEvaluator(Match match)
@@ -913,7 +913,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         }
 
         /// <summary>
-        /// Turn Markdown *italics* and **bold** into HTML strong and em tags
+        /// Turn Markdown *italics* and **bold** into HTML strong and em tags.
         /// </summary>
         private IEnumerable<Inline> DoItalicsAndBold(string text, Func<string, IEnumerable<Inline>> defaultHandler)
         {
@@ -927,11 +927,11 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
             {
                 return this.Evaluate(
                     text,
-                    strictBold,
+                    StrictBold,
                     m => this.BoldEvaluator(m, 3),
                     s1 => this.Evaluate(
                         s1,
-                        strictItalic,
+                        StrictItalic,
                         m => this.ItalicEvaluator(m, 3),
                         s2 => defaultHandler(s2)));
             }
@@ -939,11 +939,11 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
             {
                 return this.Evaluate(
                     text,
-                    bold,
+                    Bold,
                     m => this.BoldEvaluator(m, 2),
                     s1 => this.Evaluate(
                         s1,
-                        italic,
+                        Italic,
                         m => this.ItalicEvaluator(m, 2),
                         s2 => defaultHandler(s2)));
             }
@@ -972,7 +972,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         }
 
         /// <summary>
-        /// Remove one level of line-leading spaces
+        /// Remove one level of line-leading spaces.
         /// </summary>
         private string Outdent(string block)
         {
@@ -983,7 +983,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         /// convert all tabs to _tabWidth spaces;
         /// standardizes line endings from DOS (CR LF) or Mac (CR) to UNIX (LF);
         /// makes sure text ends with a couple of newlines;
-        /// removes any blank lines (only spaces) in the text
+        /// removes any blank lines (only spaces) in the text.
         /// </summary>
         private string Normalize(string text)
         {

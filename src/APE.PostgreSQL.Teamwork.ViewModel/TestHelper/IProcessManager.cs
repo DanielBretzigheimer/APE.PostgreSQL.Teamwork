@@ -14,7 +14,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.TestHelper
     public interface IProcessManager
     {
         /// <summary>
-        /// Executes a new process with the given <see cref="ProcessStartInfo"/>
+        /// Executes a new process with the given <see cref="ProcessStartInfo"/>.
         /// </summary>
         /// <param name="startInfo">Which is forwarded to the process.</param>
         void Execute(ProcessStartInfo startInfo);

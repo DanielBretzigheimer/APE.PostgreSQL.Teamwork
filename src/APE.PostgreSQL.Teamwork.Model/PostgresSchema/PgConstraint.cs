@@ -28,7 +28,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Creates and returns SQL for creation of the constraint.
         /// </summary>
-        /// <returns> created SQL </returns>
+        /// <returns> created SQL.</returns>
         public string CreationSQL
         {
             get

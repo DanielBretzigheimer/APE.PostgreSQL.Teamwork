@@ -32,7 +32,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Creates and returns SQL statement for creation of the sequence.
         /// </summary>
-        /// <returns> created SQL statement </returns>
+        /// <returns> created SQL statement. </returns>
         public string CreationSQL
         {
             get
@@ -106,7 +106,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Creates and returns SQL statement for modification "OWNED BY" parameter.
         /// </summary>
-        /// <returns> created SQL statement </returns>
+        /// <returns> created SQL statement. </returns>
         public string OwnedBySQL
         {
             get
@@ -136,7 +136,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Creates and returns SQL statement for dropping the sequence.
         /// </summary>
-        /// <returns> created SQL </returns>
+        /// <returns> created SQL. </returns>
         public string DropSQL
         {
             get

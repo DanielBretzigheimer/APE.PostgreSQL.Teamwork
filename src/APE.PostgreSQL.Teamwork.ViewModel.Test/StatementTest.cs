@@ -42,7 +42,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             var statement = new Statement(searchPath, sql, databaseMock.Object);
             statement.Execute();
             databaseMock.Setup(d => d.ExecuteCommandNonQuery(sql)).Throws(new Exception());
-            new Action(() => statement.Execute()).ShouldThrow<Exception>();
+            new Action(() => statement.Execute()).Should().Throw<Exception>();
             statement.SearchPath.Should().Be(searchPath);
         }
     }

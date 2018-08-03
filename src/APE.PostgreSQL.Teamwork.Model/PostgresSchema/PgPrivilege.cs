@@ -19,7 +19,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         public PgPrivilegeCommand Command { get; set; }
 
         /// <summary>
-        /// Gets or sets the <see cref="PgPrivilegeKind"/>
+        /// Gets or sets the <see cref="PgPrivilegeKind"/>.
         /// </summary>
         public PgPrivilegeKind Privilege { get; set; }
 

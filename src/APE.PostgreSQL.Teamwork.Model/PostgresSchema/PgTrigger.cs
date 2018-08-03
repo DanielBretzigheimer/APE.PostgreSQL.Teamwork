@@ -31,7 +31,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Creates and returns SQL for creation of trigger.
         /// </summary>
-        /// <returns> created SQL </returns>
+        /// <returns> created SQL. </returns>
         public string CreationSQL
         {
             get
@@ -140,7 +140,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Creates and returns SQL for dropping the trigger.
         /// </summary>
-        /// <returns> created SQL </returns>
+        /// <returns> created SQL. </returns>
         public string DropSQL
         {
             get

@@ -9,7 +9,7 @@ using System.Windows.Shapes;
 namespace APE.PostgreSQL.Teamwork.GUI.Loading
 {
     /// <summary>
-    /// Displays a circle outline with the given angles
+    /// Displays a circle outline with the given angles.
     /// </summary>
     public sealed class Arc : Shape
     {

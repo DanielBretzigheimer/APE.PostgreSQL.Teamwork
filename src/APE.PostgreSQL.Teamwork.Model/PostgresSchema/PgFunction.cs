@@ -115,7 +115,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Creates and returns SQL for dropping the function.
         /// </summary>
-        /// <returns> created SQL </returns>
+        /// <returns> created SQL.</returns>
         public string DropSQL
         {
             get
@@ -171,7 +171,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// Returns function signature. It consists of unquoted name and argument
         /// data types.
         /// </summary>
-        /// <returns> function signature </returns>
+        /// <returns> function signature. </returns>
         public string Signature
         {
             get
