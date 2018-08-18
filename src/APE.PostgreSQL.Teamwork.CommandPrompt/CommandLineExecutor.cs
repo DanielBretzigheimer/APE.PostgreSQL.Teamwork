@@ -118,7 +118,7 @@ namespace APE.PostgreSQL.Teamwork.CommandPrompt
             // 1 means an error occured for the setup
             var result = 1;
             Parser.Default.ParseArguments<CommandLineArgs>(args)
-                .WithParsed(commandLineArgs => this.Execute(commandLineArgs))
+                .WithParsed(commandLineArgs => result = this.Execute(commandLineArgs))
                 .WithNotParsed((errs) => this.HandleParseError(errs));
 
             return result;
