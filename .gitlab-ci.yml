@@ -34,6 +34,12 @@ CreateNugetPackage:
     script:
         - powershell -noprofile -command C:\NuGetOwncloud\GitlabBuildHelpers\Build\BuildNugetPakages.ps1
 
+        - REM APE.PostgreSQL.Teamwork.Tool is a meta package containing only tools!
+        - REM Therefore a not automated creation will be used
+        - set BUILD_VERSION=0
+        - for /f "delims=" %%a in ('powershell -noprofile -command ". C:\NuGetOwncloud\GitlabBuildHelpers\Build\CreateBuildVersion.ps1; GetBuildVersion %CI_PROJECT_NAME% %CI_COMMIT_SHA%;"') do Set "BUILD_VERSION=%%a"
+        - powershell -noprofile -command "(Get-Content .\src\APE.PostgreSQL.Teamwork.Tool\APE.PostgreSQL.Teamwork.Tool.nuspec).replace('$version$', '1.0.%BUILD_VERSION%.0') | Set-Content .\src\APE.PostgreSQL.Teamwork.Tool\APE.PostgreSQL.Teamwork.Tool.nuspec"
+        - src\.nuget\NuGet.exe pack .\src\APE.PostgreSQL.Teamwork.Tool\APE.PostgreSQL.Teamwork.Tool.nuspec -Prop Configuration=%DEPLOYCONFIGURATION% -OutputDirectory C:\NuGetOwncloud\NuGet\APE.PostgreSQL.Teamwork
 
         - REM Copy Executables
         - del /S /Q "C:\NuGetOwncloud\APE Tools\APE.PostgreSQL.Teamwork"
