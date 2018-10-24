@@ -9,7 +9,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Text;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
@@ -104,9 +103,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         protected static readonly System.ComponentModel.PropertyChangedEventArgs ErrorMessageEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(ErrorMessage));
         private string errorMessage = "";
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string ErrorMessage
         {
             get
@@ -117,11 +113,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.errorMessage, value))
                 {
-                    //this.ErrorMessageChanging(value);
                     this.ErrorMessageBeforeSet(value);
                     this.errorMessage = value;
                     this.OnPropertyChanged(ErrorMessageEventArgs);
-                    //this.ErrorMessageChanged();
                     this.ErrorMessageAfterSet();
                 }
             }
@@ -129,16 +123,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void ErrorMessageBeforeSet(string newValue);
         partial void ErrorMessageAfterSet();
-
-        //protected virtual void ErrorMessageChanging(string newValue) { }
-        //protected virtual void ErrorMessageChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs SuccessMessageEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(SuccessMessage));
         private string successMessage = "";
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string SuccessMessage
         {
             get
@@ -149,11 +138,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.successMessage, value))
                 {
-                    //this.SuccessMessageChanging(value);
                     this.SuccessMessageBeforeSet(value);
                     this.successMessage = value;
                     this.OnPropertyChanged(SuccessMessageEventArgs);
-                    //this.SuccessMessageChanged();
                     this.SuccessMessageAfterSet();
                 }
             }
@@ -161,16 +148,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void SuccessMessageBeforeSet(string newValue);
         partial void SuccessMessageAfterSet();
-
-        //protected virtual void SuccessMessageChanging(string newValue) { }
-        //protected virtual void SuccessMessageChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs EditableEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Editable));
         private bool editable = false;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool Editable
         {
             get
@@ -181,11 +163,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.editable, value))
                 {
-                    //this.EditableChanging(value);
                     this.EditableBeforeSet(value);
                     this.editable = value;
                     this.OnPropertyChanged(EditableEventArgs);
-                    //this.EditableChanged();
                     this.EditableAfterSet();
                 }
             }
@@ -193,16 +173,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void EditableBeforeSet(bool newValue);
         partial void EditableAfterSet();
-
-        //protected virtual void EditableChanging(bool newValue) { }
-        //protected virtual void EditableChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs LoadingEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Loading));
         private bool loading = false;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool Loading
         {
             get
@@ -213,11 +188,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.loading, value))
                 {
-                    //this.LoadingChanging(value);
                     this.LoadingBeforeSet(value);
                     this.loading = value;
                     this.OnPropertyChanged(LoadingEventArgs);
-                    //this.LoadingChanged();
                     this.LoadingAfterSet();
                 }
             }
@@ -225,16 +198,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void LoadingBeforeSet(bool newValue);
         partial void LoadingAfterSet();
-
-        //protected virtual void LoadingChanging(bool newValue) { }
-        //protected virtual void LoadingChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs ShowSearchEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(ShowSearch));
         private bool showSearch = false;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool ShowSearch
         {
             get
@@ -245,11 +213,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.showSearch, value))
                 {
-                    //this.ShowSearchChanging(value);
                     this.ShowSearchBeforeSet(value);
                     this.showSearch = value;
                     this.OnPropertyChanged(ShowSearchEventArgs);
-                    //this.ShowSearchChanged();
                     this.ShowSearchAfterSet();
                 }
             }
@@ -257,16 +223,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void ShowSearchBeforeSet(bool newValue);
         partial void ShowSearchAfterSet();
-
-        //protected virtual void ShowSearchChanging(bool newValue) { }
-        //protected virtual void ShowSearchChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs FilterTextEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(FilterText));
         private string filterText = "";
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string FilterText
         {
             get
@@ -277,11 +238,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.filterText, value))
                 {
-                    //this.FilterTextChanging(value);
                     this.FilterTextBeforeSet(value);
                     this.filterText = value;
                     this.OnPropertyChanged(FilterTextEventArgs);
-                    //this.FilterTextChanged();
                     this.FilterTextAfterSet();
                 }
             }
@@ -289,16 +248,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void FilterTextBeforeSet(string newValue);
         partial void FilterTextAfterSet();
-
-        //protected virtual void FilterTextChanging(string newValue) { }
-        //protected virtual void FilterTextChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs EditButtonEnabledEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(EditButtonEnabled));
         private bool editButtonEnabled = true;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool EditButtonEnabled
         {
             get
@@ -309,11 +263,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.editButtonEnabled, value))
                 {
-                    //this.EditButtonEnabledChanging(value);
                     this.EditButtonEnabledBeforeSet(value);
                     this.editButtonEnabled = value;
                     this.OnPropertyChanged(EditButtonEnabledEventArgs);
-                    //this.EditButtonEnabledChanged();
                     this.EditButtonEnabledAfterSet();
                 }
             }
@@ -321,16 +273,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void EditButtonEnabledBeforeSet(bool newValue);
         partial void EditButtonEnabledAfterSet();
-
-        //protected virtual void EditButtonEnabledChanging(bool newValue) { }
-        //protected virtual void EditButtonEnabledChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs SaveButtonVisibilityEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(SaveButtonVisibility));
         private Visibility saveButtonVisibility = Visibility.Hidden;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public Visibility SaveButtonVisibility
         {
             get
@@ -341,11 +288,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.saveButtonVisibility, value))
                 {
-                    //this.SaveButtonVisibilityChanging(value);
                     this.SaveButtonVisibilityBeforeSet(value);
                     this.saveButtonVisibility = value;
                     this.OnPropertyChanged(SaveButtonVisibilityEventArgs);
-                    //this.SaveButtonVisibilityChanged();
                     this.SaveButtonVisibilityAfterSet();
                 }
             }
@@ -353,18 +298,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void SaveButtonVisibilityBeforeSet(Visibility newValue);
         partial void SaveButtonVisibilityAfterSet();
-
-        //protected virtual void SaveButtonVisibilityChanging(Visibility newValue) { }
-        //protected virtual void SaveButtonVisibilityChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs DatabasesEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Databases));
         private List<DatabaseDisplayData> databases;
 
-        /// <summary>
-        /// 
-        /// </summary>
         [NullGuard.AllowNull]
-public List<DatabaseDisplayData> Databases
+        public List<DatabaseDisplayData> Databases
         {
             get
             {
@@ -374,11 +314,9 @@ public List<DatabaseDisplayData> Databases
             {
                 if (!object.Equals(this.databases, value))
                 {
-                    //this.DatabasesChanging(value);
                     this.DatabasesBeforeSet(value);
                     this.databases = value;
                     this.OnPropertyChanged(DatabasesEventArgs);
-                    //this.DatabasesChanged();
                     this.DatabasesAfterSet();
                 }
             }
@@ -386,9 +324,7 @@ public List<DatabaseDisplayData> Databases
 
         partial void DatabasesBeforeSet(List<DatabaseDisplayData> newValue);
         partial void DatabasesAfterSet();
-
-        //protected virtual void DatabasesChanging(List<DatabaseDisplayData> newValue) { }
-        //protected virtual void DatabasesChanged() { }
+        
 
         //--------------------------------------------------------------------------------
         // generated code for Startable

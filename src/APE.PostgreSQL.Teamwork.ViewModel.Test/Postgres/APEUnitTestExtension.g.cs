@@ -88,6 +88,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
 {
     using System.Collections.Generic;
     using System.IO;
+    using System.Linq;
     using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
     using APE.PostgreSQL.Teamwork.Model.Utils;
     using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
@@ -99,12 +100,26 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
     internal static class PgDiffConstraintsExtension
     {
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static IList<PgConstraint> CallPgDiffConstraintsGetDropConstraints(bool primaryKey)
+        internal static Dictionary<PgConstraint, string> CallPgDiffConstraintsGetRenameConstraints()
         {
             var pt = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateType(typeof(PgDiffConstraints));
             try
             {
-                return (IList<PgConstraint>)pt.InvokeStatic("GetDropConstraints", new object[] { primaryKey });
+                return (Dictionary<PgConstraint, string>)pt.InvokeStatic("GetRenameConstraints", new object[] { });
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("GetRenameConstraints with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static List<PgConstraint> CallPgDiffConstraintsGetDropConstraints(bool primaryKey)
+        {
+            var pt = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateType(typeof(PgDiffConstraints));
+            try
+            {
+                return (List<PgConstraint>)pt.InvokeStatic("GetDropConstraints", new object[] { primaryKey });
             }
             catch (System.MissingMethodException missingMethodException)
             {
@@ -113,12 +128,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres
         }
 
         [System.Diagnostics.DebuggerStepThrough()]
-        internal static IList<PgConstraint> CallPgDiffConstraintsGetNewConstraints(bool primaryKey, bool foreignKey)
+        internal static List<PgConstraint> CallPgDiffConstraintsGetNewConstraints(bool primaryKey, bool foreignKey)
         {
             var pt = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateType(typeof(PgDiffConstraints));
             try
             {
-                return (IList<PgConstraint>)pt.InvokeStatic("GetNewConstraints", new object[] { primaryKey, foreignKey });
+                return (List<PgConstraint>)pt.InvokeStatic("GetNewConstraints", new object[] { primaryKey, foreignKey });
             }
             catch (System.MissingMethodException missingMethodException)
             {

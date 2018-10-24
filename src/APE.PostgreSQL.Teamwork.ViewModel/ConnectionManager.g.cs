@@ -6,21 +6,20 @@
 // </auto-generated>
 using System;
 using System.Collections.Generic;
+using System.Data;
+using System.Diagnostics;
 using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 using APE.CodeGeneration.Attributes;
-using FluentAssertions;
-using Moq;
-using Moq.Language.Flow;
-using StructureMap.AutoMocking.Moq;
+using APE.PostgreSQL.Teamwork.Model.Setting;
+using APE.PostgreSQL.Teamwork.ViewModel;
+using Dapper;
+using log4net;
+using Npgsql;
 
-namespace APE.PostgreSQL.Teamwork.TestHelper
+namespace APE.PostgreSQL.Teamwork
 {
     // APE.CodeGeneration.Attribute [Disposable]
-    public partial class Test<T>
-         : System.IDisposable
+    public partial class ConnectionManager  : System.IDisposable
     {
         //ncrunch: no coverage start
 
@@ -53,7 +52,7 @@ namespace APE.PostgreSQL.Teamwork.TestHelper
         /// resources.</param>
         partial void Dispose(bool threadSpecificCleanup);
 
-        ~Test()
+        ~ConnectionManager()
         {
             if (this.isDisposed)
                 return;

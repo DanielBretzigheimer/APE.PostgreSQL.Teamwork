@@ -208,7 +208,7 @@
                                     <Grid>
                                         <loading:Spinner Visibility="{Binding Resetting, Converter={StaticResource BoolToVisibilityConverter}}"/>
                                         <materialDesign:PackIcon Kind="BackupRestore" RenderOptions.BitmapScalingMode="HighQuality"
-																							 Visibility="{Binding Resetting, Converter={StaticResource InvertedBoolToVisibilityConverter}}" />
+                                                                 Visibility="{Binding Resetting, Converter={StaticResource InvertedBoolToVisibilityConverter}}" />
                                     </Grid>
                                 </Button>
 
@@ -227,6 +227,10 @@
                                 <Button Command="{Binding CreateMinorCommand}" Style="{StaticResource DetailButton}" ToolTip="Open a popup to create a new minor version"
                                         IsEnabled="{Binding CanCreateMinor}" ToolTipService.ShowOnDisabled="True" >
                                     <Image Source="Images/minor-version.png" RenderOptions.BitmapScalingMode="HighQuality" />
+                                </Button>
+
+                                <Button Command="{Binding DisconnectCommand}" Style="{StaticResource DetailButton}" ToolTip="Disconnects all connections to the database">
+                                    <materialDesign:PackIcon Kind="PowerPlugOff" RenderOptions.BitmapScalingMode="HighQuality" />
                                 </Button>
                                 
                                 <Grid>

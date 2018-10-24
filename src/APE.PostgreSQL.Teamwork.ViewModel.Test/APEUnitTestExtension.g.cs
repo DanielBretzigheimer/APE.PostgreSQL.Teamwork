@@ -611,7 +611,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 {
     using System;
     using System.IO;
+    using System.Text;
     using APE.CodeGeneration.Attributes;
+    using APE.PostgreSQL.Teamwork.Model.Templates;
+    using APE.PostgreSQL.Teamwork.Model.Utils;
     using Npgsql;
     using APE.PostgreSQL.Teamwork.ViewModel;
     using APE.PostgreSQL.Teamwork;
@@ -687,6 +690,34 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             catch (System.MissingMethodException missingMethodException)
             {
                 throw new System.NotSupportedException("SearchPath with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static bool GetIsTeamworkSchema(this Statement targetClass)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                return (bool)po.GetFieldOrProperty("IsTeamworkSchema");
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("IsTeamworkSchema with requested parameters is not found. Rerun code generation.", missingMethodException);
+            }
+        }
+
+        [System.Diagnostics.DebuggerStepThrough()]
+        internal static void SetIsTeamworkSchema(this Statement targetClass, bool value)
+        {
+            var po = new Microsoft.VisualStudio.TestTools.UnitTesting.PrivateObject(targetClass);
+            try
+            {
+                po.SetFieldOrProperty("IsTeamworkSchema", value);
+            }
+            catch (System.MissingMethodException missingMethodException)
+            {
+                throw new System.NotSupportedException("IsTeamworkSchema with requested parameters is not found. Rerun code generation.", missingMethodException);
             }
         }
     }
@@ -1101,7 +1132,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Text;
     using System.Windows;
     using System.Windows.Input;
     using System.Windows.Threading;

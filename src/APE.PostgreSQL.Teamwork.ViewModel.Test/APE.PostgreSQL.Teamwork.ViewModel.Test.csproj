@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
@@ -47,14 +47,17 @@
   <ItemGroup>
     <PackageReference Include="APE.CodeGeneration.Attributes" Version="1.0.122" />
     <PackageReference Include="Dapper" Version="1.50.5" />
-    <PackageReference Include="FluentAssertions" Version="5.4.1" />
-    <PackageReference Include="Fody" Version="3.1.4" />
+    <PackageReference Include="FluentAssertions" Version="5.4.2" />
+    <PackageReference Include="Fody" Version="3.2.13">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="Moq" Version="4.0.10827" />
-    <PackageReference Include="Npgsql" Version="4.0.2" />
-    <PackageReference Include="NullGuard.Fody" Version="1.8.0" />
-    <PackageReference Include="ServiceStack.Text" Version="5.1.0" />
-    <PackageReference Include="SharpZipLib" Version="0.86.0" />
+    <PackageReference Include="Npgsql" Version="4.0.3" />
+    <PackageReference Include="NullGuard.Fody" Version="1.8.5" />
+    <PackageReference Include="ServiceStack.Text" Version="5.4.0" />
+    <PackageReference Include="SharpZipLib" Version="1.0.0" />
     <PackageReference Include="StructureMap" Version="4.7.0" />
     <PackageReference Include="structuremap.automocking.moq" Version="4.0.0.315" />
     <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" />
@@ -89,6 +92,7 @@
   </Choose>
   <ItemGroup>
     <Compile Include="Postgres\Parsers\ParserTest.cs" />
+    <Compile Include="Postgres\Parsers\APEUnitTestExtension.g.cs" />
     <Compile Include="Postgres\Parsers\PrivilegeParserTest.cs" />
     <Compile Include="Postgres\APEUnitTestExtension.g.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

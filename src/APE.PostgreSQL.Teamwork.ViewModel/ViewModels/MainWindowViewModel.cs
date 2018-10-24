@@ -246,7 +246,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 }
                 else if (dumpCreatorNotFound)
                 {
-                    var path = this.SearchFileRecursivly("pg_dump.exe", "C:\\Program Files\\PostgreSQL\\"); // todo db move it to settings
+                    var path = this.SearchFileRecursivly("pg_dump.exe", "C:\\PostgreSQL\\"); // todo db move it to settings
+                    if (path == null)
+                        path = this.SearchFileRecursivly("pg_dump.exe", "C:\\Program Files\\PostgreSQL\\"); // todo db move it to settings
 
                     // check if postgre is installed
                     if (File.Exists(path))

@@ -1,16 +1,13 @@
-﻿// <copyright file="CheckDatabaseValidationRule.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+// <copyright file="CheckDatabaseValidationRule.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System.Windows.Controls;
+using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.Model.Setting;
 using APE.PostgreSQL.Teamwork.ViewModel;
 
 namespace APE.PostgreSQL.Teamwork.View
 {
-    public class CheckDatabaseValidationRule : ValidationRule
+    [Disposable]
+    public partial class CheckDatabaseValidationRule : ValidationRule
     {
         private IConnectionManager connectionManager = new ConnectionManager();
 
@@ -43,6 +40,14 @@ namespace APE.PostgreSQL.Teamwork.View
             {
                 return new ValidationResult(false, "Input has to be a text.");
             }
+        }
+
+        partial void Dispose(bool threadSpecificCleanup)
+        {
+            if (this.connectionManager != null)
+                this.connectionManager.Dispose();
+
+            this.connectionManager = null;
         }
     }
 }

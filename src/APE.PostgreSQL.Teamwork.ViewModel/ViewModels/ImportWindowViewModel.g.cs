@@ -64,9 +64,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         protected static readonly System.ComponentModel.PropertyChangedEventArgs DiffFilesEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(DiffFiles));
         private List<SQLFileDisplayData> diffFiles;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public List<SQLFileDisplayData> DiffFiles
         {
             get
@@ -77,11 +74,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.diffFiles, value))
                 {
-                    //this.DiffFilesChanging(value);
                     this.DiffFilesBeforeSet(value);
                     this.diffFiles = value;
                     this.OnPropertyChanged(DiffFilesEventArgs);
-                    //this.DiffFilesChanged();
                     this.DiffFilesAfterSet();
                 }
             }
@@ -89,16 +84,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void DiffFilesBeforeSet(List<SQLFileDisplayData> newValue);
         partial void DiffFilesAfterSet();
-
-        //protected virtual void DiffFilesChanging(List<SQLFileDisplayData> newValue) { }
-        //protected virtual void DiffFilesChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs ExecuteButtonEnabledEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(ExecuteButtonEnabled));
         private bool executeButtonEnabled;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool ExecuteButtonEnabled
         {
             get
@@ -109,11 +99,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.executeButtonEnabled, value))
                 {
-                    //this.ExecuteButtonEnabledChanging(value);
                     this.ExecuteButtonEnabledBeforeSet(value);
                     this.executeButtonEnabled = value;
                     this.OnPropertyChanged(ExecuteButtonEnabledEventArgs);
-                    //this.ExecuteButtonEnabledChanged();
                     this.ExecuteButtonEnabledAfterSet();
                 }
             }
@@ -121,16 +109,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void ExecuteButtonEnabledBeforeSet(bool newValue);
         partial void ExecuteButtonEnabledAfterSet();
-
-        //protected virtual void ExecuteButtonEnabledChanging(bool newValue) { }
-        //protected virtual void ExecuteButtonEnabledChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs ExecuteButtonVisibleEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(ExecuteButtonVisible));
         private bool executeButtonVisible = true;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool ExecuteButtonVisible
         {
             get
@@ -141,11 +124,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.executeButtonVisible, value))
                 {
-                    //this.ExecuteButtonVisibleChanging(value);
                     this.ExecuteButtonVisibleBeforeSet(value);
                     this.executeButtonVisible = value;
                     this.OnPropertyChanged(ExecuteButtonVisibleEventArgs);
-                    //this.ExecuteButtonVisibleChanged();
                     this.ExecuteButtonVisibleAfterSet();
                 }
             }
@@ -153,16 +134,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void ExecuteButtonVisibleBeforeSet(bool newValue);
         partial void ExecuteButtonVisibleAfterSet();
-
-        //protected virtual void ExecuteButtonVisibleChanging(bool newValue) { }
-        //protected virtual void ExecuteButtonVisibleChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs LoadingEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Loading));
         private bool loading = false;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool Loading
         {
             get
@@ -173,11 +149,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.loading, value))
                 {
-                    //this.LoadingChanging(value);
                     this.LoadingBeforeSet(value);
                     this.loading = value;
                     this.OnPropertyChanged(LoadingEventArgs);
-                    //this.LoadingChanged();
                     this.LoadingAfterSet();
                 }
             }
@@ -185,18 +159,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void LoadingBeforeSet(bool newValue);
         partial void LoadingAfterSet();
-
-        //protected virtual void LoadingChanging(bool newValue) { }
-        //protected virtual void LoadingChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs SelectedDiffFileEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(SelectedDiffFile));
         private SQLFileDisplayData selectedDiffFile;
 
-        /// <summary>
-        /// 
-        /// </summary>
         [NullGuard.AllowNull]
-public SQLFileDisplayData SelectedDiffFile
+        public SQLFileDisplayData SelectedDiffFile
         {
             get
             {
@@ -206,11 +175,9 @@ public SQLFileDisplayData SelectedDiffFile
             {
                 if (!object.Equals(this.selectedDiffFile, value))
                 {
-                    //this.SelectedDiffFileChanging(value);
                     this.SelectedDiffFileBeforeSet(value);
                     this.selectedDiffFile = value;
                     this.OnPropertyChanged(SelectedDiffFileEventArgs);
-                    //this.SelectedDiffFileChanged();
                     this.SelectedDiffFileAfterSet();
                 }
             }
@@ -218,9 +185,7 @@ public SQLFileDisplayData SelectedDiffFile
 
         partial void SelectedDiffFileBeforeSet(SQLFileDisplayData newValue);
         partial void SelectedDiffFileAfterSet();
-
-        //protected virtual void SelectedDiffFileChanging(SQLFileDisplayData newValue) { }
-        //protected virtual void SelectedDiffFileChanged() { }
+        
 
         //ncrunch: no coverage end
     }

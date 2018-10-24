@@ -6,7 +6,10 @@
 // </auto-generated>
 using System;
 using System.IO;
+using System.Text;
 using APE.CodeGeneration.Attributes;
+using APE.PostgreSQL.Teamwork.Model.Templates;
+using APE.PostgreSQL.Teamwork.Model.Utils;
 using Npgsql;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
@@ -25,9 +28,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         protected static readonly System.ComponentModel.PropertyChangedEventArgs SQLEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(SQL));
         private string sQL;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string SQL
         {
             get
@@ -38,11 +38,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.sQL, value))
                 {
-                    //this.SQLChanging(value);
                     this.SQLBeforeSet(value);
                     this.sQL = value;
                     this.OnPropertyChanged(SQLEventArgs);
-                    //this.SQLChanged();
                     this.SQLAfterSet();
                 }
             }
@@ -50,16 +48,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void SQLBeforeSet(string newValue);
         partial void SQLAfterSet();
-
-        //protected virtual void SQLChanging(string newValue) { }
-        //protected virtual void SQLChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs TitleEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Title));
         private string title;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string Title
         {
             get
@@ -70,11 +63,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.title, value))
                 {
-                    //this.TitleChanging(value);
                     this.TitleBeforeSet(value);
                     this.title = value;
                     this.OnPropertyChanged(TitleEventArgs);
-                    //this.TitleChanged();
                     this.TitleAfterSet();
                 }
             }
@@ -82,9 +73,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void TitleBeforeSet(string newValue);
         partial void TitleAfterSet();
-
-        //protected virtual void TitleChanging(string newValue) { }
-        //protected virtual void TitleChanged() { }
+        
 
         //--------------------------------------------------------------------------------
         // generated code for NotifyPropertySupport

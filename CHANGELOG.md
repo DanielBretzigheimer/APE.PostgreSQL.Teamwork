@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.52.0
+**New Features**
+- PostgreSQL 11 support
+
 ## 1.0.51.0
 **New Features**
 - STRG + F to search added

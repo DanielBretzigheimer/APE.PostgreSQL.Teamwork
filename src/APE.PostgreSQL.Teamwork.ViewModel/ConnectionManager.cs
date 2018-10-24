@@ -1,10 +1,10 @@
-﻿// <copyright file="ConnectionManager.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+// <copyright file="ConnectionManager.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Diagnostics;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.Model.Setting;
 using APE.PostgreSQL.Teamwork.ViewModel;
 using Dapper;
@@ -16,11 +16,17 @@ namespace APE.PostgreSQL.Teamwork
     /// <summary>
     /// Contains all methods to communicate with the database.
     /// </summary>
-    public class ConnectionManager : IConnectionManager
+    [Disposable]
+    public partial class ConnectionManager : IConnectionManager
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private readonly object connectionLock = new object();
+
+        /// <summary>
+        /// Gets the <see cref="NpgsqlConnection"/> for a specific connection string.
+        /// </summary>
+        private Dictionary<string, NpgsqlConnection> connections = new Dictionary<string, NpgsqlConnection>();
 
         private string id;
         private string host;
@@ -73,15 +79,15 @@ namespace APE.PostgreSQL.Teamwork
         {
             try
             {
-                var connectionString = this.GetConnectionString(databaseName);
-
-                // check if connection can be established
-                using (var connection = new NpgsqlConnection(connectionString.ConnectionString))
+                lock (this.connectionLock)
                 {
-                    connection.Open();
-                }
+                    var connectionString = this.GetConnectionString(databaseName);
 
-                return true;
+                    // check if connection can be established
+                    this.GetConnection(connectionString);
+
+                    return true;
+                }
             }
             catch (Exception ex)
             {
@@ -151,16 +157,12 @@ namespace APE.PostgreSQL.Teamwork
             {
                 try
                 {
-                    using (var connection = new NpgsqlConnection(this.GetConnectionString(databaseName).ConnectionString))
+                    var connection = this.GetConnection(this.GetConnectionString(databaseName));
+                    using (var command = new NpgsqlCommand(sql, connection))
                     {
-                        connection.Open();
-
-                        using (var command = new NpgsqlCommand(sql, connection))
-                        {
-                            // wait max 10 minutes!
-                            command.CommandTimeout = 600;
-                            command.ExecuteNonQuery();
-                        }
+                        // wait max 10 minutes!
+                        command.CommandTimeout = 600;
+                        command.ExecuteNonQuery();
                     }
                 }
                 catch (Exception ex)
@@ -175,41 +177,74 @@ namespace APE.PostgreSQL.Teamwork
         {
             lock (this.connectionLock)
             {
-                var connectionStringBuilder = this.GetConnectionString(databaseName);
-                using (var connection = new NpgsqlConnection(connectionStringBuilder.ConnectionString))
+                try
                 {
-                    connection.Open();
+                    var connectionStringBuilder = this.GetConnectionString(databaseName);
+                    var connection = this.GetConnection(connectionStringBuilder);
+                    return connection.Query<T>(sql).ToList();
+                }
+                catch (NpgsqlException ex)
+                {
+                    Log.Error(ex);
+                    if (Debugger.IsAttached)
+                        Debugger.Break();
 
-                    try
-                    {
-                        return connection.Query<T>(sql).ToList();
-                    }
-                    catch (NpgsqlException ex)
-                    {
-                        Log.Error(ex);
-                        if (Debugger.IsAttached)
-                        {
-                            Debugger.Break();
-                        }
-
-                        // retry connection once
-                        if (retry)
-                            return this.ExecuteCommand<T>(databaseName, sql, false);
-                        else
-                            throw;
-                    }
-                    catch (Exception ex)
-                    {
-                        Log.Error(ex);
-                        if (Debugger.IsAttached)
-                        {
-                            Debugger.Break();
-                        }
-
+                    // retry connection once
+                    if (retry)
+                        return this.ExecuteCommand<T>(databaseName, sql, false);
+                    else
                         throw;
-                    }
+                }
+                catch (Exception ex)
+                {
+                    Log.Error(ex);
+                    if (Debugger.IsAttached)
+                        Debugger.Break();
+
+                    throw;
                 }
             }
+        }
+
+        partial void Dispose(bool threadSpecificCleanup)
+        {
+            lock (this.connectionLock)
+            {
+                if (this.connections != null)
+                {
+                    foreach (var connection in this.connections.Values)
+                        connection?.Dispose();
+
+                    this.connections.Clear();
+                }
+
+                this.connections = null;
+            }
+        }
+
+        private NpgsqlConnection GetConnection(NpgsqlConnectionStringBuilder connectionString)
+        {
+            NpgsqlConnection connection = null;
+
+            if (this.connections.ContainsKey(connectionString.ConnectionString))
+            {
+                connection = this.connections[connectionString.ConnectionString];
+
+                if (connection != null && (connection.State == ConnectionState.Closed || connection.State == ConnectionState.Broken))
+                {
+                    connection.Dispose();
+                    this.connections.Remove(connectionString.ConnectionString);
+                }
+            }
+
+            if (connection == null)
+            {
+                connection = new NpgsqlConnection(connectionString.ConnectionString);
+                connection.Open();
+                this.connections[connectionString.ConnectionString] = connection;
+            }
+
+            return connection;
         }
 
         /// <summary>
@@ -220,9 +255,7 @@ namespace APE.PostgreSQL.Teamwork
         private NpgsqlConnectionStringBuilder GetConnectionString(string databaseName)
         {
             if (!this.Initialized)
-            {
                 throw new InvalidOperationException(string.Format("{0} was not initialized", typeof(ConnectionManager).Name));
-            }
 
             var connectionString = SettingsManager.Get().Setting.ConnectionStringTemplate;
             connectionString = connectionString.Replace("[Id]", this.id);
