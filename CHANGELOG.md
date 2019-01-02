@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.55.0
+- Database Disconnect Button added
+
 ## 1.0.52.0
 **New Features**
 - PostgreSQL 11 support
