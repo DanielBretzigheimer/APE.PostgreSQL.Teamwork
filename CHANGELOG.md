@@ -1,5 +1,8 @@
 # Changelog
 
+## 1.0.56.0
+- Create view with "WITH" support added
+
 ## 1.0.55.0
 - Database Disconnect Button added
 

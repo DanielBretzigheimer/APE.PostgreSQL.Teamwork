@@ -43,6 +43,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 }
             }
 
+            parser.ExpectOptional("WITH", "(security_barrier='false')");
+
             parser.Expect("AS");
 
             var query = parser.Rest();
