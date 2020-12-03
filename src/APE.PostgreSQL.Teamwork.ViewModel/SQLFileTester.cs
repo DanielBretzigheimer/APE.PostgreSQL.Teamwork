@@ -27,7 +27,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             }
 
             // read file
-            PgDatabase postgresDatabase = PgDumpLoader.LoadDatabaseSchema(target.Path, database.Name, false, false);
+            PgDatabase postgresDatabase = PgDumpLoader.LoadDatabaseSchema(target.Path, database, false, false);
 
             // create data for tables
             foreach (var schema in postgresDatabase.Schemas)
@@ -53,7 +53,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             }
 
             // read file
-            PgDatabase oldDatabase = PgDumpLoader.LoadDatabaseSchema(target.Path, database.Name, false, false);
+            PgDatabase oldDatabase = PgDumpLoader.LoadDatabaseSchema(target.Path, database, false, false);
 
             // call empty functions
         }

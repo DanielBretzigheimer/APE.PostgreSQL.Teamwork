@@ -9,7 +9,7 @@
 					xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
 					xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
                     xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
-					mc:Ignorable="d"
+					mc:Ignorable="d" KeyDown="DialogWindow_KeyDown"
 					MinWidth="500" MinHeight="450" Title="{Binding WindowTitle}" Height="550" 
 					Background="#eee" Width="600" Icon="images/logo-icon.ico">
 
@@ -104,6 +104,7 @@
                 <materialDesign:PackIcon Kind="Plus" RenderOptions.BitmapScalingMode="HighQuality" Width="28" Height="28" />
             </Button>
 
+            <!-- Header -->
             <Border Background="White">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="5" Color="#FFCCCCCC" Direction="270" ShadowDepth="1"/>
@@ -124,7 +125,7 @@
                                 <ColumnDefinition Width="auto" />
                             </Grid.ColumnDefinitions>
 
-                            <!-- Search -->
+                            <!-- searchbar -->
                             <TextBox Width="0" materialDesign:HintAssist.Hint="Search" Height="25" Margin="5 0"
 											 Text="{Binding FilterText, UpdateSourceTrigger=PropertyChanged}" x:Name="searchBar" >
                                 <TextBox.Style>

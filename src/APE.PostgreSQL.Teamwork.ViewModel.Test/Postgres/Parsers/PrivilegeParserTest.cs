@@ -1,5 +1,6 @@
 ﻿// <copyright file="PrivilegeParserTest.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 
+using System.Collections.Generic;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema.Enums;
 using APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers;
@@ -14,7 +15,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres.Parsers
         [TestMethod]
         public void GrantParseTest()
         {
-            var db = new PgDatabase("Name");
+            var db = new PgDatabase("Name", new List<string>());
             db.DefaultSchema.Privileges.Count.Should().Be(0);
             PrivilegeParser.Parse(db, "GRANT ALL ON FUNCTION generate_csharp_pocos() TO postgres;", PgPrivilegeCommand.Grant);
             db.DefaultSchema.Privileges.Count.Should().Be(1);
@@ -47,7 +48,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test.Postgres.Parsers
         [TestMethod]
         public void RevokeParseTest()
         {
-            var db = new PgDatabase("Name");
+            var db = new PgDatabase("Name", new List<string>());
             db.DefaultSchema.Privileges.Count.Should().Be(0);
             PrivilegeParser.Parse(db, "REVOKE ALL ON FUNCTION generate_csharp_pocos() FROM PUBLIC;", PgPrivilegeCommand.Revoke);
             db.DefaultSchema.Privileges.Count.Should().Be(1);

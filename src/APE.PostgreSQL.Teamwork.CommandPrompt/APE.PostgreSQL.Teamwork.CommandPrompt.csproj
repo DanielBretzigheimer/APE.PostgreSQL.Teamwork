@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>APE.PostgreSQL.Teamwork.CommandPrompt</RootNamespace>
     <AssemblyName>APE.PostgreSQL.Teamwork.CommandPrompt</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <NuGetPackageImportStamp>
@@ -43,16 +43,19 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="1.9.71" />
-    <PackageReference Include="Fody" Version="2.1.2" />
+    <PackageReference Include="CommandLineParser" Version="2.3.0" />
+    <PackageReference Include="Fody" Version="3.2.13">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="log4net" Version="2.0.8" />
-    <PackageReference Include="NullGuard.Fody" Version="1.5.2" />
-    <PackageReference Include="ServiceStack.Text" Version="3.9.71" />
-    <PackageReference Include="SharpZipLib" Version="0.86.0" />
-    <PackageReference Include="StructureMap" Version="4.5.1" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta001" />
+    <PackageReference Include="NullGuard.Fody" Version="1.8.5" />
+    <PackageReference Include="ServiceStack.Text" Version="5.4.0" />
+    <PackageReference Include="SharpZipLib" Version="1.0.0" />
+    <PackageReference Include="StructureMap" Version="4.7.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" />
     <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
-    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.4.0" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.1" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="APE.CodeGeneration.Attributes">
@@ -67,6 +70,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommandLineArgs.cs" />
     <Compile Include="CommandLineExecutor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.g.cs" />
@@ -81,7 +85,6 @@
     <None Include="..\..\StyleCop.ruleset">
       <Link>StyleCop.ruleset</Link>
     </None>
-    <None Include="APE.PostgreSQL.Teamwork.CommandPrompt.licenseheader" />
     <None Include="App.config" />
     <Content Include="APE.PostgreSQL.Teamwork.CommandPrompt.exe.log4net.config">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

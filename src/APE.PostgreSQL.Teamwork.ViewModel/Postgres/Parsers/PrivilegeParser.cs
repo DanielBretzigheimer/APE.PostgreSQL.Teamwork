@@ -87,12 +87,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             };
 
             var schemaName = ParserUtils.GetSchemaName(nameWithSchema, database);
-            PgSchema schema = database.GetSchema(schemaName);
 
+            if (database.SchemaIsIgnored(schemaName))
+                return;
+
+            var schema = database.GetSchema(schemaName);
             if (schema == null)
-            {
                 throw new Exception($"Cannot find schema {schemaName} for statement {statement}.");
-            }
 
             schema.Add(privilege);
         }

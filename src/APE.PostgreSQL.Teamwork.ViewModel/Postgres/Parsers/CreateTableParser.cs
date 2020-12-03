@@ -1,6 +1,7 @@
 ﻿// <copyright file="CreateTableParser.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
+using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 {
@@ -24,12 +25,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             var table = new PgTable(ParserUtils.GetObjectName(tableIdentifier));
             var schemaName = ParserUtils.GetSchemaName(tableIdentifier, database);
 
-            PgSchema schema = database.GetSchema(schemaName);
+            if (database.SchemaIsIgnored(schemaName))
+                return;
 
+            var schema = database.GetSchema(schemaName);
             if (schema == null)
-            {
                 throw new Exception(string.Format("CannotFindSchema {0}. Statement {1}", schemaName, statement));
-            }
 
             schema.Add(table);
 
@@ -38,13 +39,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             while (!parser.ExpectOptional(")"))
             {
                 if (parser.ExpectOptional("CONSTRAINT"))
-                {
                     ParseConstraint(parser, table);
-                }
                 else
-                {
                     ParseColumn(parser, table);
-                }
 
                 if (parser.ExpectOptional(")"))
                 {
@@ -89,7 +86,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 }
                 else
                 {
-                    parser.ThrowUnsupportedCommand();
+                    throw new TeamworkParserException("CannotParseStringUnsupportedCommand");
                 }
             }
         }

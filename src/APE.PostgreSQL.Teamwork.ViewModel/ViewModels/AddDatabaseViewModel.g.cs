@@ -111,9 +111,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         protected static readonly System.ComponentModel.PropertyChangedEventArgs DatabaseNameEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(DatabaseName));
         private string databaseName = "";
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string DatabaseName
         {
             get
@@ -124,11 +121,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.databaseName, value))
                 {
-                    //this.DatabaseNameChanging(value);
                     this.DatabaseNameBeforeSet(value);
                     this.databaseName = value;
                     this.OnPropertyChanged(DatabaseNameEventArgs);
-                    //this.DatabaseNameChanged();
                     this.DatabaseNameAfterSet();
                 }
             }
@@ -136,16 +131,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void DatabaseNameBeforeSet(string newValue);
         partial void DatabaseNameAfterSet();
-
-        //protected virtual void DatabaseNameChanging(string newValue) { }
-        //protected virtual void DatabaseNameChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs DatabasePathEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(DatabasePath));
         private string databasePath = "";
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string DatabasePath
         {
             get
@@ -156,11 +146,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.databasePath, value))
                 {
-                    //this.DatabasePathChanging(value);
                     this.DatabasePathBeforeSet(value);
                     this.databasePath = value;
                     this.OnPropertyChanged(DatabasePathEventArgs);
-                    //this.DatabasePathChanged();
                     this.DatabasePathAfterSet();
                 }
             }
@@ -168,16 +156,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void DatabasePathBeforeSet(string newValue);
         partial void DatabasePathAfterSet();
-
-        //protected virtual void DatabasePathChanging(string newValue) { }
-        //protected virtual void DatabasePathChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs DatabasesEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Databases));
         private List<string> databases;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public List<string> Databases
         {
             get
@@ -188,11 +171,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.databases, value))
                 {
-                    //this.DatabasesChanging(value);
                     this.DatabasesBeforeSet(value);
                     this.databases = value;
                     this.OnPropertyChanged(DatabasesEventArgs);
-                    //this.DatabasesChanged();
                     this.DatabasesAfterSet();
                 }
             }
@@ -200,16 +181,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void DatabasesBeforeSet(List<string> newValue);
         partial void DatabasesAfterSet();
-
-        //protected virtual void DatabasesChanging(List<string> newValue) { }
-        //protected virtual void DatabasesChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs DataCheckedEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(DataChecked));
         private bool dataChecked = false;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool DataChecked
         {
             get
@@ -220,11 +196,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.dataChecked, value))
                 {
-                    //this.DataCheckedChanging(value);
                     this.DataCheckedBeforeSet(value);
                     this.dataChecked = value;
                     this.OnPropertyChanged(DataCheckedEventArgs);
-                    //this.DataCheckedChanged();
                     this.DataCheckedAfterSet();
                 }
             }
@@ -232,16 +206,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void DataCheckedBeforeSet(bool newValue);
         partial void DataCheckedAfterSet();
-
-        //protected virtual void DataCheckedChanging(bool newValue) { }
-        //protected virtual void DataCheckedChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs DatabaseExistsEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(DatabaseExists));
         private bool databaseExists = false;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool DatabaseExists
         {
             get
@@ -252,11 +221,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.databaseExists, value))
                 {
-                    //this.DatabaseExistsChanging(value);
                     this.DatabaseExistsBeforeSet(value);
                     this.databaseExists = value;
                     this.OnPropertyChanged(DatabaseExistsEventArgs);
-                    //this.DatabaseExistsChanged();
                     this.DatabaseExistsAfterSet();
                 }
             }
@@ -264,16 +231,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void DatabaseExistsBeforeSet(bool newValue);
         partial void DatabaseExistsAfterSet();
-
-        //protected virtual void DatabaseExistsChanging(bool newValue) { }
-        //protected virtual void DatabaseExistsChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs LoadingEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Loading));
         private bool loading = false;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool Loading
         {
             get
@@ -284,11 +246,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.loading, value))
                 {
-                    //this.LoadingChanging(value);
                     this.LoadingBeforeSet(value);
                     this.loading = value;
                     this.OnPropertyChanged(LoadingEventArgs);
-                    //this.LoadingChanged();
                     this.LoadingAfterSet();
                 }
             }
@@ -296,16 +256,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void LoadingBeforeSet(bool newValue);
         partial void LoadingAfterSet();
-
-        //protected virtual void LoadingChanging(bool newValue) { }
-        //protected virtual void LoadingChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs CreatingDatabaseEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(CreatingDatabase));
         private bool creatingDatabase = false;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool CreatingDatabase
         {
             get
@@ -316,11 +271,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.creatingDatabase, value))
                 {
-                    //this.CreatingDatabaseChanging(value);
                     this.CreatingDatabaseBeforeSet(value);
                     this.creatingDatabase = value;
                     this.OnPropertyChanged(CreatingDatabaseEventArgs);
-                    //this.CreatingDatabaseChanged();
                     this.CreatingDatabaseAfterSet();
                 }
             }
@@ -328,9 +281,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void CreatingDatabaseBeforeSet(bool newValue);
         partial void CreatingDatabaseAfterSet();
-
-        //protected virtual void CreatingDatabaseChanging(bool newValue) { }
-        //protected virtual void CreatingDatabaseChanged() { }
+        
 
         //ncrunch: no coverage end
     }

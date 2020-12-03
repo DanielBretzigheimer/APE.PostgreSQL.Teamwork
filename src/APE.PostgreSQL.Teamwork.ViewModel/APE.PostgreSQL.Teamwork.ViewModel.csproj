@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>APE.PostgreSQL.Teamwork.ViewModel</RootNamespace>
     <AssemblyName>APE.PostgreSQL.Teamwork.ViewModel</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <NuGetPackageImportStamp>
@@ -40,17 +40,20 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="1.50.2" />
-    <PackageReference Include="Fody" Version="2.1.2" />
+    <PackageReference Include="Dapper" Version="1.50.5" />
+    <PackageReference Include="Fody" Version="3.2.13">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="log4net" Version="2.0.8" />
-    <PackageReference Include="Npgsql" Version="3.2.6" />
-    <PackageReference Include="NullGuard.Fody" Version="1.5.2" />
-    <PackageReference Include="ServiceStack.Text" Version="3.9.71" />
-    <PackageReference Include="SharpZipLib" Version="0.86.0" />
-    <PackageReference Include="StructureMap" Version="4.5.1" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta001" />
+    <PackageReference Include="Npgsql" Version="4.0.3" />
+    <PackageReference Include="NullGuard.Fody" Version="1.8.5" />
+    <PackageReference Include="ServiceStack.Text" Version="5.4.0" />
+    <PackageReference Include="SharpZipLib" Version="1.0.0" />
+    <PackageReference Include="StructureMap" Version="4.7.0" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" />
     <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
-    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.4.0" />
+    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.1" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="APE.CodeGeneration.Attributes">
@@ -76,6 +79,10 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="ConnectionManager.cs" />
+        <Compile Include="ConnectionManager.g.cs">
+            <DependentUpon>ConnectionManager.cs</DependentUpon>
+            <SubType>Code</SubType>
+        </Compile>
     <Compile Include="CreateMinorVersionViewModel.cs" />
     <Compile Include="CreateMinorVersionViewModel.g.cs">
       <DependentUpon>CreateMinorVersionViewModel.cs</DependentUpon>

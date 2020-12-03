@@ -1,5 +1,6 @@
 ﻿// <copyright file="CommandLineExecutor.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
+using System.Collections.Generic;
 using APE.PostgreSQL.Teamwork.Model;
 using APE.PostgreSQL.Teamwork.ViewModel;
 using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
@@ -114,16 +115,18 @@ namespace APE.PostgreSQL.Teamwork.CommandPrompt
         /// <param name="args">Args which contain the database and additional info.</param>
         public int Execute(string[] args)
         {
-            var commandLineArgs = new CommandLineArgs();
-
-            if (Parser.Default.ParseArguments(args, commandLineArgs))
-            {
-                return this.Execute(commandLineArgs);
-            }
-
             // 1 means an error occured for the setup
+            var result = 1;
+            Parser.Default.ParseArguments<CommandLineArgs>(args)
+                .WithParsed(commandLineArgs => result = this.Execute(commandLineArgs))
+                .WithNotParsed((errs) => this.HandleParseError(errs));
+
+            return result;
+        }
+
+        private void HandleParseError(IEnumerable<Error> errors)
+        {
             Console.WriteLine("Could not parse arguments");
-            return 1;
         }
     }
 }

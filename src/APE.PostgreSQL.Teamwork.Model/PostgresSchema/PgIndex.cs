@@ -12,7 +12,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Creates a new <see cref="PgIndex"/> object.
         /// </summary>
-        /// <param name="name">The name of the <see cref="PgIndex"/></param>
+        /// <param name="name">The name of the <see cref="PgIndex"/>.</param>
         public PgIndex(string name)
         {
             this.Name = name;
@@ -27,7 +27,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Creates and returns SQL for creation of the index.
         /// </summary>
-        /// <returns> created SQL </returns>
+        /// <returns> created SQL. </returns>
         public string CreationSQL
         {
             get
@@ -64,7 +64,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Creates and returns SQL statement for dropping the index.
         /// </summary>
-        /// <returns> created SQL statement </returns>
+        /// <returns> created SQL statement. </returns>
         public string DropSQL
         {
             get

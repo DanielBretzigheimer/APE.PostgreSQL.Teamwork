@@ -9,7 +9,7 @@
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>APE.PostgreSQL.Teamwork.TestHelper</RootNamespace>
     <AssemblyName>APE.PostgreSQL.Teamwork.TestHelper</AssemblyName>
-    <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
+    <TargetFrameworkVersion>v4.7.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
     <NuGetPackageImportStamp>
@@ -40,16 +40,19 @@
     <RunCodeAnalysis>true</RunCodeAnalysis>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="FluentAssertions" Version="4.19.4" />
-    <PackageReference Include="Fody" Version="2.1.2" />
+    <PackageReference Include="FluentAssertions" Version="5.4.2" />
+    <PackageReference Include="Fody" Version="3.2.13">
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="log4net" Version="2.0.8" />
     <PackageReference Include="Moq" Version="4.0.10827" />
-    <PackageReference Include="NullGuard.Fody" Version="1.5.2" />
-    <PackageReference Include="ServiceStack.Text" Version="3.9.71" />
-    <PackageReference Include="SharpZipLib" Version="0.86.0" />
-    <PackageReference Include="StructureMap" Version="4.5.1" />
+    <PackageReference Include="NullGuard.Fody" Version="1.8.5" />
+    <PackageReference Include="ServiceStack.Text" Version="5.4.0" />
+    <PackageReference Include="SharpZipLib" Version="1.0.0" />
+    <PackageReference Include="StructureMap" Version="4.7.0" />
     <PackageReference Include="structuremap.automocking.moq" Version="4.0.0.315" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta001" />
+    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" />
     <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
   </ItemGroup>
   <ItemGroup>

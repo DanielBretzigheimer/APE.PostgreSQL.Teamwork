@@ -87,25 +87,19 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             try
             {
                 // execute statements which dont support transaction at the beginning
-                foreach (var statement in this.SQLStatements.Where(s => !s.SupportsTransaction))
-                {
+                foreach (var statement in this.SQLStatements.Where(s => !s.SupportsTransaction && !s.IsTeamworkSchema))
                     statement.Execute();
-                }
 
                 var sb = new StringBuilder();
-                foreach (var statement in this.SQLStatements.Where(s => s.SupportsTransaction))
-                {
+                foreach (var statement in this.SQLStatements.Where(s => s.SupportsTransaction && !s.IsTeamworkSchema))
                     sb.AppendLine(statement.SQL);
-                }
 
                 // execute other statements in transaction
                 var sql = sb.ToString();
                 this.database.ExecuteCommandNonQuery(sql);
 
                 if (this.FileType == FileType.UndoDiff)
-                {
                     this.database.ExecuteCommandNonQuery(SQLTemplates.RemoveVersion(this.Version));
-                }
 
                 this.database.ExecuteCommandNonQuery(SQLTemplates.AddExecutedFileSql(this.Version, this.FileType));
             }

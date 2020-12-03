@@ -13,6 +13,6 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema.Enums
     public enum PgPrivilegeCommand
     {
         Grant,
-        Revoke
+        Revoke,
     }
 }

@@ -152,6 +152,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         public ICommand CreateMinorCommand { get; private set; }
 
+        public ICommand DisconnectCommand { get; private set; }
+
         /// <summary>
         /// Updates the version and the not applied files.
         /// </summary>
@@ -464,18 +466,18 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 }
                 else
                 {
-                    var messageBox = MainWindowViewModel.GetMessageBox(
+                    var messageBox = BaseViewModel.GetMessageBox(
                         string.Format("Error while trying to open path. Possibly the directory {0} was deleted or the folder was renamed.", this.Database.Path),
                         "Directory not found.",
                         MessageBoxButton.OK);
-                    await MainWindowViewModel.ShowDialog(messageBox);
+                    await BaseViewModel.ShowDialog(messageBox);
                 }
             });
             this.SaveCommand = new RelayCommand(() => this.Save());
             this.EditCommand = new RelayCommand(() => this.EditMode = true);
             this.EditPathCommand = new RelayCommand(() => this.EditPath());
             this.ExportCommand = new RelayCommand(() => this.ExecuteInTask(() => this.Export()));
-            this.OpenImportWindowCommand = new RelayCommand(() => MainWindowViewModel.OpenImportWindow(this));
+            this.OpenImportWindowCommand = new RelayCommand(() => BaseViewModel.OpenImportWindow(this));
             this.ReduceVersionCommand = new RelayCommand(() => this.ReduceVersion());
             this.TestCommand = new RelayCommand(this.TestDatabase);
             this.CreateDumpCommand = new RelayCommand(this.CreateDump);
@@ -487,6 +489,23 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             this.AddSchemaCommand = new RelayCommand(this.AddSchema);
             this.RemoveSchemaCommand = new RelayCommand(this.RemoveSchema);
             this.CreateMinorCommand = new RelayCommand(this.CreateMinor);
+            this.DisconnectCommand = new RelayCommand(this.Disconnect);
+        }
+
+        private void Disconnect()
+        {
+            this.ExecuteInTask(() =>
+            {
+                try
+                {
+                    var name = DatabaseSetting.GetDatabaseSetting(this.Id).Name;
+                    this.connectionManager.ExecuteCommandNonQuery(SQLTemplates.DisconnectDatabase(name));
+                }
+                catch (Exception ex)
+                {
+                    Log.Error("Exception while executing Action in Task", ex);
+                }
+            });
         }
 
         /// <summary>

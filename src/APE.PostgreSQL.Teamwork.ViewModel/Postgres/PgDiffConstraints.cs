@@ -33,7 +33,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 if (oldSchema != null)
                     oldTable = oldSchema.GetTable(newTable.Name);
 
-                var oldConstraints = new List<PgConstraint>(oldTable.Constraints);
+                var oldConstraints = new List<PgConstraint>();
+                if (oldTable != null)
+                    oldConstraints.AddRange(oldTable.Constraints);
 
                 // Add new constraints
                 foreach (var newConstraint in GetNewConstraints(oldTable, newTable, primaryKey, foreignKey))

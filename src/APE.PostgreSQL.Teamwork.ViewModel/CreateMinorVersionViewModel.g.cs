@@ -58,9 +58,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         protected static readonly System.ComponentModel.PropertyChangedEventArgs NewVersionEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(NewVersion));
         private DatabaseVersion newVersion;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public DatabaseVersion NewVersion
         {
             get
@@ -71,11 +68,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.newVersion, value))
                 {
-                    //this.NewVersionChanging(value);
                     this.NewVersionBeforeSet(value);
                     this.newVersion = value;
                     this.OnPropertyChanged(NewVersionEventArgs);
-                    //this.NewVersionChanged();
                     this.NewVersionAfterSet();
                 }
             }
@@ -83,16 +78,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void NewVersionBeforeSet(DatabaseVersion newValue);
         partial void NewVersionAfterSet();
-
-        //protected virtual void NewVersionChanging(DatabaseVersion newValue) { }
-        //protected virtual void NewVersionChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs LoadingEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Loading));
         private bool loading;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool Loading
         {
             get
@@ -103,11 +93,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.loading, value))
                 {
-                    //this.LoadingChanging(value);
                     this.LoadingBeforeSet(value);
                     this.loading = value;
                     this.OnPropertyChanged(LoadingEventArgs);
-                    //this.LoadingChanged();
                     this.LoadingAfterSet();
                 }
             }
@@ -115,16 +103,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void LoadingBeforeSet(bool newValue);
         partial void LoadingAfterSet();
-
-        //protected virtual void LoadingChanging(bool newValue) { }
-        //protected virtual void LoadingChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs ShowErrorMessageEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(ShowErrorMessage));
         private bool showErrorMessage;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool ShowErrorMessage
         {
             get
@@ -135,11 +118,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.showErrorMessage, value))
                 {
-                    //this.ShowErrorMessageChanging(value);
                     this.ShowErrorMessageBeforeSet(value);
                     this.showErrorMessage = value;
                     this.OnPropertyChanged(ShowErrorMessageEventArgs);
-                    //this.ShowErrorMessageChanged();
                     this.ShowErrorMessageAfterSet();
                 }
             }
@@ -147,16 +128,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void ShowErrorMessageBeforeSet(bool newValue);
         partial void ShowErrorMessageAfterSet();
-
-        //protected virtual void ShowErrorMessageChanging(bool newValue) { }
-        //protected virtual void ShowErrorMessageChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs ShowSuccessMessageEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(ShowSuccessMessage));
         private bool showSuccessMessage;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool ShowSuccessMessage
         {
             get
@@ -167,11 +143,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.showSuccessMessage, value))
                 {
-                    //this.ShowSuccessMessageChanging(value);
                     this.ShowSuccessMessageBeforeSet(value);
                     this.showSuccessMessage = value;
                     this.OnPropertyChanged(ShowSuccessMessageEventArgs);
-                    //this.ShowSuccessMessageChanged();
                     this.ShowSuccessMessageAfterSet();
                 }
             }
@@ -179,16 +153,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void ShowSuccessMessageBeforeSet(bool newValue);
         partial void ShowSuccessMessageAfterSet();
-
-        //protected virtual void ShowSuccessMessageChanging(bool newValue) { }
-        //protected virtual void ShowSuccessMessageChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs MessageEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Message));
         private string message = "";
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string Message
         {
             get
@@ -199,11 +168,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.message, value))
                 {
-                    //this.MessageChanging(value);
                     this.MessageBeforeSet(value);
                     this.message = value;
                     this.OnPropertyChanged(MessageEventArgs);
-                    //this.MessageChanged();
                     this.MessageAfterSet();
                 }
             }
@@ -211,9 +178,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void MessageBeforeSet(string newValue);
         partial void MessageAfterSet();
-
-        //protected virtual void MessageChanging(string newValue) { }
-        //protected virtual void MessageChanged() { }
+        
 
         //--------------------------------------------------------------------------------
         // generated code for NotifyPropertySupport

@@ -84,7 +84,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Creates and returns SQL for creation of the table.
         /// </summary>
-        /// <returns> created SQL statement </returns>
+        /// <returns> created SQL statement. </returns>
         public string CreationSQL
         {
             get
@@ -215,7 +215,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Creates and returns SQL statement for dropping the table.
         /// </summary>
-        /// <returns> created SQL statement </returns>
+        /// <returns> created SQL statement. </returns>
         public string DropSQL
         {
             get
@@ -279,7 +279,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Returns list of columns that have statistics defined.
         /// </summary>
-        /// <returns> list of columns that have statistics defined </returns>
+        /// <returns> list of columns that have statistics defined. </returns>
         private IList<PgColumn> ColumnsWithStatistics
         {
             get

@@ -17,10 +17,10 @@ namespace APE.PostgreSQL.Teamwork.GUI
         private string commandName;
 
         /// <summary>
-        /// Gets or sets the name of the command which should be executed
+        /// Gets or sets the name of the command which should be executed.
         /// </summary>
         /// <remarks>
-        /// This property is replaced by the "Command" property if both are set
+        /// This property is replaced by the "Command" property if both are set.
         /// </remarks>
         public string CommandName
         {
@@ -41,9 +41,9 @@ namespace APE.PostgreSQL.Teamwork.GUI
         }
 
         /// <summary>
-        /// Calls the action
+        /// Calls the action.
         /// </summary>
-        /// <param name="parameter">The parameter which is forwarded to the command</param>
+        /// <param name="parameter">The parameter which is forwarded to the command.</param>
         protected override void Invoke(object parameter)
         {
             if (this.AssociatedObject == null)

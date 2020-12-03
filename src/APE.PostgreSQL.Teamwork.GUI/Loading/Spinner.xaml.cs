@@ -10,7 +10,7 @@ using System.Windows.Media.Animation;
 namespace APE.PostgreSQL.Teamwork.GUI.Loading
 {
     /// <summary>
-    /// Interaction logic for Spinner.xaml
+    /// Interaction logic for Spinner.xaml.
     /// </summary>
     public partial class Spinner : UserControl
     {

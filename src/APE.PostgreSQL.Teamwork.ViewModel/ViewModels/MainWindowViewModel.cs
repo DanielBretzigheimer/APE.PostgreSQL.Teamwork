@@ -107,7 +107,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                         this.uiDispatcher.Invoke(() => this.unfilteredDatabases.Add(databaseDisplayData));
                     }
 
-                    var databases = this.unfilteredDatabases.Where(d => string.IsNullOrWhiteSpace(this.FilterText) || d.Database.Name.Contains(this.FilterText));
+                    var databases = this.unfilteredDatabases.Where(d => string.IsNullOrWhiteSpace(this.FilterText) || d.Database.Name.ToLower().Contains(this.FilterText.ToLower()));
                     this.Databases = new List<DatabaseDisplayData>(databases);
                 }
 
@@ -246,7 +246,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 }
                 else if (dumpCreatorNotFound)
                 {
-                    var path = this.SearchFileRecursivly("pg_dump.exe", "C:\\Program Files\\PostgreSQL\\"); // todo db move it to settings
+                    var path = this.SearchFileRecursivly("pg_dump.exe", "C:\\PostgreSQL\\"); // todo db move it to settings
+                    if (path == null)
+                        path = this.SearchFileRecursivly("pg_dump.exe", "C:\\Program Files\\PostgreSQL\\"); // todo db move it to settings
 
                     // check if postgre is installed
                     if (File.Exists(path))
@@ -339,7 +341,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void FilterTextAfterSet()
         {
-            var databases = this.unfilteredDatabases.Where(d => string.IsNullOrWhiteSpace(this.FilterText) || d.Database.Name.Contains(this.FilterText));
+            var databases = this.unfilteredDatabases.Where(d => string.IsNullOrWhiteSpace(this.FilterText) || d.Database.Name.ToLower().Contains(this.FilterText.ToLower()));
             this.Databases = new List<DatabaseDisplayData>(databases);
         }
 
@@ -388,9 +390,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 this.ShowSearch = !this.ShowSearch;
                 if (!this.ShowSearch)
-                {
                     this.FilterText = string.Empty;
-                }
             });
 
             this.SizeChangedCommand = new RelayCommand<SizeChangedEventArgs>(this.SizeChanged);

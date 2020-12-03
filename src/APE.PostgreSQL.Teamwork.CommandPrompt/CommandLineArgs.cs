@@ -5,7 +5,7 @@ using System.Text;
 using CommandLine;
 using CommandLine.Text;
 
-namespace APE.PostgreSQL.Teamwork.Model
+namespace APE.PostgreSQL.Teamwork.CommandPrompt
 {
     /// <summary>
     /// Contains all possible command line args.
@@ -61,17 +61,6 @@ namespace APE.PostgreSQL.Teamwork.Model
         [Option('t', "fulltargetversion", Required = false, HelpText = "The full target version to which the database will be upgraded or downgraded. Should look e.g. like \"0000.a\". If not set the last applicable version will be set.")]
         [NullGuard.AllowNull]
         public string FullTargetVersion { get; set; }
-
-        /// <summary>
-        /// Returns a help string how to build a command line call.
-        /// </summary>
-        [HelpOption]
-        public string GetHelp()
-        {
-            return HelpText.AutoBuild(
-                this,
-                (HelpText current) => HelpText.DefaultParsingErrorsHandler(this, current));
-        }
 
         /// <summary>
         /// Returns a string that represents the current object.

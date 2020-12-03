@@ -34,9 +34,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         protected static readonly System.ComponentModel.PropertyChangedEventArgs ConnectionStringEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(ConnectionString));
         private string connectionString;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string ConnectionString
         {
             get
@@ -47,11 +44,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.connectionString, value))
                 {
-                    //this.ConnectionStringChanging(value);
                     this.ConnectionStringBeforeSet(value);
                     this.connectionString = value;
                     this.OnPropertyChanged(ConnectionStringEventArgs);
-                    //this.ConnectionStringChanged();
                     this.ConnectionStringAfterSet();
                 }
             }
@@ -59,16 +54,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void ConnectionStringBeforeSet(string newValue);
         partial void ConnectionStringAfterSet();
-
-        //protected virtual void ConnectionStringChanging(string newValue) { }
-        //protected virtual void ConnectionStringChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs ConnectionStringPreviewEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(ConnectionStringPreview));
         private string connectionStringPreview;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string ConnectionStringPreview
         {
             get
@@ -79,11 +69,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.connectionStringPreview, value))
                 {
-                    //this.ConnectionStringPreviewChanging(value);
                     this.ConnectionStringPreviewBeforeSet(value);
                     this.connectionStringPreview = value;
                     this.OnPropertyChanged(ConnectionStringPreviewEventArgs);
-                    //this.ConnectionStringPreviewChanged();
                     this.ConnectionStringPreviewAfterSet();
                 }
             }
@@ -91,16 +79,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void ConnectionStringPreviewBeforeSet(string newValue);
         partial void ConnectionStringPreviewAfterSet();
-
-        //protected virtual void ConnectionStringPreviewChanging(string newValue) { }
-        //protected virtual void ConnectionStringPreviewChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs PgDumpEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(PgDump));
         private string pgDump;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string PgDump
         {
             get
@@ -111,11 +94,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.pgDump, value))
                 {
-                    //this.PgDumpChanging(value);
                     this.PgDumpBeforeSet(value);
                     this.pgDump = value;
                     this.OnPropertyChanged(PgDumpEventArgs);
-                    //this.PgDumpChanged();
                     this.PgDumpAfterSet();
                 }
             }
@@ -123,16 +104,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void PgDumpBeforeSet(string newValue);
         partial void PgDumpAfterSet();
-
-        //protected virtual void PgDumpChanging(string newValue) { }
-        //protected virtual void PgDumpChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs PasswordEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Password));
         private string password;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string Password
         {
             get
@@ -143,11 +119,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.password, value))
                 {
-                    //this.PasswordChanging(value);
                     this.PasswordBeforeSet(value);
                     this.password = value;
                     this.OnPropertyChanged(PasswordEventArgs);
-                    //this.PasswordChanged();
                     this.PasswordAfterSet();
                 }
             }
@@ -155,16 +129,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void PasswordBeforeSet(string newValue);
         partial void PasswordAfterSet();
-
-        //protected virtual void PasswordChanging(string newValue) { }
-        //protected virtual void PasswordChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs HostEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Host));
         private string host;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string Host
         {
             get
@@ -175,11 +144,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.host, value))
                 {
-                    //this.HostChanging(value);
                     this.HostBeforeSet(value);
                     this.host = value;
                     this.OnPropertyChanged(HostEventArgs);
-                    //this.HostChanged();
                     this.HostAfterSet();
                 }
             }
@@ -187,16 +154,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void HostBeforeSet(string newValue);
         partial void HostAfterSet();
-
-        //protected virtual void HostChanging(string newValue) { }
-        //protected virtual void HostChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs IdEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Id));
         private string id;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string Id
         {
             get
@@ -207,11 +169,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.id, value))
                 {
-                    //this.IdChanging(value);
                     this.IdBeforeSet(value);
                     this.id = value;
                     this.OnPropertyChanged(IdEventArgs);
-                    //this.IdChanged();
                     this.IdAfterSet();
                 }
             }
@@ -219,16 +179,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void IdBeforeSet(string newValue);
         partial void IdAfterSet();
-
-        //protected virtual void IdChanging(string newValue) { }
-        //protected virtual void IdChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs PortEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Port));
         private int port;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public int Port
         {
             get
@@ -239,11 +194,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.port, value))
                 {
-                    //this.PortChanging(value);
                     this.PortBeforeSet(value);
                     this.port = value;
                     this.OnPropertyChanged(PortEventArgs);
-                    //this.PortChanged();
                     this.PortAfterSet();
                 }
             }
@@ -251,16 +204,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void PortBeforeSet(int newValue);
         partial void PortAfterSet();
-
-        //protected virtual void PortChanging(int newValue) { }
-        //protected virtual void PortChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs DatabaseFolderPathEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(DatabaseFolderPath));
         private string databaseFolderPath;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string DatabaseFolderPath
         {
             get
@@ -271,11 +219,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.databaseFolderPath, value))
                 {
-                    //this.DatabaseFolderPathChanging(value);
                     this.DatabaseFolderPathBeforeSet(value);
                     this.databaseFolderPath = value;
                     this.OnPropertyChanged(DatabaseFolderPathEventArgs);
-                    //this.DatabaseFolderPathChanged();
                     this.DatabaseFolderPathAfterSet();
                 }
             }
@@ -283,16 +229,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void DatabaseFolderPathBeforeSet(string newValue);
         partial void DatabaseFolderPathAfterSet();
-
-        //protected virtual void DatabaseFolderPathChanging(string newValue) { }
-        //protected virtual void DatabaseFolderPathChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs OpenFilesDefaultEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(OpenFilesDefault));
         private bool openFilesDefault;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool OpenFilesDefault
         {
             get
@@ -303,11 +244,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.openFilesDefault, value))
                 {
-                    //this.OpenFilesDefaultChanging(value);
                     this.OpenFilesDefaultBeforeSet(value);
                     this.openFilesDefault = value;
                     this.OnPropertyChanged(OpenFilesDefaultEventArgs);
-                    //this.OpenFilesDefaultChanged();
                     this.OpenFilesDefaultAfterSet();
                 }
             }
@@ -315,16 +254,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void OpenFilesDefaultBeforeSet(bool newValue);
         partial void OpenFilesDefaultAfterSet();
-
-        //protected virtual void OpenFilesDefaultChanging(bool newValue) { }
-        //protected virtual void OpenFilesDefaultChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs AutoRefreshEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(AutoRefresh));
         private bool autoRefresh;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool AutoRefresh
         {
             get
@@ -335,11 +269,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.autoRefresh, value))
                 {
-                    //this.AutoRefreshChanging(value);
                     this.AutoRefreshBeforeSet(value);
                     this.autoRefresh = value;
                     this.OnPropertyChanged(AutoRefreshEventArgs);
-                    //this.AutoRefreshChanged();
                     this.AutoRefreshAfterSet();
                 }
             }
@@ -347,18 +279,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void AutoRefreshBeforeSet(bool newValue);
         partial void AutoRefreshAfterSet();
-
-        //protected virtual void AutoRefreshChanging(bool newValue) { }
-        //protected virtual void AutoRefreshChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs MessageEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Message));
         private string message = null;
 
-        /// <summary>
-        /// 
-        /// </summary>
         [NullGuard.AllowNull]
-public string Message
+        public string Message
         {
             get
             {
@@ -368,11 +295,9 @@ public string Message
             {
                 if (!object.Equals(this.message, value))
                 {
-                    //this.MessageChanging(value);
                     this.MessageBeforeSet(value);
                     this.message = value;
                     this.OnPropertyChanged(MessageEventArgs);
-                    //this.MessageChanged();
                     this.MessageAfterSet();
                 }
             }
@@ -380,9 +305,7 @@ public string Message
 
         partial void MessageBeforeSet(string newValue);
         partial void MessageAfterSet();
-
-        //protected virtual void MessageChanging(string newValue) { }
-        //protected virtual void MessageChanged() { }
+        
 
         //ncrunch: no coverage end
     }

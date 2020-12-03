@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.0.56.0
+- Create view with "WITH" support added
+
+## 1.0.55.0
+- Database Disconnect Button added
+
+## 1.0.52.0
+**New Features**
+- PostgreSQL 11 support
+
+## 1.0.51.0
+**New Features**
+- STRG + F to search added
+
+**Bug Fixes**
+- Application Start crash fixed
+- Exception fixed when exporting first diff
+
 ## 1.0.49.0
 **New Features**
 - RENAME CONSTRAINT

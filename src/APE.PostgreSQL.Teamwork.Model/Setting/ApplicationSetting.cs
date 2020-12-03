@@ -1,9 +1,5 @@
 ﻿// <copyright file="ApplicationSetting.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using APE.CodeGeneration.Model;
 
 namespace APE.PostgreSQL.Teamwork.Model.Setting
@@ -27,7 +23,7 @@ namespace APE.PostgreSQL.Teamwork.Model.Setting
         /// <summary>
         /// Gets or sets a template of the connection string.
         /// </summary>
-        public string ConnectionStringTemplate { get; set; } = "User Id=[Id];Password=[Password];host=[Host];database=[Database];Port=[Port];";
+        public string ConnectionStringTemplate { get; set; } = "User Id=[Id];Password=[Password];host=[Host];database=[Database];Port=[Port];MaxPoolSize=100;";
 
         /// <summary>
         /// Gets or sets the path to the pgdump.exe.

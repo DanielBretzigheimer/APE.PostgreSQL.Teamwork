@@ -38,6 +38,7 @@ namespace APE.PostgreSQL.Teamwork.Model.Templates
 
         private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
+        private static readonly string GetTables;
         private static string createDatabase;
         private static string createTeamworkSchema;
         private static string disconnectDatabase;
@@ -47,7 +48,6 @@ namespace APE.PostgreSQL.Teamwork.Model.Templates
         private static string getAppliedVersions;
         private static string removeVersion;
         private static string addExecutedFile;
-        private static string getTables;
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Justification = "This is ok because we want to raise this exception as soon as the application is started!")]
         static SQLTemplates()
@@ -64,7 +64,7 @@ namespace APE.PostgreSQL.Teamwork.Model.Templates
             getAppliedVersions = Properties.Resources.GetAppliedVersions;
             removeVersion = Properties.Resources.RemoveVersion;
             addExecutedFile = Properties.Resources.AddExecutedFile;
-            getTables = Properties.Resources.GetTables;
+            GetTables = Properties.Resources.GetTables;
 
             if (createDatabase == null
                 || createTeamworkSchema == null
@@ -75,7 +75,7 @@ namespace APE.PostgreSQL.Teamwork.Model.Templates
                 || getAppliedVersions == null
                 || removeVersion == null
                 || addExecutedFile == null
-                || getTables == null)
+                || GetTables == null)
             {
                 throw new FileNotFoundException("Properties.Resources not found");
             }
@@ -90,7 +90,7 @@ namespace APE.PostgreSQL.Teamwork.Model.Templates
         }
 
         /// <summary>
-        /// Gets SQL to drop database
+        /// Gets SQL to drop database.
         /// <remarks>be sure to disconnect database before drop</remarks>
         /// </summary>
         public static string DropDatabase(string database)
@@ -207,7 +207,7 @@ namespace APE.PostgreSQL.Teamwork.Model.Templates
         /// </summary>
         public static string GetAllTables()
         {
-            return getTables;
+            return GetTables;
         }
     }
 }

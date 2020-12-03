@@ -35,6 +35,6 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// <summary>
         /// The user pressed the "yes" button.
         /// </summary>
-        Yes
+        Yes,
     }
 }

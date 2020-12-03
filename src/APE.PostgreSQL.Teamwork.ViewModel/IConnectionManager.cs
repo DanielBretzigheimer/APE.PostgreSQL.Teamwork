@@ -1,8 +1,10 @@
 ﻿// <copyright file="IConnectionManager.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 
+using System;
+
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {
-    public interface IConnectionManager
+    public interface IConnectionManager : IDisposable
     {
         /// <summary>
         /// Checks if a connection to the default postgres database can be established.

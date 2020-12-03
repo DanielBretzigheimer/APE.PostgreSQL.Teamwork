@@ -12,18 +12,18 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 {
 #pragma warning disable SA1402 // File may only contain a single type
     /// <summary>
-    /// Implementation of an ICommand that represents a command with a typed CommandParameter
+    /// Implementation of an ICommand that represents a command with a typed CommandParameter.
     /// </summary>
-    /// <typeparam name="T">CommandParameter type</typeparam>
+    /// <typeparam name="T">CommandParameter type.</typeparam>
     public class RelayCommand<T> : ICommand
 #pragma warning restore SA1402 // File may only contain a single type
     {
         private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         /// <summary>
-        /// Initializes a new command that is always executable
+        /// Initializes a new command that is always executable.
         /// </summary>
-        /// <param name="executeAction">Action that is invoked when the command is executed</param>
+        /// <param name="executeAction">Action that is invoked when the command is executed.</param>
         public RelayCommand(Action<T> executeAction)
             : this()
         {
@@ -31,10 +31,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         }
 
         /// <summary>
-        /// Initializes a new command
+        /// Initializes a new command.
         /// </summary>
-        /// <param name="executeAction">Action that is invoked when the command is executed</param>
-        /// <param name="canExecuteFunc">Function that is evaluated when the CanExecute method is executed</param>
+        /// <param name="executeAction">Action that is invoked when the command is executed.</param>
+        /// <param name="canExecuteFunc">Function that is evaluated when the CanExecute method is executed.</param>
         public RelayCommand(Action<T> executeAction, Func<T, bool> canExecuteFunc)
         {
             this.ExecuteAction = executeAction ?? throw new ArgumentNullException("executeAction");
@@ -42,7 +42,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         }
 
         /// <summary>
-        /// Default constructor only visible to subclasses
+        /// Default constructor only visible to subclasses.
         /// </summary>
         protected RelayCommand()
         {
@@ -56,20 +56,20 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         public event EventHandler CanExecuteChanged;
 
         /// <summary>
-        /// Action that is executed when the command is executed
+        /// Action that is executed when the command is executed.
         /// </summary>
         protected Action<T> ExecuteAction { get; set; }
 
         /// <summary>
-        /// Function that is evaluated when the CanExecute method is executed
+        /// Function that is evaluated when the CanExecute method is executed.
         /// </summary>
         protected Func<T, bool> CanExecuteFunc { get; set; }
 
         /// <summary>
-        /// Implementation of the ICommand interface: Gets if this command can be executed
+        /// Implementation of the ICommand interface: Gets if this command can be executed.
         /// </summary>
-        /// <param name="parameter">Command parameter</param>
-        /// <returns>true if this command can be executed</returns>
+        /// <param name="parameter">Command parameter.</param>
+        /// <returns>true if this command can be executed.</returns>
         public virtual bool CanExecute([NullGuard.AllowNull] object parameter)
         {
             try
@@ -89,9 +89,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         }
 
         /// <summary>
-        /// Implementation of the ICommand interface: Execute this command
+        /// Implementation of the ICommand interface: Execute this command.
         /// </summary>
-        /// <param name="parameter">Command parameter</param>
+        /// <param name="parameter">Command parameter.</param>
         public virtual void Execute([NullGuard.AllowNull] object parameter)
         {
             if (this.CanExecute(parameter))
@@ -119,7 +119,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         }
 
         /// <summary>
-        /// Raises the CanExecuteChanged-Event. Useful for reevaluation of the commands CanExecute() method
+        /// Raises the CanExecuteChanged-Event. Useful for reevaluation of the commands CanExecute() method.
         /// </summary>
         public void ReEvaluate()
         {
@@ -139,7 +139,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         /// Is called before the action is executed.
         /// </summary>
-        /// <param name="parameter">Parameter the action is invoked with</param>
+        /// <param name="parameter">Parameter the action is invoked with.</param>
         protected virtual void OnBeforeExecute([NullGuard.AllowNull] T parameter)
         {
         }
@@ -159,25 +159,25 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     }
 
     /// <summary>
-    /// Implementation of an ICommand that represents a command with no CommandParameter
+    /// Implementation of an ICommand that represents a command with no CommandParameter.
     /// </summary>
     [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Reviewed.")]
     public class RelayCommand : RelayCommand<object>
     {
         /// <summary>
-        /// Initializes a new command that is always executable
+        /// Initializes a new command that is always executable.
         /// </summary>
-        /// <param name="executeAction">Action that is invoked when the command is executed</param>
+        /// <param name="executeAction">Action that is invoked when the command is executed.</param>
         public RelayCommand(Action executeAction)
             : base(x => executeAction())
         {
         }
 
         /// <summary>
-        /// Initializes a new command
+        /// Initializes a new command.
         /// </summary>
-        /// <param name="executeAction">Action that is invoked when the command is executed</param>
-        /// <param name="canExecuteFunc">Function that is evaluated when the CanExecute method is executed</param>
+        /// <param name="executeAction">Action that is invoked when the command is executed.</param>
+        /// <param name="canExecuteFunc">Function that is evaluated when the CanExecute method is executed.</param>
         public RelayCommand(Action executeAction, Func<bool> canExecuteFunc)
             : base(x => executeAction(), x => canExecuteFunc())
         {

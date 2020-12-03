@@ -11,13 +11,13 @@ namespace APE.PostgreSQL.Teamwork.Model.Setting
 {
     /// <summary>
     /// Loads the application settings from the settings file in the
-    /// applications directory
+    /// applications directory.
     /// </summary>
     public class SettingsManager
     {
-        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
+        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
 
-        private static string settingsPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\settings.ocignore.xml";
+        private static readonly string SettingsPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\settings.ocignore.xml";
 
         private static SettingsManager instance = null;
 
@@ -44,14 +44,14 @@ namespace APE.PostgreSQL.Teamwork.Model.Setting
                 return instance;
             }
 
-            if (!File.Exists(settingsPath))
+            if (!File.Exists(SettingsPath))
             {
                 instance = new SettingsManager();
                 instance.Save();
                 return instance;
             }
 
-            return LoadFile(settingsPath);
+            return LoadFile(SettingsPath);
         }
 
         /// <summary>
@@ -67,7 +67,7 @@ namespace APE.PostgreSQL.Teamwork.Model.Setting
                 serializer.Serialize(stream, this);
                 stream.Position = 0;
                 xmlDocument.Load(stream);
-                xmlDocument.Save(settingsPath);
+                xmlDocument.Save(SettingsPath);
             }
         }
 

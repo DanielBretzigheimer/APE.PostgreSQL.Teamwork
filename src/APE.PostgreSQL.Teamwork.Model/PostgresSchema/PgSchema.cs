@@ -12,6 +12,8 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
     /// </summary>
     public class PgSchema
     {
+        private const string PublicSchemaName = "public";
+
         /// <summary>
         /// Creates a new <see cref="PgSchema"/> object.
         /// </summary>
@@ -21,27 +23,29 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             this.Name = name;
         }
 
+        public static PgSchema Public => new PgSchema(PublicSchemaName);
+
         /// <summary>
-        /// Gets or sets the authorization for this <see cref="PgSchema"/>
+        /// Gets or sets the authorization for this <see cref="PgSchema"/>.
         /// </summary>
         [NullGuard.AllowNull]
         public string Authorization { get; set; }
 
         /// <summary>
-        /// Gets or sets the comment for this <see cref="PgSchema"/>
+        /// Gets or sets the comment for this <see cref="PgSchema"/>.
         /// </summary>
         [NullGuard.AllowNull]
         public string Comment { get; set; }
 
         /// <summary>
-        /// Gets or sets the definition for this <see cref="PgSchema"/>
+        /// Gets or sets the definition for this <see cref="PgSchema"/>.
         /// </summary>
         public string Definition { get; set; }
 
         /// <summary>
         /// Creates and returns SQL for creation of the schema.
         /// </summary>
-        /// <returns> created SQL </returns>
+        /// <returns> created SQL. </returns>
         public string CreationSQL
         {
             get

@@ -23,9 +23,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         protected static readonly System.ComponentModel.PropertyChangedEventArgs DiffFileEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(DiffFile));
         private SQLFileDisplayData diffFile;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public SQLFileDisplayData DiffFile
         {
             get
@@ -36,11 +33,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.diffFile, value))
                 {
-                    //this.DiffFileChanging(value);
                     this.DiffFileBeforeSet(value);
                     this.diffFile = value;
                     this.OnPropertyChanged(DiffFileEventArgs);
-                    //this.DiffFileChanged();
                     this.DiffFileAfterSet();
                 }
             }
@@ -48,16 +43,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void DiffFileBeforeSet(SQLFileDisplayData newValue);
         partial void DiffFileAfterSet();
-
-        //protected virtual void DiffFileChanging(SQLFileDisplayData newValue) { }
-        //protected virtual void DiffFileChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs UndoDiffFileEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(UndoDiffFile));
         private SQLFileDisplayData undoDiffFile;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public SQLFileDisplayData UndoDiffFile
         {
             get
@@ -68,11 +58,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.undoDiffFile, value))
                 {
-                    //this.UndoDiffFileChanging(value);
                     this.UndoDiffFileBeforeSet(value);
                     this.undoDiffFile = value;
                     this.OnPropertyChanged(UndoDiffFileEventArgs);
-                    //this.UndoDiffFileChanged();
                     this.UndoDiffFileAfterSet();
                 }
             }
@@ -80,9 +68,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void UndoDiffFileBeforeSet(SQLFileDisplayData newValue);
         partial void UndoDiffFileAfterSet();
-
-        //protected virtual void UndoDiffFileChanging(SQLFileDisplayData newValue) { }
-        //protected virtual void UndoDiffFileChanged() { }
+        
 
         //--------------------------------------------------------------------------------
         // generated code for NotifyPropertySupport

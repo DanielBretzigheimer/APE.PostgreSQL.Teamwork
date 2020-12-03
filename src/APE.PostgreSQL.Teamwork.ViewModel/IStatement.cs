@@ -24,6 +24,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         bool SupportsTransaction { get; }
 
         /// <summary>
+        /// Indicates if this statement belongs to the APE.PostgreSQL.Teamwork Schema.
+        /// </summary>
+        bool IsTeamworkSchema { get; }
+
+        /// <summary>
         /// Executes the <see cref="SQL"/> of this <see cref="IStatement"/>.
         /// </summary>
         void Execute();

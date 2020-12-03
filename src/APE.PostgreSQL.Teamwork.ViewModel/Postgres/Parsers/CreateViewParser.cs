@@ -43,6 +43,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 }
             }
 
+            parser.ExpectOptional("WITH", "(security_barrier='false')");
+
             parser.Expect("AS");
 
             var query = parser.Rest();
@@ -53,6 +55,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 Query = query,
             };
             var schemaName = ParserUtils.GetSchemaName(viewName, database);
+
+            if (database.SchemaIsIgnored(schemaName))
+                return;
 
             PgSchema schema = database.GetSchema(schemaName);
 

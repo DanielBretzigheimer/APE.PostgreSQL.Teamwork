@@ -1,6 +1,7 @@
 ﻿// <copyright file="PgDumpLoader.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
@@ -22,7 +23,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
         private static readonly Regex PatternCreateSchema = new Regex("^CREATE[\\s]+SCHEMA[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
-        /// Regex for testing wheter it is CREATE RULE statement
+        /// Regex for testing wheter it is CREATE RULE statement.
         /// </summary>
         private static readonly Regex PatternCreateRule = new Regex("^CREATE[\\s]+RULE[\\s]+.*$", RegexOptions.Singleline);
 
@@ -93,12 +94,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
         private static readonly Regex PatternCreateFunction = new Regex("^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?FUNCTION[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
-        /// Regex for testing whether it is a GRANT PRIVILEGE statement
+        /// Regex for testing whether it is a GRANT PRIVILEGE statement.
         /// </summary>
         private static readonly Regex PatternPrivilegeGrant = new Regex("GRANT.+?TO.+?;", RegexOptions.Singleline);
 
         /// <summary>
-        /// Regex for testing whether it is a REVOKE PRIVILEGE statement
+        /// Regex for testing whether it is a REVOKE PRIVILEGE statement.
         /// </summary>
         private static readonly Regex PatternPrivilegeRevoke = new Regex("REVOKE.+?FROM.+?;", RegexOptions.Singleline);
 
@@ -136,28 +137,15 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
         /// Loads database schema from dump file.
         /// </summary>
         /// <param name="file">The path to the file which is loaded.</param>
-        /// <param name="databaseName">The name of the database.</param>
-        /// <param name="outputIgnoredStatements">Whether ignored statements should be included in the output.</param>
-        /// <param name="ignoreSlonyTriggers">Indicates if slony triggers are ignored.</param>
-        /// <returns>Database schema from dump file.</returns>
-        public static PgDatabase LoadDatabaseSchema(string file, string databaseName, bool outputIgnoredStatements, bool ignoreSlonyTriggers)
-        {
-            return PgDumpLoader.LoadDatabaseSchema(file, DefaultEncoding, databaseName, outputIgnoredStatements, ignoreSlonyTriggers);
-        }
-
-        /// <summary>
-        /// Loads database schema from dump file.
-        /// </summary>
-        /// <param name="file">The path to the file which is loaded.</param>
-        /// <param name="databaseName">The name of the database.</param>
+        /// <param name="database">The database.</param>
         /// <param name="encodingName">Charset that should be used to read the file.</param>
         /// <param name="outputIgnoredStatements">Whether ignored statements should be included in the output.</param>
         /// <param name="ignoreSlonyTriggers">Indicates if slony triggers are ignored.</param>
         /// <returns>Database schema from dump file.</returns>
-        public static PgDatabase LoadDatabaseSchema(string file, string encodingName, string databaseName, bool outputIgnoredStatements, bool ignoreSlonyTriggers)
+        public static PgDatabase LoadDatabaseSchema(string file, Database database, bool outputIgnoredStatements, bool ignoreSlonyTriggers, string encodingName = DefaultEncoding)
         {
             var encoding = Encoding.GetEncoding(encodingName);
-            var database = new PgDatabase(databaseName);
+            var pgDatabase = new PgDatabase(database.Name, database.IgnoredSchemas.ToList());
             StreamReader reader = null;
 
             using (reader = new StreamReader(file, encoding))
@@ -168,72 +156,72 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
                 {
                     if (PatternCreateSchema.Matches(statement).Count != 0)
                     {
-                        CreateSchemaParser.Parse(database, statement);
+                        CreateSchemaParser.Parse(pgDatabase, statement);
                     }
                     else if (PatternCreateRule.Matches(statement).Count != 0)
                     {
-                        CreateRuleParser.Parse(database, statement);
+                        CreateRuleParser.Parse(pgDatabase, statement);
                     }
                     else if (PatternDefaultSchema.Matches(statement).Count != 0)
                     {
                         PatternDefaultSchema.Matches(statement);
-                        database.SetDefaultSchema(PatternDefaultSchema.Matches(statement)[0].Groups[1].ToString());
+                        pgDatabase.SetDefaultSchema(PatternDefaultSchema.Matches(statement)[0].Groups[1].ToString());
                     }
                     else if (PatternCreateTable.Matches(statement).Count != 0)
                     {
-                        CreateTableParser.Parse(database, statement);
+                        CreateTableParser.Parse(pgDatabase, statement);
                     }
                     else if (PatternAlterTable.Matches(statement).Count != 0)
                     {
-                        AlterTableParser.Parse(database, statement, outputIgnoredStatements);
+                        AlterTableParser.Parse(pgDatabase, statement, outputIgnoredStatements);
                     }
                     else if (PatternCreateSequence.Matches(statement).Count != 0)
                     {
-                        CreateSequenceParser.Parse(database, statement);
+                        CreateSequenceParser.Parse(pgDatabase, statement);
                     }
                     else if (PatternAlterSequence.Matches(statement).Count != 0)
                     {
-                        AlterSequenceParser.Parse(database, statement);
+                        AlterSequenceParser.Parse(pgDatabase, statement);
                     }
                     else if (PatternCreateIndex.Matches(statement).Count != 0)
                     {
-                        CreateIndexParser.Parse(database, statement);
+                        CreateIndexParser.Parse(pgDatabase, statement);
                     }
                     else if (PatternCreateView.Matches(statement).Count != 0)
                     {
-                        CreateViewParser.Parse(database, statement);
+                        CreateViewParser.Parse(pgDatabase, statement);
                     }
                     else if (PatternAlterView.Matches(statement).Count != 0)
                     {
-                        AlterViewParser.Parse(database, statement, outputIgnoredStatements);
+                        AlterViewParser.Parse(pgDatabase, statement, outputIgnoredStatements);
                     }
                     else if (PatternCreateTrigger.Matches(statement).Count != 0)
                     {
-                        CreateTriggerParser.Parse(database, statement, ignoreSlonyTriggers);
+                        CreateTriggerParser.Parse(pgDatabase, statement, ignoreSlonyTriggers);
                     }
                     else if (PatternCreateFunction.Matches(statement).Count != 0)
                     {
-                        CreateFunctionParser.Parse(database, statement);
+                        CreateFunctionParser.Parse(pgDatabase, statement);
                     }
                     else if (PatternPrivilegeGrant.Matches(statement).Count != 0)
                     {
-                        PrivilegeParser.Parse(database, statement, PgPrivilegeCommand.Grant);
+                        PrivilegeParser.Parse(pgDatabase, statement, PgPrivilegeCommand.Grant);
                     }
                     else if (PatternPrivilegeRevoke.Matches(statement).Count != 0)
                     {
-                        PrivilegeParser.Parse(database, statement, PgPrivilegeCommand.Revoke);
+                        PrivilegeParser.Parse(pgDatabase, statement, PgPrivilegeCommand.Revoke);
                     }
                     else if (PatternCreateAggregate.Matches(statement).Count != 0)
                     {
-                        CreateAggregateParser.Parse(database, statement);
+                        CreateAggregateParser.Parse(pgDatabase, statement);
                     }
                     else if (PatternComment.Matches(statement).Count != 0)
                     {
-                        CommentParser.Parse(database, statement, outputIgnoredStatements);
+                        CommentParser.Parse(pgDatabase, statement, outputIgnoredStatements);
                     }
                     else if (PatternCreateType.Matches(statement).Count != 0)
                     {
-                        CreateTypeParser.Parse(database, statement);
+                        CreateTypeParser.Parse(pgDatabase, statement);
                     }
                     else if (PatternSelect.Matches(statement).Count != 0
                         || PatternInsertInto.Matches(statement).Count != 0
@@ -244,7 +232,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
                     }
                     else if (outputIgnoredStatements)
                     {
-                        database.AddIgnoredStatement(statement);
+                        pgDatabase.AddIgnoredStatement(statement);
                     }
                     else
                     {
@@ -255,7 +243,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
                 }
             }
 
-            return database;
+            return pgDatabase;
         }
 
         /// <summary>

@@ -67,7 +67,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         /// <summary>
         /// Gets or sets a command which can close the view which belongs to
-        /// this <see cref="BaseViewModel"/>
+        /// this <see cref="BaseViewModel"/>.
         /// </summary>
         public static Action CloseView { get; set; }
 

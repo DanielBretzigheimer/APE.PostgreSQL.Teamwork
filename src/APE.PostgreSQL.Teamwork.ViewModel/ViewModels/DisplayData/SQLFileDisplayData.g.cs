@@ -33,9 +33,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         protected static readonly System.ComponentModel.PropertyChangedEventArgs SQLStatementsEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(SQLStatements));
         private ObservableCollection<StatementDisplayData> sQLStatements;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public ObservableCollection<StatementDisplayData> SQLStatements
         {
             get
@@ -46,11 +43,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.sQLStatements, value))
                 {
-                    //this.SQLStatementsChanging(value);
                     this.SQLStatementsBeforeSet(value);
                     this.sQLStatements = value;
                     this.OnPropertyChanged(SQLStatementsEventArgs);
-                    //this.SQLStatementsChanged();
                     this.SQLStatementsAfterSet();
                 }
             }
@@ -58,16 +53,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void SQLStatementsBeforeSet(ObservableCollection<StatementDisplayData> newValue);
         partial void SQLStatementsAfterSet();
-
-        //protected virtual void SQLStatementsChanging(ObservableCollection<StatementDisplayData> newValue) { }
-        //protected virtual void SQLStatementsChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs SQLFileEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(SQLFile));
         private SQLFile sQLFile;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public SQLFile SQLFile
         {
             get
@@ -78,11 +68,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.sQLFile, value))
                 {
-                    //this.SQLFileChanging(value);
                     this.SQLFileBeforeSet(value);
                     this.sQLFile = value;
                     this.OnPropertyChanged(SQLFileEventArgs);
-                    //this.SQLFileChanged();
                     this.SQLFileAfterSet();
                 }
             }
@@ -90,16 +78,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void SQLFileBeforeSet(SQLFile newValue);
         partial void SQLFileAfterSet();
-
-        //protected virtual void SQLFileChanging(SQLFile newValue) { }
-        //protected virtual void SQLFileChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs StatusEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Status));
         private ErrorStatus status;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public ErrorStatus Status
         {
             get
@@ -110,11 +93,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.status, value))
                 {
-                    //this.StatusChanging(value);
                     this.StatusBeforeSet(value);
                     this.status = value;
                     this.OnPropertyChanged(StatusEventArgs);
-                    //this.StatusChanged();
                     this.StatusAfterSet();
                 }
             }
@@ -122,16 +103,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void StatusBeforeSet(ErrorStatus newValue);
         partial void StatusAfterSet();
-
-        //protected virtual void StatusChanging(ErrorStatus newValue) { }
-        //protected virtual void StatusChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs ShowWarningEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(ShowWarning));
         private bool showWarning;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool ShowWarning
         {
             get
@@ -142,11 +118,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.showWarning, value))
                 {
-                    //this.ShowWarningChanging(value);
                     this.ShowWarningBeforeSet(value);
                     this.showWarning = value;
                     this.OnPropertyChanged(ShowWarningEventArgs);
-                    //this.ShowWarningChanged();
                     this.ShowWarningAfterSet();
                 }
             }
@@ -154,16 +128,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void ShowWarningBeforeSet(bool newValue);
         partial void ShowWarningAfterSet();
-
-        //protected virtual void ShowWarningChanging(bool newValue) { }
-        //protected virtual void ShowWarningChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs WarningTextEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(WarningText));
         private string warningText;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string WarningText
         {
             get
@@ -174,11 +143,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.warningText, value))
                 {
-                    //this.WarningTextChanging(value);
                     this.WarningTextBeforeSet(value);
                     this.warningText = value;
                     this.OnPropertyChanged(WarningTextEventArgs);
-                    //this.WarningTextChanged();
                     this.WarningTextAfterSet();
                 }
             }
@@ -186,9 +153,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void WarningTextBeforeSet(string newValue);
         partial void WarningTextAfterSet();
-
-        //protected virtual void WarningTextChanging(string newValue) { }
-        //protected virtual void WarningTextChanged() { }
+        
 
         //--------------------------------------------------------------------------------
         // generated code for NotifyPropertySupport

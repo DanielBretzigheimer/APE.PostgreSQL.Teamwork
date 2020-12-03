@@ -27,9 +27,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         protected static readonly System.ComponentModel.PropertyChangedEventArgs StatementEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Statement));
         private IStatement statement;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public IStatement Statement
         {
             get
@@ -40,11 +37,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.statement, value))
                 {
-                    //this.StatementChanging(value);
                     this.StatementBeforeSet(value);
                     this.statement = value;
                     this.OnPropertyChanged(StatementEventArgs);
-                    //this.StatementChanged();
                     this.StatementAfterSet();
                 }
             }
@@ -52,16 +47,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void StatementBeforeSet(IStatement newValue);
         partial void StatementAfterSet();
-
-        //protected virtual void StatementChanging(IStatement newValue) { }
-        //protected virtual void StatementChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs EditModeEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(EditMode));
         private bool editMode;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public bool EditMode
         {
             get
@@ -72,11 +62,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.editMode, value))
                 {
-                    //this.EditModeChanging(value);
                     this.EditModeBeforeSet(value);
                     this.editMode = value;
                     this.OnPropertyChanged(EditModeEventArgs);
-                    //this.EditModeChanged();
                     this.EditModeAfterSet();
                 }
             }
@@ -84,9 +72,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void EditModeBeforeSet(bool newValue);
         partial void EditModeAfterSet();
-
-        //protected virtual void EditModeChanging(bool newValue) { }
-        //protected virtual void EditModeChanged() { }
+        
 
         //--------------------------------------------------------------------------------
         // generated code for NotifyPropertySupport

@@ -112,7 +112,8 @@ namespace APE.PostgreSQL.Teamwork.GUI
         {
             // start the viewmodel when the dialog host is initialized
             // to ensure that dialogs can be shown
-            this.mainWindowViewModel.Start();
+            if (!this.mainWindowViewModel.IsStarted)
+                this.mainWindowViewModel.Start();
         }
 
         private CreateMinorVersionView GetCreateMinorVersionView(DatabaseDisplayData database)
@@ -218,6 +219,15 @@ namespace APE.PostgreSQL.Teamwork.GUI
         private void RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
         {
             System.Diagnostics.Process.Start(e.Uri.ToString());
+        }
+
+        private void DialogWindow_KeyDown(object sender, KeyEventArgs e)
+        {
+            if ((Keyboard.IsKeyDown(Key.LeftCtrl) || Keyboard.IsKeyDown(Key.RightCtrl)) && e.Key == Key.F)
+            {
+                this.mainWindowViewModel.ShowSearch = true;
+                this.searchBar.Focus();
+            }
         }
     }
 }

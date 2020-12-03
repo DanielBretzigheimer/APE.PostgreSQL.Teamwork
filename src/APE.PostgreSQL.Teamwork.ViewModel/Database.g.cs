@@ -141,9 +141,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         protected static readonly System.ComponentModel.PropertyChangedEventArgs NameEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Name));
         private string name;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string Name
         {
             get
@@ -154,11 +151,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.name, value))
                 {
-                    //this.NameChanging(value);
                     this.NameBeforeSet(value);
                     this.name = value;
                     this.OnPropertyChanged(NameEventArgs);
-                    //this.NameChanged();
                     this.NameAfterSet();
                 }
             }
@@ -166,16 +161,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void NameBeforeSet(string newValue);
         partial void NameAfterSet();
-
-        //protected virtual void NameChanging(string newValue) { }
-        //protected virtual void NameChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs PathEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Path));
         private string path;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public string Path
         {
             get
@@ -186,11 +176,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.path, value))
                 {
-                    //this.PathChanging(value);
                     this.PathBeforeSet(value);
                     this.path = value;
                     this.OnPropertyChanged(PathEventArgs);
-                    //this.PathChanged();
                     this.PathAfterSet();
                 }
             }
@@ -198,16 +186,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void PathBeforeSet(string newValue);
         partial void PathAfterSet();
-
-        //protected virtual void PathChanging(string newValue) { }
-        //protected virtual void PathChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs IgnoredSchemasEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(IgnoredSchemas));
         private ObservableCollection<string> ignoredSchemas;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public ObservableCollection<string> IgnoredSchemas
         {
             get
@@ -218,11 +201,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.ignoredSchemas, value))
                 {
-                    //this.IgnoredSchemasChanging(value);
                     this.IgnoredSchemasBeforeSet(value);
                     this.ignoredSchemas = value;
                     this.OnPropertyChanged(IgnoredSchemasEventArgs);
-                    //this.IgnoredSchemasChanged();
                     this.IgnoredSchemasAfterSet();
                 }
             }
@@ -230,16 +211,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void IgnoredSchemasBeforeSet(ObservableCollection<string> newValue);
         partial void IgnoredSchemasAfterSet();
-
-        //protected virtual void IgnoredSchemasChanging(ObservableCollection<string> newValue) { }
-        //protected virtual void IgnoredSchemasChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs LastApplicableVersionEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(LastApplicableVersion));
         private DatabaseVersion lastApplicableVersion;
 
-        /// <summary>
-        /// 
-        /// </summary>
         public DatabaseVersion LastApplicableVersion
         {
             get
@@ -250,11 +226,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.lastApplicableVersion, value))
                 {
-                    //this.LastApplicableVersionChanging(value);
                     this.LastApplicableVersionBeforeSet(value);
                     this.lastApplicableVersion = value;
                     this.OnPropertyChanged(LastApplicableVersionEventArgs);
-                    //this.LastApplicableVersionChanged();
                     this.LastApplicableVersionAfterSet();
                 }
             }
@@ -262,9 +236,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void LastApplicableVersionBeforeSet(DatabaseVersion newValue);
         partial void LastApplicableVersionAfterSet();
-
-        //protected virtual void LastApplicableVersionChanging(DatabaseVersion newValue) { }
-        //protected virtual void LastApplicableVersionChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs ProgressEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Progress));
         private double progress = 100;
@@ -282,11 +254,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 if (!object.Equals(this.progress, value))
                 {
-                    //this.ProgressChanging(value);
                     this.ProgressBeforeSet(value);
                     this.progress = value;
                     this.OnPropertyChanged(ProgressEventArgs);
-                    //this.ProgressChanged();
                     this.ProgressAfterSet();
                 }
             }
@@ -294,18 +264,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void ProgressBeforeSet(double newValue);
         partial void ProgressAfterSet();
-
-        //protected virtual void ProgressChanging(double newValue) { }
-        //protected virtual void ProgressChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs CurrentVersionEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(CurrentVersion));
         private DatabaseVersion currentVersion;
 
-        /// <summary>
-        /// 
-        /// </summary>
         [NullGuard.AllowNull]
-public DatabaseVersion CurrentVersion
+        public DatabaseVersion CurrentVersion
         {
             get
             {
@@ -315,11 +280,9 @@ public DatabaseVersion CurrentVersion
             {
                 if (!object.Equals(this.currentVersion, value))
                 {
-                    //this.CurrentVersionChanging(value);
                     this.CurrentVersionBeforeSet(value);
                     this.currentVersion = value;
                     this.OnPropertyChanged(CurrentVersionEventArgs);
-                    //this.CurrentVersionChanged();
                     this.CurrentVersionAfterSet();
                 }
             }
@@ -327,18 +290,13 @@ public DatabaseVersion CurrentVersion
 
         partial void CurrentVersionBeforeSet(DatabaseVersion newValue);
         partial void CurrentVersionAfterSet();
-
-        //protected virtual void CurrentVersionChanging(DatabaseVersion newValue) { }
-        //protected virtual void CurrentVersionChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs UndoDiffFilesEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(UndoDiffFiles));
         private ObservableCollection<SQLFile> undoDiffFiles;
 
-        /// <summary>
-        /// 
-        /// </summary>
         [NullGuard.AllowNull]
-public ObservableCollection<SQLFile> UndoDiffFiles
+        public ObservableCollection<SQLFile> UndoDiffFiles
         {
             get
             {
@@ -348,11 +306,9 @@ public ObservableCollection<SQLFile> UndoDiffFiles
             {
                 if (!object.Equals(this.undoDiffFiles, value))
                 {
-                    //this.UndoDiffFilesChanging(value);
                     this.UndoDiffFilesBeforeSet(value);
                     this.undoDiffFiles = value;
                     this.OnPropertyChanged(UndoDiffFilesEventArgs);
-                    //this.UndoDiffFilesChanged();
                     this.UndoDiffFilesAfterSet();
                 }
             }
@@ -360,18 +316,13 @@ public ObservableCollection<SQLFile> UndoDiffFiles
 
         partial void UndoDiffFilesBeforeSet(ObservableCollection<SQLFile> newValue);
         partial void UndoDiffFilesAfterSet();
-
-        //protected virtual void UndoDiffFilesChanging(ObservableCollection<SQLFile> newValue) { }
-        //protected virtual void UndoDiffFilesChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs DiffFilesEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(DiffFiles));
         private ObservableCollection<SQLFile> diffFiles;
 
-        /// <summary>
-        /// 
-        /// </summary>
         [NullGuard.AllowNull]
-public ObservableCollection<SQLFile> DiffFiles
+        public ObservableCollection<SQLFile> DiffFiles
         {
             get
             {
@@ -381,11 +332,9 @@ public ObservableCollection<SQLFile> DiffFiles
             {
                 if (!object.Equals(this.diffFiles, value))
                 {
-                    //this.DiffFilesChanging(value);
                     this.DiffFilesBeforeSet(value);
                     this.diffFiles = value;
                     this.OnPropertyChanged(DiffFilesEventArgs);
-                    //this.DiffFilesChanged();
                     this.DiffFilesAfterSet();
                 }
             }
@@ -393,9 +342,7 @@ public ObservableCollection<SQLFile> DiffFiles
 
         partial void DiffFilesBeforeSet(ObservableCollection<SQLFile> newValue);
         partial void DiffFilesAfterSet();
-
-        //protected virtual void DiffFilesChanging(ObservableCollection<SQLFile> newValue) { }
-        //protected virtual void DiffFilesChanged() { }
+        
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs ProgressInfoEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(ProgressInfo));
         private string progressInfo = "";
@@ -404,7 +351,7 @@ public ObservableCollection<SQLFile> DiffFiles
         /// This will be shown to the user as additional info to the current progress.
         /// </summary>
         [NullGuard.AllowNull]
-public string ProgressInfo
+        public string ProgressInfo
         {
             get
             {
@@ -414,11 +361,9 @@ public string ProgressInfo
             {
                 if (!object.Equals(this.progressInfo, value))
                 {
-                    //this.ProgressInfoChanging(value);
                     this.ProgressInfoBeforeSet(value);
                     this.progressInfo = value;
                     this.OnPropertyChanged(ProgressInfoEventArgs);
-                    //this.ProgressInfoChanged();
                     this.ProgressInfoAfterSet();
                 }
             }
@@ -426,9 +371,7 @@ public string ProgressInfo
 
         partial void ProgressInfoBeforeSet(string newValue);
         partial void ProgressInfoAfterSet();
-
-        //protected virtual void ProgressInfoChanging(string newValue) { }
-        //protected virtual void ProgressInfoChanged() { }
+        
 
         //--------------------------------------------------------------------------------
         // generated code for NotifyPropertySupport

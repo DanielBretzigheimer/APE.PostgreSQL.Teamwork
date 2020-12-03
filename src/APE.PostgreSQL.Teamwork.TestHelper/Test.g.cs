@@ -41,7 +41,7 @@ namespace APE.PostgreSQL.Teamwork.TestHelper
                 return;
 
             this.Dispose(true);
-            System.GC.SuppressFinalize(this); //do not execute 
+            System.GC.SuppressFinalize(this); //do not execute destructor
             this.isDisposed = true;
         }
 
