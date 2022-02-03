@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 15
-VisualStudioVersion = 15.0.27130.2026
+# Visual Studio Version 17
+VisualStudioVersion = 17.1.32127.271
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APE.PostgreSQL.Teamwork.GUI", "APE.PostgreSQL.Teamwork.GUI\APE.PostgreSQL.Teamwork.GUI.csproj", "{E9A43C83-45D8-4B05-AFA4-0E3FAF0EC57F}"
 EndProject
@@ -17,7 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APE.PostgreSQL.Teamwork.Tes
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{FB5C8473-7B01-4012-ABDD-2007E7A5C8DF}"
 	ProjectSection(SolutionItems) = preProject
-		..\.gitlab-ci.yml = ..\.gitlab-ci.yml
 		..\CHANGELOG.md = ..\CHANGELOG.md
 		..\README.md = ..\README.md
 	EndProjectSection
