@@ -1,5 +1,4 @@
 ﻿// <copyright file="PgView.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using APE.PostgreSQL.Teamwork.Model.Utils;
@@ -25,22 +24,17 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// Creates a new instance of the <see cref="PgView"/>.
         /// </summary>
         /// <param name="name">The name of this <see cref="PgView"/>.</param>
-        public PgView(string name)
-        {
-            this.Name = name;
-        }
+        public PgView(string name) => this.Name = name;
 
         /// <summary>
         /// Gets or sets a <see cref="List{String}"/> of all column names.
         /// </summary>
-        [NullGuard.AllowNull]
-        public List<string> ColumnNames { get; set; }
+        public List<string>? ColumnNames { get; set; }
 
         /// <summary>
         /// Gets or sets the comment of the <see cref="PgView"/>.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         /// <summary>
         /// Creates and returns SQL for creation of the view.
@@ -75,7 +69,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 creationSql.Append(this.Query);
                 creationSql.Append(';');
 
-                foreach (DefaultValue defaultValue in this.defaultValues)
+                foreach (var defaultValue in this.defaultValues)
                 {
                     creationSql.Append("\n\nALTER VIEW ");
                     creationSql.Append(PgDiffStringExtension.QuoteName(this.Name));
@@ -95,7 +89,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                     creationSql.Append(';');
                 }
 
-                foreach (ColumnComment columnComment in this.columnComments)
+                foreach (var columnComment in this.columnComments)
                 {
                     if (columnComment.Comment != null && columnComment.Comment != string.Empty)
                     {
@@ -115,13 +109,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// Creates and returns SQL statement for dropping the view.
         /// </summary>
         /// <returns> created SQL statement. </returns>
-        public string DropSQL
-        {
-            get
-            {
-                return "DROP VIEW " + PgDiffStringExtension.QuoteName(this.Name) + ";";
-            }
-        }
+        public string DropSQL => "DROP VIEW " + PgDiffStringExtension.QuoteName(this.Name) + ";";
 
         /// <summary>
         /// Gets the name of this <see cref="PgView"/>.
@@ -136,24 +124,12 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets a <see cref="List{DefaultValue}"/> for this <see cref="PgView"/>.
         /// </summary>
-        public IList<DefaultValue> DefaultValues
-        {
-            get
-            {
-                return new ReadOnlyCollection<DefaultValue>(this.defaultValues);
-            }
-        }
+        public IList<DefaultValue> DefaultValues => new ReadOnlyCollection<DefaultValue>(this.defaultValues);
 
         /// <summary>
         /// Gets a <see cref="IList{ColumnComment}"/> for all columns of this <see cref="PgView"/>.
         /// </summary>
-        public IList<ColumnComment> ColumnComments
-        {
-            get
-            {
-                return new ReadOnlyCollection<ColumnComment>(this.columnComments);
-            }
-        }
+        public IList<ColumnComment> ColumnComments => new ReadOnlyCollection<ColumnComment>(this.columnComments);
 
         /// <summary>
         /// Adds/replaces column default value specification.
@@ -169,7 +145,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         public void RemoveColumnDefaultValue(string columnName)
         {
-            foreach (DefaultValue item in this.defaultValues)
+            foreach (var item in this.defaultValues)
             {
                 if (item.ColumnName.Equals(columnName))
                 {
@@ -193,7 +169,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         public void RemoveColumnComment(string columnName)
         {
-            foreach (ColumnComment item in this.columnComments)
+            foreach (var item in this.columnComments)
             {
                 if (item.ColumnName.Equals(columnName))
                 {
@@ -250,7 +226,6 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             /// <summary>
             /// Gets the comment.
             /// </summary>
-            [NullGuard.AllowNull]
             public string Comment { get; private set; }
         }
     }

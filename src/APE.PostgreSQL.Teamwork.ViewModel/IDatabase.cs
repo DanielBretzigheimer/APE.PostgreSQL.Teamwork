@@ -1,6 +1,4 @@
 ﻿// <copyright file="IDatabase.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
 using APE.PostgreSQL.Teamwork.Model;
 using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
 
@@ -107,7 +105,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <param name="afterFileExecution">Action which is called after a file was executed with a List of all SQLFiles
         /// (<see cref="IEnumerable{SQLFile}"/>) and the index of the currently executed one.</param>
         /// <exception cref="TeamworkConnectionException">Is thrown when an error occurred while executing the SQL Statements.</exception>
-        void UpdateToVersion(DatabaseVersion version, Action<IEnumerable<SQLFile>, SQLFile> afterFileExecution = null);
+        void UpdateToVersion(DatabaseVersion version, Action<IEnumerable<SQLFile>, SQLFile>? afterFileExecution = null);
 
         /// <summary>
         /// Executes the given SQL command on the given database.

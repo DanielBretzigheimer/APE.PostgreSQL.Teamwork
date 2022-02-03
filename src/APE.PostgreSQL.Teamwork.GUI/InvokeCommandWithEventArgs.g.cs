@@ -4,20 +4,14 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 // </auto-generated>
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Reflection;
-using System.Windows;
 using System.Windows.Input;
-using System.Windows.Interactivity;
-using APE.CodeGeneration.Attributes;
 
 namespace APE.PostgreSQL.Teamwork.GUI
 {
     // APE.CodeGeneration.Attribute [DependencyProperty(typeof(object), "DataContext", null)]
     // APE.CodeGeneration.Attribute [DependencyProperty(typeof(ICommand), "Command", null)]
-    public partial class InvokeCommandWithEventArgs {        //ncrunch: no coverage start
+    public partial class InvokeCommandWithEventArgs {
+        //ncrunch: no coverage start
 
         //--------------------------------------------------------------------------------
         // generated code for DependencyProperty

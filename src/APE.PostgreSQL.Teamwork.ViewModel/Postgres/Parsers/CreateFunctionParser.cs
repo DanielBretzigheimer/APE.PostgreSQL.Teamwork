@@ -1,5 +1,4 @@
 ﻿// <copyright file="CreateFunctionParser.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
 
@@ -30,7 +29,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             var functionName = parser.ParseIdentifier();
             var schemaName = ParserUtils.GetSchemaName(functionName, database);
 
-            PgSchema schema = database.GetSchema(schemaName);
+            var schema = database.GetSchema(schemaName);
 
             if (database.SchemaIsIgnored(schemaName))
                 return;
@@ -50,7 +49,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             while (!parser.ExpectOptional(")"))
             {
-                string mode;
+                string? mode;
                 if (parser.ExpectOptional("IN"))
                 {
                     mode = "IN";
@@ -73,7 +72,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 }
 
                 var position = parser.Position;
-                string argumentName = null;
+                string? argumentName = null;
                 var dataType = parser.ParseDataType();
 
                 var position2 = parser.Position;
@@ -89,7 +88,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     parser.Position = position2;
                 }
 
-                string defaultExpression;
+                string? defaultExpression;
                 if (parser.ExpectOptional("=") || parser.ExpectOptional("DEFAULT"))
                 {
                     defaultExpression = parser.Expression();

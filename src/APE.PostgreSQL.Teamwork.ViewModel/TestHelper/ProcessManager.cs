@@ -1,28 +1,23 @@
 ﻿// <copyright file="ProcessManager.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.IO;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.TestHelper
 {
     public class ProcessManager : IProcessManager
     {
         public void Execute(ProcessStartInfo startInfo)
-        {
-            this.Execute(startInfo, false);
-        }
+            => this.Execute(startInfo, false);
 
         public void ExecuteAsync(ProcessStartInfo startInfo)
-        {
-            this.Execute(startInfo, true);
-        }
+            => this.Execute(startInfo, true);
 
         public void Start(string file)
         {
-            Process.Start(file);
+            if (Directory.Exists(file))
+                Process.Start("explorer.exe", file);
+            else
+                Process.Start(file);
         }
 
         private void Execute(ProcessStartInfo startInfo, bool async)

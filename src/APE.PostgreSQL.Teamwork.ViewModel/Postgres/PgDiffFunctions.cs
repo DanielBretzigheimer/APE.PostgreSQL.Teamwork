@@ -20,12 +20,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for new or modified functions.
         /// </summary>
-        public static void Create(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper, bool ignoreFunctionWhitespace)
+        public static void Create(StreamWriter writer, PgSchema? oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper, bool ignoreFunctionWhitespace)
         {
             // Add new functions and replace modified functions
-            foreach (PgFunction newFunction in newSchema.Functions)
+            foreach (var newFunction in newSchema.Functions)
             {
-                PgFunction oldFunction;
+                PgFunction? oldFunction;
 
                 if (oldSchema == null)
                 {
@@ -48,7 +48,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for dropping of functions that exist no more.
         /// </summary>
-        public static void Drop(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Drop(StreamWriter writer, PgSchema? oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
             {
@@ -56,7 +56,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             }
 
             // Drop functions that exist no more
-            foreach (PgFunction oldFunction in oldSchema.Functions)
+            foreach (var oldFunction in oldSchema.Functions)
             {
                 if (!newSchema.ContainsFunction(oldFunction.Signature))
                 {
@@ -70,16 +70,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for function comments that have changed.
         /// </summary>
-        public static void AlterComments(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void AlterComments(StreamWriter writer, PgSchema? oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
             {
                 return;
             }
 
-            foreach (PgFunction oldfunction in oldSchema.Functions)
+            foreach (var oldfunction in oldSchema.Functions)
             {
-                PgFunction newFunction = newSchema.GetFunction(oldfunction.Signature);
+                var newFunction = newSchema.GetFunction(oldfunction.Signature);
 
                 if (newFunction == null)
                 {
@@ -97,7 +97,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                     writer.Write('(');
 
                     var addComma = false;
-                    foreach (PgFunction.Argument argument in newFunction.Arguments)
+                    foreach (var argument in newFunction.Arguments)
                     {
                         if (addComma)
                         {
@@ -125,7 +125,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                     writer.Write('(');
 
                     var addComma = false;
-                    foreach (PgFunction.Argument argument in newFunction.Arguments)
+                    foreach (var argument in newFunction.Arguments)
                     {
                         if (addComma)
                         {

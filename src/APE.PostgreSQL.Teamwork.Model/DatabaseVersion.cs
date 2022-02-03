@@ -1,10 +1,5 @@
 ﻿// <copyright file="DatabaseVersion.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
 using APE.PostgreSQL.Teamwork.Model.Templates;
 
 namespace APE.PostgreSQL.Teamwork.Model
@@ -24,13 +19,13 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// </summary>
         public const string TempUndoDiffName = "TempUndoDiff";
 
-        private static readonly EqualsAndHashCode<DatabaseVersion> EqualsAndHashCode = new EqualsAndHashCode<DatabaseVersion>(
+        private static readonly EqualsAndHashCode<DatabaseVersion> EqualsAndHashCode = new(
             v => v.Main,
             v => v.Minor);
 
-        private static readonly Regex RegexDiffVersion = new Regex(@"\\(?<Version>[0-9][0-9][0-9][0-9])(?<SubVersion>\..*)?\" + SQLTemplates.DiffFile);
-        private static readonly Regex RegexDumpVersion = new Regex(@"\\(?<Version>[0-9][0-9][0-9][0-9])(?<SubVersion>\..*)?\" + SQLTemplates.DumpFile);
-        private static readonly Regex RegexUndoDiffFile = new Regex(@"\\(?<Version>[0-9][0-9][0-9][0-9])(?<SubVersion>\..*)?\" + SQLTemplates.UndoDiffFile);
+        private static readonly Regex RegexDiffVersion = new(@"\\(?<Version>[0-9][0-9][0-9][0-9])(?<SubVersion>\..*)?\" + SQLTemplates.DiffFile);
+        private static readonly Regex RegexDumpVersion = new(@"\\(?<Version>[0-9][0-9][0-9][0-9])(?<SubVersion>\..*)?\" + SQLTemplates.DumpFile);
+        private static readonly Regex RegexUndoDiffFile = new(@"\\(?<Version>[0-9][0-9][0-9][0-9])(?<SubVersion>\..*)?\" + SQLTemplates.UndoDiffFile);
 
         /// <summary>
         /// Parses the given path to a <see cref="DatabaseVersion"/>.
@@ -45,7 +40,7 @@ namespace APE.PostgreSQL.Teamwork.Model
             }
             else
             {
-                MatchCollection collection = null;
+                MatchCollection? collection = null;
                 if (path.EndsWith(SQLTemplates.DiffFile))
                     collection = RegexDiffVersion.Matches(path);
                 else if (path.EndsWith(SQLTemplates.DumpFile))
@@ -70,23 +65,17 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// </summary>
         public DatabaseVersion(ExecutedFile file)
         {
-            this.Main = int.Parse(file.Version.Substring(0, 4));
-            this.Minor = file.Version.Substring(4);
+            this.Main = int.Parse(file.Version[..4]);
+            this.Minor = file.Version[4..];
         }
 
         /// <summary>
         /// Creates a new <see cref="DatabaseVersion"/> with the given <see cref="Main"/> version and no <see cref="Minor"/> version.
         /// </summary>
-        public DatabaseVersion(int mainVersion)
-        {
-            this.Main = mainVersion;
-        }
+        public DatabaseVersion(int mainVersion) => this.Main = mainVersion;
 
         public DatabaseVersion(int main, string minor)
-            : this(main)
-        {
-            this.Minor = minor.StartsWith(".") ? minor : $".{minor}";
-        }
+            : this(main) => this.Minor = minor.StartsWith(".") ? minor : $".{minor}";
 
         private DatabaseVersion()
         {
@@ -95,10 +84,7 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// <summary>
         /// Returns the lowest <see cref="DatabaseVersion"/>.
         /// </summary>
-        public static DatabaseVersion StartVersion
-        {
-            get { return new DatabaseVersion(0); }
-        }
+        public static DatabaseVersion StartVersion => new(0);
 
         /// <summary>
         /// Gets the main part of the version.
@@ -113,14 +99,9 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// <summary>
         /// Gets the full version which contains out of the <see cref="Main"/> and <see cref="Minor"/> version.
         /// </summary>
-        public string Full
-        {
-            get
-            {
+        public string Full =>
                 // should look like 0187.a
-                return this.Main.ToString().PadLeft(4, '0') + this.Minor;
-            }
-        }
+                this.Main.ToString().PadLeft(4, '0') + this.Minor;
 
         /// <summary>
         /// Increases the <see cref="Main"/> version by 1.
@@ -137,9 +118,7 @@ namespace APE.PostgreSQL.Teamwork.Model
         public static bool operator <(DatabaseVersion a, DatabaseVersion b)
         {
             if (a == b)
-            {
                 return false;
-            }
 
             var versions = new List<DatabaseVersion> { a, b }
             .OrderBy(v => v.Full);
@@ -153,9 +132,7 @@ namespace APE.PostgreSQL.Teamwork.Model
         public static bool operator >(DatabaseVersion a, DatabaseVersion b)
         {
             if (a == b)
-            {
                 return false;
-            }
 
             var versions = new List<DatabaseVersion> { a, b }
             .OrderBy(v => v.Full);
@@ -166,35 +143,25 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// <summary>
         /// Checks if the version a is smaller or equal than the version b and returns a boolean with the result.
         /// </summary>
-        public static bool operator <=(DatabaseVersion a, DatabaseVersion b)
-        {
-            return a == b || a < b;
-        }
+        public static bool operator <=(DatabaseVersion a, DatabaseVersion b) => a == b || a < b;
 
         /// <summary>
         /// Checks if the version a is bigger or equal than the version b and returns a boolean with the result.
         /// </summary>
-        public static bool operator >=(DatabaseVersion a, DatabaseVersion b)
-        {
-            return a == b || a > b;
-        }
+        public static bool operator >=(DatabaseVersion a, DatabaseVersion b) => a == b || a > b;
 
         /// <summary>
         /// Checks if the version a is equal to the version b and returns a boolean with the result.
         /// </summary>
-        public static bool operator ==([NullGuard.AllowNull] DatabaseVersion a, [NullGuard.AllowNull] DatabaseVersion b)
+        public static bool operator ==(DatabaseVersion? a, DatabaseVersion? b)
         {
             // If both are null, or both are same instance, return true.
-            if (object.ReferenceEquals(a, b))
-            {
+            if (ReferenceEquals(a, b))
                 return true;
-            }
 
             // If one is null, but not both, return false.
-            if (((object)a == null) || ((object)b == null))
-            {
+            if (a is null || b is null)
                 return false;
-            }
 
             return a.Equals(b);
         }
@@ -202,43 +169,28 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// <summary>
         /// Checks if the version a is not equal to the version b and returns a boolean with the result.
         /// </summary>
-        public static bool operator !=([NullGuard.AllowNull] DatabaseVersion a, [NullGuard.AllowNull] DatabaseVersion b)
-        {
-            return !(a == b);
-        }
+        public static bool operator !=(DatabaseVersion? a, DatabaseVersion? b) => !(a == b);
 
-        public DatabaseVersion Next()
-        {
-            return new DatabaseVersion(this.Main + 1);
-        }
+        public DatabaseVersion Next() => new(this.Main + 1);
 
         /// <summary>
         /// Determines whether the specified object is equal to the current object.
         /// </summary>
-        public override bool Equals([NullGuard.AllowNull] object obj)
-        {
-            return EqualsAndHashCode.AreEqual(this, obj);
-        }
+        public override bool Equals(object? obj) => EqualsAndHashCode.AreEqual(this, obj);
 
         /// <summary>
         /// Serves as the default hash function.
         /// </summary>
         /// <returns>A hash code for the current object.</returns>
-        public override int GetHashCode()
-        {
-            return EqualsAndHashCode.GetHashCode(this);
-        }
+        public override int GetHashCode() => EqualsAndHashCode.GetHashCode(this);
 
         /// <summary>
         ///  Returns a string that represents the current object.
         /// </summary>
-        [return: NullGuard.AllowNull]
         public override string ToString()
-        {
-            return this.Full;
-        }
+            => this.Full;
 
-        public int CompareTo(DatabaseVersion other)
+        public int CompareTo(DatabaseVersion? other)
         {
             if (other == null)
                 return 1;
@@ -246,17 +198,15 @@ namespace APE.PostgreSQL.Teamwork.Model
             return this.Full.CompareTo(other.Full);
         }
 
-        internal static DatabaseVersion CommandLineVersion(string version)
+        public static DatabaseVersion CommandLineVersion(string version)
         {
             if (version.Length < 4)
-            {
                 throw new ArgumentException($"Version could not be parsed from {version}");
-            }
 
             var retVal = new DatabaseVersion()
             {
-                Main = int.Parse(version.Substring(0, 4)),
-                Minor = version.Substring(4),
+                Main = int.Parse(version[..4]),
+                Minor = version[4..],
             };
             return retVal;
         }

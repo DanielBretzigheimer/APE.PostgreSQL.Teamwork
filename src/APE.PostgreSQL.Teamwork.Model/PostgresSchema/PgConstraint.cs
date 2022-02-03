@@ -13,17 +13,14 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Regex for checking whether the constraint is PRIMARY KEY constraint.
         /// </summary>
-        private static readonly Regex PatternPrimaryKey = new Regex(".*PRIMARY[\\s]+KEY.*");
-        private static readonly Regex PatternForeignKey = new Regex(".*FOREIGN[\\s]+KEY.*");
+        private static readonly Regex PatternPrimaryKey = new(".*PRIMARY[\\s]+KEY.*");
+        private static readonly Regex PatternForeignKey = new(".*FOREIGN[\\s]+KEY.*");
 
         /// <summary>
         /// Creates a new <see cref="PgConstraint"/> object.
         /// </summary>
         /// <param name="name">The name of the <see cref="PgConstraint"/>.</param>
-        public PgConstraint(string name)
-        {
-            this.Name = name;
-        }
+        public PgConstraint(string name) => this.Name = name;
 
         /// <summary>
         /// Creates and returns SQL for creation of the constraint.
@@ -60,8 +57,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the comment of the <see cref="PgConstraint"/>.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         /// <summary>
         /// Gets or sets the definition of the <see cref="PgConstraint"/>.
@@ -94,24 +90,12 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Returns true if this is a PRIMARY KEY constraint, otherwise false.
         /// </summary>
-        public bool PrimaryKeyConstraint
-        {
-            get
-            {
-                return PatternPrimaryKey.Matches(this.Definition).Count != 0;
-            }
-        }
+        public bool PrimaryKeyConstraint => PatternPrimaryKey.Matches(this.Definition).Count != 0;
 
         /// <summary>
         /// Returns true if this is a foreign key constraint, otherwise false.
         /// </summary>
-        public bool ForeignKeyConstraint
-        {
-            get
-            {
-                return PatternForeignKey.Matches(this.Definition).Count != 0;
-            }
-        }
+        public bool ForeignKeyConstraint => PatternForeignKey.Matches(this.Definition).Count != 0;
 
         /// <summary>
         /// Gets or sets the name of the table to which this <see cref="PgConstraint"/> belongs.
@@ -143,7 +127,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Determines whether the specified object is equal to the current object.
         /// </summary>
-        public override bool Equals([NullGuard.AllowNull] object obj)
+        public override bool Equals(object? obj)
         {
             if (this == obj)
                 return true;
@@ -158,19 +142,12 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             return false;
         }
 
-        [return: NullGuard.AllowNull]
-        public override string ToString()
-        {
-            return $"{this.GetType().Name} {this.Name} for {this.TableName}";
-        }
+        public override string ToString() => $"{this.GetType().Name} {this.Name} for {this.TableName}";
 
         /// <summary>
         /// Serves as the default hash function.
         /// </summary>
         /// <returns>A hash code for the current object.</returns>
-        public override int GetHashCode()
-        {
-            return (this.GetType().FullName + "|" + this.Definition + "|" + this.Name + "|" + this.TableName).GetHashCode();
-        }
+        public override int GetHashCode() => (this.GetType().FullName + "|" + this.Definition + "|" + this.Name + "|" + this.TableName).GetHashCode();
     }
 }

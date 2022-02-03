@@ -1,12 +1,6 @@
 ﻿// <copyright file="PrivilegeParser.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema.Enums;
-using log4net;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 {
@@ -15,9 +9,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
     /// </summary>
     public class PrivilegeParser
     {
-        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        private static List<PgPrivilegeKind> enumEntries = new List<PgPrivilegeKind>();
+        private static readonly List<PgPrivilegeKind> enumEntries = new();
 
         static PrivilegeParser()
         {

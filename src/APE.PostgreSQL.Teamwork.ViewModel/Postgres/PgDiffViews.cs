@@ -1,5 +1,4 @@
 ﻿// <copyright file="PgDiffViews.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System.Collections.Generic;
 using System.IO;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 using APE.PostgreSQL.Teamwork.Model.Utils;
@@ -21,11 +20,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for creation of views.
         /// </summary>
-        public static void Create(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Create(StreamWriter writer, PgSchema? oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
-            foreach (PgView newView in newSchema.Views)
+            foreach (var newView in newSchema.Views)
             {
-                if (oldSchema == null || !oldSchema.ContainsView(newView.Name) || IsViewModified(oldSchema.GetView(newView.Name), newView))
+                if (oldSchema == null || !oldSchema.TryGetView(newView.Name, out var oldView) || IsViewModified(oldView, newView))
                 {
                     searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();
@@ -37,16 +36,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for dropping views.
         /// </summary>
-        public static void Drop(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Drop(StreamWriter writer, PgSchema? oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
             {
                 return;
             }
 
-            foreach (PgView oldView in oldSchema.Views)
+            foreach (var oldView in oldSchema.Views)
             {
-                PgView newView = newSchema.GetView(oldView.Name);
+                var newView = newSchema.GetView(oldView.Name);
 
                 if (newView == null || IsViewModified(oldView, newView))
                 {
@@ -60,16 +59,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for altering view default values.
         /// </summary>
-        public static void Alter(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Alter(StreamWriter writer, PgSchema? oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
             {
                 return;
             }
 
-            foreach (PgView oldView in oldSchema.Views)
+            foreach (var oldView in oldSchema.Views)
             {
-                PgView newView = newSchema.GetView(oldView.Name);
+                var newView = newSchema.GetView(oldView.Name);
 
                 if (newView == null)
                 {
@@ -102,12 +101,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
 
                 IList<string> columnNames = new List<string>(newView.ColumnComments.Count);
 
-                foreach (PgView.ColumnComment columnComment in newView.ColumnComments)
+                foreach (var columnComment in newView.ColumnComments)
                 {
                     columnNames.Add(columnComment.ColumnName);
                 }
 
-                foreach (PgView.ColumnComment columnComment in oldView.ColumnComments)
+                foreach (var columnComment in oldView.ColumnComments)
                 {
                     if (!columnNames.Contains(columnComment.ColumnName))
                     {
@@ -117,10 +116,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
 
                 foreach (var columnName in columnNames)
                 {
-                    PgView.ColumnComment oldColumnComment = null;
-                    PgView.ColumnComment newColumnComment = null;
+                    PgView.ColumnComment? oldColumnComment = null;
+                    PgView.ColumnComment? newColumnComment = null;
 
-                    foreach (PgView.ColumnComment columnComment in oldView.ColumnComments)
+                    foreach (var columnComment in oldView.ColumnComments)
                     {
                         if (columnName.Equals(columnComment.ColumnName))
                         {
@@ -129,7 +128,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                         }
                     }
 
-                    foreach (PgView.ColumnComment columnComment in newView.ColumnComments)
+                    foreach (var columnComment in newView.ColumnComments)
                     {
                         if (columnName.Equals(columnComment.ColumnName))
                         {
@@ -140,8 +139,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
 
                     if ((oldColumnComment == null && newColumnComment != null)
                         || (oldColumnComment != null
-                        && newColumnComment != null
-                        && !oldColumnComment.Comment.Equals(newColumnComment.Comment)))
+                            && newColumnComment != null
+                            && !oldColumnComment.Comment.Equals(newColumnComment.Comment)))
                     {
                         searchPathHelper.OutputSearchPath(writer);
                         writer.WriteLine();
@@ -173,7 +172,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// </summary>
         private static bool IsViewModified(PgView oldView, PgView newView)
         {
-            string[] oldViewColumnNames;
+            string[]? oldViewColumnNames;
 
             if (oldView.ColumnNames == null || oldView.ColumnNames.Count == 0)
             {
@@ -184,7 +183,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 oldViewColumnNames = oldView.ColumnNames.ToArray();
             }
 
-            string[] newViewColumnNames;
+            string[]? newViewColumnNames;
 
             if (newView.ColumnNames == null || newView.ColumnNames.Count == 0)
             {
@@ -214,16 +213,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// </summary>
         private static void DiffDefaultValues(StreamWriter writer, PgView oldView, PgView newView, SearchPathHelper searchPathHelper)
         {
-            IList<PgView.DefaultValue> oldValues = oldView.DefaultValues;
+            var oldValues = oldView.DefaultValues;
 
-            IList<PgView.DefaultValue> newValues = newView.DefaultValues;
+            var newValues = newView.DefaultValues;
 
             // modify defaults that are in old view
-            foreach (PgView.DefaultValue oldValue in oldValues)
+            foreach (var oldValue in oldValues)
             {
                 var found = false;
 
-                foreach (PgView.DefaultValue newValue in newValues)
+                foreach (var newValue in newValues)
                 {
                     if (oldValue.ColumnName.Equals(newValue.ColumnName))
                     {
@@ -259,11 +258,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             }
 
             // add new defaults
-            foreach (PgView.DefaultValue newValue in newValues)
+            foreach (var newValue in newValues)
             {
                 var found = false;
 
-                foreach (PgView.DefaultValue oldValue in oldValues)
+                foreach (var oldValue in oldValues)
                 {
                     if (newValue.ColumnName.Equals(oldValue.ColumnName))
                     {

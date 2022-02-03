@@ -1,9 +1,4 @@
 ﻿// <copyright file="DatabaseSetting.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using APE.PostgreSQL.Teamwork.Model.Setting;
 using APE.PostgreSQL.Teamwork.Model.Templates;
 
@@ -14,7 +9,7 @@ namespace APE.PostgreSQL.Teamwork.Model
     /// </summary>
     public class DatabaseSetting
     {
-        public static readonly List<string> DefaultIgnoredSchemas = new List<string>()
+        public static readonly List<string> DefaultIgnoredSchemas = new()
         {
             SQLTemplates.PostgreSQLTeamworkSchemaName,
             "APE.PostgreSQL.Test.Runner",
@@ -90,18 +85,12 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// </summary>
         /// <param name="name">The name of the database.</param>
         /// <param name="path">The path of the database.</param>
-        public static void AddDatabaseSetting(string name, string path)
-        {
-            AddDatabaseSetting(GetDatabaseSettings().Count == 0 ? 1 : GetDatabaseSettings().Max(d => d.Id + 1), name, path);
-        }
+        public static void AddDatabaseSetting(string name, string path) => AddDatabaseSetting(GetDatabaseSettings().Count == 0 ? 1 : GetDatabaseSettings().Max(d => d.Id + 1), name, path);
 
         /// <summary>
         /// Gets a <see cref="List{DatabaseSetting}"/> from the <see cref="ApplicationSetting.DatabaseSettings"/>.
         /// </summary>
-        public static List<DatabaseSetting> GetDatabaseSettings()
-        {
-            return SettingsManager.Get().Setting.DatabaseSettings;
-        }
+        public static List<DatabaseSetting> GetDatabaseSettings() => SettingsManager.Get().Setting.DatabaseSettings;
 
         /// <summary>
         /// Gets the database with the given id from the application settings.
@@ -116,10 +105,6 @@ namespace APE.PostgreSQL.Teamwork.Model
         /// <summary>
         /// Creates a string of the <see cref="DatabaseSetting"/> which contains the <see cref="Id"/> and <see cref="Name"/>.
         /// </summary>
-        [return: NullGuard.AllowNull]
-        public override string ToString()
-        {
-            return $"{this.Id} {this.Name}";
-        }
+        public override string ToString() => $"{this.Id} {this.Name}";
     }
 }

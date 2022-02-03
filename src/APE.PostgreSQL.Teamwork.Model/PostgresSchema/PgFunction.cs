@@ -1,6 +1,4 @@
 ﻿// <copyright file="PgFunction.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using APE.PostgreSQL.Teamwork.Model.Utils;
@@ -20,8 +18,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the comment of the <see cref="PgFunction"/>.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         /// <summary>
         /// Gets the creation SQL for this <see cref="PgFunction"/>.
@@ -38,7 +35,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 creationSql.Append('(');
                 var addComma = false;
 
-                foreach (Argument argument in this.arguments)
+                foreach (var argument in this.arguments)
                 {
                     if (addComma)
                     {
@@ -61,7 +58,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
 
                 addComma = false;
 
-                foreach (Argument argument in this.arguments)
+                foreach (var argument in this.arguments)
                 {
                     if (addComma)
                     {
@@ -85,7 +82,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
 
                     addComma = false;
 
-                    foreach (Argument argument in this.arguments)
+                    foreach (var argument in this.arguments)
                     {
                         if (addComma)
                         {
@@ -109,8 +106,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the body of the <see cref="PgFunction"/>.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string Body { get; set; }
+        public string? Body { get; set; }
 
         /// <summary>
         /// Creates and returns SQL for dropping the function.
@@ -127,7 +123,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
 
                 var addComma = false;
 
-                foreach (Argument argument in this.arguments)
+                foreach (var argument in this.arguments)
                 {
                     if ("OUT".Equals(argument.Mode, StringComparison.CurrentCultureIgnoreCase))
                     {
@@ -153,19 +149,12 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the name of the <see cref="PgFunction"/>.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string Name { get; set; }
+        public string? Name { get; set; }
 
         /// <summary>
         /// Gets a list of all <see cref="Argument"/>s for this <see cref="PgFunction"/>.
         /// </summary>
-        public IList<Argument> Arguments
-        {
-            get
-            {
-                return new ReadOnlyCollection<Argument>(this.arguments);
-            }
-        }
+        public IList<Argument> Arguments => new ReadOnlyCollection<Argument>(this.arguments);
 
         /// <summary>
         /// Returns function signature. It consists of unquoted name and argument
@@ -182,19 +171,15 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
 
                 var addComma = false;
 
-                foreach (Argument argument in this.arguments)
+                foreach (var argument in this.arguments)
                 {
                     if ("OUT".Equals(argument.Mode, StringComparison.CurrentCultureIgnoreCase))
-                    {
                         continue;
-                    }
 
                     if (addComma)
-                    {
                         signature.Append(',');
-                    }
 
-                    signature.Append(argument.DataType.ToLower(new System.Globalization.CultureInfo("en")));
+                    signature.Append(argument.DataType.ToLowerInvariant());
 
                     addComma = true;
                 }
@@ -208,17 +193,14 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Adds argument to the list of arguments.
         /// </summary>
-        public void AddArgument(Argument argument)
-        {
-            this.arguments.Add(argument);
-        }
+        public void AddArgument(Argument argument) => this.arguments.Add(argument);
 
         /// <summary>
         /// Determines whether the specified object is equal to the current object.
         /// </summary>
-        public override bool Equals([NullGuard.AllowNull] object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is PgFunction))
+            if (obj is not PgFunction)
             {
                 return false;
             }
@@ -252,14 +234,13 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                     return false;
                 }
 
-                string thisBody;
-
-                string thatBody;
+                string? thisBody;
+                string? thatBody;
 
                 if (ignoreFunctionWhitespace)
                 {
-                    thisBody = this.Body.Replace("\\s+", " ");
-                    thatBody = function.Body.Replace("\\s+", " ");
+                    thisBody = this.Body?.Replace("\\s+", " ");
+                    thatBody = function.Body?.Replace("\\s+", " ");
                 }
                 else
                 {
@@ -304,7 +285,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             hashCode.Append('|');
             hashCode.Append(this.Name);
 
-            foreach (Argument argument in this.arguments)
+            foreach (var argument in this.arguments)
             {
                 hashCode.Append('|');
                 hashCode.Append(argument.GetDeclaration(true));
@@ -326,37 +307,26 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             /// <summary>
             /// Gets or sets the data type of the <see cref="Argument"/>.
             /// </summary>
-            [NullGuard.AllowNull]
-            public string DataType { get; set; }
+            public string? DataType { get; set; }
 
             /// <summary>
             /// Gets or sets the default expression of the <see cref="Argument"/>.
             /// </summary>
-            [NullGuard.AllowNull]
-            public string DefaultExpression { get; set; }
+            public string? DefaultExpression { get; set; }
 
             /// <summary>
             /// Gets or sets the mode of the <see cref="Argument"/>.
             /// </summary>
-            [NullGuard.AllowNull]
-            public string Mode
+            public string? Mode
             {
-                get
-                {
-                    return this.mode;
-                }
-
-                set
-                {
-                    this.mode = value == null || value.Length == 0 ? "IN" : value;
-                }
+                get => this.mode;
+                set => this.mode = value == null || value.Length == 0 ? "IN" : value;
             }
 
             /// <summary>
             /// Gets or sets the name of the <see cref="Argument"/>.
             /// </summary>
-            [NullGuard.AllowNull]
-            public string Name { get; set; }
+            public string? Name { get; set; }
 
             /// <summary>
             /// Creates argument declaration.
@@ -392,9 +362,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             /// <summary>
             /// Determines whether the specified object is equal to the current object.
             /// </summary>
-            public override bool Equals([NullGuard.AllowNull] object obj)
+            public override bool Equals(object? obj)
             {
-                if (!(obj is Argument))
+                if (obj is not Argument)
                 {
                     return false;
                 }

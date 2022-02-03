@@ -1,11 +1,10 @@
 ﻿// <copyright file="SettingsManager.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.IO;
+
 using System.Reflection;
 using System.Xml;
 using System.Xml.Serialization;
 using APE.CodeGeneration.Model;
-using log4net;
+using Serilog;
 
 namespace APE.PostgreSQL.Teamwork.Model.Setting
 {
@@ -15,17 +14,12 @@ namespace APE.PostgreSQL.Teamwork.Model.Setting
     /// </summary>
     public class SettingsManager
     {
-        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
         private static readonly string SettingsPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\settings.ocignore.xml";
 
-        private static SettingsManager instance = null;
+        private static SettingsManager? instance = null;
 
-        private SettingsManager()
-        {
-            // initialize default settings
+        private SettingsManager() =>
             this.Setting = new ApplicationSetting();
-        }
 
         /// <summary>
         /// Gets or sets the settings of the whole application.
@@ -40,9 +34,7 @@ namespace APE.PostgreSQL.Teamwork.Model.Setting
         public static SettingsManager Get(bool refresh = false)
         {
             if (instance != null && !refresh)
-            {
                 return instance;
-            }
 
             if (!File.Exists(SettingsPath))
             {
@@ -79,9 +71,6 @@ namespace APE.PostgreSQL.Teamwork.Model.Setting
 
         private static SettingsManager LoadFile(string path)
         {
-            // deserialize
-            var attributeXml = string.Empty;
-
             var xmlDocument = new XmlDocument();
 
             try
@@ -92,7 +81,7 @@ namespace APE.PostgreSQL.Teamwork.Model.Setting
             {
                 var newPath = path.Replace(".xml", ".old.xml");
                 File.Move(path, newPath);
-                Log.Error(string.Format("Xml File {0} was not correctly formatted and renamed to {1}", path, newPath), ex);
+                Log.Error(ex, $"Xml File {path} was not correctly formatted and renamed to {newPath}");
 
                 // load new setting
                 return Get();
@@ -100,14 +89,14 @@ namespace APE.PostgreSQL.Teamwork.Model.Setting
 
             var xmlString = xmlDocument.OuterXml;
 
-            using (var read = new StringReader(xmlString))
-            {
-                var serializer = new XmlSerializer(typeof(SettingsManager));
-                XmlReader reader = new XmlTextReader(read);
-                instance = (SettingsManager)serializer.Deserialize(reader);
-            }
+            using var read = new StringReader(xmlString);
+            var serializer = new XmlSerializer(typeof(SettingsManager));
+            var reader = new XmlTextReader(read);
 
-            return instance;
+            if (serializer != null && reader != null)
+                instance = (SettingsManager?)serializer.Deserialize(reader);
+
+            return instance ?? new SettingsManager();
         }
     }
 }

@@ -1,17 +1,12 @@
 // <copyright file="InvokeCommandWithEventArgs.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
-using System.Windows.Interactivity;
-using APE.CodeGeneration.Attributes;
+using Microsoft.Xaml.Behaviors;
 
 namespace APE.PostgreSQL.Teamwork.GUI
 {
-    [DependencyProperty(typeof(object), "DataContext", null)]
-    [DependencyProperty(typeof(ICommand), "Command", null)]
     public partial class InvokeCommandWithEventArgs : TriggerAction<DependencyObject>
     {
         private string commandName;
@@ -24,19 +19,12 @@ namespace APE.PostgreSQL.Teamwork.GUI
         /// </remarks>
         public string CommandName
         {
-            get
-            {
-                return this.commandName;
-            }
+            get => this.commandName;
 
             set
             {
-                if (!(this.CommandName != value))
-                {
-                    return;
-                }
-
-                this.commandName = value;
+                if (this.CommandName != value)
+                    this.commandName = value;
             }
         }
 
@@ -51,7 +39,7 @@ namespace APE.PostgreSQL.Teamwork.GUI
                 return;
             }
 
-            ICommand command = this.ResolveCommand();
+            var command = this.ResolveCommand();
             if (command == null || !command.CanExecute(parameter))
             {
                 return;
@@ -60,9 +48,9 @@ namespace APE.PostgreSQL.Teamwork.GUI
             command.Execute(parameter);
         }
 
-        private ICommand ResolveCommand()
+        private ICommand? ResolveCommand()
         {
-            var command = (ICommand)null;
+            ICommand? command = null;
             if (this.Command != null)
             {
                 command = this.Command;
@@ -70,23 +58,19 @@ namespace APE.PostgreSQL.Teamwork.GUI
             else if (this.DataContext != null)
             {
                 // search command in given datacontext
-                foreach (PropertyInfo propertyInfo in this.DataContext.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                foreach (var propertyInfo in this.DataContext.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
                 {
                     if (typeof(ICommand).IsAssignableFrom(propertyInfo.PropertyType) && string.Equals(propertyInfo.Name, this.CommandName, StringComparison.Ordinal))
-                    {
-                        command = (ICommand)propertyInfo.GetValue((object)this.DataContext, (object[])null);
-                    }
+                        command = (ICommand?)propertyInfo.GetValue(this.DataContext, null);
                 }
             }
             else if (this.AssociatedObject != null)
             {
                 // serach command in associated object
-                foreach (PropertyInfo propertyInfo in this.AssociatedObject.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
+                foreach (var propertyInfo in this.AssociatedObject.GetType().GetProperties(BindingFlags.Instance | BindingFlags.Public))
                 {
                     if (typeof(ICommand).IsAssignableFrom(propertyInfo.PropertyType) && string.Equals(propertyInfo.Name, this.CommandName, StringComparison.Ordinal))
-                    {
-                        command = (ICommand)propertyInfo.GetValue((object)this.AssociatedObject, (object[])null);
-                    }
+                        command = (ICommand?)propertyInfo.GetValue(this.AssociatedObject, null);
                 }
             }
 

@@ -1,11 +1,7 @@
 ﻿// <copyright file="ConverterChain.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Markup;
 
@@ -23,10 +19,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Converter
         /// <summary>
         /// Gets the converters to execute.
         /// </summary>
-        public Collection<IValueConverter> Converters
-        {
-            get { return this.converters ?? (this.converters = new Collection<IValueConverter>()); }
-        }
+        public Collection<IValueConverter> Converters => this.converters ?? (this.converters = new Collection<IValueConverter>());
 
         public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
@@ -38,9 +31,6 @@ namespace APE.PostgreSQL.Teamwork.GUI.Converter
             return value;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 }

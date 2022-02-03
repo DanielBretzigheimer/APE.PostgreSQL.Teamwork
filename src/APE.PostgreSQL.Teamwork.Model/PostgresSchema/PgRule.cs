@@ -1,20 +1,13 @@
 ﻿// <copyright file="PgRule.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using APE.PostgreSQL.Teamwork.Model.Utils;
 
 namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
 {
     public class PgRule : IPgObject
     {
-        public PgRule(string name)
-        {
-            this.Name = name;
-        }
+        public PgRule(string name) => this.Name = name;
 
         /// <summary>
         /// Gets the name of the <see cref="PgRule"/>.
@@ -34,15 +27,14 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets the event type of the rule. Can be one of SELECT | INSERT | UPDATE | DELETE.
         /// </summary>
-        public string EventType { get; set; } = "SELECT";
+        public string? EventType { get; set; } = "SELECT";
 
-        public string Do { get; set; } = "INSTEAD";
+        public string? Do { get; set; } = "INSTEAD";
 
         /// <summary>
         /// Gets a optional condition which can be null.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string Condition { get; set; } = null;
+        public string? Condition { get; set; } = null;
 
         public string CreationSql
         {
@@ -65,9 +57,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
 
                 sql.Append(" DO ");
                 sql.Append(this.Do);
-                sql.Append(" ");
+                sql.Append(' ');
                 sql.Append(this.Command);
-                sql.Append(";");
+                sql.Append(';');
 
                 return sql.ToString();
             }

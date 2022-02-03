@@ -1,29 +1,22 @@
 // <copyright file="SQLFile.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
-using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.Model;
 using APE.PostgreSQL.Teamwork.Model.Templates;
 using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
-using log4net;
 using Npgsql;
+using Serilog;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {
     /// <summary>
     /// Contains Properties for SQL Files and the SQL Statements from it.
     /// </summary>
-    [NotifyPropertySupport]
     public partial class SQLFile : ISQLFile
     {
-        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        private IDatabase database;
-        private IFileSystemAccess file;
+        private readonly IDatabase database;
+        private readonly IFileSystemAccess file;
 
         /// <summary>
         /// Creates a new SQL File which gets the version from the file name.
@@ -34,7 +27,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         public SQLFile(string path, IDatabase database, IFileSystemAccess fileSystemAccess)
         {
             this.file = fileSystemAccess ?? throw new ArgumentNullException("file", "file == null");
-            this.database = database ?? throw new ArgumentNullException("database", "database == null");
+            this.database = database ?? throw new ArgumentNullException(nameof(database), "database == null");
 
             if (this.file.FileExists(path))
             {
@@ -73,10 +66,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// Refreshes the SQL Statements of the file.
         /// </summary>
         /// <remarks>This must only be called when the file was changed while the tool was opened.</remarks>
-        public void Refresh()
-        {
-            this.SQLStatements = this.GetSQLStatements();
-        }
+        public void Refresh() => this.SQLStatements = this.GetSQLStatements();
 
         /// <summary>
         /// Executes all statements in an transaction.
@@ -111,14 +101,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 }
                 catch (Exception innerEx)
                 {
-                    Log.Warn("Error while inserting execution history", innerEx);
+                    Log.Warning("Error while inserting execution history", innerEx);
                 }
 
-                Log.Warn(string.Format("File {0} contains errors", this.FileName));
+                Log.Warning($"File {this.FileName} contains errors");
                 throw new TeamworkConnectionException(this, ex.Message, ex);
             }
 
-            Log.Info(string.Format("File {0} executed successfully", this.FileName));
+            Log.Information($"File {this.FileName} executed successfully");
         }
 
         public void MarkAsExecuted()
@@ -130,11 +120,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         ///  Returns a string that represents the current object.
         /// </summary>
-        [return: NullGuard.AllowNull]
-        public override string ToString()
-        {
-            return string.Format("{0} Path: {1} Statements {2}", this.GetType().Name.ToString(), this.Path, this.SQLStatements.Count());
-        }
+        public override string ToString() => string.Format("{0} Path: {1} Statements {2}", this.GetType().Name.ToString(), this.Path, this.SQLStatements.Count());
 
         /// <summary>
         /// Scans the file at the given path for SQL Statements and returns them in a list.

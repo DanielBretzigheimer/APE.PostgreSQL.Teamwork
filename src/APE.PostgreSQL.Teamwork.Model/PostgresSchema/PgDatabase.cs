@@ -1,8 +1,4 @@
 ﻿// <copyright file="PgDatabase.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using APE.PostgreSQL.Teamwork.Model.Utils;
 
 namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
@@ -12,7 +8,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
     /// </summary>
     public class PgDatabase
     {
-        private readonly List<string> ignoredSchemas = new List<string>();
+        private readonly List<string> ignoredSchemas = new();
 
         /// <summary>
         /// Creates a new <see cref="PgDatabase"/> object.
@@ -28,8 +24,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the comment of the <see cref="PgDatabase"/>.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the <see cref="PgDatabase"/>.
@@ -56,18 +51,14 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Adds ignored statement to the list of ignored statements.
         /// </summary>
-        public void AddIgnoredStatement(string ignoredStatement)
-        {
-            this.IgnoredStatements.Add(ignoredStatement);
-        }
+        public void AddIgnoredStatement(string ignoredStatement) => this.IgnoredStatements.Add(ignoredStatement);
 
         /// <summary>
         /// Returns schema of given name or null if the schema has not been found. If schema name is null then default schema is returned.
         /// </summary>
         /// <param name="name">Schema name or null which means default schema.</param>
         /// <returns>Found schema or null.</returns>
-        [return: NullGuard.AllowNull]
-        public PgSchema GetSchema([NullGuard.AllowNull] string name)
+        public PgSchema? GetSchema(string? name)
         {
             if (name == null)
                 return this.DefaultSchema;
@@ -80,15 +71,16 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         public void SetDefaultSchema(string name)
         {
-            this.DefaultSchema = this.GetSchema(name);
+            var schema = this.GetSchema(name);
+            if (schema == null)
+                throw new ArgumentException($"Default Schema {name} could not be found.");
+
+            this.DefaultSchema = schema;
         }
 
         /// <summary>
         /// Adds <see cref="PgSchema"/> to the lists of schemas.
         /// </summary>
-        public void AddSchema(PgSchema schema)
-        {
-            this.Schemas.Add(schema);
-        }
+        public void AddSchema(PgSchema schema) => this.Schemas.Add(schema);
     }
 }

@@ -1,10 +1,5 @@
 ﻿// <copyright file="PgAggregate.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using APE.PostgreSQL.Teamwork.Model.Utils;
 
 namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
@@ -17,10 +12,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Creates a new instance of the <see cref="PgAggregate"/> class.
         /// </summary>
-        public PgAggregate()
-        {
-            this.Arguments = new List<Argument>();
-        }
+        public PgAggregate() => this.Arguments = new List<Argument>();
 
         /// <summary>
         /// Returns creation SQL of the aggregate.
@@ -39,7 +31,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
 
                 var addComma = false;
 
-                foreach (Argument argument in this.Arguments)
+                foreach (var argument in this.Arguments)
                 {
                     if (addComma)
                     {
@@ -63,7 +55,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
 
                     addComma = false;
 
-                    foreach (Argument argument in this.Arguments)
+                    foreach (var argument in this.Arguments)
                     {
                         if (addComma)
                         {
@@ -98,7 +90,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 dropSql.Append('(');
 
                 var addComma = false;
-                foreach (Argument argument in this.Arguments)
+                foreach (var argument in this.Arguments)
                 {
                     if (addComma)
                     {
@@ -117,19 +109,16 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets the comment.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         /// <summary>
         /// Gets the whole definition of the aggregate from RETURNS keyword.
         /// </summary>
-        [NullGuard.AllowNull]
         public string Body { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the aggregate including argument types.
         /// </summary>
-        [NullGuard.AllowNull]
         public string Name { get; set; }
 
         /// <summary>
@@ -152,14 +141,12 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
 
                 var addComma = false;
 
-                foreach (Argument argument in this.Arguments)
+                foreach (var argument in this.Arguments)
                 {
                     if (addComma)
-                    {
                         signature.Append(',');
-                    }
 
-                    signature.Append(argument.DataType.ToLower(new System.Globalization.CultureInfo("en")));
+                    signature.Append(argument.DataType?.ToLowerInvariant() ?? string.Empty);
 
                     addComma = true;
                 }
@@ -173,16 +160,12 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Determines whether the specified object is equal to the current object.
         /// </summary>
-        public override bool Equals([NullGuard.AllowNull] object obj)
+        public override bool Equals(object? obj)
         {
-            if (!(obj is PgAggregate))
-            {
+            if (obj is not PgAggregate)
                 return false;
-            }
             else if (obj == this)
-            {
                 return true;
-            }
 
             return this.Equals(obj, false);
         }
@@ -210,24 +193,22 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                     return false;
                 }
 
-                string thisBody;
-                string thatBody;
+                string body;
+                string otherBody;
 
                 if (ignoreAggregateWhitespace)
                 {
-                    thisBody = this.Body.Replace("\\s+", " ");
-                    thatBody = aggregate.Body.Replace("\\s+", " ");
+                    body = this.Body.Replace("\\s+", " ");
+                    otherBody = aggregate.Body.Replace("\\s+", " ");
                 }
                 else
                 {
-                    thisBody = this.Body;
-                    thatBody = aggregate.Body;
+                    body = this.Body;
+                    otherBody = aggregate.Body;
                 }
 
-                if ((thisBody == null && thatBody != null) || (thisBody != null && !thisBody.Equals(thatBody)))
-                {
+                if ((body == null && otherBody != null) || (body != null && !body.Equals(otherBody)))
                     return false;
-                }
 
                 if (this.Arguments.Count != aggregate.Arguments.Count)
                 {
@@ -238,9 +219,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                     for (var i = 0; i < this.Arguments.Count; i++)
                     {
                         if (!this.Arguments[i].Equals(aggregate.Arguments[i]))
-                        {
                             return false;
-                        }
                     }
                 }
 
@@ -261,7 +240,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             hashCode.Append('|');
             hashCode.Append(this.Name);
 
-            foreach (Argument argument in this.Arguments)
+            foreach (var argument in this.Arguments)
             {
                 hashCode.Append('|');
                 hashCode.Append(argument.DataType);
@@ -278,22 +257,17 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             /// <summary>
             /// Gets or sets the <see cref="DataType"/> of this <see cref="Argument"/>.
             /// </summary>
-            [NullGuard.AllowNull]
-            public string DataType { get; set; }
+            public string? DataType { get; set; }
 
             /// <summary>
             /// Determines whether the specified object is equal to the current object.
             /// </summary>
-            public override bool Equals([NullGuard.AllowNull] object obj)
+            public override bool Equals(object? obj)
             {
-                if (!(obj is Argument))
-                {
+                if (obj is not Argument)
                     return false;
-                }
                 else if (this == obj)
-                {
                     return true;
-                }
 
                 var argument = (Argument)obj;
 

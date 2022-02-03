@@ -1,5 +1,8 @@
 # Changelog
 
+## 2.0.0
+- Updated to .NET 6
+
 ## 1.0.56.0
 - Create view with "WITH" support added
 

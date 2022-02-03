@@ -1,5 +1,4 @@
 ﻿// <copyright file="ApplicationSetting.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System.Collections.Generic;
 using APE.CodeGeneration.Model;
 
 namespace APE.PostgreSQL.Teamwork.Model.Setting
@@ -9,16 +8,7 @@ namespace APE.PostgreSQL.Teamwork.Model.Setting
     /// </summary>
     public class ApplicationSetting
     {
-        /// <summary>
-        /// Creates a new instance of the <see cref="ApplicationSetting"/> class.
-        /// </summary>
-        internal ApplicationSetting()
-        {
-            this.DatabaseSettings = new List<DatabaseSetting>();
-        }
-
-        [NullGuard.AllowNull]
-        public ApplicationVersion ApplicationVersion { get; set; }
+        public ApplicationVersion? ApplicationVersion { get; set; }
 
         /// <summary>
         /// Gets or sets a template of the connection string.
@@ -69,7 +59,6 @@ namespace APE.PostgreSQL.Teamwork.Model.Setting
         /// <summary>
         /// Gets or sets a list with all database settings.
         /// </summary>
-        [NullGuard.AllowNull]
-        public List<DatabaseSetting> DatabaseSettings { get; set; }
+        public List<DatabaseSetting> DatabaseSettings { get; set; } = new List<DatabaseSetting>();
     }
 }

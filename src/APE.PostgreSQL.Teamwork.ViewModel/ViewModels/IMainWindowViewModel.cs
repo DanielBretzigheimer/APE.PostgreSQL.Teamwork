@@ -1,6 +1,4 @@
 ﻿// <copyright file="IMainWindowViewModel.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.ViewModels
 {

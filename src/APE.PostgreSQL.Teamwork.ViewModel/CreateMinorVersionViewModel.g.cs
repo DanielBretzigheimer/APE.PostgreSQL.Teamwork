@@ -5,17 +5,7 @@
 //     the code is regenerated.
 // </auto-generated>
 
-using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Input;
-using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.Model;
-using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
-using log4net;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {

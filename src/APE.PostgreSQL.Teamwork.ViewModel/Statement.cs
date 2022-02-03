@@ -1,8 +1,6 @@
 // <copyright file="Statement.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
 using System.IO;
 using System.Text;
-using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.Model.Templates;
 using APE.PostgreSQL.Teamwork.Model.Utils;
 using Npgsql;
@@ -12,12 +10,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     /// <summary>
     /// Contains a statement, an error message and a result.
     /// </summary>
-    [NotifyProperty(AccessModifier.PublicGetPrivateSet, typeof(string), "SQL")]
-    [NotifyProperty(AccessModifier.PublicGetPrivateSet, typeof(string), "Title")]
-    [NotifyPropertySupport]
     public partial class Statement : IStatement
     {
-        private IDatabase database = null;
+        private readonly IDatabase database;
 
         /// <summary>
         /// Initializes the SQL statement.
@@ -28,7 +23,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
             if (sql.Contains($"{SQLTemplates.PostgreSQLTeamworkSchemaName.QuoteName()}.")
                 || searchPath.Contains(SQLTemplates.PostgreSQLTeamworkSchemaName.QuoteName()))
+            {
                 this.IsTeamworkSchema = true;
+            }
 
             if (sql.ToLower().Contains("alter type")
                 && sql.ToLower().Contains("add value"))
@@ -59,32 +56,22 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// Executes the SQL statement on the database which was set through the constructor.
         /// </summary>
         /// <exception cref="NpgsqlException">Is thrown when the statement contains an error.</exception>
-        public void Execute()
-        {
-            this.database.ExecuteCommandNonQuery(this.SQL);
-        }
+        public void Execute() => this.database.ExecuteCommandNonQuery(this.SQL);
 
         private string GetTitle(string sql)
         {
-            using (var sr = new StringReader(sql))
+            using var sr = new StringReader(sql);
+            string? line;
+            while ((line = sr.ReadLine()) != null)
             {
-                string line;
-                while ((line = sr.ReadLine()) != null)
-                {
-                    var isComment = line.Contains("--") || line.Contains("\\*");
-                    var isEmpty = string.IsNullOrWhiteSpace(line);
+                var isComment = line.Contains("--") || line.Contains("\\*");
+                var isEmpty = string.IsNullOrWhiteSpace(line);
 
-                    if (line.Trim().EndsWith("("))
-                    {
-                        line = line.Trim().Substring(0, line.Length - 1);
-                    }
+                if (line.Trim().EndsWith("("))
+                    line = line.Trim()[..(line.Length - 1)];
 
-                    if (!isComment
-                        && !isEmpty)
-                    {
-                        return line;
-                    }
-                }
+                if (!isComment && !isEmpty)
+                    return line;
             }
 
             return string.Empty;

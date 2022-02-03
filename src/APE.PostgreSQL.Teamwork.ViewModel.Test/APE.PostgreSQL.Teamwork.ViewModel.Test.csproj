@@ -1,168 +1,20 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{6402AD8B-4F11-418E-827B-F413F823D339}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>APE.PostgreSQL.Teamwork.ViewModel.Test</RootNamespace>
-    <AssemblyName>APE.PostgreSQL.Teamwork.ViewModel.Test</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <ProjectTypeGuids>{3AC096D0-A1C2-E12C-1390-A8335801FDAB};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
-    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">10.0</VisualStudioVersion>
-    <VSToolsPath Condition="'$(VSToolsPath)' == ''">$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)</VSToolsPath>
-    <ReferencePath>$(ProgramFiles)\Common Files\microsoft shared\VSTT\$(VisualStudioVersion)\UITestExtensionPackages</ReferencePath>
-    <IsCodedUITest>False</IsCodedUITest>
-    <TestProjectType>UnitTest</TestProjectType>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\..\StyleCop.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
-    <DocumentationFile>bin\Debug\APE.PostgreSQL.Teamwork.ViewModel.Test.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\..\StyleCop.ruleset</CodeAnalysisRuleSet>
-    <DocumentationFile>bin\Debug\APE.PostgreSQL.Teamwork.ViewModel.Test\APE.PostgreSQL.Teamwork.ViewModel.Test.xml</DocumentationFile>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
-  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="1.50.5" />
-    <PackageReference Include="FluentAssertions" Version="5.4.2" />
-    <PackageReference Include="Fody" Version="3.2.13">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="log4net" Version="2.0.14" />
-    <PackageReference Include="Moq" Version="4.0.10827" />
-    <PackageReference Include="Npgsql" Version="4.0.3" />
-    <PackageReference Include="NullGuard.Fody" Version="1.8.5" />
-    <PackageReference Include="ServiceStack.Text" Version="5.4.0" />
-    <PackageReference Include="SharpZipLib" Version="1.3.3" />
-    <PackageReference Include="StructureMap" Version="4.7.0" />
-    <PackageReference Include="structuremap.automocking.moq" Version="4.0.0.315" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" />
-    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
-    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.1" />
+    <PackageReference Include="FluentAssertions" Version="6.4.0" />
+    <PackageReference Include="Moq" Version="4.16.1" />
+    <PackageReference Include="MSTest.TestFramework" Version="2.2.8" />
   </ItemGroup>
+
   <ItemGroup>
-    <Reference Include="APE.CodeGeneration.Attributes">
-      <HintPath>..\..\lib\APE.CodeGeneration.Attributes.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="WindowsBase" />
+    <ProjectReference Include="..\APE.PostgreSQL.Teamwork.Model\APE.PostgreSQL.Teamwork.Model.csproj" />
+    <ProjectReference Include="..\APE.PostgreSQL.Teamwork.ViewModel\APE.PostgreSQL.Teamwork.ViewModel.csproj" />
   </ItemGroup>
-  <Choose>
-    <When Condition="('$(VisualStudioVersion)' == '10.0' or '$(VisualStudioVersion)' == '') and '$(TargetFrameworkVersion)' == 'v3.5'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework, Version=10.1.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL" />
-      </ItemGroup>
-    </When>
-    <Otherwise>
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.UnitTestFramework">
-          <Private>False</Private>
-        </Reference>
-      </ItemGroup>
-    </Otherwise>
-  </Choose>
-  <ItemGroup>
-    <Compile Include="Postgres\Parsers\ParserTest.cs" />
-    <Compile Include="Postgres\Parsers\APEUnitTestExtension.g.cs" />
-    <Compile Include="Postgres\Parsers\PrivilegeParserTest.cs" />
-    <Compile Include="Postgres\APEUnitTestExtension.g.cs" />
-    <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="APEUnitTestExtension.g.cs" />
-    <Compile Include="DatabaseTest.cs" />
-    <Compile Include="SQLFileTest.cs" />
-    <Compile Include="StatementTest.cs" />
-    <Compile Include="DatabaseVersionTest.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Exceptions\" />
-    <Folder Include="ViewModels\DisplayData\" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\APE.PostgreSQL.Teamwork.Model\APE.PostgreSQL.Teamwork.Model.csproj">
-      <Project>{c3df1f15-e4c9-4052-9535-af39ff0e2191}</Project>
-      <Name>APE.PostgreSQL.Teamwork.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\APE.PostgreSQL.Teamwork.TestHelper\APE.PostgreSQL.Teamwork.TestHelper.csproj">
-      <Project>{f5da55b2-31d4-40c5-a6be-b7e35d9f00f4}</Project>
-      <Name>APE.PostgreSQL.Teamwork.TestHelper</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\APE.PostgreSQL.Teamwork.ViewModel\APE.PostgreSQL.Teamwork.ViewModel.csproj">
-      <Project>{bbee7981-c1a8-4477-b88c-f9e4d565bfe5}</Project>
-      <Name>APE.PostgreSQL.Teamwork.ViewModel</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <AdditionalFiles Include="..\..\stylecop.json">
-      <Link>stylecop.json</Link>
-    </AdditionalFiles>
-    <None Include="..\..\StyleCop.ruleset">
-      <Link>StyleCop.ruleset</Link>
-    </None>
-    <None Include="APE.PostgreSQL.Teamwork.ViewModel.Test.licenseheader" />
-    <None Include="app.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="FodyWeavers.xml" />
-  </ItemGroup>
-  <Choose>
-    <When Condition="'$(VisualStudioVersion)' == '10.0' And '$(IsCodedUITest)' == 'True'">
-      <ItemGroup>
-        <Reference Include="Microsoft.VisualStudio.QualityTools.CodedUITestFramework, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Common, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITest.Extension, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <Reference Include="Microsoft.VisualStudio.TestTools.UITesting, Version=10.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-          <Private>False</Private>
-        </Reference>
-        <AdditionalFiles Include="..\stylecop.json">
-          <Link>stylecop.json</Link>
-        </AdditionalFiles>
-      </ItemGroup>
-    </When>
-  </Choose>
-  <Import Project="$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets" Condition="Exists('$(VSToolsPath)\TeamTest\Microsoft.TestTools.targets')" />
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

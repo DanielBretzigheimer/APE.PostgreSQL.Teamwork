@@ -4,29 +4,15 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 // </auto-generated>
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Documents;
-using System.Windows.Input;
-using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.ViewModel;
 using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
 using APE.PostgreSQL.Teamwork.ViewModel.TestHelper;
 using APE.PostgreSQL.Teamwork.ViewModel.ViewModels;
-using Dragablz;
 
 namespace APE.PostgreSQL.Teamwork.GUI
 {
-    // APE.CodeGeneration.Attribute [CtorParameter(typeof(IMainWindowViewModel))]
-    // APE.CodeGeneration.Attribute [CtorParameter(typeof(IConnectionManager))]
-    // APE.CodeGeneration.Attribute [CtorParameter(typeof(IFileSystemAccess))]
-    // APE.CodeGeneration.Attribute [CtorParameter(typeof(IProcessManager))]
-    // APE.CodeGeneration.Attribute [CtorParameter(typeof(IDifferenceCreator))]
-    // APE.CodeGeneration.Attribute [CtorParameter(typeof(ISQLFileTester))]
-    public partial class MainWindow {        //ncrunch: no coverage start
+    public partial class MainWindow {
+        //ncrunch: no coverage start
 
         //--------------------------------------------------------------------------------
         // generated code for CtorParameter

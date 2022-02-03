@@ -1,9 +1,4 @@
 ﻿// <copyright file="SQLFileTester.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 using APE.PostgreSQL.Teamwork.Model.Utils;
 using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
@@ -27,7 +22,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             }
 
             // read file
-            PgDatabase postgresDatabase = PgDumpLoader.LoadDatabaseSchema(target.Path, database, false, false);
+            var postgresDatabase = PgDumpLoader.LoadDatabaseSchema(target.Path, database, false, false);
 
             // create data for tables
             foreach (var schema in postgresDatabase.Schemas)
@@ -53,7 +48,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             }
 
             // read file
-            PgDatabase oldDatabase = PgDumpLoader.LoadDatabaseSchema(target.Path, database, false, false);
+            var oldDatabase = PgDumpLoader.LoadDatabaseSchema(target.Path, database, false, false);
 
             // call empty functions
         }
@@ -66,7 +61,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 if (constraint.CreationSQL.Contains(references))
                 {
                     var referenceStart = constraint.CreationSQL.IndexOf(references) + references.Length;
-                    var referenceEnd = constraint.CreationSQL.Substring(referenceStart).IndexOf("(");
+                    var referenceEnd = constraint.CreationSQL[referenceStart..].IndexOf("(");
 
                     var reference = constraint.CreationSQL.Substring(referenceStart, referenceEnd);
 

@@ -124,8 +124,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             if (!ignoreSlonyTrigger)
             {
-                PgSchema tableSchema = database.GetSchema(ParserUtils.GetSchemaName(tableName, database));
-                tableSchema.GetTable(trigger.TableName).AddTrigger(trigger);
+                var tableSchema = database.GetSchema(ParserUtils.GetSchemaName(tableName, database)) ?? PgSchema.Public;
+                var table = tableSchema.GetTable(trigger.TableName);
+
+                if (table == null)
+                    throw new InvalidOperationException($"Trigger table {trigger.TableName} not found.");
+
+                table.AddTrigger(trigger);
             }
         }
     }

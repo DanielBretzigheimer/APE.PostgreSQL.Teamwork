@@ -2,7 +2,6 @@
 using System.Text;
 using System.Windows;
 using System.Windows.Input;
-using APE.CodeGeneration.Attributes;
 using Npgsql;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
@@ -11,12 +10,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     /// Represents a <see cref="Statement"/> for the GUI and contains
     /// an additional bool for the edit mode.
     /// </summary>
-    [NotifyProperty(typeof(IStatement), "Statement")]
-    [NotifyProperty(typeof(bool), "EditMode")]
-    [NotifyPropertySupport]
     public partial class StatementDisplayData
     {
-        private string originalSQL;
+        private readonly string originalSQL;
 
         /// <summary>
         /// Initializes the StatementDisplayData.
@@ -60,7 +56,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             statementText.AppendLine(this.Statement.SearchPath);
             statementText.AppendLine();
             statementText.AppendLine(this.Statement.SQL);
-            Clipboard.SetText(statementText.ToString());
+            System.Windows.Clipboard.SetText(statementText.ToString());
         }
     }
 }

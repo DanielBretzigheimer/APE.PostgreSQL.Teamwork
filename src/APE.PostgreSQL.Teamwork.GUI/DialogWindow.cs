@@ -1,14 +1,12 @@
 ﻿// <copyright file="DialogWindow.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 using APE.PostgreSQL.Teamwork.Model;
 using APE.PostgreSQL.Teamwork.ViewModel;
 using MaterialDesignThemes.Wpf;
+using Serilog;
 
 namespace APE.PostgreSQL.Teamwork.GUI
 {
@@ -36,10 +34,7 @@ namespace APE.PostgreSQL.Teamwork.GUI
         /// </summary>
         protected Dispatcher UIDispatcher { get; set; }
 
-        protected async Task<MaterialMessageBoxResult> ShowDialog(object view)
-        {
-            return await this.ShowDialog(view, null);
-        }
+        protected async Task<MaterialMessageBoxResult> ShowDialog(object view) => await this.ShowDialog(view, null);
 
         private void DialogWindowGotFocus(object sender, RoutedEventArgs e)
         {
@@ -51,7 +46,7 @@ namespace APE.PostgreSQL.Teamwork.GUI
         {
             return await this.ShowDialog(
                 view,
-                new Func<MaterialMessageBoxResult, object>(
+                new Func<MaterialMessageBoxResult, object?>(
                 (result) =>
                 {
                     closingEventHandler?.Invoke(result);
@@ -59,11 +54,11 @@ namespace APE.PostgreSQL.Teamwork.GUI
                 }));
         }
 
-        private async Task<MaterialMessageBoxResult> ShowDialog(object view, Func<MaterialMessageBoxResult, object> closingEventHandler)
+        private async Task<MaterialMessageBoxResult> ShowDialog(object view, Func<MaterialMessageBoxResult, object?>? closingEventHandler)
         {
             try
             {
-                MaterialMessageBoxResult result = Model.MaterialMessageBoxResult.None;
+                var result = MaterialMessageBoxResult.None;
 
                 await this.UIDispatcher.Invoke(async () =>
                 {
@@ -76,10 +71,8 @@ namespace APE.PostgreSQL.Teamwork.GUI
                                 (sender, eventArgs) =>
                                 {
                                     // if the settin view was closed return
-                                    if (eventArgs.Parameter.GetType() != typeof(MaterialMessageBoxResult))
-                                    {
+                                    if (eventArgs.Parameter?.GetType() != typeof(MaterialMessageBoxResult))
                                         return;
-                                    }
 
                                     var displayableView = closingEventHandler?.Invoke((MaterialMessageBoxResult)eventArgs.Parameter);
                                     if (displayableView != null)
@@ -108,12 +101,7 @@ namespace APE.PostgreSQL.Teamwork.GUI
             }
             catch (Exception e)
             {
-                this.UIDispatcher.Invoke(() =>
-                {
-                    var n = new Greg.WPF.Utility.ExceptionMessageBox(e, "Unhandled Exception");
-                    n.ShowDialog();
-                });
-
+                this.UIDispatcher.Invoke(() => Log.Error(e, "Unhandled Exception"));
                 throw;
             }
         }

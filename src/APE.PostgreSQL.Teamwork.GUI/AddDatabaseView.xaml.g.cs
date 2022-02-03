@@ -4,13 +4,9 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 // </auto-generated>
-using System;
-using System.Windows.Controls;
-using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.ViewModel;
 using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
 using APE.PostgreSQL.Teamwork.ViewModel.TestHelper;
-using MaterialDesignThemes.Wpf;
 
 namespace APE.PostgreSQL.Teamwork
 {
@@ -19,7 +15,8 @@ namespace APE.PostgreSQL.Teamwork
     // APE.CodeGeneration.Attribute [CtorParameter(typeof(IProcessManager))]
     // APE.CodeGeneration.Attribute [CtorParameter(typeof(IDifferenceCreator))]
     // APE.CodeGeneration.Attribute [CtorParameter(typeof(ISQLFileTester))]
-    public partial class AddDatabaseView {        //ncrunch: no coverage start
+    public partial class AddDatabaseView {
+        //ncrunch: no coverage start
 
         //--------------------------------------------------------------------------------
         // generated code for CtorParameter

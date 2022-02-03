@@ -1,7 +1,6 @@
 ﻿// <copyright file="Arc.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Media;
 using System.Windows.Shapes;
@@ -28,39 +27,36 @@ namespace APE.PostgreSQL.Teamwork.GUI.Loading
         // Using a DependencyProperty as the backing store for SmallAngle.  This enables animation, styling, binding, etc...
         public static readonly DependencyProperty SmallAngleProperty = DependencyProperty.Register("SmallAngle", typeof(bool), typeof(Arc), new FrameworkPropertyMetadata(false, FrameworkPropertyMetadataOptions.AffectsRender));
 
-        static Arc()
-        {
-            DefaultStyleKeyProperty.OverrideMetadata(typeof(Arc), new FrameworkPropertyMetadata(typeof(Arc)));
-        }
+        static Arc() => DefaultStyleKeyProperty.OverrideMetadata(typeof(Arc), new FrameworkPropertyMetadata(typeof(Arc)));
 
         public Point Center
         {
-            get { return (Point)this.GetValue(CenterProperty); }
-            set { this.SetValue(CenterProperty, value); }
+            get => (Point)this.GetValue(CenterProperty);
+            set => this.SetValue(CenterProperty, value);
         }
 
         public double StartAngle
         {
-            get { return (double)this.GetValue(StartAngleProperty); }
-            set { this.SetValue(StartAngleProperty, value); }
+            get => (double)this.GetValue(StartAngleProperty);
+            set => this.SetValue(StartAngleProperty, value);
         }
 
         public double EndAngle
         {
-            get { return (double)this.GetValue(EndAngleProperty); }
-            set { this.SetValue(EndAngleProperty, value); }
+            get => (double)this.GetValue(EndAngleProperty);
+            set => this.SetValue(EndAngleProperty, value);
         }
 
         public double Radius
         {
-            get { return (double)this.GetValue(RadiusProperty); }
-            set { this.SetValue(RadiusProperty, value); }
+            get => (double)this.GetValue(RadiusProperty);
+            set => this.SetValue(RadiusProperty, value);
         }
 
         public bool SmallAngle
         {
-            get { return (bool)this.GetValue(SmallAngleProperty); }
-            set { this.SetValue(SmallAngleProperty, value); }
+            get => (bool)this.GetValue(SmallAngleProperty);
+            set => this.SetValue(SmallAngleProperty, value);
         }
 
         protected override Geometry DefiningGeometry
@@ -79,7 +75,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Loading
                     a1 += Math.PI * 2;
                 }
 
-                SweepDirection d = SweepDirection.Counterclockwise;
+                var d = SweepDirection.Counterclockwise;
                 bool large;
 
                 if (this.SmallAngle)
@@ -100,8 +96,8 @@ namespace APE.PostgreSQL.Teamwork.GUI.Loading
                     large = Math.Abs(a1 - a0) < Math.PI;
                 }
 
-                Point p0 = this.Center + (new Vector(Math.Cos(a0), Math.Sin(a0)) * this.Radius);
-                Point p1 = this.Center + (new Vector(Math.Cos(a1), Math.Sin(a1)) * this.Radius);
+                var p0 = this.Center + (new Vector(Math.Cos(a0), Math.Sin(a0)) * this.Radius);
+                var p1 = this.Center + (new Vector(Math.Cos(a1), Math.Sin(a1)) * this.Radius);
 
                 var segments = new List<PathSegment>(1)
                 {

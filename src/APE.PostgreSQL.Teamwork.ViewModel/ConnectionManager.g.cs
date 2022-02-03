@@ -4,17 +4,6 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 // </auto-generated>
-using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Diagnostics;
-using System.Linq;
-using APE.CodeGeneration.Attributes;
-using APE.PostgreSQL.Teamwork.Model.Setting;
-using APE.PostgreSQL.Teamwork.ViewModel;
-using Dapper;
-using log4net;
-using Npgsql;
 
 namespace APE.PostgreSQL.Teamwork
 {
@@ -47,10 +36,10 @@ namespace APE.PostgreSQL.Teamwork
         /// <summary>
         /// Release unmanaged and - optionally - managed resources
         /// </summary>
-        /// <param name="threadSpecificCleanup"><c>true</c> means that the method is calld by the owning thread;
+        /// <param name="disposing"><c>true</c> means that the method is calld by the owning thread;
         /// <c>false</c> means it is called by the finalizer thread
         /// resources.</param>
-        partial void Dispose(bool threadSpecificCleanup);
+        partial void Dispose(bool disposing);
 
         ~ConnectionManager()
         {

@@ -1,7 +1,5 @@
 ﻿// <copyright file="PgDumpLoader.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
 using System.IO;
-using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
@@ -20,114 +18,114 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
         /// <summary>
         /// Regex for testing whether it is CREATE SCHEMA statement.
         /// </summary>
-        private static readonly Regex PatternCreateSchema = new Regex("^CREATE[\\s]+SCHEMA[\\s]+.*$", RegexOptions.Singleline);
+        private static readonly Regex PatternCreateSchema = new("^CREATE[\\s]+SCHEMA[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex for testing wheter it is CREATE RULE statement.
         /// </summary>
-        private static readonly Regex PatternCreateRule = new Regex("^CREATE[\\s]+RULE[\\s]+.*$", RegexOptions.Singleline);
+        private static readonly Regex PatternCreateRule = new("^CREATE[\\s]+RULE[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex for parsing default schema (search_path).
         /// </summary>
-        private static readonly Regex PatternDefaultSchema = new Regex("^SET[\\s]+search_path[\\s]*=[\\s]*\"?([^,\\s\"]+)\"?" + "(?:,[\\s]+.*)?;$", RegexOptions.Singleline);
+        private static readonly Regex PatternDefaultSchema = new("^SET[\\s]+search_path[\\s]*=[\\s]*\"?([^,\\s\"]+)\"?" + "(?:,[\\s]+.*)?;$", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex for testing whether it is CREATE TABLE statement.
         /// </summary>
-        private static readonly Regex PatternCreateTable = new Regex("^CREATE[\\s]+TABLE[\\s]+.*$", RegexOptions.Singleline);
+        private static readonly Regex PatternCreateTable = new("^CREATE[\\s]+TABLE[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex for testing whether it is CREATE VIEW statement.
         /// </summary>
-        private static readonly Regex PatternCreateView = new Regex("^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?VIEW[\\s]+.*$", RegexOptions.Singleline);
+        private static readonly Regex PatternCreateView = new("^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?VIEW[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex for testing whether it is ALTER TABLE statement.
         /// </summary>
-        private static readonly Regex PatternAlterTable = new Regex("^ALTER[\\s]+TABLE[\\s]+.*$", RegexOptions.Singleline);
+        private static readonly Regex PatternAlterTable = new("^ALTER[\\s]+TABLE[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex for testing whether it is CREATE SEQUENCE statement.
         /// </summary>
-        private static readonly Regex PatternCreateSequence = new Regex("^CREATE[\\s]+SEQUENCE[\\s]+.*$", RegexOptions.Singleline);
+        private static readonly Regex PatternCreateSequence = new("^CREATE[\\s]+SEQUENCE[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex for testing whether it is ALTER SEQUENCE statement.
         /// </summary>
-        private static readonly Regex PatternAlterSequence = new Regex("^ALTER[\\s]+SEQUENCE[\\s]+.*$", RegexOptions.Singleline);
+        private static readonly Regex PatternAlterSequence = new("^ALTER[\\s]+SEQUENCE[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex for testing whether it is CREATE INDEX statement.
         /// </summary>
-        private static readonly Regex PatternCreateIndex = new Regex("^CREATE[\\s]+(?:UNIQUE[\\s]+)?INDEX[\\s]+.*$", RegexOptions.Singleline);
+        private static readonly Regex PatternCreateIndex = new("^CREATE[\\s]+(?:UNIQUE[\\s]+)?INDEX[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex for testing whether it is SELECT statement.
         /// </summary>
-        private static readonly Regex PatternSelect = new Regex("^SELECT[\\s]+.*$", RegexOptions.Singleline);
+        private static readonly Regex PatternSelect = new("^SELECT[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex for testing whether it is INSERT INTO statement.
         /// </summary>
-        private static readonly Regex PatternInsertInto = new Regex("^INSERT[\\s]+INTO[\\s]+.*$", RegexOptions.Singleline);
+        private static readonly Regex PatternInsertInto = new("^INSERT[\\s]+INTO[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex for testing whether it is UPDATE statement.
         /// </summary>
-        private static readonly Regex PatternUpdate = new Regex("^UPDATE[\\s].*$", RegexOptions.Singleline);
+        private static readonly Regex PatternUpdate = new("^UPDATE[\\s].*$", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex for testing whether it is DELETE FROM statement.
         /// </summary>
-        private static readonly Regex PatternDeleteFrom = new Regex("^DELETE[\\s]+FROM[\\s]+.*$", RegexOptions.Singleline);
+        private static readonly Regex PatternDeleteFrom = new("^DELETE[\\s]+FROM[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex for testing whether it is CREATE TRIGGER statement.
         /// </summary>
-        private static readonly Regex PatternCreateTrigger = new Regex("^CREATE[\\s]+TRIGGER[\\s]+.*$", RegexOptions.Singleline);
+        private static readonly Regex PatternCreateTrigger = new("^CREATE[\\s]+TRIGGER[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex for testing whether it is CREATE FUNCTION or CREATE OR REPLACE
         /// FUNCTION statement.
         /// </summary>
-        private static readonly Regex PatternCreateFunction = new Regex("^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?FUNCTION[\\s]+.*$", RegexOptions.Singleline);
+        private static readonly Regex PatternCreateFunction = new("^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?FUNCTION[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex for testing whether it is a GRANT PRIVILEGE statement.
         /// </summary>
-        private static readonly Regex PatternPrivilegeGrant = new Regex("GRANT.+?TO.+?;", RegexOptions.Singleline);
+        private static readonly Regex PatternPrivilegeGrant = new("GRANT.+?TO.+?;", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex for testing whether it is a REVOKE PRIVILEGE statement.
         /// </summary>
-        private static readonly Regex PatternPrivilegeRevoke = new Regex("REVOKE.+?FROM.+?;", RegexOptions.Singleline);
+        private static readonly Regex PatternPrivilegeRevoke = new("REVOKE.+?FROM.+?;", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex for testing whether it is CREATE AGGREGATE or CREATE OR REPLACE
         /// AGGREGATE statement.
         /// </summary>
-        private static readonly Regex PatternCreateAggregate = new Regex("^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?AGGREGATE[\\s]+.*$", RegexOptions.Singleline);
+        private static readonly Regex PatternCreateAggregate = new("^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?AGGREGATE[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex for testing whether it is ALTER VIEW statement.
         /// </summary>
-        private static readonly Regex PatternAlterView = new Regex("^ALTER[\\s]+VIEW[\\s]+.*$", RegexOptions.Singleline);
+        private static readonly Regex PatternAlterView = new("^ALTER[\\s]+VIEW[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex for testing whether it is COMMENT statement.
         /// </summary>
-        private static readonly Regex PatternComment = new Regex("^COMMENT[\\s]+ON[\\s]+.*$", RegexOptions.Singleline);
+        private static readonly Regex PatternComment = new("^COMMENT[\\s]+ON[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
         /// Regex for testing whether it is CREATE TYPE statement.
         /// </summary>
-        private static readonly Regex PatternCreateType = new Regex("^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?TYPE[\\s]+.*$", RegexOptions.Singleline);
+        private static readonly Regex PatternCreateType = new("^CREATE[\\s]+(?:OR[\\s]+REPLACE[\\s]+)?TYPE[\\s]+.*$", RegexOptions.Singleline);
 
         /// <summary>
         /// Storage of unprocessed line part.
         /// </summary>
-        private static string lineBuffer;
+        private static string? lineBuffer;
 
         private PgDumpLoader()
         {
@@ -146,7 +144,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
         {
             var encoding = Encoding.GetEncoding(encodingName);
             var pgDatabase = new PgDatabase(database.Name, database.IgnoredSchemas.ToList());
-            StreamReader reader = null;
+            StreamReader? reader = null;
 
             using (reader = new StreamReader(file, encoding))
             {
@@ -250,8 +248,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
         /// Reads whole statement from the reader into single-line string.
         /// </summary>
         /// <returns>Whole statement from the reader into single-line string.</returns>
-        [return: NullGuard.AllowNull]
-        private static string GetWholeStatement(StreamReader reader)
+        private static string? GetWholeStatement(StreamReader reader)
         {
             var statement = new StringBuilder(1024);
 
@@ -273,19 +270,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
                     if (newLine == null)
                     {
                         if (statement.ToString().Trim().Length == 0)
-                        {
                             return null;
-                        }
                         else
-                        {
                             throw new Exception($"EndOfStatementNotFound {statement.ToString()}");
-                        }
                     }
 
                     if (statement.Length > 0)
-                    {
                         statement.Append('\n');
-                    }
 
                     pos = statement.Length;
                     statement.Append(newLine);
@@ -303,7 +294,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
                         }
                         else
                         {
-                            lineBuffer = statement.ToString().Substring(pos + 1);
+                            lineBuffer = statement.ToString()[(pos + 1)..];
                             statement.Length = pos + 1;
                         }
 
@@ -374,7 +365,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
                         return true;
                     }
 
-                    var tag = stringBuilder.ToString().Substring(curPos, endPos + 1 - curPos);
+                    var tag = stringBuilder.ToString()[curPos..(endPos + 1)];
 
                     var endTagPos = stringBuilder.ToString().IndexOf(tag, endPos + 1);
 

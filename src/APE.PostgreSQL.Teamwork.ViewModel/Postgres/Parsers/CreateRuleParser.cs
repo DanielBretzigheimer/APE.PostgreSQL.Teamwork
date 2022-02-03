@@ -1,10 +1,5 @@
 ﻿// <copyright file="CreateRuleParser.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
@@ -42,12 +37,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             rule.Do = parser.ExpectOptionalOneOf("ALSO", "INSTEAD");
             rule.Command = parser.Rest() + ";";
 
-            PgSchema schema = database.GetSchema(schemaName);
+            var schema = database.GetSchema(schemaName);
 
             if (schema == null)
-            {
                 throw new Exception(string.Format("CannotFindSchema {0}. Statement {1}", schemaName, statement));
-            }
 
             // check if the rule is a view
             if (rule.EventType == "SELECT" && rule.Do == "INSTEAD")

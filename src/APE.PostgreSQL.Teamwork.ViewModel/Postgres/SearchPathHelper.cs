@@ -13,25 +13,19 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Statement to output.
         /// </summary>
-        private readonly string searchPath;
+        private readonly string? searchPath;
 
         /// <summary>
         /// Flag determining whether the statement was already output.
         /// </summary>
         private bool wasOutput;
 
-        public SearchPathHelper()
-        {
-            this.searchPath = null;
-        }
+        public SearchPathHelper() => this.searchPath = null;
 
         /// <summary>
         /// Creates new instance of SearchPathHelper with the given search path.
         /// </summary>
-        public SearchPathHelper(string searchPath)
-        {
-            this.searchPath = searchPath;
-        }
+        public SearchPathHelper(string searchPath) => this.searchPath = searchPath;
 
         /// <summary>
         /// Creates new instance of SearchPathHelper with the search path set to the given schema.

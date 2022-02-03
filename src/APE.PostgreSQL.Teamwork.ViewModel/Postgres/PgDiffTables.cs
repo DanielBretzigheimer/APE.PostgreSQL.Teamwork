@@ -1,7 +1,5 @@
 ﻿// <copyright file="PgDiffTables.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 
-using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Text.RegularExpressions;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
@@ -24,11 +22,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for creation of clusters.
         /// </summary>
-        public static void DropClusters(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void DropClusters(StreamWriter writer, PgSchema? oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
-            foreach (PgTable newTable in newSchema.Tables)
+            foreach (var newTable in newSchema.Tables)
             {
-                PgTable oldTable;
+                PgTable? oldTable;
 
                 if (oldSchema == null)
                 {
@@ -39,7 +37,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                     oldTable = oldSchema.GetTable(newTable.Name);
                 }
 
-                string oldCluster;
+                string? oldCluster;
 
                 if (oldTable == null)
                 {
@@ -66,11 +64,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for dropping of clusters.
         /// </summary>
-        public static void CreateClusters(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void CreateClusters(StreamWriter writer, PgSchema? oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
-            foreach (PgTable newTable in newSchema.Tables)
+            foreach (var newTable in newSchema.Tables)
             {
-                PgTable oldTable;
+                PgTable? oldTable;
 
                 if (oldSchema == null)
                 {
@@ -81,7 +79,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                     oldTable = oldSchema.GetTable(newTable.Name);
                 }
 
-                string oldCluster;
+                string? oldCluster;
 
                 if (oldTable == null)
                 {
@@ -110,16 +108,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for altering tables.
         /// </summary>
-        public static void Alter(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Alter(StreamWriter writer, PgSchema? oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
-            foreach (PgTable newTable in newSchema.Tables)
+            foreach (var newTable in newSchema.Tables)
             {
                 if (oldSchema == null || !oldSchema.ContainsTable(newTable.Name))
                 {
                     continue;
                 }
 
-                PgTable oldTable = oldSchema.GetTable(newTable.Name);
+                var oldTable = oldSchema.GetTable(newTable.Name);
                 UpdateTableColumns(writer, oldTable, newTable, searchPathHelper);
                 CheckWithOIDS(writer, oldTable, newTable, searchPathHelper);
                 CheckInherits(writer, oldTable, newTable, searchPathHelper);
@@ -133,9 +131,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for creation of new tables.
         /// </summary>
-        public static void Create(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Create(StreamWriter writer, PgSchema? oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
-            foreach (PgTable table in newSchema.Tables)
+            foreach (var table in newSchema.Tables)
             {
                 if (oldSchema == null || !oldSchema.ContainsTable(table.Name))
                 {
@@ -149,7 +147,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for dropping tables.
         /// </summary>
-        public static void Drop(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Drop(StreamWriter writer, PgSchema? oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
             {
@@ -159,7 +157,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             var referencedTables = new Dictionary<string, List<PgTable>>();
 
             var dropedTables = new List<PgTable>();
-            foreach (PgTable table in oldSchema.Tables)
+            foreach (var table in oldSchema.Tables)
             {
                 if (!newSchema.ContainsTable(table.Name))
                 {
@@ -169,14 +167,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                     foreach (var constraint in table.Constraints)
                     {
                         var regex = new Regex(@"FOREIGN KEY.+REFERENCES (?<ReferencedTable>.+)\(.+\)");
-                        MatchCollection matchCollection = regex.Matches(constraint.Definition);
+                        var matchCollection = regex.Matches(constraint.Definition);
                         if (matchCollection.Count > 0)
                         {
                             var referencedTable = matchCollection[0].Groups["ReferencedTable"].Value;
 
                             if (referencedTables.ContainsKey(referencedTable))
                             {
-                                if (referencedTables.TryGetValue(referencedTable, out List<PgTable> tables))
+                                if (referencedTables.TryGetValue(referencedTable, out var tables))
                                 {
                                     tables.Add(table);
                                 }
@@ -190,13 +188,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 }
             }
 
-            List<PgTable> dropableTables = null;
+            List<PgTable>? dropableTables = null;
             while (dropableTables == null)
             {
                 dropableTables = SortTablesByReferences(referencedTables, dropedTables);
             }
 
-            foreach (PgTable table in dropableTables)
+            foreach (var table in dropableTables)
             {
                 writer.WriteLine();
                 writer.WriteLine(table.DropSQL);
@@ -210,15 +208,15 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         {
             var stats = new Dictionary<string, int?>();
 
-            foreach (PgColumn newColumn in newTable.Columns)
+            foreach (var newColumn in newTable.Columns)
             {
-                PgColumn oldColumn = oldTable.GetColumn(newColumn.Name);
+                var oldColumn = oldTable.GetColumn(newColumn.Name);
 
                 if (oldColumn != null)
                 {
-                    int? oldStat = oldColumn.Statistics;
+                    var oldStat = oldColumn.Statistics;
 
-                    int? newStat = newColumn.Statistics;
+                    var newStat = newColumn.Statistics;
                     int? newStatValue = null;
 
                     if (newStat != null && (oldStat == null || !newStat.Equals(oldStat)))
@@ -237,7 +235,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 }
             }
 
-            foreach (KeyValuePair<string, int?> entry in stats)
+            foreach (var entry in stats)
             {
                 searchPathHelper.OutputSearchPath(writer);
                 writer.WriteLine();
@@ -256,9 +254,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// </summary>
         private static void AddAlterStorage(StreamWriter writer, PgTable oldTable, PgTable newTable, SearchPathHelper searchPathHelper)
         {
-            foreach (PgColumn newColumn in newTable.Columns)
+            foreach (var newColumn in newTable.Columns)
             {
-                PgColumn oldColumn = oldTable.GetColumn(newColumn.Name);
+                var oldColumn = oldTable.GetColumn(newColumn.Name);
 
                 var oldStorage = (oldColumn == null || oldColumn.Storage == null || oldColumn.Storage == string.Empty) ? null : oldColumn.Storage;
 
@@ -295,7 +293,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// </summary>
         private static void AddCreateTableColumns(IList<string> statements, PgTable oldTable, PgTable newTable, IList<PgColumn> dropDefaultsColumns, bool addDefaults)
         {
-            foreach (PgColumn column in newTable.Columns)
+            foreach (var column in newTable.Columns)
             {
                 if (!oldTable.ContainsColumn(column.Name))
                 {
@@ -314,7 +312,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// </summary>
         private static void AddDropTableColumns(IList<string> statements, PgTable oldTable, PgTable newTable)
         {
-            foreach (PgColumn column in oldTable.Columns)
+            foreach (var column in oldTable.Columns)
             {
                 if (!newTable.ContainsColumn(column.Name))
                 {
@@ -328,14 +326,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// </summary>
         private static void AddModifyTableColumns(IList<string> statements, PgTable oldTable, PgTable newTable, IList<PgColumn> dropDefaultsColumns, bool addDefaults)
         {
-            foreach (PgColumn newColumn in newTable.Columns)
+            foreach (var newColumn in newTable.Columns)
             {
                 if (!oldTable.ContainsColumn(newColumn.Name))
                 {
                     continue;
                 }
 
-                PgColumn oldColumn = oldTable.GetColumn(newColumn.Name);
+                var oldColumn = oldTable.GetColumn(newColumn.Name);
 
                 var newColumnName = PgDiffStringExtension.QuoteName(newColumn.Name);
 
@@ -461,15 +459,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             writer.WriteLine("\tTABLESPACE " + newTable.Tablespace + ';');
         }
 
-        [return: NullGuard.AllowNull]
-        private static List<PgTable> SortTablesByReferences(Dictionary<string, List<PgTable>> referencedTables, List<PgTable> dropedTables)
+        private static List<PgTable>? SortTablesByReferences(Dictionary<string, List<PgTable>> referencedTables, List<PgTable> dropedTables)
         {
             for (var i = 0; i < dropedTables.Count; i++)
             {
                 var tables = new List<PgTable>();
                 if (referencedTables.TryGetValue("\"" + dropedTables[i].Name + "\"", out tables))
                 {
-                    foreach (PgTable table in tables)
+                    foreach (var table in tables)
                     {
                         if (dropedTables.IndexOf(table) > i)
                         {
@@ -553,9 +550,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 writer.WriteLine(" IS NULL;");
             }
 
-            foreach (PgColumn newColumn in newTable.Columns)
+            foreach (var newColumn in newTable.Columns)
             {
-                PgColumn oldColumn = oldTable.GetColumn(newColumn.Name);
+                var oldColumn = oldTable.GetColumn(newColumn.Name);
 
                 var oldComment = oldColumn?.Comment;
 

@@ -1,5 +1,4 @@
 ﻿// <copyright file="TeamworkParserException.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Exceptions
 {

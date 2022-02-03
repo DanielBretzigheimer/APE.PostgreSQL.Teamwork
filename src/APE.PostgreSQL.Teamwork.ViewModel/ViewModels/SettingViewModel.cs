@@ -1,8 +1,5 @@
 // <copyright file="SettingViewModel.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Windows.Forms;
 using System.Windows.Input;
-using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.Model.Setting;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
@@ -10,38 +7,23 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     /// <summary>
     /// Lets the user manage all settings.
     /// </summary>
-    [NotifyProperty(typeof(string), "ConnectionString")]
-    [NotifyProperty(typeof(string), "ConnectionStringPreview")]
-    [NotifyProperty(typeof(string), "PgDump")]
-    [NotifyProperty(typeof(string), "Password")]
-    [NotifyProperty(typeof(string), "Host")]
-    [NotifyProperty(typeof(string), "Id")]
-    [NotifyProperty(typeof(int), "Port")]
-    [NotifyProperty(typeof(string), "DatabaseFolderPath")]
-    [NotifyProperty(AccessModifier.Public, typeof(bool), "OpenFilesDefault")]
-    [NotifyProperty(AccessModifier.Public, typeof(bool), "AutoRefresh")]
-    [AllowNullNotifyProperty(AccessModifier.Public, typeof(string), "Message", null)]
     public partial class SettingViewModel : BaseViewModel
     {
-        private const string ConfigExtension = "Config (*.config)|*.config";
         private const string ExeExtension = "Exe (*.exe)|*.exe";
 
-        private IConnectionManager connectionManager;
+        private readonly IConnectionManager connectionManager;
 
         /// <summary>
         /// Reads all user settings and shows them to the user.
         /// </summary>
         public SettingViewModel(IConnectionManager connectionManager)
         {
-            this.connectionManager = connectionManager ?? throw new ArgumentNullException("connectionManager", "connectionManager == null");
+            this.connectionManager = connectionManager ?? throw new ArgumentNullException(nameof(connectionManager), "connectionManager == null");
 
             if (!this.connectionManager.CheckConnection())
-            {
                 this.Message = "Could not establish a connection to the default database. Check your Settings";
-            }
 
             this.Load();
-
             this.SaveCommand = new RelayCommand(() => this.Save());
             this.SelectDefaultDatabaseFolderPathCommand = new RelayCommand(this.SelectDefaultDatabaseFolderPath);
             this.SelectPgDumpPathCommand = new RelayCommand(this.SelectPgDumpPath);
@@ -79,30 +61,15 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             this.UpdateConnectionStringPreview();
         }
 
-        partial void ConnectionStringAfterSet()
-        {
-            this.UpdateConnectionStringPreview();
-        }
+        partial void ConnectionStringAfterSet() => this.UpdateConnectionStringPreview();
 
-        partial void HostAfterSet()
-        {
-            this.UpdateConnectionStringPreview();
-        }
+        partial void HostAfterSet() => this.UpdateConnectionStringPreview();
 
-        partial void IdAfterSet()
-        {
-            this.UpdateConnectionStringPreview();
-        }
+        partial void IdAfterSet() => this.UpdateConnectionStringPreview();
 
-        partial void PasswordAfterSet()
-        {
-            this.UpdateConnectionStringPreview();
-        }
+        partial void PasswordAfterSet() => this.UpdateConnectionStringPreview();
 
-        partial void PortAfterSet()
-        {
-            this.UpdateConnectionStringPreview();
-        }
+        partial void PortAfterSet() => this.UpdateConnectionStringPreview();
 
         private void UpdateConnectionStringPreview()
         {
@@ -156,14 +123,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         private void SelectDefaultDatabaseFolderPath()
         {
-            var dialog = new FolderBrowserDialog()
-            {
-                ShowNewFolderButton = true,
-            };
+            var dialog = new FolderBrowserDialog() { ShowNewFolderButton = true };
             if (dialog.ShowDialog() != DialogResult.OK)
-            {
                 return;
-            }
 
             this.DatabaseFolderPath = dialog.SelectedPath;
         }

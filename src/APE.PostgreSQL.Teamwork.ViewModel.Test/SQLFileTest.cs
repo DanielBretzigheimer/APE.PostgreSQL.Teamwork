@@ -1,7 +1,4 @@
 ﻿// <copyright file="SQLFileTest.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.IO;
-using System.Linq;
 using APE.PostgreSQL.Teamwork.Model;
 using APE.PostgreSQL.Teamwork.Model.Templates;
 using FluentAssertions;
@@ -19,13 +16,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             var databaseMock = new Mock<IDatabase>();
             var fileMock = new Mock<IFileSystemAccess>();
 
-            new Action(() => { new SQLFile(string.Empty, databaseMock.Object, fileMock.Object); }).Should().Throw<FileNotFoundException>();
+            new Action(() => new SQLFile(string.Empty, databaseMock.Object, fileMock.Object)).Should().Throw<FileNotFoundException>();
 
             fileMock.Setup(f => f.FileExists(It.IsAny<string>())).Returns(true);
-            new Action(() => { new SQLFile(@"D:\SVN_Arbeitskopien\Unicorn\trunk\BDE\src\Unicorn.BDE.Database\0162.a.undoDiff.dat", databaseMock.Object, fileMock.Object); }).Should().Throw<ArgumentException>();
-
-            new Action(() => { new SQLFile(@"D:\SVN_Arbeitskopien\Unicorn\trunk\BDE\src\Unicorn.BDE.Database\0162.a.undoDiff.dat", databaseMock.Object, null); }).Should().Throw<ArgumentNullException>();
-            new Action(() => { new SQLFile(@"D:\SVN_Arbeitskopien\Unicorn\trunk\BDE\src\Unicorn.BDE.Database\0162.a.undoDiff.dat", null, fileMock.Object); }).Should().Throw<ArgumentNullException>();
+            new Action(() => new SQLFile(@"D:\SVN_Arbeitskopien\Unicorn\trunk\BDE\src\Unicorn.BDE.Database\0162.a.undoDiff.dat", databaseMock.Object, fileMock.Object)).Should().Throw<ArgumentException>();
 
             var file = new SQLFile(@"D:\SVN_Arbeitskopien\Unicorn\trunk\BDE\src\Unicorn.BDE.Database\0162.a.undoDiff.sql", databaseMock.Object, fileMock.Object);
             file.FileType.Should().Be(FileType.UndoDiff);

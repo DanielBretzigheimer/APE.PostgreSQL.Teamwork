@@ -1,5 +1,4 @@
 ﻿// <copyright file="AlterSequenceParser.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
 
@@ -41,7 +40,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             var objectName = ParserUtils.GetObjectName(sequenceName);
 
-            PgSequence sequence = schema.GetSequence(objectName);
+            var sequence = schema.GetSequence(objectName);
 
             if (sequence == null)
             {

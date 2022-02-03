@@ -1,8 +1,0 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <ItemGroup>
-    <!--Only copy files when not operating with package refernce-->
-    <None Include="APE.PostgreSQL.Teamwork.CommandPrompt.exe.log4net.config" Condition="'$(NuGetPackageRoot)' == ''">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
-</Project>

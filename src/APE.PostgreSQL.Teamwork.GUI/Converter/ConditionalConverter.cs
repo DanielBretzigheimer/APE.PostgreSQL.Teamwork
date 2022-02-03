@@ -1,8 +1,6 @@
 ﻿// <copyright file="ConditionalConverter.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
 using System.Windows.Data;
 
 namespace APE.PostgreSQL.Teamwork.GUI.Converter
@@ -32,9 +30,6 @@ namespace APE.PostgreSQL.Teamwork.GUI.Converter
                 : this.IfFalse;
         }
 
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotSupportedException();
-        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotSupportedException();
     }
 }

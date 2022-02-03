@@ -1,19 +1,7 @@
 ﻿// <copyright file="MaterialMessageBox.xaml.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using MaterialDesignThemes.Wpf;
 
 namespace APE.PostgreSQL.Teamwork.GUI
 {
@@ -65,13 +53,7 @@ namespace APE.PostgreSQL.Teamwork.GUI
         /// <summary>
         /// Gets the <see cref="TextBlock"/> which shows the message content to the user.
         /// </summary>
-        internal TextBlock MessageTextBlock
-        {
-            get
-            {
-                return this.message;
-            }
-        }
+        internal TextBlock MessageTextBlock => this.message;
 
         private void CopyMessageClick(object sender, RoutedEventArgs e)
         {

@@ -13,12 +13,12 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         public static readonly DependencyProperty MarkdownProperty =
             DependencyProperty.Register("Markdown", typeof(Markdown), typeof(TextToFlowDocumentConverter), new PropertyMetadata(null));
 
-        private Lazy<Markdown> markdown = new Lazy<Markdown>(() => new Markdown());
+        private readonly Lazy<Markdown> markdown = new(() => new Markdown());
 
         public Markdown Markdown
         {
-            get { return (Markdown)this.GetValue(MarkdownProperty); }
-            set { this.SetValue(MarkdownProperty, value); }
+            get => (Markdown)this.GetValue(MarkdownProperty);
+            set => this.SetValue(MarkdownProperty, value);
         }
 
         /// <summary>
@@ -31,12 +31,10 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         /// <param name="targetType">The type of the binding target property.</param>
         /// <param name="parameter">The converter parameter to use.</param>
         /// <param name="culture">The culture to use in the converter.</param>
-        public object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        public object? Convert(object value, Type targetType, object parameter, CultureInfo culture)
         {
             if (value == null)
-            {
                 return null;
-            }
 
             var text = (string)value;
 
@@ -55,9 +53,6 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         /// <param name="targetType">The type to convert to.</param>
         /// <param name="parameter">The converter parameter to use.</param>
         /// <param name="culture">The culture to use in the converter.</param>
-        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
-        {
-            throw new NotImplementedException();
-        }
+        public object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture) => throw new NotImplementedException();
     }
 }

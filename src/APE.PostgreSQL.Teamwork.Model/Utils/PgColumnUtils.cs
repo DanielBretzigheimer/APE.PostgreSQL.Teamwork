@@ -21,10 +21,9 @@ namespace APE.PostgreSQL.Teamwork.Model.Utils
         /// </summary>
         /// <param name="type">Column type.</param>
         /// <returns>Found default value or null.</returns>
-        [return: NullGuard.AllowNull]
-        public static string GetDefaultValue(string type)
+        public static string? GetDefaultValue(string type)
         {
-            string defaultValue;
+            string? defaultValue;
 
             var adjType = type.ToLower(new CultureInfo("en"));
 

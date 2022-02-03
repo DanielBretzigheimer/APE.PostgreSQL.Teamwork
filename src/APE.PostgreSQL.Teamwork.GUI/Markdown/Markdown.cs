@@ -71,8 +71,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         private const string MarkerUL = @"[*+-]";
         private const string MarkerOL = @"\d+[.]";
 
-        private static readonly Regex LeadingWhitespace = new Regex(@"^[ ]*", RegexOptions.Compiled);
-        private static readonly Regex HeaderSetext = new Regex(
+        private static readonly Regex HeaderSetext = new(
             @"
                 ^(.+?)
                 [ ]*
@@ -82,7 +81,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
                 \n+",
             RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
-        private static readonly Regex HeaderAtx = new Regex(
+        private static readonly Regex HeaderAtx = new(
             @"
                 ^(\#{1,6})  # $1 = string of #'s
                 [ ]*
@@ -92,7 +91,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
                 \n+",
             RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
-        private static readonly Regex HorizontalRules = new Regex(
+        private static readonly Regex HorizontalRules = new(
             @"
             ^[ ]{0,3}         # Leading space
                 ([-*_])       # $1: First marker
@@ -127,15 +126,15 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
             string.Format("(?:{0}|{1})", MarkerUL, MarkerOL),
             TabWidth - 1);
 
-        private static readonly Regex ListNested = new Regex(
+        private static readonly Regex ListNested = new(
             @"^" + WholeList,
             RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
-        private static readonly Regex ListTopLevel = new Regex(
+        private static readonly Regex ListTopLevel = new(
             @"(?:(?<=\n\n)|\A\n?)" + WholeList,
             RegexOptions.Multiline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
-        private static readonly Regex CodeSpan = new Regex(
+        private static readonly Regex CodeSpan = new(
             @"
                     (?<!\\)   # Character before opening ` can't be a backslash
                     (`+)      # $1 = Opening run of `
@@ -144,23 +143,23 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
                     \1
                     (?!`)", RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline | RegexOptions.Compiled);
 
-        private static readonly Regex Bold = new Regex(
+        private static readonly Regex Bold = new(
             @"(\*\*|__) (?=\S) (.+?[*_]*) (?<=\S) \1",
             RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline | RegexOptions.Compiled);
 
-        private static readonly Regex StrictBold = new Regex(
+        private static readonly Regex StrictBold = new(
             @"([\W_]|^) (\*\*|__) (?=\S) ([^\r]*?\S[\*_]*) \2 ([\W_]|$)",
             RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline | RegexOptions.Compiled);
 
-        private static readonly Regex Italic = new Regex(
+        private static readonly Regex Italic = new(
             @"(\*|_) (?=\S) (.+?) (?<=\S) \1",
             RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline | RegexOptions.Compiled);
 
-        private static readonly Regex StrictItalic = new Regex(
+        private static readonly Regex StrictItalic = new(
             @"([\W_]|^) (\*|_) (?=\S) ([^\r\*_]*?\S) \2 ([\W_]|$)",
             RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline | RegexOptions.Compiled);
 
-        private static Regex imageInline = new Regex(
+        private static Regex imageInline = new(
             string.Format(
             @"
                 (                           # wrap whole match in $1
@@ -183,7 +182,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
             GetNestedParensPatternWithWhiteSpace()),
             RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
-        private static Regex anchorInline = new Regex(
+        private static Regex anchorInline = new(
             string.Format(
             @"
                 (                           # wrap whole match in $1
@@ -206,23 +205,18 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
             GetNestedParensPattern()),
             RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
-        private static Regex newlinesLeadingTrailing = new Regex(@"^\n+|\n+\z", RegexOptions.Compiled);
-        private static Regex newlinesMultiple = new Regex(@"\n{2,}", RegexOptions.Compiled);
+        private static readonly Regex newlinesLeadingTrailing = new(@"^\n+|\n+\z", RegexOptions.Compiled);
+        private static readonly Regex newlinesMultiple = new(@"\n{2,}", RegexOptions.Compiled);
 
-        private static Regex eoln = new Regex("\\s+");
+        private static readonly Regex eoln = new("\\s+");
 
         private static string nestedBracketsPattern;
         private static string nestedParensPattern;
         private static string nestedParensPatternWithWhiteSpace;
 
-        private static Regex outDent = new Regex(@"^[ ]{1," + TabWidth + @"}", RegexOptions.Multiline | RegexOptions.Compiled);
-
         private int listLevel;
 
-        public Markdown()
-        {
-            this.HyperlinkCommand = NavigationCommands.GoToPage;
-        }
+        public Markdown() => this.HyperlinkCommand = NavigationCommands.GoToPage;
 
         public static Regex ImageInline { get => ImageInline1; set => ImageInline1 = value; }
 
@@ -240,69 +234,69 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
 
         public Style DocumentStyle
         {
-            get { return (Style)this.GetValue(DocumentStyleProperty); }
-            set { this.SetValue(DocumentStyleProperty, value); }
+            get => (Style)this.GetValue(DocumentStyleProperty);
+            set => this.SetValue(DocumentStyleProperty, value);
         }
 
         public Style Heading1Style
         {
-            get { return (Style)this.GetValue(Heading1StyleProperty); }
-            set { this.SetValue(Heading1StyleProperty, value); }
+            get => (Style)this.GetValue(Heading1StyleProperty);
+            set => this.SetValue(Heading1StyleProperty, value);
         }
 
         public Style Heading2Style
         {
-            get { return (Style)this.GetValue(Heading2StyleProperty); }
-            set { this.SetValue(Heading2StyleProperty, value); }
+            get => (Style)this.GetValue(Heading2StyleProperty);
+            set => this.SetValue(Heading2StyleProperty, value);
         }
 
         public Style Heading3Style
         {
-            get { return (Style)this.GetValue(Heading3StyleProperty); }
-            set { this.SetValue(Heading3StyleProperty, value); }
+            get => (Style)this.GetValue(Heading3StyleProperty);
+            set => this.SetValue(Heading3StyleProperty, value);
         }
 
         public Style Heading4Style
         {
-            get { return (Style)this.GetValue(Heading4StyleProperty); }
-            set { this.SetValue(Heading4StyleProperty, value); }
+            get => (Style)this.GetValue(Heading4StyleProperty);
+            set => this.SetValue(Heading4StyleProperty, value);
         }
 
         public Style CodeStyle
         {
-            get { return (Style)this.GetValue(CodeStyleProperty); }
-            set { this.SetValue(CodeStyleProperty, value); }
+            get => (Style)this.GetValue(CodeStyleProperty);
+            set => this.SetValue(CodeStyleProperty, value);
         }
 
         public Style LinkStyle
         {
-            get { return (Style)this.GetValue(LinkStyleProperty); }
-            set { this.SetValue(LinkStyleProperty, value); }
+            get => (Style)this.GetValue(LinkStyleProperty);
+            set => this.SetValue(LinkStyleProperty, value);
         }
 
         public Style ImageStyle
         {
-            get { return (Style)this.GetValue(ImageStyleProperty); }
-            set { this.SetValue(ImageStyleProperty, value); }
+            get => (Style)this.GetValue(ImageStyleProperty);
+            set => this.SetValue(ImageStyleProperty, value);
         }
 
         public Style SeparatorStyle
         {
-            get { return (Style)this.GetValue(SeparatorStyleProperty); }
-            set { this.SetValue(SeparatorStyleProperty, value); }
+            get => (Style)this.GetValue(SeparatorStyleProperty);
+            set => this.SetValue(SeparatorStyleProperty, value);
         }
 
         public string AssetPathRoot
         {
-            get { return (string)this.GetValue(AssetPathRootProperty); }
-            set { this.SetValue(AssetPathRootProperty, value); }
+            get => (string)this.GetValue(AssetPathRootProperty);
+            set => this.SetValue(AssetPathRootProperty, value);
         }
 
         public FlowDocument Transform(string text)
         {
             if (text == null)
             {
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             }
 
             text = this.Normalize(text);
@@ -324,7 +318,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (text == null)
             {
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             }
 
             var t = eoln.Replace(text, " ");
@@ -335,7 +329,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (content == null)
             {
-                throw new ArgumentNullException("content");
+                throw new ArgumentNullException(nameof(content));
             }
 
             var block = this.Create<Paragraph, Inline>(content);
@@ -385,7 +379,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (text == null)
             {
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             }
 
             var sb = new StringBuilder(text.Length * count);
@@ -479,7 +473,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (text == null)
             {
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             }
 
             return this.DoHeaders(
@@ -498,7 +492,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (text == null)
             {
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             }
 
             return this.DoCodeSpans(
@@ -519,7 +513,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (text == null)
             {
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             }
 
             // split on two or more newlines
@@ -541,7 +535,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (text == null)
             {
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             }
 
             return this.Evaluate(text, ImageInline, this.ImageInlineEvaluator, defaultHandler);
@@ -551,12 +545,12 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (match == null)
             {
-                throw new ArgumentNullException("match");
+                throw new ArgumentNullException(nameof(match));
             }
 
             var linkText = match.Groups[2].Value;
             var url = match.Groups[3].Value;
-            BitmapImage imgSource = null;
+            BitmapImage? imgSource = null;
             try
             {
                 if (!Uri.IsWellFormedUriString(url, UriKind.Absolute) && !System.IO.Path.IsPathRooted(url))
@@ -617,7 +611,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (text == null)
             {
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             }
 
             // Next, inline-style links: [link text](url "optional title") or [link text](url "optional title")
@@ -628,12 +622,12 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (match == null)
             {
-                throw new ArgumentNullException("match");
+                throw new ArgumentNullException(nameof(match));
             }
 
             var linkText = match.Groups[2].Value;
             var url = match.Groups[3].Value;
-            var title = match.Groups[6].Value;
+            // var title = match.Groups[6].Value;
 
             var result = this.Create<Hyperlink, Inline>(this.RunSpanGamut(linkText));
             result.Command = this.HyperlinkCommand;
@@ -666,7 +660,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (text == null)
             {
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             }
 
             return this.Evaluate(
@@ -680,7 +674,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (match == null)
             {
-                throw new ArgumentNullException("match");
+                throw new ArgumentNullException(nameof(match));
             }
 
             var header = match.Groups[1].Value;
@@ -694,7 +688,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (match == null)
             {
-                throw new ArgumentNullException("match");
+                throw new ArgumentNullException(nameof(match));
             }
 
             var header = match.Groups[2].Value;
@@ -715,7 +709,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (text == null)
             {
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             }
 
             return this.Evaluate(text, HorizontalRules, this.RuleEvaluator, defaultHandler);
@@ -725,7 +719,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (match == null)
             {
-                throw new ArgumentNullException("match");
+                throw new ArgumentNullException(nameof(match));
             }
 
             var line = new Line();
@@ -750,7 +744,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (text == null)
             {
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             }
 
             // We use a different prefix before nested lists than top-level lists.
@@ -765,7 +759,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (match == null)
             {
-                throw new ArgumentNullException("match");
+                throw new ArgumentNullException(nameof(match));
             }
 
             var list = match.Groups[1].Value;
@@ -839,7 +833,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (match == null)
             {
-                throw new ArgumentNullException("match");
+                throw new ArgumentNullException(nameof(match));
             }
 
             var item = match.Groups[4].Value;
@@ -864,7 +858,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (text == null)
             {
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             }
 
             ////    * You can use multiple backticks as the delimiters if you want to
@@ -896,7 +890,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (match == null)
             {
-                throw new ArgumentNullException("match");
+                throw new ArgumentNullException(nameof(match));
             }
 
             var span = match.Groups[2].Value;
@@ -919,7 +913,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (text == null)
             {
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             }
 
             // <strong> must go first, then <em>
@@ -953,7 +947,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (match == null)
             {
-                throw new ArgumentNullException("match");
+                throw new ArgumentNullException(nameof(match));
             }
 
             var content = match.Groups[contentGroup].Value;
@@ -964,19 +958,11 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (match == null)
             {
-                throw new ArgumentNullException("match");
+                throw new ArgumentNullException(nameof(match));
             }
 
             var content = match.Groups[contentGroup].Value;
             return this.Create<Bold, Inline>(this.RunSpanGamut(content));
-        }
-
-        /// <summary>
-        /// Remove one level of line-leading spaces.
-        /// </summary>
-        private string Outdent(string block)
-        {
-            return outDent.Replace(block, string.Empty);
         }
 
         /// <summary>
@@ -989,7 +975,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (text == null)
             {
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             }
 
             var output = new StringBuilder(text.Length);
@@ -1057,7 +1043,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         {
             if (text == null)
             {
-                throw new ArgumentNullException("text");
+                throw new ArgumentNullException(nameof(text));
             }
 
             var matches = expression.Matches(text);
@@ -1066,7 +1052,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
             {
                 if (m.Index > index)
                 {
-                    var prefix = text.Substring(index, m.Index - index);
+                    var prefix = text[index..m.Index];
                     foreach (var t in rest(prefix))
                     {
                         yield return t;
@@ -1080,7 +1066,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
 
             if (index < text.Length)
             {
-                var suffix = text.Substring(index, text.Length - index);
+                var suffix = text[index..];
                 foreach (var t in rest(suffix))
                 {
                     yield return t;

@@ -1,6 +1,4 @@
 ﻿// <copyright file="AlterTableParser.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
 
@@ -34,7 +32,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             if (database.SchemaIsIgnored(schemaName))
                 return;
 
-            PgSchema schema = database.GetSchema(schemaName);
+            var schema = database.GetSchema(schemaName);
 
             if (schema == null)
             {
@@ -43,11 +41,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             var objectName = ParserUtils.GetObjectName(tableName);
 
-            PgTable table = schema.GetTable(objectName);
+            var table = schema.GetTable(objectName);
 
             if (table == null)
             {
-                PgView view = schema.GetView(objectName);
+                var view = schema.GetView(objectName);
 
                 if (view != null)
                 {
@@ -55,7 +53,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     return;
                 }
 
-                PgSequence sequence = schema.GetSequence(objectName);
+                var sequence = schema.GetSequence(objectName);
 
                 if (sequence != null)
                 {
@@ -266,7 +264,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             {
                 if (parser.ExpectOptional("STATISTICS"))
                 {
-                    PgColumn column = table.GetColumn(columnName);
+                    var column = table.GetColumn(columnName);
 
                     if (column == null)
                     {
@@ -281,7 +279,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
                     if (table.ContainsColumn(columnName))
                     {
-                        PgColumn column = table.GetColumn(columnName);
+                        var column = table.GetColumn(columnName);
 
                         if (column == null)
                         {
@@ -297,7 +295,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 }
                 else if (parser.ExpectOptional("STORAGE"))
                 {
-                    PgColumn column = table.GetColumn(columnName);
+                    var column = table.GetColumn(columnName);
 
                     if (column == null)
                     {

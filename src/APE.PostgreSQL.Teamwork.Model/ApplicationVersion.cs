@@ -1,9 +1,4 @@
 ﻿// <copyright file="ApplicationVersion.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Xml.Serialization;
 
 namespace APE.CodeGeneration.Model
@@ -31,18 +26,8 @@ namespace APE.CodeGeneration.Model
         public int Revision { get; set; } = 0;
 
         [XmlIgnore]
-        public Version Version
-        {
-            get
-            {
-                return new Version(this.Major, this.Minor, this.Build, this.Revision);
-            }
-        }
+        public Version Version => new(this.Major, this.Minor, this.Build, this.Revision);
 
-        [return: NullGuard.AllowNull]
-        public override string ToString()
-        {
-            return $"{this.Major}.{this.Minor}.{this.Build}.{this.Revision}";
-        }
+        public override string ToString() => $"{this.Major}.{this.Minor}.{this.Build}.{this.Revision}";
     }
 }

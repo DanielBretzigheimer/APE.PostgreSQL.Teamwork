@@ -1,23 +1,16 @@
 // <copyright file="DatabaseDisplayData.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Input;
-using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.Model;
 using APE.PostgreSQL.Teamwork.Model.Setting;
 using APE.PostgreSQL.Teamwork.Model.Templates;
 using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
-using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
-using APE.PostgreSQL.Teamwork.ViewModel.TestHelper;
-using log4net;
 using Microsoft.VisualBasic;
+using Microsoft.Win32;
 using Npgsql;
+using Serilog;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {
@@ -25,35 +18,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     /// Contains one database and the corresponding commands and
     /// notify properties.
     /// </summary>
-    [NotifyProperty(AccessModifier.Public, typeof(bool), "Enabled", false)]
-    [NotifyProperty(AccessModifier.Public, typeof(bool), "EditMode", false)]
-    [NotifyProperty(AccessModifier.Public, typeof(bool), "ShowDetails", false)]
-    [NotifyProperty(AccessModifier.Public, typeof(bool), "Exporting", false, "Indicates that the database is exporting at the moment")]
-    [NotifyProperty(AccessModifier.Public, typeof(bool), "Importing", false, "Indicates that the database is importing at the moment")]
-    [NotifyProperty(AccessModifier.Public, typeof(bool), "Testing", false, "Indicates that the database is testing at the moment")]
-    [NotifyProperty(AccessModifier.Public, typeof(bool), "Resetting", false, "Indicates that the database is resetting at the moment")]
-    [NotifyProperty(AccessModifier.Public, typeof(bool), "Undoing", false, "Indicates that the database is undoing changes at the moment")]
-    [NotifyProperty(AccessModifier.Public, typeof(bool), "Error", false)]
-    [NotifyProperty(AccessModifier.Public, typeof(bool), "ImportableFilesFound", false)]
-    [NotifyProperty(AccessModifier.PublicGetPrivateSet, typeof(bool), "CanCreateMinor", false)]
-    [AllowNullNotifyProperty(AccessModifier.Public, typeof(string), "SelectedSchema")]
-    [NotifyProperty(typeof(string), "ErrorMessage")]
-    [AllowNullNotifyProperty(typeof(Database), "Database")]
-    [NotifyProperty(AccessModifier.Public, typeof(DatabaseVersion), "TargetVersion")]
-    [AllowNullNotifyProperty(AccessModifier.Public, typeof(List<DatabaseVersion>), "Versions")]
-    [AllowNullNotifyProperty(typeof(ObservableCollection<SQLFileDisplayData>), "ApplicableSQLFiles")]
-    [CtorParameter(typeof(IConnectionManager))]
-    [CtorParameter(typeof(IFileSystemAccess))]
-    [CtorParameter(typeof(IProcessManager))]
-    [CtorParameter(typeof(IDifferenceCreator))]
-    [CtorParameter(typeof(ISQLFileTester))]
-    [CtorParameter(AccessModifier.Public, typeof(int), "Id", false, "id of the database for which the name and path are loaded")]
-    [NotifyPropertySupport]
     public partial class DatabaseDisplayData
     {
         private const string DumpExtension = "SQL Dump (*" + SQLTemplates.DumpFile + ")|*" + SQLTemplates.DumpFile;
-
-        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
 
         private bool dataInitialized = false;
 
@@ -77,9 +44,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             get
             {
                 if (this.Database == null)
-                {
                     return DatabaseSetting.GetDatabaseSetting(this.Id).Name;
-                }
 
                 return this.Database.Name;
             }
@@ -90,9 +55,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             get
             {
                 if (this.Database == null)
-                {
                     return DatabaseSetting.GetDatabaseSetting(this.Id).Path;
-                }
 
                 return this.Database.Path;
             }
@@ -160,10 +123,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <param name="force">Forces a refresh of the SQL Files on directory level.</param>
         public void UpdateData(bool force = false)
         {
-            if (this.Resetting || this.Error)
-            {
+            if (this.Resetting || this.Error || this.Database is null)
                 return;
-            }
 
             try
             {
@@ -231,6 +192,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         public void ResetTargetVersion()
         {
+            if (this.Database is null)
+                throw new InvalidOperationException("The database is not connected.");
+
             this.TargetVersion = this.Database.LastApplicableVersion;
         }
 
@@ -248,6 +212,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         public void ExportWithoutErrorHandling(DatabaseVersion newVersion)
         {
+            if (this.Database is null)
+                throw new InvalidOperationException("The database is not connected.");
+
             this.Database.Export(
                 newVersion,
                 SettingsManager.Get().Setting.PgDumpLocation,
@@ -274,17 +241,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         ///  Returns a string that represents the current object.
         /// </summary>
-        [return: NullGuard.AllowNull]
-        public override string ToString()
-        {
-            return this.Database.Name;
-        }
+        public override string ToString() => this.Database.Name;
 
         /// <summary>
         /// Exports the database and shows a message box to the user if a error occurred.
         /// </summary>
         private async void Export()
         {
+            if (this.Database is null)
+                throw new InvalidOperationException("The database is not connected.");
+
             this.Exporting = true;
             try
             {
@@ -296,11 +262,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 var message = ex.Message;
                 var buttons = MessageBoxButton.OK;
 
-                if (ex is FileNotFoundException)
+                if (ex is FileNotFoundException fileNotFoundException)
                 {
-                    message = $"{message}: {((FileNotFoundException)ex).FileName}";
+                    message = $"{message}: {fileNotFoundException.FileName}";
                 }
-                else if (ex is TeamworkException && !((TeamworkException)ex).ShowAsError)
+                else if (ex is TeamworkException teamworkException && !teamworkException.ShowAsError)
                 {
                     title = "Info";
                 }
@@ -310,12 +276,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                     buttons = MessageBoxButton.YesNo;
                 }
 
-                Log.Warn(string.Format("Error while exporting database {0}", this.Database.Name), ex);
-                var messageBox = MainWindowViewModel.GetMessageBox(
+                Log.Warning(string.Format("Error while exporting database {0}", this.Database.Name), ex);
+                var messageBox = BaseViewModel.GetMessageBox(
                         $"Message: {message}",
                         title,
                         buttons);
-                var result = await MainWindowViewModel.ShowDialog(messageBox);
+                var result = await BaseViewModel.ShowDialog(messageBox);
 
                 // yes applies if the file should be opened
                 if (result == MaterialMessageBoxResult.Yes && ex is TeamworkTestException testException)
@@ -375,16 +341,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 this.Enabled = false;
         }
 
-        partial void TargetVersionAfterSet()
-        {
-            this.UpdateApplicableSQLFiles();
-        }
+        partial void TargetVersionAfterSet() => this.UpdateApplicableSQLFiles();
 
         /// <summary>
         /// Sets the applicable SQL files.
         /// </summary>
         private void UpdateApplicableSQLFiles()
         {
+            if (this.Database is null)
+                throw new InvalidOperationException("The database is not connected.");
+
             var applicableSQLFiles = new ObservableCollection<SQLFileDisplayData>();
             foreach (var file in this.Database.GetToBeAppliedSQLFiles(this.TargetVersion))
             {
@@ -405,11 +371,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <remarks>Does not delete the Postgres SQL database.</remarks>
         private async void Remove()
         {
-            var messageBox = MainWindowViewModel.GetMessageBox(
+            var messageBox = BaseViewModel.GetMessageBox(
                 "Are you sure you want to remove the database? This will not delete the Database but will remove it from the list of the APE.PostgreSQL.Teamwork tool",
                 "Remove the database",
                 MessageBoxButton.YesNo);
-            var result = await MainWindowViewModel.ShowDialog(messageBox);
+            var result = await BaseViewModel.ShowDialog(messageBox);
 
             if (result == MaterialMessageBoxResult.Yes)
             {
@@ -423,6 +389,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         private void Save()
         {
+            if (this.Database is null)
+                throw new InvalidOperationException("The database is not connected.");
+
             var newDatabases = DatabaseSetting.GetDatabaseSettings();
             newDatabases.Single(d => d.Id == this.Id).Name = this.Database.Name;
             newDatabases.Single(d => d.Id == this.Id).Path = this.Database.Path;
@@ -437,7 +406,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         private void EditPath()
         {
-            // todo db implement material folder browser
+            if (this.Database is null)
+                throw new InvalidOperationException("The database is not connected.");
+
             var dialog = new FolderBrowserDialog()
             {
                 ShowNewFolderButton = true,
@@ -457,6 +428,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         private void InitializeCommands()
         {
+            if (this.Database is null)
+                throw new InvalidOperationException("The database is not connected.");
+
             this.ExpandCommand = new RelayCommand(() => this.ToggleExpansion(false));
             this.OpenPathCommand = new RelayCommand(async () =>
             {
@@ -515,14 +489,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         {
             try
             {
-                var view = MainWindowViewModel.GetCreateMinorVersionView(this);
-                MainWindowViewModel.ShowDialog(view);
+                var view = BaseViewModel.GetCreateMinorVersionView(this);
+                BaseViewModel.ShowDialog(view);
             }
             catch (Exception ex)
             {
                 Log.Error("Error while trying to create minor version.", ex);
-                var msgBox = MainWindowViewModel.GetMessageBox($"The minor version cannot be created. Error: {ex.Message}", "Minor Version can't be created", MessageBoxButton.OK);
-                MainWindowViewModel.ShowDialog(msgBox);
+                var msgBox = BaseViewModel.GetMessageBox($"The minor version cannot be created. Error: {ex.Message}", "Minor Version can't be created", MessageBoxButton.OK);
+                BaseViewModel.ShowDialog(msgBox);
                 return;
             }
         }
@@ -543,8 +517,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
             if (DatabaseSetting.DefaultIgnoredSchemas.Contains(this.SelectedSchema))
             {
-                var messageBox = MainWindowViewModel.GetMessageBox("The default schemas can't be removed.", "Schema not removed", MessageBoxButton.OK);
-                MainWindowViewModel.ShowDialog(messageBox);
+                var messageBox = BaseViewModel.GetMessageBox("The default schemas can't be removed.", "Schema not removed", MessageBoxButton.OK);
+                BaseViewModel.ShowDialog(messageBox);
                 return;
             }
 
@@ -575,6 +549,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         private void StartImport()
         {
+            if (this.Database is null)
+                throw new InvalidOperationException("The database is not connected.");
+
             this.ExecuteInTask(async () =>
             {
                 this.UpdateData();
@@ -586,11 +563,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 ////            "Import database changes",
                 ////            MessageBoxButton.YesNoCancel);
 
-                var messageBox = MainWindowViewModel.GetMessageBox(
+                var messageBox = BaseViewModel.GetMessageBox(
                             $"Import changes for database '{this.Database.Name}' to Version {this.Database.LastApplicableVersion}.",
                             "Import database changes",
                             MessageBoxButton.OKCancel);
-                var result = await MainWindowViewModel.ShowDialog(messageBox);
+                var result = await BaseViewModel.ShowDialog(messageBox);
                 if (result == MaterialMessageBoxResult.Cancel)
                 {
                     return;
@@ -618,9 +595,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                     ////}
 
                     this.UpdateToVersion(this.Database.LastApplicableVersion);
-                    var finishedMessageBox = MainWindowViewModel.GetMessageBox("All SQL Files successfully executed!", "Successfully Executed", MessageBoxButton.OK);
-                    await MainWindowViewModel.ShowDialog(finishedMessageBox);
-                    Log.Info("All sql files successfully executed");
+                    var finishedMessageBox = BaseViewModel.GetMessageBox("All SQL Files successfully executed!", "Successfully Executed", MessageBoxButton.OK);
+                    await BaseViewModel.ShowDialog(finishedMessageBox);
+                    Log.Information("All sql files successfully executed");
                 }
                 catch (Exception ex)
                 {
@@ -632,8 +609,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                     }
 
                     var message = $"Error in file {path}: {ex.Message}\n\nStart rolling back to version {oldVersion}";
-                    MainWindowViewModel.ShowDialog(MainWindowViewModel.GetMessageBox(message, "Execution failed", MessageBoxButton.OK)).Wait();
-                    Log.Info(string.Format("Error while executing files. Rolling back to version {0}", oldVersion), ex);
+                    BaseViewModel.ShowDialog(BaseViewModel.GetMessageBox(message, "Execution failed", MessageBoxButton.OK)).Wait();
+                    Log.Information(string.Format("Error while executing files. Rolling back to version {0}", oldVersion), ex);
 
                     this.UpdateToVersion(oldVersion);
                 }
@@ -647,13 +624,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         private void UndoChanges()
         {
+            if (this.Database is null)
+                throw new InvalidOperationException("The database is not connected.");
+
             this.ExecuteInTask(async () =>
             {
-                var messageBox = MainWindowViewModel.GetMessageBox(
+                var messageBox = BaseViewModel.GetMessageBox(
                                 $"Are you sure you want to undo all changes you did to '{this.Database.Name}'?",
                                 "Undo changes to the database",
                                 MessageBoxButton.YesNo);
-                var result = await MainWindowViewModel.ShowDialog(messageBox);
+                var result = await BaseViewModel.ShowDialog(messageBox);
                 if (result == MaterialMessageBoxResult.No)
                 {
                     return;
@@ -671,12 +651,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 }
                 catch (Exception ex)
                 {
-                    Log.Warn($"Error while undoing changes for database {this.Database.Name}", ex);
-                    var errorMessageBox = MainWindowViewModel.GetMessageBox(
+                    Log.Warning($"Error while undoing changes for database {this.Database.Name}", ex);
+                    var errorMessageBox = BaseViewModel.GetMessageBox(
                             $"Error Message: {ex.Message}",
                             "Error while undoing database changes",
                             MessageBoxButton.OK);
-                    MainWindowViewModel.ShowDialog(errorMessageBox).Wait();
+                    BaseViewModel.ShowDialog(errorMessageBox).Wait();
                 }
                 finally
                 {
@@ -688,13 +668,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         private void Reset()
         {
+            if (this.Database is null)
+                throw new InvalidOperationException("The database is not connected.");
+
             this.ExecuteInTask(async () =>
                 {
-                    var messageBox = MainWindowViewModel.GetMessageBox(
+                    var messageBox = BaseViewModel.GetMessageBox(
                                 "Are you sure you want to reset the database? This will delete all structure of the database including the stored data.",
                                 "Reset the database",
                                 MessageBoxButton.YesNo);
-                    var result = await MainWindowViewModel.ShowDialog(messageBox);
+                    var result = await BaseViewModel.ShowDialog(messageBox);
                     if (result == MaterialMessageBoxResult.No)
                     {
                         return;
@@ -721,12 +704,15 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         private void CreateDump()
         {
-            var sfd = new SaveFileDialog()
+            if (this.Database is null)
+                throw new InvalidOperationException("The database is not connected.");
+
+            var sfd = new Microsoft.Win32.SaveFileDialog()
             {
                 Filter = DumpExtension,
             };
             var result = sfd.ShowDialog();
-            if (result == DialogResult.OK)
+            if (result == true)
             {
                 try
                 {
@@ -744,22 +730,25 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                     var message = ex.Message;
 
                     Log.Error(string.Format("Error while creating dump {0}", this.Database.Name), ex);
-                    var messageBox = MainWindowViewModel.GetMessageBox(
+                    var messageBox = BaseViewModel.GetMessageBox(
                             $"Message: {message}",
                             title,
                             MessageBoxButton.OK);
-                    MainWindowViewModel.ShowDialog(messageBox);
+                    BaseViewModel.ShowDialog(messageBox);
                 }
             }
         }
 
         private async void ReduceVersion()
         {
-            var messageBox = MainWindowViewModel.GetMessageBox(
+            if (this.Database is null)
+                throw new InvalidOperationException("The database is not connected.");
+
+            var messageBox = BaseViewModel.GetMessageBox(
                         "Are you sure you want to reduce the database version?",
                         "Reduce the version of the database",
                         MessageBoxButton.YesNo);
-            var result = await MainWindowViewModel.ShowDialog(messageBox);
+            var result = await BaseViewModel.ShowDialog(messageBox);
 
             if (result == MaterialMessageBoxResult.Yes)
             {
@@ -772,6 +761,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         private void TestDatabase()
         {
+            if (this.Database is null)
+                throw new InvalidOperationException("The database is not connected.");
+
             this.ExecuteInTask(async () =>
             {
                 this.Testing = true;
@@ -779,29 +771,29 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 {
                     this.Database.TestSQLFiles();
 
-                    var messageBox = MainWindowViewModel.GetMessageBox(
+                    var messageBox = BaseViewModel.GetMessageBox(
                         "All sql statements successfully executed!",
                         "Test successfully finished",
                         MessageBoxButton.OK);
-                    await MainWindowViewModel.ShowDialog(messageBox);
-                    Log.Info("All sql statements successfully executed");
+                    await BaseViewModel.ShowDialog(messageBox);
+                    Log.Information("All sql statements successfully executed");
                 }
                 catch (TeamworkConnectionException ex)
                 {
-                    var messageBox = MainWindowViewModel.GetMessageBox(
-                        string.Format("Error occured while executing file {0}: {1}", ex.File.Path, ex.Message),
+                    var messageBox = BaseViewModel.GetMessageBox(
+                        string.Format("Error occured while executing file {0}: {1}", ex.File?.Path ?? "-", ex.Message),
                         "Test failed",
                         MessageBoxButton.OK);
-                    MainWindowViewModel.ShowDialog(messageBox).Wait();
-                    Log.Warn(string.Format("Error occured while executing file {0}: {1}", ex.File.Path, ex.Message), ex);
+                    BaseViewModel.ShowDialog(messageBox).Wait();
+                    Log.Warning(string.Format("Error occured while executing file {0}: {1}", ex.File?.Path ?? "-", ex.Message), ex);
                 }
                 catch (Exception ex)
                 {
-                    var messageBox = MainWindowViewModel.GetMessageBox(
+                    var messageBox = BaseViewModel.GetMessageBox(
                         string.Format("Unkown error occured. Error: {0}", ex.Message),
                         "Test failed",
                         MessageBoxButton.OK);
-                    MainWindowViewModel.ShowDialog(messageBox).Wait();
+                    BaseViewModel.ShowDialog(messageBox).Wait();
                 }
                 finally
                 {

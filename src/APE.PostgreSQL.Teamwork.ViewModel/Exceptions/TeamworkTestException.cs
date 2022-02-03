@@ -1,6 +1,5 @@
 ﻿// <copyright file="TeamworkTestException.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 
-using System;
 using System.Runtime.Serialization;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Exceptions

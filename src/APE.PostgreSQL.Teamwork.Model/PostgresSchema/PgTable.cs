@@ -1,6 +1,4 @@
 ﻿// <copyright file="PgTable.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using APE.PostgreSQL.Teamwork.Model.Utils;
@@ -41,45 +39,28 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// Creates a new <see cref="PgTable"/> object.
         /// </summary>
         /// <param name="name">The name of the <see cref="PgTable"/>.</param>
-        public PgTable(string name)
-        {
-            this.Name = name;
-        }
+        public PgTable(string name) => this.Name = name;
 
         /// <summary>
         /// Gets or sets the name of the index on which the table is clustered.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string ClusterIndexName { get; set; }
+        public string? ClusterIndexName { get; set; }
 
         /// <summary>
         /// Getter for <seealso cref="columns"/>. The list cannot be modified.
         /// </summary>
         /// <returns> <seealso cref="columns"/> </returns>
-        public IList<PgColumn> Columns
-        {
-            get
-            {
-                return new ReadOnlyCollection<PgColumn>(this.columns);
-            }
-        }
+        public IList<PgColumn> Columns => new ReadOnlyCollection<PgColumn>(this.columns);
 
         /// <summary>
         /// Gets or sets the comment for the table.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         /// <summary>
         /// Gets a list of all <see cref="PgConstraint"/> for this <see cref="PgTable"/>.
         /// </summary>
-        public IList<PgConstraint> Constraints
-        {
-            get
-            {
-                return new ReadOnlyCollection<PgConstraint>(this.constraints);
-            }
-        }
+        public IList<PgConstraint> Constraints => new ReadOnlyCollection<PgConstraint>(this.constraints);
 
         /// <summary>
         /// Creates and returns SQL for creation of the table.
@@ -102,7 +83,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 }
                 else
                 {
-                    foreach (PgColumn column in this.columns)
+                    foreach (var column in this.columns)
                     {
                         if (first)
                         {
@@ -113,7 +94,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                             sql.Append(",\n");
                         }
 
-                        sql.Append("\t");
+                        sql.Append('\t');
                         sql.Append(column.GetFullDefinition(false));
                     }
 
@@ -140,12 +121,12 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                         sql.Append(tableName);
                     }
 
-                    sql.Append(")");
+                    sql.Append(')');
                 }
 
                 if (this.With != null && this.With.Length > 0)
                 {
-                    sql.Append("\n");
+                    sql.Append('\n');
 
                     if ("OIDS=false".Equals(this.With, StringComparison.CurrentCultureIgnoreCase))
                     {
@@ -174,7 +155,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
 
                 sql.Append(';');
 
-                foreach (PgColumn column in this.ColumnsWithStatistics)
+                foreach (var column in this.ColumnsWithStatistics)
                 {
                     sql.Append("\nALTER TABLE ONLY ");
                     sql.Append(this.Name.QuoteName());
@@ -194,7 +175,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                     sql.Append(';');
                 }
 
-                foreach (PgColumn column in this.columns)
+                foreach (var column in this.columns)
                 {
                     if (column.Comment != null && column.Comment != string.Empty)
                     {
@@ -216,36 +197,18 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// Creates and returns SQL statement for dropping the table.
         /// </summary>
         /// <returns> created SQL statement. </returns>
-        public string DropSQL
-        {
-            get
-            {
-                return "DROP TABLE IF EXISTS " + this.Name.QuoteName() + ";";
-            }
-        }
+        public string DropSQL => "DROP TABLE IF EXISTS " + this.Name.QuoteName() + ";";
 
         /// <summary>
         /// Getter for <seealso cref="indexes"/>. The list cannot be modified.
         /// </summary>
         /// <returns> <seealso cref="indexes"/> </returns>
-        public IList<PgIndex> Indexes
-        {
-            get
-            {
-                return new ReadOnlyCollection<PgIndex>(this.indexes);
-            }
-        }
+        public IList<PgIndex> Indexes => new ReadOnlyCollection<PgIndex>(this.indexes);
 
         /// <summary>
         /// Gets a list with all inherits from the <see cref="PgTable"/>.
         /// </summary>
-        public IList<string> Inherits
-        {
-            get
-            {
-                return new ReadOnlyCollection<string>(this.inherits);
-            }
-        }
+        public IList<string> Inherits => new ReadOnlyCollection<string>(this.inherits);
 
         /// <summary>
         /// Gets or sets the name of the <see cref="PgTable"/>.
@@ -255,26 +218,18 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets a list of all <see cref="PgTrigger"/>s.
         /// </summary>
-        public IList<PgTrigger> Triggers
-        {
-            get
-            {
-                return new ReadOnlyCollection<PgTrigger>(this.triggers);
-            }
-        }
+        public IList<PgTrigger> Triggers => new ReadOnlyCollection<PgTrigger>(this.triggers);
 
         /// <summary>
         /// Gets or sets the WITH clause. If value is null then it is not set, otherwise can be set to
         /// OIDS=true, OIDS=false, or storage parameters can be set.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string With { get; set; }
+        public string? With { get; set; }
 
         /// <summary>
         /// Gets or sets the table space for this <see cref="PgTable"/>.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string Tablespace { get; set; }
+        public string? Tablespace { get; set; }
 
         /// <summary>
         /// Returns list of columns that have statistics defined.
@@ -285,7 +240,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             get
             {
                 IList<PgColumn> list = new List<PgColumn>();
-                foreach (PgColumn column in this.columns)
+                foreach (var column in this.columns)
                 {
                     if (column.Statistics != null)
                     {
@@ -302,10 +257,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <param name="name">Name of the column to be searched.</param>
         /// <returns>Found column or null if no such column has been found.</returns>
-        [return: NullGuard.AllowNull]
-        public PgColumn GetColumn(string name)
+        public PgColumn? GetColumn(string name)
         {
-            foreach (PgColumn column in this.columns)
+            foreach (var column in this.columns)
             {
                 if (column.Name.Equals(name))
                 {
@@ -321,14 +275,12 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <param name="name">Name of the index to be searched.</param>
         /// <returns>Found index or null if no such index has been found.</returns>
-        public PgIndex GetIndex(string name)
+        public PgIndex? GetIndex(string name)
         {
-            foreach (PgIndex index in this.indexes)
+            foreach (var index in this.indexes)
             {
                 if (index.Name.Equals(name))
-                {
                     return index;
-                }
             }
 
             return null;
@@ -339,15 +291,12 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <param name="name">Name of the trigger to be searched.</param>
         /// <returns>Found trigger or null if no such trigger has been found.</returns>
-        [return: NullGuard.AllowNull]
-        public PgTrigger GetTrigger(string name)
+        public PgTrigger? GetTrigger(string name)
         {
-            foreach (PgTrigger trigger in this.triggers)
+            foreach (var trigger in this.triggers)
             {
                 if (trigger.Name.Equals(name))
-                {
                     return trigger;
-                }
             }
 
             return null;
@@ -358,10 +307,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <param name="name">Name of the constraint to be searched.</param>
         /// <returns>Found constraint or null if no such constraint has been found.</returns>
-        [return: NullGuard.AllowNull]
-        public PgConstraint GetConstraint(string name)
+        public PgConstraint? GetConstraint(string name)
         {
-            foreach (PgConstraint constraint in this.constraints)
+            foreach (var constraint in this.constraints)
             {
                 if (constraint.Name.Equals(name))
                 {
@@ -375,42 +323,27 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Adds the given table name to the list of inherits.
         /// </summary>
-        public void AddInherits(string tableName)
-        {
-            this.inherits.Add(tableName);
-        }
+        public void AddInherits(string tableName) => this.inherits.Add(tableName);
 
         /// <summary>
         /// Adds a <see cref="PgColumn"/> to the list of columns.
         /// </summary>
-        public void AddColumn(PgColumn column)
-        {
-            this.columns.Add(column);
-        }
+        public void AddColumn(PgColumn column) => this.columns.Add(column);
 
         /// <summary>
         /// Adds a <see cref="PgConstraint"/> to the list of constraints.
         /// </summary>
-        public void AddConstraint(PgConstraint constraint)
-        {
-            this.constraints.Add(constraint);
-        }
+        public void AddConstraint(PgConstraint constraint) => this.constraints.Add(constraint);
 
         /// <summary>
         /// Adds a <see cref="PgIndex"/> to the list of indexes.
         /// </summary>
-        public void AddIndex(PgIndex index)
-        {
-            this.indexes.Add(index);
-        }
+        public void AddIndex(PgIndex index) => this.indexes.Add(index);
 
         /// <summary>
         /// Adds a <see cref="PgTrigger"/> to the list of triggers.
         /// </summary>
-        public void AddTrigger(PgTrigger trigger)
-        {
-            this.triggers.Add(trigger);
-        }
+        public void AddTrigger(PgTrigger trigger) => this.triggers.Add(trigger);
 
         /// <summary>
         /// Returns true if table contains given column, otherwise false.
@@ -419,7 +352,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <returns>True if table contains given column, otherwise false.</returns>
         public bool ContainsColumn(string name)
         {
-            foreach (PgColumn column in this.columns)
+            foreach (var column in this.columns)
             {
                 if (column.Name.Equals(name))
                 {
@@ -437,7 +370,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <returns>True if table contains given constraint, otherwise false.</returns>
         public bool ContainsConstraint(string name)
         {
-            foreach (PgConstraint constraint in this.constraints)
+            foreach (var constraint in this.constraints)
             {
                 if (constraint.Name.Equals(name))
                 {
@@ -455,7 +388,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <returns>True if table contains given index, otherwise false.</returns>
         public bool ContainsIndex(string name)
         {
-            foreach (PgIndex index in this.indexes)
+            foreach (var index in this.indexes)
             {
                 if (index.Name.Equals(name))
                 {

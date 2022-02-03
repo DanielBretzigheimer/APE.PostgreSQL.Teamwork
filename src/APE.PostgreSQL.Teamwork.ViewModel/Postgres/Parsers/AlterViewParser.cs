@@ -1,5 +1,4 @@
 ﻿// <copyright file="AlterViewParser.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
 
@@ -32,7 +31,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             if (database.SchemaIsIgnored(schemaName))
                 return;
 
-            PgSchema schema = database.GetSchema(schemaName);
+            var schema = database.GetSchema(schemaName);
 
             if (schema == null)
             {
@@ -41,7 +40,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             var objectName = ParserUtils.GetObjectName(viewName);
 
-            PgView view = schema.GetView(objectName);
+            var view = schema.GetView(objectName);
 
             if (view == null)
             {

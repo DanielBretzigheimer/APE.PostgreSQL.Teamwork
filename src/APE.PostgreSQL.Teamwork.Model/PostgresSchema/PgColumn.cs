@@ -13,38 +13,33 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Regex for parsing NULL arguments.
         /// </summary>
-        private static readonly Regex PatternNull = new Regex("^(.+)[\\s]+NULL$");
+        private static readonly Regex PatternNull = new("^(.+)[\\s]+NULL$");
 
         /// <summary>
         /// Regex for parsing NOT NULL arguments.
         /// </summary>
-        private static readonly Regex PatternNotNull = new Regex("^(.+)[\\s]+NOT[\\s]+NULL$");
+        private static readonly Regex PatternNotNull = new("^(.+)[\\s]+NOT[\\s]+NULL$");
 
         /// <summary>
         /// Regex for parsing DEFAULT value.
         /// </summary>
-        private static readonly Regex PatternDefault = new Regex("^(.+)[\\s]+DEFAULT[\\s]+(.+)$");
+        private static readonly Regex PatternDefault = new("^(.+)[\\s]+DEFAULT[\\s]+(.+)$");
 
         /// <summary>
         /// Creates a new <see cref="PgColumn"/> object.
         /// </summary>
         /// <param name="name">Name of the column.</param>
-        public PgColumn(string name)
-        {
-            this.Name = name;
-        }
+        public PgColumn(string name) => this.Name = name;
 
         /// <summary>
         /// Gets or sets the comment of the <see cref="PgColumn"/>.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         /// <summary>
         /// Gets or sets the default value of the <see cref="PgColumn"/>.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string DefaultValue { get; set; }
+        public string? DefaultValue { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the <see cref="PgColumn"/>.
@@ -59,14 +54,12 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the statistics of the <see cref="PgColumn"/>.
         /// </summary>
-        [NullGuard.AllowNull]
         public int? Statistics { get; set; }
 
         /// <summary>
         /// Gets or sets the storage of the <see cref="PgColumn"/>.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string Storage { get; set; }
+        public string? Storage { get; set; }
 
         /// <summary>
         /// Gets or sets the type of the <see cref="PgColumn"/>.
@@ -132,7 +125,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
 
             if (PatternDefault.Matches(definition).Count != 0)
             {
-                Match match = PatternDefault.Matches(definition)[0];
+                var match = PatternDefault.Matches(definition)[0];
                 definition = match.Groups[1].ToString().Trim();
                 this.DefaultValue = match.Groups[2].ToString().Trim();
             }

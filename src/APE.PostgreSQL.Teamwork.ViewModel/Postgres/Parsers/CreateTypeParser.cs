@@ -1,6 +1,4 @@
 ﻿// <copyright file="CreateTypeParser.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
 using System.Text;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 
@@ -54,7 +52,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 if (database.SchemaIsIgnored(schemaName))
                     return;
 
-                PgSchema schema = database.GetSchema(schemaName);
+                var schema = database.GetSchema(schemaName);
                 if (schema == null)
                 {
                     throw new Exception(string.Format("Cannot find schema {0}. Statement {1}", schemaName, statement));
@@ -92,7 +90,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 parser.Expect(";");
 
                 var schemaName = ParserUtils.GetSchemaName(typeName, database);
-                PgSchema schema = database.GetSchema(schemaName);
+                var schema = database.GetSchema(schemaName);
                 if (schema == null)
                 {
                     throw new Exception(string.Format("Cannot find schema {0}. Statement {1}", schemaName, statement));

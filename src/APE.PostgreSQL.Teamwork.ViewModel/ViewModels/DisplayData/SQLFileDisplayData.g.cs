@@ -4,14 +4,8 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 // </auto-generated>
-using System;
 using System.Collections.ObjectModel;
-using System.Linq;
-using System.Text;
-using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.Model;
-using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
-using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {

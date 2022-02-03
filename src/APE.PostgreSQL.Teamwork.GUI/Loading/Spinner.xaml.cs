@@ -1,7 +1,6 @@
 ﻿// <copyright file="Spinner.xaml.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media;
@@ -18,7 +17,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Loading
         public static readonly DependencyProperty ColorProperty =
             DependencyProperty.Register("Color", typeof(Brush), typeof(Spinner), new PropertyMetadata(null));
 
-        private static readonly List<Color> DefaultColors = new List<Color>()
+        private static readonly List<Color> DefaultColors = new()
         {
             (Color)ColorConverter.ConvertFromString("#4285F4"),
             (Color)ColorConverter.ConvertFromString("#DE3E35"),
@@ -27,7 +26,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Loading
         };
 
         private int actualColor = 1;
-        private ColorAnimation oldAnimation = null;
+        private ColorAnimation? oldAnimation = null;
 
         public Spinner()
         {
@@ -37,8 +36,8 @@ namespace APE.PostgreSQL.Teamwork.GUI.Loading
 
         public Brush Color
         {
-            get { return (Brush)this.GetValue(ColorProperty); }
-            set { this.SetValue(ColorProperty, value); }
+            get => (Brush)this.GetValue(ColorProperty);
+            set => this.SetValue(ColorProperty, value);
         }
 
         private void SpinnerLoaded(object sender, RoutedEventArgs e)
@@ -54,7 +53,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Loading
             }
         }
 
-        private void ColorAnimationCompleted(object sender = null, EventArgs e = null)
+        private void ColorAnimationCompleted(object? sender = null, EventArgs? e = null)
         {
             if (this.oldAnimation != null)
             {

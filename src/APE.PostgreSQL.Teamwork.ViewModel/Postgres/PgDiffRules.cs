@@ -1,11 +1,6 @@
 ﻿// <copyright file="PgDiffRules.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres

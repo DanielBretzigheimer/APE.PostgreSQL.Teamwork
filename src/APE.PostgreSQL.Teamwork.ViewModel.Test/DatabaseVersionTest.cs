@@ -1,5 +1,4 @@
 ﻿// <copyright file="DatabaseVersionTest.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
 using APE.PostgreSQL.Teamwork.Model;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;

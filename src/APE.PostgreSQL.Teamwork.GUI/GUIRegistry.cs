@@ -1,17 +1,16 @@
 ﻿// <copyright file="GUIRegistry.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
+
 using APE.PostgreSQL.Teamwork.ViewModel;
-using log4net;
-using StructureMap;
+using Lamar;
+using Serilog;
 
 namespace APE.PostgreSQL.Teamwork.GUI
 {
     /// <summary>
     /// Initializes the <see cref="Registry"/> for the GUI project.
     /// </summary>
-    public class GUIRegistry : Registry
+    public class GUIRegistry : ServiceRegistry
     {
-        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         public GUIRegistry()
         {
             Log.Debug("Start initializing GUI Registry");

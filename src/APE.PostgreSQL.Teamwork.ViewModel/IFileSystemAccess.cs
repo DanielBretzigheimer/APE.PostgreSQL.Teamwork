@@ -1,5 +1,4 @@
 ﻿// <copyright file="IFileSystemAccess.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
 using System.Diagnostics;
 using System.IO;
 
@@ -127,19 +126,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         void MoveFile(string sourceFilePath, string desinationFilePath);
 
         /// <summary>
-        /// Gets the entry assembly's binary path.
-        /// </summary>
-        string GetEntryAssemblyDirectory();
-
-        /// <summary>
         /// Gets version information about a file.
         /// </summary>
         FileVersionInfo GetFileVersionInfo(string file);
-
-        /// <summary>
-        /// Gets a value indicating whether the current user has write access to the specified path.
-        /// </summary>
-        bool CurrentUserHasWriteAccess(string path);
 
         /// <summary>
         /// Gets the current working directory.

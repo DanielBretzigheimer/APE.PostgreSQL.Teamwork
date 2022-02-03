@@ -1,5 +1,4 @@
 ﻿// <copyright file="Parser.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
 using System.Globalization;
 using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
 
@@ -52,29 +51,23 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         /// <returns> rest of the string, without trailing ';' if present, or null if
         /// there is nothing more in the string. </returns>
-        [return: NullGuard.AllowNull]
-        public string Rest()
+        public string? Rest()
         {
             string result;
 
-            if (this.String[this.String.Length - 1] == ';')
+            if (this.String[^1] == ';')
             {
                 if (this.Position == this.String.Length - 1)
-                {
                     return null;
-                }
                 else
-                {
-                    result = this.String.Substring(this.Position, this.String.Length - 1 - this.Position);
-                }
+                    result = this.String[this.Position..^1];
             }
             else
             {
-                result = this.String.Substring(this.Position);
+                result = this.String[this.Position..];
             }
 
             this.Position = this.String.Length;
-
             return result;
         }
 
@@ -89,7 +82,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             if (this.Position == endPos)
                 throw new TeamworkParserException($"Could not find expression in {this.String}.");
 
-            var result = this.String.Substring(this.Position, endPos - this.Position).Trim();
+            var result = this.String[this.Position..endPos].Trim();
             this.Position = endPos;
             return result;
         }
@@ -118,7 +111,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             var wordEnd = this.Position + word.Length;
 
             if (wordEnd <= this.String.Length
-                && this.String.Substring(this.Position, wordEnd - this.Position).Equals(word, StringComparison.CurrentCultureIgnoreCase))
+                && this.String[this.Position..wordEnd].Equals(word, StringComparison.CurrentCultureIgnoreCase))
             {
                 var isEnd = wordEnd == this.String.Length;
                 var followingChar = isEnd ? char.MinValue : this.String[wordEnd];
@@ -140,7 +133,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             if (optional)
                 return false;
 
-            throw new TeamworkParserException($"Expected \"{word}\" as next word in {this.String.Substring(this.Position)}.");
+            throw new TeamworkParserException($"Expected \"{word}\" as next word in {this.String[this.Position..]}.");
         }
 
         /// <summary>
@@ -153,9 +146,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             var found = this.Expect(words[0], true);
 
             if (!found)
-            {
                 return false;
-            }
 
             for (var i = 1; i < words.Length; i++)
             {
@@ -209,14 +200,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             for (; endPos < this.String.Length; endPos++)
             {
                 if (!char.IsLetterOrDigit(this.String[endPos]))
-                {
                     break;
-                }
             }
 
             try
             {
-                var result = Convert.ToInt32(this.String.Substring(this.Position, endPos - this.Position));
+                var result = Convert.ToInt32(this.String[this.Position..endPos]);
 
                 this.Position = endPos;
                 this.SkipWhitespace();
@@ -271,7 +260,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
                 try
                 {
-                    result = this.String.Substring(this.Position, endPos + 1 - this.Position);
+                    result = this.String[this.Position..(endPos + 1)];
                 }
                 catch (Exception ex)
                 {
@@ -302,7 +291,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     throw new TeamworkParserException("CannotParseStringExpectedString");
                 }
 
-                var result = this.String.Substring(this.Position, endPos - this.Position);
+                var result = this.String[this.Position..endPos];
 
                 this.Position = endPos;
                 this.SkipWhitespace();
@@ -317,8 +306,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         /// <param name="words">Words to check.</param>
         /// <returns>Found word or null if non of the words has been found.</returns>
-        [return: NullGuard.AllowNull]
-        public string ExpectOptionalOneOf(params string[] words)
+        public string? ExpectOptionalOneOf(params string[] words)
         {
             foreach (var word in words)
             {
@@ -334,10 +322,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// <summary>
         /// Returns substring from the string.
         /// </summary>
-        public string GetSubString(int startPos, int endPos)
-        {
-            return this.String.Substring(startPos, endPos - startPos);
-        }
+        public string GetSubString(int startPos, int endPos) => this.String[startPos..endPos];
 
         /// <summary>
         /// Parses data type from the string. Position is updated. If data type
@@ -362,7 +347,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 throw new TeamworkParserException("CannotParseStringExpectedDataType");
             }
 
-            var dataType = this.String.Substring(this.Position, endPos - this.Position);
+            var dataType = this.String[this.Position..endPos];
 
             this.Position = endPos;
             this.SkipWhitespace();
@@ -489,7 +474,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             if (quoted)
             {
                 var endPos = this.String.IndexOf('"', this.Position + 1);
-                var result = this.String.Substring(this.Position, endPos + 1 - this.Position);
+                var result = this.String[this.Position..(endPos + 1)];
                 this.Position = endPos + 1;
 
                 return result;
@@ -508,7 +493,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                     }
                 }
 
-                var result = this.String.Substring(this.Position, endPos - this.Position).ToLower(new CultureInfo("en"));
+                var result = this.String[this.Position..endPos].ToLower(new CultureInfo("en"));
 
                 this.Position = endPos;
 

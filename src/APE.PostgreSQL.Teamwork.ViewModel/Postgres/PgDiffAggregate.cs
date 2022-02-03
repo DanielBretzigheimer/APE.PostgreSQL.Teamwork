@@ -1,6 +1,5 @@
 ﻿// <copyright file="PgDiffAggregate.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System.IO;
-using APE.PostgreSQL.Teamwork;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 using APE.PostgreSQL.Teamwork.Model.Utils;
 
@@ -22,21 +21,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <param name="oldSchema">Original schema.</param>
         /// <param name="newSchema">New schema.</param>
         /// <param name="searchPathHelper">Search path helper.</param>
-        public static void Create(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Create(StreamWriter writer, PgSchema? oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             // Add new aggregates and replace modified aggregates
-            foreach (PgAggregate newAggregate in newSchema.Aggregates)
+            foreach (var newAggregate in newSchema.Aggregates)
             {
-                PgAggregate oldAggregate;
+                PgAggregate? oldAggregate;
 
                 if (oldSchema == null)
-                {
                     oldAggregate = null;
-                }
                 else
-                {
                     oldAggregate = oldSchema.GetAggregate(newAggregate.Signature);
-                }
 
                 if ((oldAggregate == null) || !newAggregate.Equals(oldAggregate))
                 {
@@ -54,7 +49,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <param name="oldSchema">Original schema.</param>
         /// <param name="newSchema">New schema.</param>
         /// <param name="searchPathHelper">Search path helper.</param>
-        public static void Drop(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Drop(StreamWriter writer, PgSchema? oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
             {
@@ -62,7 +57,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             }
 
             // Drop aggregates that exist no more
-            foreach (PgAggregate oldAggregate in oldSchema.Aggregates)
+            foreach (var oldAggregate in oldSchema.Aggregates)
             {
                 if (!newSchema.ContainsAggregate(oldAggregate.Signature))
                 {
@@ -76,16 +71,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for aggregate comments that have changed.
         /// </summary>
-        public static void AlterComments(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void AlterComments(StreamWriter writer, PgSchema? oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
             {
                 return;
             }
 
-            foreach (PgAggregate oldAggregate in oldSchema.Aggregates)
+            foreach (var oldAggregate in oldSchema.Aggregates)
             {
-                PgAggregate newAggregate = newSchema.GetAggregate(oldAggregate.Signature);
+                var newAggregate = newSchema.GetAggregate(oldAggregate.Signature);
 
                 if (newAggregate == null)
                 {
@@ -104,7 +99,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
 
                     var addComma = false;
 
-                    foreach (PgAggregate.Argument argument in newAggregate.Arguments)
+                    foreach (var argument in newAggregate.Arguments)
                     {
                         if (addComma)
                         {
@@ -132,7 +127,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                     writer.Write('(');
 
                     var addComma = false;
-                    foreach (PgAggregate.Argument argument in newAggregate.Arguments)
+                    foreach (var argument in newAggregate.Arguments)
                     {
                         if (addComma)
                         {

@@ -1,7 +1,4 @@
 ﻿// <copyright file="BindingProxy.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 
 namespace APE.PostgreSQL.Teamwork.GUI
@@ -22,16 +19,13 @@ namespace APE.PostgreSQL.Teamwork.GUI
         /// </summary>
         public object Data
         {
-            get { return (object)this.GetValue(DataProperty); }
-            set { this.SetValue(DataProperty, value); }
+            get => (object)this.GetValue(DataProperty);
+            set => this.SetValue(DataProperty, value);
         }
 
         /// <summary>
         /// See <see cref="Freezable"/>.
         /// </summary>
-        protected override Freezable CreateInstanceCore()
-        {
-            return new BindingProxy();
-        }
+        protected override Freezable CreateInstanceCore() => new BindingProxy();
     }
 }

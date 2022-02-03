@@ -1,230 +1,24 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{BBEE7981-C1A8-4477-B88C-F9E4D565BFE5}</ProjectGuid>
-    <OutputType>Library</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>APE.PostgreSQL.Teamwork.ViewModel</RootNamespace>
-    <AssemblyName>APE.PostgreSQL.Teamwork.ViewModel</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <UseWPF>true</UseWPF>
+    <UseWindowsForms>true</UseWindowsForms>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\..\StyleCop.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
-    <DocumentationFile>bin\Debug\APE.PostgreSQL.Teamwork.ViewModel.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\APE.PostgreSQL.Teamwork.ViewModel.xml</DocumentationFile>
-    <CodeAnalysisRuleSet>..\..\StyleCop.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
-  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="Dapper" Version="1.50.5" />
-    <PackageReference Include="Fody" Version="3.2.13">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="log4net" Version="2.0.14" />
-    <PackageReference Include="Npgsql" Version="4.0.3" />
-    <PackageReference Include="NullGuard.Fody" Version="1.8.5" />
-    <PackageReference Include="ServiceStack.Text" Version="5.4.0" />
-    <PackageReference Include="SharpZipLib" Version="1.3.3" />
-    <PackageReference Include="StructureMap" Version="4.7.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" />
-    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
-    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.1" />
+    <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="Lamar" Version="7.1.1" />
+    <PackageReference Include="MaterialDesignColors" Version="2.0.4" />
+    <PackageReference Include="MaterialDesignThemes" Version="4.3.0" />
+    <PackageReference Include="Npgsql" Version="6.0.3" />
+    <PackageReference Include="Serilog" Version="2.10.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Reference Include="APE.CodeGeneration.Attributes">
-      <HintPath>..\..\lib\APE.CodeGeneration.Attributes.dll</HintPath>
-    </Reference>
-    <Reference Include="Microsoft.VisualBasic" />
-    <Reference Include="PresentationCore" />
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Configuration" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Drawing" />
-    <Reference Include="System.Windows.Forms" />
-    <Reference Include="System.Xaml" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="Microsoft.CSharp" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
-    <Reference Include="UIAutomationProvider" />
-    <Reference Include="WindowsBase" />
-    <Reference Include="WindowsFormsIntegration" />
+    <ProjectReference Include="..\APE.PostgreSQL.Teamwork.Model\APE.PostgreSQL.Teamwork.Model.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="ConnectionManager.cs" />
-    <Compile Include="ConnectionManager.g.cs">
-      <DependentUpon>ConnectionManager.cs</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="CreateMinorVersionViewModel.cs" />
-    <Compile Include="CreateMinorVersionViewModel.g.cs">
-      <DependentUpon>CreateMinorVersionViewModel.cs</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="Database.cs" />
-    <Compile Include="Database.g.cs">
-      <DependentUpon>Database.cs</DependentUpon>
-    </Compile>
-    <Compile Include="Exceptions\TeamworkException.cs" />
-    <Compile Include="Exceptions\TeamworkConnectionException.cs" />
-    <Compile Include="Exceptions\TeamworkTestException.cs" />
-    <Compile Include="FileSystemAccess.cs" />
-    <Compile Include="IConnectionManager.cs" />
-    <Compile Include="IDatabase.cs" />
-    <Compile Include="IFileSystemAccess.cs" />
-    <Compile Include="ISQLFile.cs" />
-    <Compile Include="ISQLFileTester.cs" />
-    <Compile Include="IStatement.cs" />
-    <Compile Include="Postgres\IDifferenceCreator.cs" />
-    <Compile Include="Postgres\Loader\PgDumpLoader.cs" />
-    <Compile Include="Postgres\Parsers\AlterSequenceParser.cs" />
-    <Compile Include="Postgres\Parsers\AlterTableParser.cs" />
-    <Compile Include="Postgres\Parsers\AlterViewParser.cs" />
-    <Compile Include="Postgres\Parsers\CommentParser.cs" />
-    <Compile Include="Postgres\Parsers\CreateAggregateParser.cs" />
-    <Compile Include="Postgres\Parsers\CreateFunctionParser.cs" />
-    <Compile Include="Postgres\Parsers\CreateIndexParser.cs" />
-    <Compile Include="Postgres\Parsers\CreateRuleParser.cs" />
-    <Compile Include="Postgres\Parsers\CreateSchemaParser.cs" />
-    <Compile Include="Postgres\Parsers\CreateSequenceParser.cs" />
-    <Compile Include="Postgres\Parsers\CreateTableParser.cs" />
-    <Compile Include="Postgres\Parsers\CreateTriggerParser.cs" />
-    <Compile Include="Postgres\Parsers\CreateTypeParser.cs" />
-    <Compile Include="Postgres\Parsers\CreateViewParser.cs" />
-    <Compile Include="Postgres\Parsers\Parser.cs" />
-    <Compile Include="Exceptions\TeamworkParserException.cs" />
-    <Compile Include="Postgres\Parsers\ParserUtils.cs" />
-    <Compile Include="Postgres\DifferenceCreator.cs" />
-    <Compile Include="Postgres\Parsers\PrivilegeParser.cs" />
-    <Compile Include="Postgres\PgDiffAggregate.cs" />
-    <Compile Include="Postgres\PgDiffConstraints.cs" />
-    <Compile Include="Postgres\PgDiffFunctions.cs" />
-    <Compile Include="Postgres\PgDiffIndexes.cs" />
-    <Compile Include="Postgres\PgDiffPrivileges.cs" />
-    <Compile Include="Postgres\PgDiffRules.cs" />
-    <Compile Include="Postgres\PgDiffSequences.cs" />
-    <Compile Include="Postgres\PgDiffTables.cs" />
-    <Compile Include="Postgres\PgDiffTriggers.cs" />
-    <Compile Include="Postgres\PgDiffTypes.cs" />
-    <Compile Include="Postgres\PgDiffViews.cs" />
-    <Compile Include="Postgres\SearchPathHelper.cs" />
-    <Compile Include="Properties\AssemblyInfo.g.cs" />
-    <Compile Include="RelayCommand.cs" />
-    <Compile Include="SQLFile.cs" />
-    <Compile Include="SQLFile.g.cs">
-      <DependentUpon>SQLFile.cs</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="SQLFileTester.cs" />
-    <Compile Include="Statement.cs" />
-    <Compile Include="Statement.g.cs">
-      <DependentUpon>Statement.cs</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="TestHelper\IProcessManager.cs" />
-    <Compile Include="TestHelper\ProcessManager.cs" />
-    <Compile Include="ViewModelRegistry.cs" />
-    <Compile Include="ViewModels\AddDatabaseViewModel.cs" />
-    <Compile Include="ViewModels\AddDatabaseViewModel.g.cs">
-      <DependentUpon>AddDatabaseViewModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ViewModels\BaseViewModel.cs" />
-    <Compile Include="ViewModels\BaseViewModel.g.cs">
-      <DependentUpon>BaseViewModel.cs</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ViewModels\DisplayData\DatabaseDisplayData.cs" />
-    <Compile Include="ViewModels\DisplayData\DatabaseDisplayData.g.cs">
-      <DependentUpon>DatabaseDisplayData.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ViewModels\ExportWindowViewModel.cs" />
-    <Compile Include="ViewModels\ExportWindowViewModel.g.cs">
-      <DependentUpon>ExportWindowViewModel.cs</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ViewModels\IMainWindowViewModel.cs" />
-    <Compile Include="ViewModels\ImportWindowViewModel.cs" />
-    <Compile Include="ViewModels\ImportWindowViewModel.g.cs">
-      <DependentUpon>ImportWindowViewModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ViewModels\MainWindowViewModel.cs" />
-    <Compile Include="ViewModels\MainWindowViewModel.g.cs">
-      <DependentUpon>MainWindowViewModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ViewModels\SettingViewModel.cs" />
-    <Compile Include="ViewModels\SettingViewModel.g.cs">
-      <DependentUpon>SettingViewModel.cs</DependentUpon>
-    </Compile>
-    <Compile Include="ViewModels\DisplayData\SQLFileDisplayData.cs" />
-    <Compile Include="ViewModels\DisplayData\SQLFileDisplayData.g.cs">
-      <DependentUpon>SQLFileDisplayData.cs</DependentUpon>
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ViewModels\DisplayData\StatementDisplayData.cs" />
-    <Compile Include="ViewModels\DisplayData\StatementDisplayData.g.cs">
-      <DependentUpon>StatementDisplayData.cs</DependentUpon>
-    </Compile>
-  </ItemGroup>
-  <ItemGroup>
-    <AdditionalFiles Include="..\..\stylecop.json">
-      <Link>stylecop.json</Link>
-    </AdditionalFiles>
-    <None Include="..\..\CHANGELOG.md">
-      <Link>CHANGELOG.md</Link>
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-    <None Include="..\..\StyleCop.ruleset">
-      <Link>StyleCop.ruleset</Link>
-    </None>
-    <None Include="APE.PostgreSQL.Teamwork.ViewModel.licenseheader" />
-    <None Include="app.config" />
-    <None Include="Postgres\_PgDiff.cd" />
-    <None Include="Properties\AssemblyInfo.g.cs.Template" />
-    <None Include="_CommandLine.cd" />
-    <None Include="_ViewModelDiagram.cd" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\APE.PostgreSQL.Teamwork.Model\APE.PostgreSQL.Teamwork.Model.csproj">
-      <Project>{c3df1f15-e4c9-4052-9535-af39ff0e2191}</Project>
-      <Name>APE.PostgreSQL.Teamwork.Model</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="FodyWeavers.xml" />
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

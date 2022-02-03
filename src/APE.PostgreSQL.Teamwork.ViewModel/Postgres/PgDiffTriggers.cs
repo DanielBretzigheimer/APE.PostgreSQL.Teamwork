@@ -1,5 +1,4 @@
 ﻿// <copyright file="PgDiffTriggers.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System.Collections.Generic;
 using System.IO;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 using APE.PostgreSQL.Teamwork.Model.Utils;
@@ -21,11 +20,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for creation of new triggers.
         /// </summary>
-        public static void Create(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Create(StreamWriter writer, PgSchema? oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
-            foreach (PgTable newTable in newSchema.Tables)
+            foreach (var newTable in newSchema.Tables)
             {
-                PgTable oldTable;
+                PgTable? oldTable;
 
                 if (oldSchema == null)
                 {
@@ -37,7 +36,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 }
 
                 // Add new triggers
-                foreach (PgTrigger trigger in GetNewTriggers(oldTable, newTable))
+                foreach (var trigger in GetNewTriggers(oldTable, newTable))
                 {
                     searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();
@@ -49,11 +48,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for dropping triggers.
         /// </summary>
-        public static void Drop(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void Drop(StreamWriter writer, PgSchema? oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
-            foreach (PgTable newTable in newSchema.Tables)
+            foreach (var newTable in newSchema.Tables)
             {
-                PgTable oldTable;
+                PgTable? oldTable;
 
                 if (oldSchema == null)
                 {
@@ -65,7 +64,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 }
 
                 // Drop triggers that no more exist or are modified
-                foreach (PgTrigger trigger in GetDropTriggers(oldTable, newTable))
+                foreach (var trigger in GetDropTriggers(oldTable, newTable))
                 {
                     searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();
@@ -77,25 +76,25 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for trigger comments that have changed.
         /// </summary>
-        public static void AlterComments(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        public static void AlterComments(StreamWriter writer, PgSchema? oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
             {
                 return;
             }
 
-            foreach (PgTable oldTable in oldSchema.Tables)
+            foreach (var oldTable in oldSchema.Tables)
             {
-                PgTable newTable = newSchema.GetTable(oldTable.Name);
+                var newTable = newSchema.GetTable(oldTable.Name);
 
                 if (newTable == null)
                 {
                     continue;
                 }
 
-                foreach (PgTrigger oldTrigger in oldTable.Triggers)
+                foreach (var oldTrigger in oldTable.Triggers)
                 {
-                    PgTrigger newTrigger = newTable.GetTrigger(oldTrigger.Name);
+                    var newTrigger = newTable.GetTrigger(oldTrigger.Name);
 
                     if (newTrigger == null)
                     {
@@ -134,14 +133,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Returns list of triggers that should be dropped.
         /// </summary>
-        private static IList<PgTrigger> GetDropTriggers([NullGuard.AllowNull] PgTable oldTable, [NullGuard.AllowNull] PgTable newTable)
+        private static IList<PgTrigger> GetDropTriggers(PgTable? oldTable, PgTable? newTable)
         {
             IList<PgTrigger> list = new List<PgTrigger>();
 
             if (newTable != null && oldTable != null)
             {
-                IList<PgTrigger> newTriggers = newTable.Triggers;
-                foreach (PgTrigger oldTrigger in oldTable.Triggers)
+                var newTriggers = newTable.Triggers;
+                foreach (var oldTrigger in oldTable.Triggers)
                 {
                     if (!newTriggers.Contains(oldTrigger))
                     {
@@ -156,7 +155,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Returns list of triggers that should be added.
         /// </summary>
-        private static IList<PgTrigger> GetNewTriggers([NullGuard.AllowNull] PgTable oldTable, PgTable newTable)
+        private static IList<PgTrigger> GetNewTriggers(PgTable? oldTable, PgTable newTable)
         {
             var list = new List<PgTrigger>();
 
@@ -168,7 +167,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 }
                 else
                 {
-                    foreach (PgTrigger newTrigger in newTable.Triggers)
+                    foreach (var newTrigger in newTable.Triggers)
                     {
                         if (!oldTable.Triggers.Contains(newTrigger))
                         {

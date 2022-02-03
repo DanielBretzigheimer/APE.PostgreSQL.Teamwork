@@ -2,14 +2,14 @@
 using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
 using APE.PostgreSQL.Teamwork.ViewModel.TestHelper;
 using APE.PostgreSQL.Teamwork.ViewModel.ViewModels;
-using StructureMap;
+using Lamar;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {
     /// <summary>
     /// Holds information for structure map.
     /// </summary>
-    public class ViewModelRegistry : Registry
+    public class ViewModelRegistry : ServiceRegistry
     {
         /// <summary>
         /// Creates the <see cref="ViewModelRegistry"/>.
@@ -17,16 +17,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         public ViewModelRegistry()
         {
             // Special view models
-            this.For<IMainWindowViewModel>().Singleton().Use<MainWindowViewModel>();
+            this.For<IMainWindowViewModel>().Use<MainWindowViewModel>().Singleton();
 
             // Manager
-            this.For<IConnectionManager>().Singleton().Use<ConnectionManager>();
+            this.For<IConnectionManager>().Use<ConnectionManager>().Singleton();
 
             // TestHelper classes
-            this.For<IFileSystemAccess>().Singleton().Use<FileSystemAccess>();
-            this.For<IProcessManager>().Singleton().Use<ProcessManager>();
-            this.For<IDifferenceCreator>().Singleton().Use<DifferenceCreator>();
-            this.For<ISQLFileTester>().Singleton().Use<SQLFileTester>();
+            this.For<IFileSystemAccess>().Use<FileSystemAccess>().Singleton();
+            this.For<IProcessManager>().Use<ProcessManager>().Singleton();
+            this.For<IDifferenceCreator>().Use<DifferenceCreator>().Singleton();
+            this.For<ISQLFileTester>().Use<SQLFileTester>().Singleton();
         }
     }
 }

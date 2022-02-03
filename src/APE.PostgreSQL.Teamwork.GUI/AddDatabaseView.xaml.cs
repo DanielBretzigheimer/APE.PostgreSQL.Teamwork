@@ -1,19 +1,12 @@
 ﻿// <copyright file="AddDatabaseView.xaml.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System;
 using System.Windows.Controls;
-using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.ViewModel;
-using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
-using APE.PostgreSQL.Teamwork.ViewModel.TestHelper;
 using MaterialDesignThemes.Wpf;
+using Serilog;
 
 namespace APE.PostgreSQL.Teamwork
 {
-    [CtorParameter(typeof(IConnectionManager))]
-    [CtorParameter(typeof(IFileSystemAccess))]
-    [CtorParameter(typeof(IProcessManager))]
-    [CtorParameter(typeof(IDifferenceCreator))]
-    [CtorParameter(typeof(ISQLFileTester))]
     public partial class AddDatabaseView : UserControl
     {
         partial void AddDatabaseViewCtor()
@@ -25,8 +18,7 @@ namespace APE.PostgreSQL.Teamwork
             }
             catch (Exception e)
             {
-                var n = new Greg.WPF.Utility.ExceptionMessageBox(e, "Unhandled Exception");
-                n.ShowDialog();
+                Log.Error(e, "Unhandled Exception");
             }
         }
 

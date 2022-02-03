@@ -1,8 +1,5 @@
 ﻿// <copyright file="PgType.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
 using System.Text;
-using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 using APE.PostgreSQL.Teamwork.Model.Utils;
 
 namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
@@ -84,7 +81,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                     {
                         if (!first)
                         {
-                            createString.Append(",");
+                            createString.Append(',');
                         }
 
                         createString.AppendLine(entry);
@@ -109,7 +106,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 dropString.AppendLine("-- Droping Enum (Type) doesn't work when there are relationships");
                 dropString.Append("DROP TYPE ");
                 dropString.Append(PgDiffStringExtension.QuoteName(this.Name));
-                dropString.Append(";");
+                dropString.Append(';');
 
                 return dropString.ToString();
             }
@@ -171,7 +168,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             alterString.Append(PgDiffStringExtension.QuoteName(this.Name));
             alterString.Append(" ADD VALUE IF NOT EXISTS ");
             alterString.Append(newValue);
-            alterString.Append(";");
+            alterString.Append(';');
 
             return alterString.ToString();
         }

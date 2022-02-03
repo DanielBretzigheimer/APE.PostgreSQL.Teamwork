@@ -1,9 +1,6 @@
 // <copyright file="DifferenceCreator.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
 using System.IO;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
-using APE.PostgreSQL.Teamwork.Model.Templates;
 using APE.PostgreSQL.Teamwork.Model.Utils;
 using APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader;
 
@@ -53,8 +50,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             var newDatabase = PgDumpLoader.LoadDatabaseSchema(newDumpFile, database, false, false);
 
             // mark the file as deleteable if no changes where made
-            var created = false;
-            created = this.DiffDatabaseSchemas(database, writer, oldDatabase, newDatabase, false);
+            var created = this.DiffDatabaseSchemas(database, writer, oldDatabase, newDatabase, false);
             writer.Close();
             return created;
         }
@@ -126,7 +122,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
 
         private void CreateNewSchemas(Database database, StreamWriter writer, PgDatabase oldDatabase, PgDatabase newDatabase)
         {
-            foreach (PgSchema newSchema in newDatabase.Schemas)
+            foreach (var newSchema in newDatabase.Schemas)
             {
                 // ignore the ignored schemas
                 if (database.IgnoredSchemas.Contains(newSchema.Name))
@@ -142,7 +138,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
 
         private void DropOldSchemas(Database database, StreamWriter writer, PgDatabase oldDatabase, PgDatabase newDatabase)
         {
-            foreach (PgSchema oldSchema in oldDatabase.Schemas)
+            foreach (var oldSchema in oldDatabase.Schemas)
             {
                 if (newDatabase.GetSchema(oldSchema.Name) == null)
                 {
@@ -175,7 +171,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 if (oldSchema != null)
                 {
                     if ((oldSchema.Comment == null && newSchema.Comment != null)
-                        || (oldSchema.Comment != null && newSchema.Comment != null && !oldSchema.Comment.Equals(newSchema.Comment)))
+                        || (oldSchema.Comment != null
+                            && newSchema.Comment != null
+                            && !oldSchema.Comment.Equals(newSchema.Comment)))
                     {
                         writer.WriteLine();
                         writer.Write("COMMENT ON SCHEMA ");

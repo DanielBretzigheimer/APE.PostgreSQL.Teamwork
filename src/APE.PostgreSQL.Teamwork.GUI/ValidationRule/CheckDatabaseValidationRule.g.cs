@@ -4,15 +4,6 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 // </auto-generated>
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Controls;
-using APE.CodeGeneration.Attributes;
-using APE.PostgreSQL.Teamwork.Model.Setting;
-using APE.PostgreSQL.Teamwork.ViewModel;
 
 namespace APE.PostgreSQL.Teamwork.View
 {
@@ -45,10 +36,10 @@ namespace APE.PostgreSQL.Teamwork.View
         /// <summary>
         /// Release unmanaged and - optionally - managed resources
         /// </summary>
-        /// <param name="threadSpecificCleanup"><c>true</c> means that the method is calld by the owning thread;
+        /// <param name="disposing"><c>true</c> means that the method is calld by the owning thread;
         /// <c>false</c> means it is called by the finalizer thread
         /// resources.</param>
-        partial void Dispose(bool threadSpecificCleanup);
+        partial void Dispose(bool disposing);
 
         ~CheckDatabaseValidationRule()
         {

@@ -1,5 +1,4 @@
 ﻿// <copyright file="PgTrigger.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Text;
 using APE.PostgreSQL.Teamwork.Model.Utils;
@@ -25,8 +24,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the comment of the <see cref="PgTrigger"/>.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         /// <summary>
         /// Creates and returns SQL for creation of trigger.
@@ -142,12 +140,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <returns> created SQL. </returns>
         public string DropSQL
-        {
-            get
-            {
-                return "DROP TRIGGER " + PgDiffStringExtension.QuoteName(this.Name) + " ON " + PgDiffStringExtension.QuoteName(this.TableName) + ";";
-            }
-        }
+            => "DROP TRIGGER " + PgDiffStringExtension.QuoteName(this.Name) + " ON " + PgDiffStringExtension.QuoteName(this.TableName) + ";";
 
         /// <summary>
         /// Gets or sets a boolean indicating whether the trigger should be fired FOR EACH ROW or FOR EACH STATEMENT.
@@ -158,7 +151,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets a the function that should be fired on the <see cref="PgTrigger"/>.
         /// </summary>
-        public string Function { get; set; }
+        public string? Function { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the <see cref="PgTrigger"/>.
@@ -193,32 +186,22 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets a list of all columns which should be updated.
         /// </summary>
-        public IList<string> UpdateColumns
-        {
-            get
-            {
-                return new ReadOnlyCollection<string>(this.updateColumns);
-            }
-        }
+        public IList<string> UpdateColumns => new ReadOnlyCollection<string>(this.updateColumns);
 
         /// <summary>
         /// Gets or sets a string indicating when the <see cref="PgTrigger"/> should be fired.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string When { get; set; }
+        public string? When { get; set; }
 
         /// <summary>
         /// Adds column name to the list of update columns.
         /// </summary>
-        public void AddUpdateColumn(string columnName)
-        {
-            this.updateColumns.Add(columnName);
-        }
+        public void AddUpdateColumn(string columnName) => this.updateColumns.Add(columnName);
 
         /// <summary>
         /// Determines whether the specified object is equal to the current object.
         /// </summary>
-        public override bool Equals([NullGuard.AllowNull] object obj)
+        public override bool Equals(object? obj)
         {
             var equals = false;
 
@@ -248,9 +231,6 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// Serves as the default hash function.
         /// </summary>
         /// <returns>A hash code for the current object.</returns>
-        public override int GetHashCode()
-        {
-            return (this.GetType().FullName + "|" + this.Before + "|" + this.ForEachRow + "|" + this.Function + "|" + this.Name + "|" + this.OnDelete + "|" + this.OnInsert + "|" + this.OnUpdate + "|" + this.OnTruncate + "|" + this.TableName).GetHashCode();
-        }
+        public override int GetHashCode() => (this.GetType().FullName + "|" + this.Before + "|" + this.ForEachRow + "|" + this.Function + "|" + this.Name + "|" + this.OnDelete + "|" + this.OnInsert + "|" + this.OnUpdate + "|" + this.OnTruncate + "|" + this.TableName).GetHashCode();
     }
 }

@@ -4,13 +4,9 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 // </auto-generated>
-using APE.CodeGeneration.Attributes;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {
-    // APE.CodeGeneration.Attribute [NotifyProperty(typeof(SQLFileDisplayData), "DiffFile")]
-    // APE.CodeGeneration.Attribute [NotifyProperty(typeof(SQLFileDisplayData), "UndoDiffFile")]
-    // APE.CodeGeneration.Attribute [NotifyPropertySupport]
     public partial class ExportWindowViewModel
   : System.ComponentModel.INotifyPropertyChanged
     {

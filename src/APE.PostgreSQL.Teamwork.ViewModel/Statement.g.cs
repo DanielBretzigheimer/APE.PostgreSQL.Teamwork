@@ -4,13 +4,6 @@
 //     Changes to this file may cause incorrect behavior and will be lost if
 //     the code is regenerated.
 // </auto-generated>
-using System;
-using System.IO;
-using System.Text;
-using APE.CodeGeneration.Attributes;
-using APE.PostgreSQL.Teamwork.Model.Templates;
-using APE.PostgreSQL.Teamwork.Model.Utils;
-using Npgsql;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {

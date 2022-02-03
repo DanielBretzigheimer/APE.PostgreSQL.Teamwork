@@ -1,5 +1,4 @@
 ﻿// <copyright file="ParserUtils.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System.Collections.Generic;
 using System.Text;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 
@@ -26,7 +25,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         {
             var names = SplitNames(name);
 
-            return names[names.Length - 1];
+            return names[^1];
         }
 
         /// <summary>
@@ -38,7 +37,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         {
             var names = SplitNames(name);
 
-            return names[names.Length - 2];
+            return names[^2];
         }
 
         /// <summary>
@@ -46,12 +45,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         /// <param name="name">Optionally schema qualified name.</param>
         /// <returns>Name of the object or null if there is no third object name.</returns>
-        [return: NullGuard.AllowNull]
-        public static string GetThirdObjectName(string name)
+        public static string? GetThirdObjectName(string name)
         {
             var names = SplitNames(name);
 
-            return names.Length >= 3 ? names[names.Length - 3] : null;
+            return names.Length >= 3 ? names[^3] : null;
         }
 
         /// <summary>
@@ -74,7 +72,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// <summary>
         /// Generates unique name from the prefix, list of names, and postfix.
         /// </summary>
-        public static string GenerateName([NullGuard.AllowNull] string prefix, IList<string> names, [NullGuard.AllowNull] string postfix)
+        public static string GenerateName(string? prefix, IList<string> names, string? postfix)
         {
             string adjName;
 
@@ -115,53 +113,23 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             return result.ToString();
         }
 
-        private static string[] Split(string self, string regexDelimiter, bool trimTrailingEmptyStrings)
-        {
-            var splitArray = System.Text.RegularExpressions.Regex.Split(self, regexDelimiter);
-
-            if (trimTrailingEmptyStrings)
-            {
-                if (splitArray.Length > 1)
-                {
-                    for (var i = splitArray.Length; i > 0; i--)
-                    {
-                        if (splitArray[i - 1].Length > 0)
-                        {
-                            if (i < splitArray.Length)
-                            {
-                                System.Array.Resize(ref splitArray, i);
-                            }
-
-                            break;
-                        }
-                    }
-                }
-            }
-
-            return splitArray;
-        }
-
         /// <summary>
         /// Splits qualified names by dots. If names are quoted then quotes are removed.
         /// </summary>
-        private static string[] SplitNames(string @string)
+        private static string[] SplitNames(string namesString)
         {
-            if (@string.IndexOf('"') == -1)
+            if (!namesString.Contains('"'))
             {
-                var names = System.Text.RegularExpressions.Regex.Split(@string, "\\.");
+                var names = System.Text.RegularExpressions.Regex.Split(namesString, "\\.");
                 if (names.Length <= 1)
-                {
                     return names;
-                }
 
                 for (var i = names.Length; i > 0; i--)
                 {
                     if (names[i - 1].Length > 0)
                     {
                         if (i < names.Length)
-                        {
-                            System.Array.Resize(ref names, i);
-                        }
+                            Array.Resize(ref names, i);
 
                         break;
                     }
@@ -176,36 +144,30 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
                 while (true)
                 {
-                    if (@string[startPos] == '"')
+                    if (namesString[startPos] == '"')
                     {
-                        var endPos = @string.IndexOf('"', startPos + 1);
-                        strings.Add(@string.Substring(startPos + 1, endPos - (startPos + 1)));
+                        var endPos = namesString.IndexOf('"', startPos + 1);
+                        strings.Add(namesString[(startPos + 1)..endPos]);
 
-                        if (endPos + 1 == @string.Length)
-                        {
+                        if (endPos + 1 == namesString.Length)
                             break;
-                        }
-                        else if (@string[endPos + 1] == '.')
-                        {
+                        else if (namesString[endPos + 1] == '.')
                             startPos = endPos + 2;
-                        }
                         else
-                        {
                             startPos = endPos + 1;
-                        }
                     }
                     else
                     {
-                        var endPos = @string.IndexOf('.', startPos);
+                        var endPos = namesString.IndexOf('.', startPos);
 
                         if (endPos == -1)
                         {
-                            strings.Add(@string.Substring(startPos));
+                            strings.Add(namesString[startPos..]);
                             break;
                         }
                         else
                         {
-                            strings.Add(@string.Substring(startPos, endPos - startPos));
+                            strings.Add(namesString[startPos..endPos]);
                             startPos = endPos + 1;
                         }
                     }

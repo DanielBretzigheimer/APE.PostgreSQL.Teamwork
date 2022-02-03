@@ -1,113 +1,19 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
-<Project ToolsVersion="15.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
-  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
-    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{CE35B78F-B9E6-462D-BD8A-314D71D6B5D0}</ProjectGuid>
-    <OutputType>Exe</OutputType>
-    <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>APE.PostgreSQL.Teamwork.CommandPrompt</RootNamespace>
-    <AssemblyName>APE.PostgreSQL.Teamwork.CommandPrompt</AssemblyName>
-    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
-    <FileAlignment>512</FileAlignment>
-    <SolutionDir Condition="$(SolutionDir) == '' Or $(SolutionDir) == '*Undefined*'">..\</SolutionDir>
-    <NuGetPackageImportStamp>
-    </NuGetPackageImportStamp>
-    <TargetFrameworkProfile />
-    <AutoGenerateBindingRedirects>True</AutoGenerateBindingRedirects>
+    <TargetFramework>net6.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugSymbols>true</DebugSymbols>
-    <DebugType>full</DebugType>
-    <Optimize>false</Optimize>
-    <OutputPath>bin\Debug\</OutputPath>
-    <DefineConstants>TRACE;DEBUG</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <CodeAnalysisRuleSet>..\..\StyleCop.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
-    <DocumentationFile>bin\Debug\APE.PostgreSQL.Teamwork.CommandPrompt.xml</DocumentationFile>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <DebugType>pdbonly</DebugType>
-    <Optimize>true</Optimize>
-    <OutputPath>bin\Release\</OutputPath>
-    <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <DocumentationFile>bin\Release\APE.PostgreSQL.Teamwork.CommandPrompt.xml</DocumentationFile>
-    <CodeAnalysisRuleSet>..\..\StyleCop.ruleset</CodeAnalysisRuleSet>
-    <RunCodeAnalysis>true</RunCodeAnalysis>
-  </PropertyGroup>
+
   <ItemGroup>
-    <PackageReference Include="CommandLineParser" Version="2.3.0" />
-    <PackageReference Include="Fody" Version="3.2.13">
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers</IncludeAssets>
-      <PrivateAssets>all</PrivateAssets>
-    </PackageReference>
-    <PackageReference Include="log4net" Version="2.0.14" />
-    <PackageReference Include="NullGuard.Fody" Version="1.8.5" />
-    <PackageReference Include="ServiceStack.Text" Version="5.4.0" />
-    <PackageReference Include="SharpZipLib" Version="1.3.3" />
-    <PackageReference Include="StructureMap" Version="4.7.0" />
-    <PackageReference Include="StyleCop.Analyzers" Version="1.1.0-beta008" />
-    <PackageReference Include="System.Reflection.Emit.Lightweight" Version="4.3.0" />
-    <PackageReference Include="System.Threading.Tasks.Extensions" Version="4.5.1" />
+    <PackageReference Include="CommandLineParser" Version="2.8.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="5.0.0" />
   </ItemGroup>
+
   <ItemGroup>
-    <Reference Include="APE.CodeGeneration.Attributes">
-      <HintPath>..\..\lib\APE.CodeGeneration.Attributes.dll</HintPath>
-    </Reference>
-    <Reference Include="PresentationFramework" />
-    <Reference Include="System" />
-    <Reference Include="System.Core" />
-    <Reference Include="System.Xml.Linq" />
-    <Reference Include="System.Data.DataSetExtensions" />
-    <Reference Include="System.Data" />
-    <Reference Include="System.Xml" />
+    <ProjectReference Include="..\APE.PostgreSQL.Teamwork.Model\APE.PostgreSQL.Teamwork.Model.csproj" />
+    <ProjectReference Include="..\APE.PostgreSQL.Teamwork.ViewModel\APE.PostgreSQL.Teamwork.ViewModel.csproj" />
   </ItemGroup>
-  <ItemGroup>
-    <Compile Include="CommandLineArgs.cs" />
-    <Compile Include="CommandLineExecutor.cs" />
-    <Compile Include="Program.cs" />
-    <Compile Include="Properties\AssemblyInfo.g.cs" />
-  </ItemGroup>
-  <ItemGroup>
-    <AdditionalFiles Include="..\..\stylecop.json">
-      <Link>stylecop.json</Link>
-    </AdditionalFiles>
-    <None Include="APE.PostgreSQL.Teamwork.CommandPrompt.nuspec" />
-    <None Include="APE.PostgreSQL.Teamwork.CommandPrompt.targets" />
-    <None Include="FodyWeavers.xml" />
-    <None Include="..\..\StyleCop.ruleset">
-      <Link>StyleCop.ruleset</Link>
-    </None>
-    <None Include="App.config" />
-    <Content Include="APE.PostgreSQL.Teamwork.CommandPrompt.exe.log4net.config">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <None Include="Properties\AssemblyInfo.g.cs.Template" />
-    <None Include="_CommandPrompt.cd" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\APE.PostgreSQL.Teamwork.Model\APE.PostgreSQL.Teamwork.Model.csproj">
-      <Project>{C3DF1F15-E4C9-4052-9535-AF39FF0E2191}</Project>
-      <Name>APE.PostgreSQL.Teamwork.Model</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\APE.PostgreSQL.Teamwork.ViewModel\APE.PostgreSQL.Teamwork.ViewModel.csproj">
-      <Project>{BBEE7981-C1A8-4477-B88C-F9E4D565BFE5}</Project>
-      <Name>APE.PostgreSQL.Teamwork.ViewModel</Name>
-    </ProjectReference>
-  </ItemGroup>
-  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
-  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
-       Other similar extension points exist, see Microsoft.Common.targets.
-  <Target Name="BeforeBuild">
-  </Target>
-  <Target Name="AfterBuild">
-  </Target>
-  -->
+
 </Project>

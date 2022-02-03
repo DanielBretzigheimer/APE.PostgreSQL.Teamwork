@@ -1,10 +1,7 @@
 ﻿// <copyright file="CreateAggregateParser.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
-using log4net;
+using Serilog;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 {
@@ -13,8 +10,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
     /// </summary>
     public class CreateAggregateParser
     {
-        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         /// <summary>
         /// Creates a new instance of CreateAggregateParser.
         /// </summary>
@@ -38,7 +33,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             if (database.SchemaIsIgnored(schemaName))
                 return;
 
-            PgSchema schema = database.GetSchema(schemaName);
+            var schema = database.GetSchema(schemaName);
 
             if (schema == null)
             {
@@ -69,7 +64,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                         var tmpArgument = arguments.Last();
 
                         // last data type was a name
-                        Log.Warn(string.Format("Aggregate {0} had a parameter which was not fully a data type (could be because it contained the name). {1} was ignored!", statement, tmpArgument.DataType), ex);
+                        Log.Warning(string.Format("Aggregate {0} had a parameter which was not fully a data type (could be because it contained the name). {1} was ignored!", statement, tmpArgument.DataType), ex);
                         arguments.Remove(tmpArgument);
                     }
                 }

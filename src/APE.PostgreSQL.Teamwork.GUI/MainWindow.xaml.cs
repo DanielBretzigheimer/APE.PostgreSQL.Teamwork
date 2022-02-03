@@ -6,35 +6,24 @@ using System.Text;
 using System.Windows;
 using System.Windows.Documents;
 using System.Windows.Input;
-using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.ViewModel;
-using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
-using APE.PostgreSQL.Teamwork.ViewModel.TestHelper;
-using APE.PostgreSQL.Teamwork.ViewModel.ViewModels;
 using Dragablz;
+using Serilog;
 
 namespace APE.PostgreSQL.Teamwork.GUI
 {
-    [CtorParameter(typeof(IMainWindowViewModel))]
-    [CtorParameter(typeof(IConnectionManager))]
-    [CtorParameter(typeof(IFileSystemAccess))]
-    [CtorParameter(typeof(IProcessManager))]
-    [CtorParameter(typeof(IDifferenceCreator))]
-    [CtorParameter(typeof(ISQLFileTester))]
     public partial class MainWindow : DialogWindow
     {
-        private List<DatabaseDisplayData> lastOrder = new List<DatabaseDisplayData>();
+        private List<DatabaseDisplayData>? lastOrder = new();
 
         public override object DialogIdentifier
         {
             get
             {
                 if (this.dialogHost == null)
-                {
                     throw new InvalidOperationException("Can not show a dialog before the dialog host was initialized");
-                }
 
-                return this.dialogHost.Identifier;
+                return this.dialogHost.Identifier ?? new object();
             }
         }
 
@@ -61,8 +50,7 @@ namespace APE.PostgreSQL.Teamwork.GUI
             }
             catch (Exception e)
             {
-                var n = new Greg.WPF.Utility.ExceptionMessageBox(e, "Unhandled Exception");
-                n.ShowDialog();
+                Log.Error(e, "Unhandeld Exception");
             }
         }
 
@@ -75,12 +63,12 @@ namespace APE.PostgreSQL.Teamwork.GUI
             }
         }
 
-        private void DatabaseOrderChanged(object sender, OrderChangedEventArgs e)
+        private void DatabaseOrderChanged(object? sender, OrderChangedEventArgs e)
         {
             // first start
             if (e.NewOrder == null
                 || e.PreviousOrder == null
-                || e.NewOrder.Count() != e.PreviousOrder.Count())
+                || e.NewOrder.Length != e.PreviousOrder.Length)
             {
                 return;
             }
@@ -91,7 +79,7 @@ namespace APE.PostgreSQL.Teamwork.GUI
             var oldDatabaseNames = oldDatabases.Select(d => d.Name).ToList();
             var newDatabaseNames = newDatabases.Select(d => d.Name).ToList();
             var orderEquals = true;
-            for (var i = 0; i < oldDatabaseNames.Count(); i++)
+            for (var i = 0; i < oldDatabaseNames.Count; i++)
             {
                 if (oldDatabaseNames[i] != newDatabaseNames[i])
                 {
@@ -118,41 +106,41 @@ namespace APE.PostgreSQL.Teamwork.GUI
 
         private CreateMinorVersionView GetCreateMinorVersionView(DatabaseDisplayData database)
         {
-            CreateMinorVersionView retval = null;
+            CreateMinorVersionView? retval = null;
 
             this.UIDispatcher.Invoke(() => retval = new CreateMinorVersionView(database));
 
-            return retval;
+            return retval ?? throw new InvalidOperationException("Could not create minor version view.");
         }
 
         private SettingView GetSettingView()
         {
-            SettingView retVal = null;
+            SettingView? retVal = null;
 
             // create in ui dispatcher so this method can also be called from an task
             this.UIDispatcher.Invoke(() => retVal = new SettingView(this.connectionManager));
 
-            return retVal;
+            return retVal ?? throw new InvalidOperationException("Could not create setting view.");
         }
 
         private AddDatabaseView GetAddDatabaseView()
         {
-            AddDatabaseView retVal = null;
+            AddDatabaseView? retVal = null;
 
             // create in ui dispatcher so this method can also be called from an task
             this.UIDispatcher.Invoke(() => retVal = new AddDatabaseView(this.connectionManager, this.fileSystemAccess, this.processManager, this.differenceCreator, this.sQLFileTester));
 
-            return retVal;
+            return retVal ?? throw new InvalidOperationException("Could not create add database view.");
         }
 
         private MaterialMessageBox GetMessageBox(string text, string title, MessageBoxButton buttons, bool isMarkdown)
         {
-            MaterialMessageBox retVal = null;
+            MaterialMessageBox? retVal = null;
 
             // create in ui dispatcher so this method can also be called from an task
             this.UIDispatcher.Invoke(() => retVal = new MaterialMessageBox(text, title, buttons, isMarkdown));
 
-            return retVal;
+            return retVal ?? throw new InvalidOperationException("Could not create material messagebox view.");
         }
 
         private void OpenImportWindow(DatabaseDisplayData database)
@@ -166,8 +154,7 @@ namespace APE.PostgreSQL.Teamwork.GUI
             {
                 this.UIDispatcher.Invoke(() =>
                 {
-                    var n = new Greg.WPF.Utility.ExceptionMessageBox(e, "Unhandled Exception");
-                    n.ShowDialog();
+                    Log.Error(e, "Unhandled Exception");
                 });
             }
         }
@@ -182,16 +169,12 @@ namespace APE.PostgreSQL.Teamwork.GUI
             {
                 this.UIDispatcher.Invoke(() =>
                 {
-                    var n = new Greg.WPF.Utility.ExceptionMessageBox(e, "Unhandled Exception");
-                    n.ShowDialog();
+                    Log.Error(e, "Unhandled Exception");
                 });
             }
         }
 
-        private void SearchClick(object sender, RoutedEventArgs e)
-        {
-            this.searchBar.Focus();
-        }
+        private void SearchClick(object sender, RoutedEventArgs e) => this.searchBar.Focus();
 
         private async void ShowLicensesClick(object sender, RoutedEventArgs e)
         {
@@ -216,10 +199,7 @@ namespace APE.PostgreSQL.Teamwork.GUI
             await this.ShowDialog(messageBox);
         }
 
-        private void RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e)
-        {
-            System.Diagnostics.Process.Start(e.Uri.ToString());
-        }
+        private void RequestNavigate(object sender, System.Windows.Navigation.RequestNavigateEventArgs e) => System.Diagnostics.Process.Start(e.Uri.ToString());
 
         private void DialogWindow_KeyDown(object sender, KeyEventArgs e)
         {

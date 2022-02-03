@@ -1,8 +1,5 @@
 ﻿// <copyright file="DatabaseTest.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
 using APE.PostgreSQL.Teamwork.Model;
 using APE.PostgreSQL.Teamwork.Model.Templates;
 using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
@@ -30,13 +27,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             var sqlFileTester = new Mock<ISQLFileTester>();
             var diffCreatorMock = new Mock<IDifferenceCreator>();
             connectionManagerMock.Setup(c => c.ExecuteCommand<int>(It.IsAny<IDatabase>(), It.IsAny<string>())).Returns(new List<int>() { 0 });
-
-            new Action(() => new Database(name, path, new List<string>(), null, null, null, null, null, true)).Should().Throw<ArgumentNullException>();
-            new Action(() => new Database(name, path, new List<string>(), null, fileMock.Object, processMock.Object, diffCreatorMock.Object, sqlFileTester.Object, true)).Should().Throw<ArgumentNullException>();
-            new Action(() => new Database(name, path, new List<string>(), connectionManagerMock.Object, null, processMock.Object, diffCreatorMock.Object, sqlFileTester.Object, true)).Should().Throw<ArgumentNullException>();
-            new Action(() => new Database(name, path, new List<string>(), connectionManagerMock.Object, fileMock.Object, null, diffCreatorMock.Object, sqlFileTester.Object, true)).Should().Throw<ArgumentNullException>();
-            new Action(() => new Database(name, path, new List<string>(), connectionManagerMock.Object, fileMock.Object, processMock.Object, null, sqlFileTester.Object, true)).Should().Throw<ArgumentNullException>();
-            new Action(() => new Database(name, path, new List<string>(), connectionManagerMock.Object, fileMock.Object, processMock.Object, diffCreatorMock.Object, null, true)).Should().Throw<ArgumentNullException>();
 
             var d = new Database(name, path, new List<string>(), connectionManagerMock.Object, fileMock.Object, processMock.Object, diffCreatorMock.Object, sqlFileTester.Object, initializeData: false);
             d.Should().NotBeNull();
@@ -136,7 +126,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
 
             database.UpdateToVersion(DatabaseVersion.StartVersion);
             connectionManagerMock.Setup(c => c.ExecuteCommand<ExecutedFile>(It.IsAny<IDatabase>(), It.IsAny<string>())).Returns(new List<ExecutedFile>());
-            database.CallUpdateVersion();
+            database.UpdateData();
             database.CurrentVersion.Main.Should().Be(0);
         }
 
@@ -169,7 +159,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             // UpdateData is called internally when bool is set to true
             var database = new Database(name, path, new List<string>(), connectionManagerMock.Object, fileMock.Object, processMock.Object, diffCreatorMock.Object, sqlFileTester.Object, initializeData: true);
 
-            database.CallSearchFiles(true);
+            database.UpdateData(true);
             database.UndoDiffFiles.Count.Should().Be(1);
             database.DiffFiles.Count.Should().Be(2);
         }
@@ -314,38 +304,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Test
             diffCreatorMock.Setup(d => d.Create(It.IsAny<string>(), It.IsAny<Database>(), It.IsAny<string>(), It.IsAny<string>()))
                 .Throws(new Exception());
             new Action(() => database.Export(database.CurrentVersion.Next(), string.Empty, string.Empty, string.Empty, string.Empty, 0)).Should().Throw<Exception>();
-        }
-
-        [TestMethod]
-        [DeploymentItem("Templates", "Templates")]
-        public void CreateDiffTest()
-        {
-            var name = "TestDB";
-            var path = "testpfad";
-
-            var fileMock = new Mock<IFileSystemAccess>();
-            var connectionManagerMock = new Mock<IConnectionManager>();
-            var processMock = new Mock<IProcessManager>();
-            var sqlFileMock = new Mock<ISQLFile>();
-            var diffCreatorMock = new Mock<IDifferenceCreator>();
-            var sqlFileTester = new Mock<ISQLFileTester>();
-
-            connectionManagerMock.Setup(c => c.ExecuteCommand<int>(It.IsAny<IDatabase>(), It.IsAny<string>())).Returns(new List<int>() { 0 });
-            connectionManagerMock.Setup(c => c.ExecuteCommand<ExecutedFile>(It.IsAny<IDatabase>(), It.IsAny<string>())).Returns(new List<ExecutedFile>());
-
-            // UpdateData is called internally when bool is set to true
-            var database = new Database(name, path, new List<string>(), connectionManagerMock.Object, fileMock.Object, processMock.Object, diffCreatorMock.Object, sqlFileTester.Object, initializeData: false);
-
-            new Action(() => { database.CallCreateDiffs(string.Empty, string.Empty, string.Empty, string.Empty); }).Should().Throw<FileNotFoundException>();
-
-            fileMock.Setup(f => f.FileExists(It.IsAny<string>())).Returns(true);
-            new Action(() => { database.CallCreateDiffs(string.Empty, string.Empty, string.Empty, string.Empty); }).Should().Throw<TeamworkException>();
-            new Action(() => { database.CallCreateDiffs("0001.dump.sql", "0002.dump.sql", "path1", "path2"); }).Should().Throw<TeamworkException>();
-
-            diffCreatorMock.Setup(d => d.Create(It.IsAny<string>(), It.IsAny<Database>(), It.IsAny<string>(), It.IsAny<string>())).Returns(true).Verifiable();
-            database.CallCreateDiffs("0001.dump.sql", "0002.dump.sql", "\\path1\\0002.diff.sql", "path1\\0002.undodiff.sql");
-
-            diffCreatorMock.VerifyAll();
         }
     }
 }

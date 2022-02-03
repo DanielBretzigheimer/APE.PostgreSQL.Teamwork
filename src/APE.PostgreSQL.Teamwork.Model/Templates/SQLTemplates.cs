@@ -1,8 +1,6 @@
 ﻿// <copyright file="SQLTemplates.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.IO;
+
 using System.Reflection;
-using log4net;
 
 namespace APE.PostgreSQL.Teamwork.Model.Templates
 {
@@ -36,20 +34,17 @@ namespace APE.PostgreSQL.Teamwork.Model.Templates
         /// </summary>
         public const string PostgreSQLTeamworkSchemaName = "APE.PostgreSQL.Teamwork";
 
-        private static readonly ILog Log = LogManager.GetLogger(MethodBase.GetCurrentMethod().DeclaringType);
-
         private static readonly string GetTables;
-        private static string createDatabase;
-        private static string createTeamworkSchema;
-        private static string disconnectDatabase;
-        private static string dropDatabase;
-        private static string getSchema;
-        private static string renameDatabase;
-        private static string getAppliedVersions;
-        private static string removeVersion;
-        private static string addExecutedFile;
+        private static readonly string createDatabase;
+        private static readonly string createTeamworkSchema;
+        private static readonly string disconnectDatabase;
+        private static readonly string dropDatabase;
+        private static readonly string getSchema;
+        private static readonly string renameDatabase;
+        private static readonly string getAppliedVersions;
+        private static readonly string removeVersion;
+        private static readonly string addExecutedFile;
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Design", "CA1065:DoNotRaiseExceptionsInUnexpectedLocations", Justification = "This is ok because we want to raise this exception as soon as the application is started!")]
         static SQLTemplates()
         {
             var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\Templates";
@@ -84,27 +79,18 @@ namespace APE.PostgreSQL.Teamwork.Model.Templates
         /// <summary>
         /// Gets SQL to disconnect a given database.
         /// </summary>
-        public static string DisconnectDatabase(string database)
-        {
-            return disconnectDatabase.Replace("[Database]", database);
-        }
+        public static string DisconnectDatabase(string database) => disconnectDatabase.Replace("[Database]", database);
 
         /// <summary>
         /// Gets SQL to drop database.
         /// <remarks>be sure to disconnect database before drop</remarks>
         /// </summary>
-        public static string DropDatabase(string database)
-        {
-            return dropDatabase.Replace("[Database]", database);
-        }
+        public static string DropDatabase(string database) => dropDatabase.Replace("[Database]", database);
 
         /// <summary>
         /// Gets SQL to create a database with the given name.
         /// </summary>
-        public static string CreateDatabase(string database)
-        {
-            return createDatabase.Replace("[Database]", database);
-        }
+        public static string CreateDatabase(string database) => createDatabase.Replace("[Database]", database);
 
         /// <summary>
         /// Gets a SQL statement which finds a schema in one database.
@@ -205,9 +191,6 @@ namespace APE.PostgreSQL.Teamwork.Model.Templates
         /// <summary>
         /// Gets a SQL string which can request all tables from the database.
         /// </summary>
-        public static string GetAllTables()
-        {
-            return GetTables;
-        }
+        public static string GetAllTables() => GetTables;
     }
 }

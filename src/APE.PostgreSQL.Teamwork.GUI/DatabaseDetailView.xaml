@@ -5,13 +5,11 @@
              xmlns:local="clr-namespace:APE.PostgreSQL.Teamwork.View"
 			 xmlns:loading="clr-namespace:APE.PostgreSQL.Teamwork.GUI.Loading"
 			 xmlns:vm="clr-namespace:APE.PostgreSQL.Teamwork.ViewModel;assembly=APE.PostgreSQL.Teamwork.ViewModel"
-			 xmlns:system="clr-namespace:System;assembly=System"
              x:Class="APE.PostgreSQL.Teamwork.GUI.DatabaseDetailView"
              xmlns:dragablz="http://dragablz.net/winfx/xaml/dragablz"
-             xmlns:i="clr-namespace:System.Windows.Interactivity;assembly=System.Windows.Interactivity"
-			 xmlns:sys="clr-namespace:System;assembly=mscorlib"
-			 xmlns:lib="http://schemas.thinkpixellab.com/2011/xaml/presentation"
-			 xmlns:materialDesign="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
+             xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
+             xmlns:sys="clr-namespace:System;assembly=mscorlib"
+             xmlns:materialDesign="clr-namespace:MaterialDesignThemes.Wpf;assembly=MaterialDesignThemes.Wpf"
              mc:Ignorable="d" Margin="5" d:DataContext="{d:DesignInstance Type=vm:DatabaseDisplayData, IsDesignTimeCreatable=True}"
              d:DesignWidth="300">
 

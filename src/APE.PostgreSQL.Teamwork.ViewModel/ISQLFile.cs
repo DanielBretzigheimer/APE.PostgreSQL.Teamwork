@@ -1,5 +1,4 @@
 ﻿// <copyright file="ISQLFile.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System.Collections.Generic;
 using APE.PostgreSQL.Teamwork.Model;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel

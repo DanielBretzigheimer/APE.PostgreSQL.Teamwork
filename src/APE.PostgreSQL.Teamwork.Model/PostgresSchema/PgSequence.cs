@@ -12,22 +12,17 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Creates a new <see cref="PgSequence"/> object.
         /// </summary>
-        public PgSequence(string name)
-        {
-            this.Name = name;
-        }
+        public PgSequence(string name) => this.Name = name;
 
         /// <summary>
         /// Gets or sets the cache of the <see cref="PgSequence"/>.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string Cache { get; set; }
+        public string? Cache { get; set; }
 
         /// <summary>
         /// Gets or sets the comment of the <see cref="PgSequence"/>.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         /// <summary>
         /// Creates and returns SQL statement for creation of the sequence.
@@ -137,31 +132,22 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// Creates and returns SQL statement for dropping the sequence.
         /// </summary>
         /// <returns> created SQL. </returns>
-        public string DropSQL
-        {
-            get
-            {
-                return "DROP SEQUENCE IF EXISTS " + PgDiffStringExtension.QuoteName(this.Name) + ";";
-            }
-        }
+        public string DropSQL => "DROP SEQUENCE IF EXISTS " + PgDiffStringExtension.QuoteName(this.Name) + ";";
 
         /// <summary>
         /// Gets or sets the increment of the <see cref="PgSequence"/>.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string Increment { get; set; }
+        public string? Increment { get; set; }
 
         /// <summary>
         /// Gets or sets the max value of the <see cref="PgSequence"/>.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string MaxValue { get; set; }
+        public string? MaxValue { get; set; }
 
         /// <summary>
         /// Gets or sets the min value of the <see cref="PgSequence"/>.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string MinValue { get; set; }
+        public string? MinValue { get; set; }
 
         /// <summary>
         /// Gets or sets the name of the <see cref="PgSequence"/>.
@@ -171,13 +157,11 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the start value of the <see cref="PgSequence"/>.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string StartWith { get; set; }
+        public string? StartWith { get; set; }
 
         /// <summary>
         /// Gets or sets the owner of the <see cref="PgSequence"/>.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string Owner { get; set; }
+        public string? Owner { get; set; }
     }
 }

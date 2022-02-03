@@ -1,5 +1,4 @@
 ﻿// <copyright file="CommentParser.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
 
@@ -85,7 +84,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             if (database.SchemaIsIgnored(schemaName))
                 return;
 
-            PgTable table = database.GetSchema(schemaName).GetTable(objectName);
+            var table = database.GetSchema(schemaName).GetTable(objectName);
 
             parser.Expect("IS");
             table.Comment = GetComment(parser);
@@ -108,7 +107,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             if (database.SchemaIsIgnored(schemaName))
                 return;
 
-            PgConstraint constraint = database.GetSchema(schemaName).GetTable(objectName).GetConstraint(constraintName);
+            var constraint = database.GetSchema(schemaName).GetTable(objectName).GetConstraint(constraintName);
 
             parser.Expect("IS");
             constraint.Comment = GetComment(parser);
@@ -140,13 +139,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             if (database.SchemaIsIgnored(schemaName))
                 return;
 
-            PgSchema schema = database.GetSchema(schemaName);
+            var schema = database.GetSchema(schemaName);
 
-            PgIndex index = schema.GetIndex(objectName);
+            var index = schema.GetIndex(objectName);
 
             if (index == null)
             {
-                PgConstraint primaryKey = schema.GetPrimaryKey(objectName);
+                var primaryKey = schema.GetPrimaryKey(objectName);
                 parser.Expect("IS");
                 primaryKey.Comment = GetComment(parser);
                 parser.Expect(";");
@@ -166,7 +165,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         {
             var schemaName = ParserUtils.GetObjectName(parser.ParseIdentifier());
 
-            PgSchema schema = database.GetSchema(schemaName);
+            var schema = database.GetSchema(schemaName);
 
             parser.Expect("IS");
             schema.Comment = GetComment(parser);
@@ -187,7 +186,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             if (database.SchemaIsIgnored(schemaName))
                 return;
 
-            PgSequence sequence = database.GetSchema(schemaName).GetSequence(objectName);
+            var sequence = database.GetSchema(schemaName).GetSequence(objectName);
 
             parser.Expect("IS");
             sequence.Comment = GetComment(parser);
@@ -212,7 +211,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             if (database.SchemaIsIgnored(schemaName))
                 return;
 
-            PgTrigger trigger = database.GetSchema(schemaName).GetTable(objectName).GetTrigger(triggerName);
+            var trigger = database.GetSchema(schemaName).GetTable(objectName).GetTrigger(triggerName);
 
             parser.Expect("IS");
             trigger.Comment = GetComment(parser);
@@ -233,7 +232,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             if (database.SchemaIsIgnored(schemaName))
                 return;
 
-            PgView view = database.GetSchema(schemaName).GetView(objectName);
+            var view = database.GetSchema(schemaName).GetView(objectName);
 
             parser.Expect("IS");
             view.Comment = GetComment(parser);
@@ -256,13 +255,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             if (database.SchemaIsIgnored(schemaName))
                 return;
 
-            PgSchema schema = database.GetSchema(schemaName);
+            var schema = database.GetSchema(schemaName);
 
-            PgTable table = schema.GetTable(tableName);
+            var table = schema.GetTable(tableName);
 
             if (table == null)
             {
-                PgView view = schema.GetView(tableName);
+                var view = schema.GetView(tableName);
                 parser.Expect("IS");
 
                 var comment = GetComment(parser);
@@ -280,7 +279,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             }
             else
             {
-                PgColumn column = table.GetColumn(objectName);
+                var column = table.GetColumn(objectName);
 
                 if (column == null)
                 {
@@ -307,7 +306,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             if (database.SchemaIsIgnored(schemaName))
                 return;
 
-            PgSchema schema = database.GetSchema(schemaName);
+            var schema = database.GetSchema(schemaName);
 
             parser.Expect("(");
 
@@ -317,7 +316,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             };
             while (!parser.ExpectOptional(")"))
             {
-                string mode;
+                string? mode;
 
                 if (parser.ExpectOptional("IN"))
                 {
@@ -341,7 +340,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 }
 
                 var position = parser.Position;
-                string argumentName = null;
+                string? argumentName = null;
                 var dataType = parser.ParseDataType();
 
                 var position2 = parser.Position;
@@ -375,7 +374,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 }
             }
 
-            PgFunction function = schema.GetFunction(tmpFunction.Signature);
+            var function = schema.GetFunction(tmpFunction.Signature);
 
             parser.Expect("IS");
             function.Comment = GetComment(parser);
@@ -386,8 +385,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// Parses comment from parser. If comment is "null" string then null is
         /// returned, otherwise the parsed string is returned.
         /// </summary>
-        [return: NullGuard.AllowNull]
-        private static string GetComment(Parser parser)
+        private static string? GetComment(Parser parser)
         {
 #pragma warning disable CS0618 // Type or member is obsolete
             var comment = parser.ParseStringCompat();

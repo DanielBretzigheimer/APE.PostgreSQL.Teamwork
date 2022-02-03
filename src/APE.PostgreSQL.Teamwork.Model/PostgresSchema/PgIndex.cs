@@ -13,16 +13,12 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// Creates a new <see cref="PgIndex"/> object.
         /// </summary>
         /// <param name="name">The name of the <see cref="PgIndex"/>.</param>
-        public PgIndex(string name)
-        {
-            this.Name = name;
-        }
+        public PgIndex(string name) => this.Name = name;
 
         /// <summary>
         /// Gets or sets the comment of the <see cref="PgIndex"/>.
         /// </summary>
-        [NullGuard.AllowNull]
-        public string Comment { get; set; }
+        public string? Comment { get; set; }
 
         /// <summary>
         /// Creates and returns SQL for creation of the index.
@@ -65,13 +61,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// Creates and returns SQL statement for dropping the index.
         /// </summary>
         /// <returns> created SQL statement. </returns>
-        public string DropSQL
-        {
-            get
-            {
-                return "DROP INDEX " + PgDiffStringExtension.QuoteName(this.Name) + ";";
-            }
-        }
+        public string DropSQL => "DROP INDEX " + PgDiffStringExtension.QuoteName(this.Name) + ";";
 
         /// <summary>
         /// Gets or sets the definition of the <see cref="PgIndex"/>.
@@ -96,7 +86,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Determines whether the specified object is equal to the current object.
         /// </summary>
-        public override bool Equals([NullGuard.AllowNull] object obj)
+        public override bool Equals(object? obj)
         {
             var equals = false;
 
@@ -116,9 +106,6 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// Serves as the default hash function.
         /// </summary>
         /// <returns>A hash code for the current object.</returns>
-        public override int GetHashCode()
-        {
-            return (this.GetType().FullName + "|" + this.Definition + "|" + this.Name + "|" + this.TableName + "|" + this.Unique).GetHashCode();
-        }
+        public override int GetHashCode() => (this.GetType().FullName + "|" + this.Definition + "|" + this.Name + "|" + this.TableName + "|" + this.Unique).GetHashCode();
     }
 }

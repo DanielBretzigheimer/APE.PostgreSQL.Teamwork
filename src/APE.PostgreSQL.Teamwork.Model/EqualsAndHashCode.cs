@@ -1,7 +1,4 @@
 ﻿// <copyright file="EqualsAndHashCode.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
 using System.Reflection;
 
@@ -34,19 +31,19 @@ namespace APE.PostgreSQL.Teamwork.Model
     {
         private readonly Func<T, T, bool> equals;
         private readonly Func<T, int> getHashCode;
-        private Expression<Func<T, object>>[] properties;
+        private readonly Expression<Func<T, object>>[] properties;
 
         public EqualsAndHashCode(params Expression<Func<T, object>>[] properties)
         {
             // Expression<Func<TProperty>>
             if (properties == null)
             {
-                throw new ArgumentNullException("properties", "properties == null");
+                throw new ArgumentNullException(nameof(properties), "properties == null");
             }
 
             if (properties.Length == 0)
             {
-                throw new ArgumentOutOfRangeException("properties", "properties.Length == 0");
+                throw new ArgumentOutOfRangeException(nameof(properties), "properties.Length == 0");
             }
 
             this.properties = properties;
@@ -55,7 +52,7 @@ namespace APE.PostgreSQL.Teamwork.Model
             this.getHashCode = this.BuildGetHashCode(properties);
         }
 
-        public bool AreEqual([NullGuard.AllowNull] T source, [NullGuard.AllowNull] object target)
+        public bool AreEqual(T? source, object? target)
         {
             if (source == null || target == null)
             {
@@ -70,11 +67,11 @@ namespace APE.PostgreSQL.Teamwork.Model
             return this.equals(source, (T)target);
         }
 
-        public int GetHashCode([NullGuard.AllowNull] T source)
+        public int GetHashCode(T? source)
         {
             if (source == null)
             {
-                throw new ArgumentNullException("source", "source == null");
+                throw new ArgumentNullException(nameof(source), "source == null");
             }
 
             return this.getHashCode(source);
@@ -83,9 +80,10 @@ namespace APE.PostgreSQL.Teamwork.Model
         private Func<T, int> BuildGetHashCode(Expression<Func<T, object>>[] properties)
         {
             var getHashCodeMethodInfo = typeof(object).GetMethod("GetHashCode");
+            if (getHashCodeMethodInfo == null) throw new InvalidOperationException("GetHashCode of object is null");
 
             var sourceParameter = Expression.Parameter(typeof(T));
-            Expression currentHashCode = null;
+            Expression? currentHashCode = null;
 
             foreach (var property in properties)
             {
@@ -115,7 +113,7 @@ namespace APE.PostgreSQL.Teamwork.Model
 
             var leftParameter = Expression.Parameter(typeof(T));
             var rightParameter = Expression.Parameter(typeof(T));
-            Expression equalsExpression = null;
+            Expression? equalsExpression = null;
 
             foreach (var property in properties)
             {

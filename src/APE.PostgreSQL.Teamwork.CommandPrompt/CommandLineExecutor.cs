@@ -1,6 +1,5 @@
 ﻿// <copyright file="CommandLineExecutor.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
+using System.Text;
 using APE.PostgreSQL.Teamwork.Model;
 using APE.PostgreSQL.Teamwork.ViewModel;
 using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
@@ -42,6 +41,10 @@ namespace APE.PostgreSQL.Teamwork.CommandPrompt
                 sqlFileTester,
                 true);
             var oldVersion = database.CurrentVersion;
+
+            if (oldVersion is null)
+                throw new InvalidOperationException("The database version has to be loaded before exeuction.");
+
             Console.WriteLine(string.Format("{0}Old Version was {1}", Environment.NewLine, oldVersion));
 
             database.UpdateData();
@@ -126,7 +129,11 @@ namespace APE.PostgreSQL.Teamwork.CommandPrompt
 
         private void HandleParseError(IEnumerable<Error> errors)
         {
-            Console.WriteLine("Could not parse arguments");
+            var errorText = new StringBuilder();
+            foreach (var error in errors)
+                errorText.AppendLine($"{error.Tag}. Stop Processing: {error.StopsProcessing}");
+
+            Console.WriteLine($"Could not parse arguments. {errorText}");
         }
     }
 }

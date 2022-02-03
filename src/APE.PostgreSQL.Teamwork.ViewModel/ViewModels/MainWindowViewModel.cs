@@ -1,46 +1,25 @@
 // <copyright file="MainWindowViewModel.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
-using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.Model;
 using APE.PostgreSQL.Teamwork.Model.Setting;
-using APE.PostgreSQL.Teamwork.ViewModel.Postgres;
-using APE.PostgreSQL.Teamwork.ViewModel.TestHelper;
 using APE.PostgreSQL.Teamwork.ViewModel.ViewModels;
+using Serilog;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {
     /// <summary>
     /// ViewModel for the MainWindowView which displays a list of databases.
     /// </summary>
-    [NotifyProperty(AccessModifier.PublicGetPrivateSet, typeof(string), "ErrorMessage", "")]
-    [NotifyProperty(AccessModifier.PublicGetPrivateSet, typeof(string), "SuccessMessage", "")]
-    [NotifyProperty(AccessModifier.Public, typeof(bool), "Editable", false)]
-    [NotifyProperty(AccessModifier.Public, typeof(bool), "Loading", false)]
-    [NotifyProperty(AccessModifier.Public, typeof(bool), "ShowSearch", false)]
-    [NotifyProperty(AccessModifier.Public, typeof(string), "FilterText", "")]
-    [AllowNullNotifyProperty(typeof(List<DatabaseDisplayData>), "Databases")]
-    [NotifyProperty(AccessModifier.Public, typeof(bool), "EditButtonEnabled", true)]
-    [NotifyProperty(AccessModifier.Public, typeof(Visibility), "SaveButtonVisibility", Visibility.Hidden)]
-    [Startable]
-    [CtorParameter(typeof(IConnectionManager))]
-    [CtorParameter(typeof(IFileSystemAccess))]
-    [CtorParameter(typeof(IProcessManager))]
-    [CtorParameter(typeof(IDifferenceCreator))]
-    [CtorParameter(typeof(ISQLFileTester))]
     public partial class MainWindowViewModel : BaseViewModel, IMainWindowViewModel
     {
-        private readonly object updateLock = new object();
-        private DispatcherTimer worker = null;
-        private Dispatcher uiDispatcher = null;
+        private DispatcherTimer? worker = null;
+        private Dispatcher? uiDispatcher = null;
 
-        private List<DatabaseDisplayData> unfilteredDatabases = null;
+        private List<DatabaseDisplayData>? unfilteredDatabases = null;
 
         /// <summary>
         /// DESIGN TIME CONSTRUCTOR.
@@ -118,7 +97,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                     this.ExecuteInTask(() => database.UpdateData());
                 }
 
-                Log.Info("Databases successfully updated");
+                Log.Information("Databases successfully updated");
             }
         }
 
@@ -131,7 +110,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             // do not reorder list if it was modified
             if (newDatabaseOrder.Count() != this.Databases.Count)
             {
-                Log.Warn("Could not reorder databases because they were modified.");
+                Log.Warning("Could not reorder databases because they were modified.");
                 return;
             }
 
@@ -151,7 +130,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             var assemblyVersion = Assembly.GetAssembly(typeof(MainWindowViewModel)).GetName().Version;
             if (settings.ApplicationVersion == null || assemblyVersion > settings.ApplicationVersion.Version)
             {
-                Log.Info($"Version was upgraded from {previousVersionString} to {assemblyVersion.ToString()}");
+                Log.Information($"Version was upgraded from {previousVersionString} to {assemblyVersion}");
                 var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\CHANGELOG.md";
 
                 var changelog = string.Empty;
@@ -174,7 +153,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             else if (assemblyVersion < settings.ApplicationVersion.Version)
             {
                 // downgrade
-                Log.Info($"Version was downgraded from {previousVersionString} to {assemblyVersion.ToString()}");
+                Log.Information($"Version was downgraded from {previousVersionString} to {assemblyVersion}");
                 await ShowDialog(GetMessageBox("Your version of the CodeGeneration was downgrade. Check your settings.", "Version downgraded", MessageBoxButton.OK));
             }
 
@@ -196,7 +175,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 SettingsManager.Get().Setting.Password,
                 SettingsManager.Get().Setting.Port);
 
-            this.WindowTitle = "APE PostgreSQL Teamwork (" + Assembly.GetAssembly(typeof(MainWindowViewModel)).GetName().Version.ToString() + ")";
+            this.WindowTitle = $"APE PostgreSQL Teamwork ({Assembly.GetAssembly(typeof(MainWindowViewModel)).GetName().Version})";
 
             // disable buttons until a database is selected
             this.EditButtonEnabled = false;
@@ -208,10 +187,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             this.worker.Tick += this.UpdateWorkerTick;
         }
 
-        private void UpdateWorkerTick(object sender, EventArgs e)
-        {
-            this.UpdateDatabases();
-        }
+        private void UpdateWorkerTick(object sender, EventArgs e) => this.UpdateDatabases();
 
         /// <summary>
         /// Starts the async worker which updates the databases.
@@ -288,8 +264,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         /// <remarks>If one folder of the path contains a number the highest is chosen.</remarks>
         /// <returns>The path to the file or null if the file was not found.</returns>
-        [return: NullGuard.AllowNull]
-        private string SearchFileRecursivly(string filename, string path)
+        private string? SearchFileRecursivly(string filename, string path)
         {
             if (!Directory.Exists(path))
             {
@@ -305,7 +280,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             }
 
             var directories = Directory.GetDirectories(path);
-            for (var i = directories.Count() - 1; i >= 0; i--)
+            for (var i = directories.Length - 1; i >= 0; i--)
             {
                 var file = this.SearchFileRecursivly(filename, directories.ElementAt(i));
                 if (file != null)
@@ -317,17 +292,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             return null;
         }
 
-        [return: NullGuard.AllowNull]
-        private object ConnectionMessageBoxClosingEventHandler(MaterialMessageBoxResult result)
+        private object? ConnectionMessageBoxClosingEventHandler(MaterialMessageBoxResult result)
         {
             if (result == MaterialMessageBoxResult.No)
             {
-                Application.Current.Shutdown();
+                System.Windows.Application.Current.Shutdown();
                 return null;
             }
 
             // update content of the session
-            return MainWindowViewModel.GetSettingView();
+            return GetSettingView();
         }
 
         /// <summary>
@@ -345,10 +319,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             this.Databases = new List<DatabaseDisplayData>(databases);
         }
 
-        private void DatabaseRemoved(object sender, EventArgs e)
-        {
-            this.UpdateDatabases();
-        }
+        private void DatabaseRemoved(object sender, EventArgs e) => this.UpdateDatabases();
 
         private void RefreshDatabases()
         {

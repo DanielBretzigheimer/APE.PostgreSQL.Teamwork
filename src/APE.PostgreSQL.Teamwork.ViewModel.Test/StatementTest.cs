@@ -1,7 +1,4 @@
 ﻿// <copyright file="StatementTest.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using APE.PostgreSQL.Teamwork.Model;
-using APE.PostgreSQL.Teamwork.TestHelper;
 using FluentAssertions;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Moq;

@@ -1,37 +1,31 @@
 // <copyright file="ConnectionManager.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
+
 using System.Data;
 using System.Diagnostics;
-using System.Linq;
-using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.Model.Setting;
 using APE.PostgreSQL.Teamwork.ViewModel;
 using Dapper;
-using log4net;
 using Npgsql;
+using Serilog;
 
 namespace APE.PostgreSQL.Teamwork
 {
     /// <summary>
     /// Contains all methods to communicate with the database.
     /// </summary>
-    [Disposable]
     public partial class ConnectionManager : IConnectionManager
     {
-        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
-        private readonly object connectionLock = new object();
+        private readonly object connectionLock = new();
 
         /// <summary>
         /// Gets the <see cref="NpgsqlConnection"/> for a specific connection string.
         /// </summary>
-        private Dictionary<string, NpgsqlConnection> connections = new Dictionary<string, NpgsqlConnection>();
+        private readonly Dictionary<string, NpgsqlConnection> connections = new();
 
-        private string id;
-        private string host;
-        private string password;
-        private int port;
+        private string id = "postgres";
+        private string host = "localhost";
+        private string password = string.Empty;
+        private int port = 5432;
 
         /// <summary>
         /// Creates a new instance of the <see cref="ConnectionManager"/> class.
@@ -65,10 +59,7 @@ namespace APE.PostgreSQL.Teamwork
         /// Checks if a connection to the default postgres database can be established.
         /// </summary>
         /// <returns>A bool indicating if the connection worked.</returns>
-        public bool CheckConnection()
-        {
-            return this.CheckConnection(Database.PostgresDefaultDatabaseName);
-        }
+        public bool CheckConnection() => this.CheckConnection(Database.PostgresDefaultDatabaseName);
 
         /// <summary>
         /// Checks if the given database exists.
@@ -91,7 +82,7 @@ namespace APE.PostgreSQL.Teamwork
             }
             catch (Exception ex)
             {
-                Log.Warn(string.Format("Connection to the database {0} could not be established", databaseName), ex);
+                Log.Warning(string.Format("Connection to the database {0} could not be established", databaseName), ex);
                 return false;
             }
         }
@@ -102,10 +93,7 @@ namespace APE.PostgreSQL.Teamwork
         /// <remarks>
         /// Max time is 10 minutes, after that a timeout exception is thrown.
         /// </remarks>
-        public void ExecuteCommandNonQuery(IDatabase database, string sql)
-        {
-            this.ExecuteCommandNonQuery(database.Name, sql);
-        }
+        public void ExecuteCommandNonQuery(IDatabase database, string sql) => this.ExecuteCommandNonQuery(database.Name, sql);
 
         /// <summary>
         /// Executes the given SQL command without a return value on the default database defined in the settings.
@@ -126,10 +114,7 @@ namespace APE.PostgreSQL.Teamwork
         /// <typeparam name="T">The type of the result.</typeparam>
         /// <param name="database">The <see cref="IDatabase"/> on which the sql is executed.</param>
         /// <param name="sql">The SQL which is executed.</param>
-        public List<T> ExecuteCommand<T>(IDatabase database, string sql)
-        {
-            return this.ExecuteCommand<T>(database.Name, sql);
-        }
+        public List<T> ExecuteCommand<T>(IDatabase database, string sql) => this.ExecuteCommand<T>(database.Name, sql);
 
         /// <summary>
         /// Executes the given SQL command on the default database.
@@ -145,12 +130,8 @@ namespace APE.PostgreSQL.Teamwork
         /// <summary>
         /// Clear all <see cref="NpgsqlConnection"/> pools.
         /// </summary>
-        public void ClearPools()
-        {
-            NpgsqlConnection.ClearAllPools();
-        }
+        public void ClearPools() => NpgsqlConnection.ClearAllPools();
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Security", "CA2100:Review SQL queries for security vulnerabilities", Justification = "This is ok because the sql is no user input.")]
         private void ExecuteCommandNonQuery(string databaseName, string sql)
         {
             lock (this.connectionLock)
@@ -185,7 +166,7 @@ namespace APE.PostgreSQL.Teamwork
                 }
                 catch (NpgsqlException ex)
                 {
-                    Log.Error(ex);
+                    Log.Error(ex, "NpgsqlException while executing command.");
                     if (Debugger.IsAttached)
                         Debugger.Break();
 
@@ -197,7 +178,7 @@ namespace APE.PostgreSQL.Teamwork
                 }
                 catch (Exception ex)
                 {
-                    Log.Error(ex);
+                    Log.Error(ex, "Exception while executing command.");
                     if (Debugger.IsAttached)
                         Debugger.Break();
 
@@ -206,25 +187,20 @@ namespace APE.PostgreSQL.Teamwork
             }
         }
 
-        partial void Dispose(bool threadSpecificCleanup)
+        partial void Dispose(bool disposing)
         {
             lock (this.connectionLock)
             {
-                if (this.connections != null)
-                {
-                    foreach (var connection in this.connections.Values)
-                        connection?.Dispose();
+                foreach (var connection in this.connections.Values)
+                    connection?.Dispose();
 
-                    this.connections.Clear();
-                }
-
-                this.connections = null;
+                this.connections.Clear();
             }
         }
 
         private NpgsqlConnection GetConnection(NpgsqlConnectionStringBuilder connectionString)
         {
-            NpgsqlConnection connection = null;
+            NpgsqlConnection? connection = null;
 
             if (this.connections.ContainsKey(connectionString.ConnectionString))
             {

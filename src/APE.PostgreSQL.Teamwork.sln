@@ -3,25 +3,24 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.1.32127.271
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APE.PostgreSQL.Teamwork.GUI", "APE.PostgreSQL.Teamwork.GUI\APE.PostgreSQL.Teamwork.GUI.csproj", "{E9A43C83-45D8-4B05-AFA4-0E3FAF0EC57F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APE.PostgreSQL.Teamwork.GUI", "APE.PostgreSQL.Teamwork.GUI\APE.PostgreSQL.Teamwork.GUI.csproj", "{E9A43C83-45D8-4B05-AFA4-0E3FAF0EC57F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APE.PostgreSQL.Teamwork.ViewModel", "APE.PostgreSQL.Teamwork.ViewModel\APE.PostgreSQL.Teamwork.ViewModel.csproj", "{BBEE7981-C1A8-4477-B88C-F9E4D565BFE5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APE.PostgreSQL.Teamwork.ViewModel", "APE.PostgreSQL.Teamwork.ViewModel\APE.PostgreSQL.Teamwork.ViewModel.csproj", "{BBEE7981-C1A8-4477-B88C-F9E4D565BFE5}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APE.PostgreSQL.Teamwork.Model", "APE.PostgreSQL.Teamwork.Model\APE.PostgreSQL.Teamwork.Model.csproj", "{C3DF1F15-E4C9-4052-9535-AF39FF0E2191}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APE.PostgreSQL.Teamwork.Model", "APE.PostgreSQL.Teamwork.Model\APE.PostgreSQL.Teamwork.Model.csproj", "{C3DF1F15-E4C9-4052-9535-AF39FF0E2191}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APE.PostgreSQL.Teamwork.CommandPrompt", "APE.PostgreSQL.Teamwork.CommandPrompt\APE.PostgreSQL.Teamwork.CommandPrompt.csproj", "{CE35B78F-B9E6-462D-BD8A-314D71D6B5D0}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APE.PostgreSQL.Teamwork.CommandPrompt", "APE.PostgreSQL.Teamwork.CommandPrompt\APE.PostgreSQL.Teamwork.CommandPrompt.csproj", "{CE35B78F-B9E6-462D-BD8A-314D71D6B5D0}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APE.PostgreSQL.Teamwork.ViewModel.Test", "APE.PostgreSQL.Teamwork.ViewModel.Test\APE.PostgreSQL.Teamwork.ViewModel.Test.csproj", "{6402AD8B-4F11-418E-827B-F413F823D339}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APE.PostgreSQL.Teamwork.ViewModel.Test", "APE.PostgreSQL.Teamwork.ViewModel.Test\APE.PostgreSQL.Teamwork.ViewModel.Test.csproj", "{6402AD8B-4F11-418E-827B-F413F823D339}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APE.PostgreSQL.Teamwork.TestHelper", "APE.PostgreSQL.Teamwork.TestHelper\APE.PostgreSQL.Teamwork.TestHelper.csproj", "{F5DA55B2-31D4-40C5-A6BE-B7E35D9F00F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "APE.PostgreSQL.Teamwork.Model.Test", "APE.PostgreSQL.Teamwork.Model.Test\APE.PostgreSQL.Teamwork.Model.Test.csproj", "{3568A34C-158E-4139-9BE2-A1780B49562E}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = ".config", ".config", "{FB5C8473-7B01-4012-ABDD-2007E7A5C8DF}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{0BB5FF76-8657-429B-848B-D612119657B1}"
 	ProjectSection(SolutionItems) = preProject
+		.editorconfig = .editorconfig
 		..\CHANGELOG.md = ..\CHANGELOG.md
 		..\README.md = ..\README.md
 	EndProjectSection
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "APE.PostgreSQL.Teamwork.Model.Test", "APE.PostgreSQL.Teamwork.Model.Test\APE.PostgreSQL.Teamwork.Model.Test.csproj", "{3568A34C-158E-4139-9BE2-A1780B49562E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -60,12 +59,6 @@ Global
 		{6402AD8B-4F11-418E-827B-F413F823D339}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6402AD8B-4F11-418E-827B-F413F823D339}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6402AD8B-4F11-418E-827B-F413F823D339}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F5DA55B2-31D4-40C5-A6BE-B7E35D9F00F4}.Alle Erstellen - DEBUG|Any CPU.ActiveCfg = Release|Any CPU
-		{F5DA55B2-31D4-40C5-A6BE-B7E35D9F00F4}.Alle Erstellen - DEBUG|Any CPU.Build.0 = Release|Any CPU
-		{F5DA55B2-31D4-40C5-A6BE-B7E35D9F00F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F5DA55B2-31D4-40C5-A6BE-B7E35D9F00F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F5DA55B2-31D4-40C5-A6BE-B7E35D9F00F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F5DA55B2-31D4-40C5-A6BE-B7E35D9F00F4}.Release|Any CPU.Build.0 = Release|Any CPU
 		{3568A34C-158E-4139-9BE2-A1780B49562E}.Alle Erstellen - DEBUG|Any CPU.ActiveCfg = Release|Any CPU
 		{3568A34C-158E-4139-9BE2-A1780B49562E}.Alle Erstellen - DEBUG|Any CPU.Build.0 = Release|Any CPU
 		{3568A34C-158E-4139-9BE2-A1780B49562E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU

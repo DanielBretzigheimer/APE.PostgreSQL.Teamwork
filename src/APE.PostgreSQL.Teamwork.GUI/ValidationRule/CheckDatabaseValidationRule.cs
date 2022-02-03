@@ -1,23 +1,22 @@
 // <copyright file="CheckDatabaseValidationRule.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
 using System.Windows.Controls;
-using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.Model.Setting;
 using APE.PostgreSQL.Teamwork.ViewModel;
 
 namespace APE.PostgreSQL.Teamwork.View
 {
-    [Disposable]
     public partial class CheckDatabaseValidationRule : ValidationRule
     {
-        private IConnectionManager connectionManager = new ConnectionManager();
+        private readonly IConnectionManager connectionManager = new ConnectionManager();
 
         public CheckDatabaseValidationRule()
         {
+            var setting = SettingsManager.Get().Setting;
             this.connectionManager.Initialize(
-                SettingsManager.Get().Setting.Id,
-                SettingsManager.Get().Setting.Host,
-                SettingsManager.Get().Setting.Password,
-                SettingsManager.Get().Setting.Port);
+                setting.Id,
+                setting.Host,
+                setting.Password,
+                setting.Port);
         }
 
         public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
@@ -42,12 +41,10 @@ namespace APE.PostgreSQL.Teamwork.View
             }
         }
 
-        partial void Dispose(bool threadSpecificCleanup)
+        partial void Dispose(bool disposing)
         {
-            if (this.connectionManager != null)
+            if (disposing)
                 this.connectionManager.Dispose();
-
-            this.connectionManager = null;
         }
     }
 }

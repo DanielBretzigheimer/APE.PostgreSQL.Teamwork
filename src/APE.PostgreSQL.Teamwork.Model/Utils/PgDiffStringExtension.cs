@@ -59,9 +59,6 @@ namespace APE.PostgreSQL.Teamwork.Model.Utils
         /// quoted.
         /// </summary>
         /// <returns>Quoted string if needed, otherwise not quoted string.</returns>
-        public static string QuoteName(this string name)
-        {
-            return name.GetQuotedName(false);
-        }
+        public static string QuoteName(this string name) => name.GetQuotedName(false);
     }
 }

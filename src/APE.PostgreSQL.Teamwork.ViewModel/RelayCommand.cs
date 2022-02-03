@@ -1,44 +1,34 @@
 ﻿// <copyright file="RelayCommand.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
 using System.Diagnostics.CodeAnalysis;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
-using log4net;
+using Serilog;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {
-#pragma warning disable SA1402 // File may only contain a single type
     /// <summary>
     /// Implementation of an ICommand that represents a command with a typed CommandParameter.
     /// </summary>
     /// <typeparam name="T">CommandParameter type.</typeparam>
     public class RelayCommand<T> : ICommand
-#pragma warning restore SA1402 // File may only contain a single type
     {
-        private static readonly ILog Log = LogManager.GetLogger(System.Reflection.MethodBase.GetCurrentMethod().DeclaringType);
-
         /// <summary>
         /// Initializes a new command that is always executable.
         /// </summary>
         /// <param name="executeAction">Action that is invoked when the command is executed.</param>
         public RelayCommand(Action<T> executeAction)
-            : this()
-        {
-            this.ExecuteAction = executeAction ?? throw new ArgumentNullException("executeAction");
-        }
+            : this() => this.ExecuteAction = executeAction ?? throw new ArgumentNullException(nameof(executeAction));
 
         /// <summary>
         /// Initializes a new command.
         /// </summary>
         /// <param name="executeAction">Action that is invoked when the command is executed.</param>
         /// <param name="canExecuteFunc">Function that is evaluated when the CanExecute method is executed.</param>
-        public RelayCommand(Action<T> executeAction, Func<T, bool> canExecuteFunc)
+        public RelayCommand(Action<T> executeAction, Func<T?, bool> canExecuteFunc)
         {
-            this.ExecuteAction = executeAction ?? throw new ArgumentNullException("executeAction");
-            this.CanExecuteFunc = canExecuteFunc ?? throw new ArgumentNullException("canExecuteFunc");
+            this.ExecuteAction = executeAction ?? throw new ArgumentNullException(nameof(executeAction));
+            this.CanExecuteFunc = canExecuteFunc ?? throw new ArgumentNullException(nameof(canExecuteFunc));
         }
 
         /// <summary>
@@ -53,33 +43,28 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         /// Event that is raised when the Command's CanExecute-status needs to be reevaluated
         /// </summary>
-        public event EventHandler CanExecuteChanged;
+        public event EventHandler? CanExecuteChanged;
 
         /// <summary>
         /// Action that is executed when the command is executed.
         /// </summary>
-        protected Action<T> ExecuteAction { get; set; }
+        protected Action<T?> ExecuteAction { get; set; }
 
         /// <summary>
         /// Function that is evaluated when the CanExecute method is executed.
         /// </summary>
-        protected Func<T, bool> CanExecuteFunc { get; set; }
+        protected Func<T?, bool> CanExecuteFunc { get; set; }
 
         /// <summary>
         /// Implementation of the ICommand interface: Gets if this command can be executed.
         /// </summary>
         /// <param name="parameter">Command parameter.</param>
         /// <returns>true if this command can be executed.</returns>
-        public virtual bool CanExecute([NullGuard.AllowNull] object parameter)
+        public virtual bool CanExecute(object? parameter)
         {
             try
             {
-                if (parameter is T)
-                {
-                    return this.CanExecuteFunc((T)parameter);
-                }
-
-                return this.CanExecuteFunc(default(T));
+                return parameter is T value ? this.CanExecuteFunc(value) : this.CanExecuteFunc(default);
             }
             catch (Exception ex)
             {
@@ -92,15 +77,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// Implementation of the ICommand interface: Execute this command.
         /// </summary>
         /// <param name="parameter">Command parameter.</param>
-        public virtual void Execute([NullGuard.AllowNull] object parameter)
+        public virtual void Execute(object? parameter)
         {
             if (this.CanExecute(parameter))
             {
-                var param = parameter is T
-                    ? (T)parameter
-                    : default(T);
+                var param = parameter is T value ? value : default;
 
-                Exception exception = null;
+                Exception? exception = null;
 
                 this.OnBeforeExecute(param);
 
@@ -125,14 +108,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         {
             if (this.CanExecuteChanged != null)
             {
-                if (Application.Current != null && Application.Current.Dispatcher != Dispatcher.CurrentDispatcher)
-                {
-                    Application.Current.Dispatcher.Invoke(() => this.CanExecuteChanged(this, new EventArgs()));
-                }
+                var currentApplication = System.Windows.Application.Current;
+                if (currentApplication != null && currentApplication.Dispatcher != Dispatcher.CurrentDispatcher)
+                    currentApplication.Dispatcher.Invoke(() => this.CanExecuteChanged(this, new EventArgs()));
                 else
-                {
                     this.CanExecuteChanged(this, new EventArgs());
-                }
             }
         }
 
@@ -140,7 +120,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// Is called before the action is executed.
         /// </summary>
         /// <param name="parameter">Parameter the action is invoked with.</param>
-        protected virtual void OnBeforeExecute([NullGuard.AllowNull] T parameter)
+        protected virtual void OnBeforeExecute(T? parameter)
         {
         }
 
@@ -149,19 +129,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         /// <param name="parameter">Parameter the action is invoked with.</param>
         /// <param name="ex">Exception if thrown by the action. Null if no exception is thrown.</param>
-        protected virtual void OnAfterExecute([NullGuard.AllowNull] T parameter, Exception ex)
+        protected virtual void OnAfterExecute(T? parameter, Exception? ex)
         {
             if (ex != null)
-            {
                 Log.Error("Exception while RelayCommand.Execute", ex);
-            }
         }
     }
 
     /// <summary>
     /// Implementation of an ICommand that represents a command with no CommandParameter.
     /// </summary>
-    [SuppressMessage("StyleCop.CSharp.MaintainabilityRules", "SA1402:FileMayOnlyContainASingleClass", Justification = "Reviewed.")]
     public class RelayCommand : RelayCommand<object>
     {
         /// <summary>

@@ -1,9 +1,4 @@
 ﻿// <copyright file="PgArgument.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
 {
@@ -36,12 +31,6 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets a string which contains the <see cref="Name"/> and <see cref="DataType"/>.
         /// </summary>
-        public string Full
-        {
-            get
-            {
-                return string.Format("{0} {1}", this.Name, this.DataType);
-            }
-        }
+        public string Full => string.Format("{0} {1}", this.Name, this.DataType);
     }
 }

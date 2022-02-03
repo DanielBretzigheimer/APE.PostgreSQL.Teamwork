@@ -1,14 +1,10 @@
 // <copyright file="ImportWindowViewModel.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Windows;
 using System.Windows.Input;
 using System.Windows.Threading;
-using APE.CodeGeneration.Attributes;
 using APE.PostgreSQL.Teamwork.Model;
 using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
-using APE.PostgreSQL.Teamwork.ViewModel.TestHelper;
+using Serilog;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {
@@ -17,13 +13,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     /// <see cref="SQLFileDisplayData"/> and another list with all <see cref="StatementDisplayData"/>
     /// which the user can execute.
     /// </summary>
-    [NotifyProperty(typeof(List<SQLFileDisplayData>), "DiffFiles")]
-    [AllowNullNotifyProperty(typeof(SQLFileDisplayData), "SelectedDiffFile")]
-    [NotifyProperty(typeof(bool), "ExecuteButtonEnabled")]
-    [NotifyProperty(AccessModifier.Public, typeof(bool), "ExecuteButtonVisible", true)]
-    [NotifyProperty(AccessModifier.Public, typeof(bool), "Loading", false)]
-    [CtorParameter(typeof(IProcessManager))]
-    [CtorParameter(AccessModifier.Public, typeof(DatabaseDisplayData), "SelectedDatabase")]
     public partial class ImportWindowViewModel : BaseViewModel
     {
         /// <summary>
@@ -114,7 +103,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                             catch (TeamworkConnectionException ex)
                             {
                                 ShowDialog(GetMessageBox(string.Format("Error while executing file {0}", ex.File.Path), "Execution failed", MessageBoxButton.OK)).Wait();
-                                Log.Warn(string.Format("Error while executing file {0}", ex.File.Path), ex);
+                                Log.Warning(string.Format("Error while executing file {0}", ex.File.Path), ex);
                             }
                         }
 
@@ -179,7 +168,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             {
                 this.SelectedDatabase.UpdateToVersion(this.SelectedDatabase.TargetVersion);
                 await BaseViewModel.ShowDialogWithCloseHandler(BaseViewModel.GetMessageBox("All SQL Files successfully executed! Do you want to close the window?", "Successfully Executed", MessageBoxButton.YesNo), this.SuccessfullyExecutedMessageBoxClosing);
-                Log.Info("All sql files successfully executed");
+                Log.Information("All sql files successfully executed");
             }
             catch (Exception ex)
             {
@@ -192,7 +181,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
                 var message = string.Format("Error in file {0}: {1}\n\nStart rolling back to version {2}", path, ex.Message, oldVersion);
                 BaseViewModel.ShowDialog(BaseViewModel.GetMessageBox(message, "Execution failed", MessageBoxButton.OK)).Wait();
-                Log.Warn(string.Format("Error while executing files. Rolling back to version {0}", oldVersion), ex);
+                Log.Warning(string.Format("Error while executing files. Rolling back to version {0}", oldVersion), ex);
 
                 try
                 {

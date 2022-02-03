@@ -1,10 +1,5 @@
 ﻿// <copyright file="PgDiffTypes.cs" company="APE Engineering GmbH">Copyright (c) APE Engineering GmbH. All rights reserved.</copyright>
-using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
@@ -14,13 +9,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Creates the types.
         /// </summary>
-        internal static void Create(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        static internal void Create(StreamWriter writer, PgSchema? oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
-            foreach (PgType newType in newSchema.Types)
+            foreach (var newType in newSchema.Types)
             {
                 if (oldSchema == null || !oldSchema.ContainsType(newType.Signature))
                 {
-                    PgType oldType = null;
+                    PgType? oldType = null;
                     if (oldSchema != null)
                     {
                         oldType = oldSchema.GetEnum(newType.Name);
@@ -42,18 +37,18 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Drops the types.
         /// </summary>
-        internal static void Drop(StreamWriter writer, [NullGuard.AllowNull] PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        static internal void Drop(StreamWriter writer, PgSchema? oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
             {
                 return;
             }
 
-            foreach (PgType oldType in oldSchema.Types)
+            foreach (var oldType in oldSchema.Types)
             {
                 if (!newSchema.ContainsType(oldType.Signature))
                 {
-                    List<string> newValues = newSchema.TypeEntriesChanged(oldType);
+                    var newValues = newSchema.TypeEntriesChanged(oldType);
                     if (newValues != null)
                     {
                         AddDefinition(writer, oldType, newValues, searchPathHelper);
