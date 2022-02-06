@@ -28,7 +28,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// and uses a function to notify when the dialog is closed. The function can return a new user control which
         /// is displayed afterwards or null if the dialog should be closed.
         /// </summary>
-        public static Func<object, Func<MaterialMessageBoxResult, object>, Task<MaterialMessageBoxResult>> ShowExtendedDialog { get; set; }
+        public static Func<object, Func<MaterialMessageBoxResult, object?>, Task<MaterialMessageBoxResult>> ShowExtendedDialog { get; set; }
 
         /// <summary>
         /// Gets a view for adding a database.

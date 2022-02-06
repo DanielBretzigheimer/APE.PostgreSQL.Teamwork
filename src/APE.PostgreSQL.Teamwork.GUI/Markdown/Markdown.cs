@@ -158,8 +158,21 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
         private static readonly Regex StrictItalic = new(
             @"([\W_]|^) (\*|_) (?=\S) ([^\r\*_]*?\S) \2 ([\W_]|$)",
             RegexOptions.IgnorePatternWhitespace | RegexOptions.Singleline | RegexOptions.Compiled);
+        
+        private static readonly Regex newlinesLeadingTrailing = new(@"^\n+|\n+\z", RegexOptions.Compiled);
+        private static readonly Regex newlinesMultiple = new(@"\n{2,}", RegexOptions.Compiled);
 
-        private static Regex imageInline = new(
+        private static readonly Regex eoln = new("\\s+");
+
+        private static string? nestedBracketsPattern;
+        private static string? nestedParensPattern;
+        private static string? nestedParensPatternWithWhiteSpace;
+
+        private int listLevel;
+
+        public Markdown() => this.HyperlinkCommand = NavigationCommands.GoToPage;
+
+        public static Regex ImageInline { get; set; } = new(
             string.Format(
             @"
                 (                           # wrap whole match in $1
@@ -182,7 +195,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
             GetNestedParensPatternWithWhiteSpace()),
             RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
 
-        private static Regex anchorInline = new(
+        public static Regex AnchorInline { get; set; } = new(
             string.Format(
             @"
                 (                           # wrap whole match in $1
@@ -204,25 +217,6 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
             GetNestedBracketsPattern(),
             GetNestedParensPattern()),
             RegexOptions.Singleline | RegexOptions.IgnorePatternWhitespace | RegexOptions.Compiled);
-
-        private static readonly Regex newlinesLeadingTrailing = new(@"^\n+|\n+\z", RegexOptions.Compiled);
-        private static readonly Regex newlinesMultiple = new(@"\n{2,}", RegexOptions.Compiled);
-
-        private static readonly Regex eoln = new("\\s+");
-
-        private static string nestedBracketsPattern;
-        private static string nestedParensPattern;
-        private static string nestedParensPatternWithWhiteSpace;
-
-        private int listLevel;
-
-        public Markdown() => this.HyperlinkCommand = NavigationCommands.GoToPage;
-
-        public static Regex ImageInline { get => ImageInline1; set => ImageInline1 = value; }
-
-        public static Regex ImageInline1 { get => imageInline; set => imageInline = value; }
-
-        public static Regex AnchorInline { get => anchorInline; set => anchorInline = value; }
 
         /// <summary>
         /// when true, bold and italic require non-word characters on either side
@@ -585,7 +579,7 @@ namespace APE.PostgreSQL.Teamwork.GUI.Markdown
                 };
 
                 var bindingExpression = BindingOperations.SetBinding(image, FrameworkElement.WidthProperty, binding);
-                void DownloadCompletedHandler(object sender, EventArgs e)
+                void DownloadCompletedHandler(object? sender, EventArgs e)
                 {
                     imgSource.DownloadCompleted -= DownloadCompletedHandler;
                     bindingExpression.UpdateTarget();

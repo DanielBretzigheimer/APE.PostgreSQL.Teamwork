@@ -15,10 +15,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     /// </summary>
     public partial class ImportWindowViewModel : BaseViewModel
     {
-        /// <summary>
-        /// DESIGN TIME CONSTRUCTOR.
-        /// </summary>
+        [Obsolete("Design time constructor")]
+#pragma warning disable CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         public ImportWindowViewModel()
+#pragma warning restore CS8618 // Non-nullable field must contain a non-null value when exiting constructor. Consider declaring as nullable.
         {
         }
 
@@ -102,8 +102,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                             }
                             catch (TeamworkConnectionException ex)
                             {
-                                ShowDialog(GetMessageBox(string.Format("Error while executing file {0}", ex.File.Path), "Execution failed", MessageBoxButton.OK)).Wait();
-                                Log.Warning(string.Format("Error while executing file {0}", ex.File.Path), ex);
+                                var path = ex.File?.Path ?? "unknown file";
+                                ShowDialog(GetMessageBox($"Error while executing file '{path}'", "Execution failed", MessageBoxButton.OK)).Wait();
+                                Log.Warning($"Error while executing file {path}", ex);
                             }
                         }
 
@@ -153,9 +154,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         {
             this.SelectedDatabase.UpdateData();
 
+            if (this.SelectedDatabase.Database == null)
+                throw new InvalidOperationException($"Database {this.SelectedDatabase.Name} is not connected.");
+
             if (this.SelectedDatabase.ApplicableSQLFiles.Count <= 0)
             {
-                await BaseViewModel.ShowDialog(BaseViewModel.GetMessageBox(
+                await ShowDialog(GetMessageBox(
                     @"All found files were already executed and database is on the selected Version. Try changing the target version to go to another version.",
                     "Database up-to-date",
                     MessageBoxButton.OK));
@@ -167,7 +171,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             try
             {
                 this.SelectedDatabase.UpdateToVersion(this.SelectedDatabase.TargetVersion);
-                await BaseViewModel.ShowDialogWithCloseHandler(BaseViewModel.GetMessageBox("All SQL Files successfully executed! Do you want to close the window?", "Successfully Executed", MessageBoxButton.YesNo), this.SuccessfullyExecutedMessageBoxClosing);
+                await ShowDialogWithCloseHandler(GetMessageBox("All SQL Files successfully executed! Do you want to close the window?", "Successfully Executed", MessageBoxButton.YesNo), this.SuccessfullyExecutedMessageBoxClosing);
                 Log.Information("All sql files successfully executed");
             }
             catch (Exception ex)
@@ -180,7 +184,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 }
 
                 var message = string.Format("Error in file {0}: {1}\n\nStart rolling back to version {2}", path, ex.Message, oldVersion);
-                BaseViewModel.ShowDialog(BaseViewModel.GetMessageBox(message, "Execution failed", MessageBoxButton.OK)).Wait();
+                ShowDialog(GetMessageBox(message, "Execution failed", MessageBoxButton.OK)).Wait();
                 Log.Warning(string.Format("Error while executing files. Rolling back to version {0}", oldVersion), ex);
 
                 try
@@ -190,7 +194,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 catch (Exception rollbackEx)
                 {
                     var rollbackMessage = $"Rollback to version {oldVersion} did not work. Error in file {path}: {rollbackEx.Message}";
-                    BaseViewModel.ShowDialog(BaseViewModel.GetMessageBox(rollbackMessage, "Rollback failed", MessageBoxButton.OK)).Wait();
+                    ShowDialog(GetMessageBox(rollbackMessage, "Rollback failed", MessageBoxButton.OK)).Wait();
                     Log.Fatal("Rollback did not work. This means the database is in an unknown status! This can only be solved by manually checking the database!");
                 }
             }
@@ -202,7 +206,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         {
             if (result == MaterialMessageBoxResult.Yes)
             {
-                ImportWindowViewModel.CloseView();
+                CloseView();
             }
         }
     }

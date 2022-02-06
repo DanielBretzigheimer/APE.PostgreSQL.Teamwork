@@ -270,9 +270,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs DatabasesEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Databases));
-        private List<DatabaseDisplayData>? databases;
+        private List<DatabaseDisplayData> databases = new();
 
-        public List<DatabaseDisplayData>? Databases
+        public List<DatabaseDisplayData> Databases
         {
             get
             {
@@ -290,7 +290,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             }
         }
 
-        partial void DatabasesBeforeSet(List<DatabaseDisplayData>? newValue);
+        partial void DatabasesBeforeSet(List<DatabaseDisplayData> newValue);
         partial void DatabasesAfterSet();
         
 

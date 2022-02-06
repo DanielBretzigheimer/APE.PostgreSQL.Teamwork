@@ -82,7 +82,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             foreach (var argument in arguments)
                 aggregate.Arguments.Add(argument);
 
-            aggregate.Body = parser.Rest();
+            var body = parser.Rest();
+            aggregate.Body = body ?? throw new InvalidOperationException("Aggregate body is missing.");
         }
     }
 }

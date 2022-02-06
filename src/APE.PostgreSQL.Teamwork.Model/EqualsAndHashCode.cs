@@ -109,7 +109,7 @@ namespace APE.PostgreSQL.Teamwork.Model
 
         private Func<T, T, bool> BuildEquals(Expression<Func<T, object>>[] properties)
         {
-            var equalsMethodInfo = typeof(object).GetMethod("Equals", System.Reflection.BindingFlags.Static | System.Reflection.BindingFlags.Public);
+            var equalsMethodInfo = typeof(object).GetMethod("Equals", BindingFlags.Static | BindingFlags.Public);
 
             var leftParameter = Expression.Parameter(typeof(T));
             var rightParameter = Expression.Parameter(typeof(T));

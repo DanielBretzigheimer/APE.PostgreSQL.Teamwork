@@ -50,7 +50,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             var view = new PgView(ParserUtils.GetObjectName(viewName))
             {
                 ColumnNames = columnNames,
-                Query = query,
+                Query = query ?? throw new InvalidOperationException("Query can't be null"),
             };
             var schemaName = ParserUtils.GetSchemaName(viewName, database);
 

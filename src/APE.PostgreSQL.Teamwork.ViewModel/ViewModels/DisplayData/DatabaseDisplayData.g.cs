@@ -6,63 +6,17 @@ using APE.PostgreSQL.Teamwork.ViewModel.TestHelper;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel
 {
-    // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "Enabled", false)]
-    // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "EditMode", false)]
-    // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "ShowDetails", false)]
-    // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "Exporting", false, "Indicates that the database is exporting at the moment")]
-    // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "Importing", false, "Indicates that the database is importing at the moment")]
-    // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "Testing", false, "Indicates that the database is testing at the moment")]
-    // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "Resetting", false, "Indicates that the database is resetting at the moment")]
-    // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "Undoing", false, "Indicates that the database is undoing changes at the moment")]
-    // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "Error", false)]
-    // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(bool), "ImportableFilesFound", false)]
-    // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.PublicGetPrivateSet, typeof(bool), "CanCreateMinor", false)]
-    // APE.CodeGeneration.Attribute [AllowNullNotifyProperty(AccessModifier.Public, typeof(string), "SelectedSchema")]
-    // APE.CodeGeneration.Attribute [NotifyProperty(typeof(string), "ErrorMessage")]
-    // APE.CodeGeneration.Attribute [AllowNullNotifyProperty(typeof(Database), "Database")]
-    // APE.CodeGeneration.Attribute [NotifyProperty(AccessModifier.Public, typeof(DatabaseVersion), "TargetVersion")]
-    // APE.CodeGeneration.Attribute [AllowNullNotifyProperty(AccessModifier.Public, typeof(List<DatabaseVersion>), "Versions")]
-    // APE.CodeGeneration.Attribute [AllowNullNotifyProperty(typeof(ObservableCollection<SQLFileDisplayData>), "ApplicableSQLFiles")]
-    // APE.CodeGeneration.Attribute [CtorParameter(typeof(IConnectionManager))]
-    // APE.CodeGeneration.Attribute [CtorParameter(typeof(IFileSystemAccess))]
-    // APE.CodeGeneration.Attribute [CtorParameter(typeof(IProcessManager))]
-    // APE.CodeGeneration.Attribute [CtorParameter(typeof(IDifferenceCreator))]
-    // APE.CodeGeneration.Attribute [CtorParameter(typeof(ISQLFileTester))]
-    // APE.CodeGeneration.Attribute [CtorParameter(AccessModifier.Public, typeof(int), "Id", false, "id of the database for which the name and path are loaded")]
-    // APE.CodeGeneration.Attribute [NotifyPropertySupport]
     public partial class DatabaseDisplayData
   : System.ComponentModel.INotifyPropertyChanged
     {
-        //ncrunch: no coverage start
-
-        //--------------------------------------------------------------------------------
-        // generated code for CtorParameter
-        //--------------------------------------------------------------------------------
-
-
-        /// <summary>
-        /// 
-        /// </summary>
         private IConnectionManager connectionManager;
 
-        /// <summary>
-        /// 
-        /// </summary>
         private IFileSystemAccess fileSystemAccess;
 
-        /// <summary>
-        /// 
-        /// </summary>
         private IProcessManager processManager;
 
-        /// <summary>
-        /// 
-        /// </summary>
         private IDifferenceCreator differenceCreator;
 
-        /// <summary>
-        /// 
-        /// </summary>
         private ISQLFileTester sQLFileTester;
 
         /// <summary>
@@ -443,7 +397,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs SelectedSchemaEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(SelectedSchema));
-        private string selectedSchema;
+        private string? selectedSchema;
 
         public string? SelectedSchema
         {
@@ -463,7 +417,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             }
         }
 
-        partial void SelectedSchemaBeforeSet(string newValue);
+        partial void SelectedSchemaBeforeSet(string? newValue);
         partial void SelectedSchemaAfterSet();
         
 
@@ -493,7 +447,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs VersionsEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(Versions));
-        private List<DatabaseVersion> versions;
+        private List<DatabaseVersion>? versions;
 
         public List<DatabaseVersion>? Versions
         {
@@ -513,14 +467,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             }
         }
 
-        partial void VersionsBeforeSet(List<DatabaseVersion> newValue);
+        partial void VersionsBeforeSet(List<DatabaseVersion>? newValue);
         partial void VersionsAfterSet();
         
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs ApplicableSQLFilesEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(ApplicableSQLFiles));
-        private ObservableCollection<SQLFileDisplayData> applicableSQLFiles;
+        private ObservableCollection<SQLFileDisplayData> applicableSQLFiles = new ObservableCollection<SQLFileDisplayData>();
 
-        public ObservableCollection<SQLFileDisplayData>? ApplicableSQLFiles
+        public ObservableCollection<SQLFileDisplayData> ApplicableSQLFiles
         {
             get
             {
@@ -546,12 +500,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         // generated code for NotifyPropertySupport
         //--------------------------------------------------------------------------------
 
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
+
         protected void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
         {
             this.PropertyChanged?.Invoke(this, e);
         }
-
-        //ncrunch: no coverage end
     }
 }

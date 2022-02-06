@@ -257,9 +257,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs UndoDiffFilesEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(UndoDiffFiles));
-        private ObservableCollection<SQLFile>? undoDiffFiles;
+        private ObservableCollection<SQLFile> undoDiffFiles = new ObservableCollection<SQLFile>();
 
-        public ObservableCollection<SQLFile>? UndoDiffFiles
+        public ObservableCollection<SQLFile> UndoDiffFiles
         {
             get => this.undoDiffFiles;
             set
@@ -274,14 +274,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             }
         }
 
-        partial void UndoDiffFilesBeforeSet(ObservableCollection<SQLFile>? newValue);
+        partial void UndoDiffFilesBeforeSet(ObservableCollection<SQLFile> newValue);
         partial void UndoDiffFilesAfterSet();
         
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs DiffFilesEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(DiffFiles));
-        private ObservableCollection<SQLFile>? diffFiles;
+        private ObservableCollection<SQLFile> diffFiles = new ObservableCollection<SQLFile>();
 
-        public ObservableCollection<SQLFile>? DiffFiles
+        public ObservableCollection<SQLFile> DiffFiles
         {
             get => this.diffFiles;
             set
@@ -296,17 +296,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             }
         }
 
-        partial void DiffFilesBeforeSet(ObservableCollection<SQLFile>? newValue);
+        partial void DiffFilesBeforeSet(ObservableCollection<SQLFile> newValue);
         partial void DiffFilesAfterSet();
         
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs ProgressInfoEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(ProgressInfo));
-        private string progressInfo = "";
+        private string progressInfo = string.Empty;
 
         /// <summary>
         /// This will be shown to the user as additional info to the current progress.
         /// </summary>
-        public string? ProgressInfo
+        public string ProgressInfo
         {
             get
             {
@@ -332,7 +332,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         // generated code for NotifyPropertySupport
         //--------------------------------------------------------------------------------
 
-        public event System.ComponentModel.PropertyChangedEventHandler PropertyChanged;
+        public event System.ComponentModel.PropertyChangedEventHandler? PropertyChanged;
+
         protected void OnPropertyChanged(System.ComponentModel.PropertyChangedEventArgs e)
         {
             this.PropertyChanged?.Invoke(this, e);

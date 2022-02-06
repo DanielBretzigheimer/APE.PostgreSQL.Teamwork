@@ -17,7 +17,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         public string[] GetDirectories(string path) => Directory.GetDirectories(path);
 
-        public FileAttributes GetAttributes(string path) => System.IO.File.GetAttributes(path);
+        public FileAttributes GetAttributes(string path) => File.GetAttributes(path);
 
         public string GetTempFileName() => Path.GetTempFileName();
 
@@ -57,15 +57,15 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             }
         }
 
-        public void WriteAllText(string fileName, string content) => System.IO.File.WriteAllText(fileName, content);
+        public void WriteAllText(string fileName, string content) => File.WriteAllText(fileName, content);
 
-        public void DeleteFile(string filePath) => System.IO.File.Delete(filePath);
+        public void DeleteFile(string filePath) => File.Delete(filePath);
 
         public void DeleteFolder(string folderPath) => Directory.Delete(folderPath, true);
 
-        public void CopyFile(string sourceFileName, string destinationFileName) => System.IO.File.Copy(sourceFileName, destinationFileName);
+        public void CopyFile(string sourceFileName, string destinationFileName) => File.Copy(sourceFileName, destinationFileName);
 
-        public void CopyFile(string sourceFileName, string destinationFileName, bool overriteExisting) => System.IO.File.Copy(sourceFileName, destinationFileName, overriteExisting);
+        public void CopyFile(string sourceFileName, string destinationFileName, bool overriteExisting) => File.Copy(sourceFileName, destinationFileName, overriteExisting);
 
         public long GetFileSize(string file)
         {
@@ -77,7 +77,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             return new FileInfo(file).Length;
         }
 
-        public void MoveFile(string sourceFilePath, string destinationFilePath) => System.IO.File.Move(sourceFilePath, destinationFilePath);
+        public void MoveFile(string sourceFilePath, string destinationFilePath) => File.Move(sourceFilePath, destinationFilePath);
 
         public FileVersionInfo GetFileVersionInfo(string file) => FileVersionInfo.GetVersionInfo(file);
 
@@ -151,11 +151,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         public void SetCurrentDirectory(string path) => Directory.SetCurrentDirectory(path);
 
-        public MemoryStream GetMemoryStreamFromFile(string fileName) => new(System.IO.File.ReadAllBytes(fileName));
+        public MemoryStream GetMemoryStreamFromFile(string fileName) => new(File.ReadAllBytes(fileName));
 
-        public string ReadAllText(string fileName) => System.IO.File.ReadAllText(fileName);
+        public string ReadAllText(string fileName) => File.ReadAllText(fileName);
 
-        public void SetCreationTime(string path, DateTime creationTime) => System.IO.File.SetCreationTime(path, creationTime);
+        public void SetCreationTime(string path, DateTime creationTime) => File.SetCreationTime(path, creationTime);
 
         private void GetFiles(string path, string searchPattern, IList<string> files, int max)
         {

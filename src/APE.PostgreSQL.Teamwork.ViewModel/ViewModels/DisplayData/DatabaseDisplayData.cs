@@ -224,8 +224,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 SettingsManager.Get().Setting.Port);
 
             // open the diff files so user can verify them
-            var diff = new SQLFileDisplayData(this.Database.DiffFiles.SingleOrDefault(f => f.Version == newVersion));
-            var undoDiff = new SQLFileDisplayData(this.Database.UndoDiffFiles.SingleOrDefault(f => f.Version == newVersion));
+            var diff = new SQLFileDisplayData(this.Database.DiffFiles.Single(f => f.Version == newVersion));
+            var undoDiff = new SQLFileDisplayData(this.Database.UndoDiffFiles.Single(f => f.Version == newVersion));
 
             if (SettingsManager.Get().Setting.OpenFilesInDefaultApplication)
             {
@@ -241,7 +241,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// <summary>
         ///  Returns a string that represents the current object.
         /// </summary>
-        public override string ToString() => this.Database.Name;
+        public override string ToString() => this.Database?.Name ?? nameof(DatabaseDisplayData);
 
         /// <summary>
         /// Exports the database and shows a message box to the user if a error occurred.
@@ -357,8 +357,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 applicableSQLFiles.Add(new SQLFileDisplayData(file));
             }
 
-            if (this.ApplicableSQLFiles == null
-                || this.ApplicableSQLFiles.Count != applicableSQLFiles.Count
+            if (this.ApplicableSQLFiles.Count != applicableSQLFiles.Count
                 || applicableSQLFiles.Any(f => this.ApplicableSQLFiles.FirstOrDefault((oldFile) => oldFile.SQLFile.Version.Full == f.SQLFile.Version.Full) == null))
             {
                 this.ApplicableSQLFiles = applicableSQLFiles;
@@ -578,22 +577,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
                 try
                 {
-                    // check compatibility
-                    ////if (result == MaterialMessageBoxResult.Yes)
-                    ////{
-                    ////    if (this.Database.ImportConflicts(
-                    ////       SettingsManager.Get().Setting.PgDumpLocation,
-                    ////       SettingsManager.Get().Setting.Host,
-                    ////       SettingsManager.Get().Setting.Id,
-                    ////       SettingsManager.Get().Setting.Password))
-                    ////    {
-                    ////        // todo add message
-                    ////        var compatibilityMessageBox = MainWindowViewModel.GetMessageBox($"TODO", "Compatibility problems found.", MessageBoxButton.OK);
-                    ////        await MainWindowViewModel.ShowDialog(compatibilityMessageBox);
-                    ////        return;
-                    ////    }
-                    ////}
-
                     this.UpdateToVersion(this.Database.LastApplicableVersion);
                     var finishedMessageBox = BaseViewModel.GetMessageBox("All SQL Files successfully executed!", "Successfully Executed", MessageBoxButton.OK);
                     await BaseViewModel.ShowDialog(finishedMessageBox);

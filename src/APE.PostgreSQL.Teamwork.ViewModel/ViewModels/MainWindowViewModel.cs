@@ -17,9 +17,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     public partial class MainWindowViewModel : BaseViewModel, IMainWindowViewModel
     {
         private DispatcherTimer? worker = null;
-        private Dispatcher? uiDispatcher = null;
+        private Dispatcher uiDispatcher;
+        private Version version;
 
-        private List<DatabaseDisplayData>? unfilteredDatabases = null;
+        private List<DatabaseDisplayData> unfilteredDatabases = new();
 
         /// <summary>
         /// DESIGN TIME CONSTRUCTOR.
@@ -127,19 +128,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         {
             var settings = SettingsManager.Get().Setting;
             var previousVersionString = settings.ApplicationVersion == null ? "none" : settings.ApplicationVersion.Version.ToString();
-            var assemblyVersion = Assembly.GetAssembly(typeof(MainWindowViewModel)).GetName().Version;
-            if (settings.ApplicationVersion == null || assemblyVersion > settings.ApplicationVersion.Version)
+            if (settings.ApplicationVersion == null || this.version > settings.ApplicationVersion.Version)
             {
-                Log.Information($"Version was upgraded from {previousVersionString} to {assemblyVersion}");
+                Log.Information($"Version was upgraded from {previousVersionString} to {this.version}");
                 var path = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\CHANGELOG.md";
 
                 var changelog = string.Empty;
                 try
                 {
-                    using (var streamReader = new StreamReader(path))
-                    {
-                        changelog = streamReader.ReadToEnd();
-                    }
+                    using var streamReader = new StreamReader(path);
+                    changelog = streamReader.ReadToEnd();
                 }
                 catch (Exception)
                 {
@@ -150,14 +148,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 // upgrade => show change log
                 await ShowDialog(GetMarkdownBox(changelog, "Code generation was upgraded", MessageBoxButton.OK));
             }
-            else if (assemblyVersion < settings.ApplicationVersion.Version)
+            else if (this.version < settings.ApplicationVersion.Version)
             {
                 // downgrade
-                Log.Information($"Version was downgraded from {previousVersionString} to {assemblyVersion}");
+                Log.Information($"Version was downgraded from {previousVersionString} to {this.version}");
                 await ShowDialog(GetMessageBox("Your version of the CodeGeneration was downgrade. Check your settings.", "Version downgraded", MessageBoxButton.OK));
             }
 
-            SettingsManager.Get().UpdateVersion(assemblyVersion);
+            SettingsManager.Get().UpdateVersion(this.version);
         }
 
         /// <summary>
@@ -175,7 +173,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 SettingsManager.Get().Setting.Password,
                 SettingsManager.Get().Setting.Port);
 
-            this.WindowTitle = $"APE PostgreSQL Teamwork ({Assembly.GetAssembly(typeof(MainWindowViewModel)).GetName().Version})";
+            this.version = Assembly.GetAssembly(typeof(MainWindowViewModel))?.GetName().Version
+                ?? throw new InvalidOperationException("Version could not be read from assembly");
+            this.WindowTitle = $"APE PostgreSQL Teamwork ({this.version})";
 
             // disable buttons until a database is selected
             this.EditButtonEnabled = false;
@@ -187,7 +187,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             this.worker.Tick += this.UpdateWorkerTick;
         }
 
-        private void UpdateWorkerTick(object sender, EventArgs e) => this.UpdateDatabases();
+        private void UpdateWorkerTick(object? sender, EventArgs e) => this.UpdateDatabases();
 
         /// <summary>
         /// Starts the async worker which updates the databases.
@@ -255,7 +255,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                     "Verify Settings",
                     MessageBoxButton.YesNo);
 
-                await MainWindowViewModel.ShowExtendedDialog(messageBox, this.ConnectionMessageBoxClosingEventHandler);
+                await ShowExtendedDialog(messageBox, this.ConnectionMessageBoxClosingEventHandler);
             }
         }
 
@@ -315,21 +315,23 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         partial void FilterTextAfterSet()
         {
-            var databases = this.unfilteredDatabases.Where(d => string.IsNullOrWhiteSpace(this.FilterText) || d.Database.Name.ToLower().Contains(this.FilterText.ToLower()));
+            var databases = this.unfilteredDatabases.Where(d => 
+                string.IsNullOrWhiteSpace(this.FilterText)
+                || d.Database?.Name.ToLower().Contains(this.FilterText.ToLower()) == true);
             this.Databases = new List<DatabaseDisplayData>(databases);
         }
 
-        private void DatabaseRemoved(object sender, EventArgs e) => this.UpdateDatabases();
+        private void DatabaseRemoved(object? sender, EventArgs e) => this.UpdateDatabases();
 
         private void RefreshDatabases()
         {
-            this.unfilteredDatabases = null;
+            this.unfilteredDatabases = new();
             this.ExecuteInTask(() => this.UpdateDatabases());
         }
 
         private void OpenSettings()
         {
-            MainWindowViewModel.ShowDialog(MainWindowViewModel.GetSettingView());
+            ShowDialog(GetSettingView());
 
             //// todo db this.CheckSettings();
 
@@ -373,16 +375,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             if (args.NewSize.Height > 600 && args.NewSize.Width > 650)
             {
                 foreach (var d in this.Databases.Where(d => !d.ShowDetails))
-                {
                     d.ToggleExpansion(true);
-                }
             }
             else
             {
                 foreach (var d in this.Databases.Where(d => d.ShowDetails))
-                {
                     d.ToggleExpansion(true);
-                }
             }
         }
     }
