@@ -39,10 +39,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 throw new TeamworkParserException($"CannotFindSchema {schemaName} {statement}");
             }
 
-            var function = new PgFunction()
-            {
-                Name = ParserUtils.GetObjectName(functionName),
-            };
+            var function = new PgFunction(ParserUtils.GetObjectName(functionName));
             schema.Add(function);
 
             parser.Expect("(");

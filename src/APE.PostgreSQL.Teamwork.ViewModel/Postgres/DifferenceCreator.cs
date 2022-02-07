@@ -156,7 +156,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
 
         private void UpdateSchemas(Database database, StreamWriter writer, PgDatabase oldDatabase, PgDatabase newDatabase)
         {
-            var newAndOldSchemas = new Dictionary<PgSchema, PgSchema>();
+            var newAndOldSchemas = new Dictionary<PgSchema, PgSchema?>();
 
             foreach (var newSchema in newDatabase.Schemas)
             {
@@ -194,7 +194,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
                 newAndOldSchemas.Add(newSchema, oldSchema);
             }
 
-            var schemaActions = new List<Action<StreamWriter, PgSchema, PgSchema>>()
+            var schemaActions = new List<Action<StreamWriter, PgSchema, PgSchema?>>()
             {
                 (w, newSchema, oldSchema) => { PgDiffTriggers.Drop(w, oldSchema, newSchema, new SearchPathHelper(newSchema)); },
                 (w, newSchema, oldSchema) => { PgDiffAggregate.Drop(w, oldSchema, newSchema, new SearchPathHelper(newSchema)); },

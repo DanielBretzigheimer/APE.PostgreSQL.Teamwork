@@ -706,7 +706,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 Log.Debug(message);
 
             this.Progress = progress;
-            this.ProgressInfo = message;
+            this.ProgressInfo = message ?? string.Empty;
         }
     }
 }

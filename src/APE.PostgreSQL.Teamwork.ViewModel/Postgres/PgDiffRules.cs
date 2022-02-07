@@ -7,14 +7,11 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
 {
     public class PgDiffRules
     {
-        internal static void Drop(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        static internal void Drop(StreamWriter writer, PgSchema? oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             if (oldSchema == null)
                 return;
 
-            var referencedRules = new Dictionary<string, List<PgRule>>();
-
-            var dropedRules = new List<PgRule>();
             foreach (var rule in oldSchema.Rules)
             {
                 if (!newSchema.Contains(rule))
@@ -29,7 +26,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// <summary>
         /// Outputs statements for creation of new <see cref="PgRule"/>s.
         /// </summary>
-        internal static void Create(StreamWriter writer, PgSchema oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
+        static internal void Create(StreamWriter writer, PgSchema? oldSchema, PgSchema newSchema, SearchPathHelper searchPathHelper)
         {
             foreach (var rule in newSchema.Rules)
             {

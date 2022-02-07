@@ -15,6 +15,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         private readonly IList<string> updateColumns = new List<string>();
 
+        public PgTrigger(string name)
+            => this.Name = name;
+
         /// <summary>
         /// Gets or sets a boolean indicating whether the trigger should be fired BEFORE or AFTER action. Default is
         /// before.
@@ -51,13 +54,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 if (this.OnUpdate)
                 {
                     if (firstEvent)
-                    {
                         firstEvent = false;
-                    }
                     else
-                    {
                         creationSql.Append(" OR");
-                    }
 
                     creationSql.Append(" UPDATE");
 
@@ -70,13 +69,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                         foreach (var columnName in this.updateColumns)
                         {
                             if (first)
-                            {
                                 first = false;
-                            }
                             else
-                            {
                                 creationSql.Append(',');
-                            }
 
                             creationSql.Append(' ');
                             creationSql.Append(columnName);
@@ -87,9 +82,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 if (this.OnDelete)
                 {
                     if (!firstEvent)
-                    {
                         creationSql.Append(" OR");
-                    }
 
                     creationSql.Append(" DELETE");
                 }
@@ -97,9 +90,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 if (this.OnTruncate)
                 {
                     if (!firstEvent)
-                    {
                         creationSql.Append(" OR");
-                    }
 
                     creationSql.Append(" TRUNCATE");
                 }
@@ -140,7 +131,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         /// <returns> created SQL. </returns>
         public string DropSQL
-            => "DROP TRIGGER " + PgDiffStringExtension.QuoteName(this.Name) + " ON " + PgDiffStringExtension.QuoteName(this.TableName) + ";";
+            => $"DROP TRIGGER {PgDiffStringExtension.QuoteName(this.Name)} ON {PgDiffStringExtension.QuoteName(this.TableName)};";
 
         /// <summary>
         /// Gets or sets a boolean indicating whether the trigger should be fired FOR EACH ROW or FOR EACH STATEMENT.
@@ -181,7 +172,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the name of the table to which this <see cref="PgTrigger"/> belongs.
         /// </summary>
-        public string TableName { get; set; }
+        public string? TableName { get; set; }
 
         /// <summary>
         /// Gets a list of all columns which should be updated.
@@ -211,7 +202,15 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             }
             else if (obj is PgTrigger trigger)
             {
-                equals = (this.Before == trigger.Before) && (this.ForEachRow == trigger.ForEachRow) && this.Function.Equals(trigger.Function) && this.Name.Equals(trigger.Name) && (this.OnDelete == trigger.OnDelete) && (this.OnInsert == trigger.OnInsert) && (this.OnUpdate == trigger.OnUpdate) && (this.OnTruncate == trigger.OnTruncate) && this.TableName.Equals(trigger.TableName);
+                equals = (this.Before == trigger.Before)
+                    && (this.ForEachRow == trigger.ForEachRow)
+                    && (this.Function?.Equals(trigger.Function) ?? trigger.Function is null)
+                    && this.Name.Equals(trigger.Name)
+                    && (this.OnDelete == trigger.OnDelete)
+                    && (this.OnInsert == trigger.OnInsert)
+                    && (this.OnUpdate == trigger.OnUpdate)
+                    && (this.OnTruncate == trigger.OnTruncate)
+                    && this.TableName.Equals(trigger.TableName);
 
                 if (equals)
                 {

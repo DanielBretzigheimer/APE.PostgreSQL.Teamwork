@@ -32,7 +32,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the definition for this <see cref="PgSchema"/>.
         /// </summary>
-        public string Definition { get; set; }
+        public string? Definition { get; set; }
 
         /// <summary>
         /// Creates and returns SQL for creation of the schema.

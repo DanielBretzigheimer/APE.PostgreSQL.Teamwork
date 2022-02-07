@@ -28,21 +28,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             var objectName = ParserUtils.GetObjectName(triggerName);
 
-            var trigger = new PgTrigger()
-            {
-                Name = objectName,
-            };
+            var trigger = new PgTrigger(objectName);
             if (parser.ExpectOptional("BEFORE"))
-            {
                 trigger.Before = true;
-            }
             else if (parser.ExpectOptional("AFTER"))
-            {
                 trigger.Before = false;
-            }
 
             var first = true;
-
             while (true)
             {
                 if (!first && !parser.ExpectOptional("OR"))

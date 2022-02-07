@@ -33,7 +33,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
                 }
                 catch (Exception ex)
                 {
-                    Log.Warning($"Error while exporting database {this.DatabaseDisplayData.Database.Name} for minor version ", ex);
+                    Log.Warning($"Error while exporting database {this.DatabaseDisplayData.Name} for minor version ", ex);
                     this.ShowErrorMessage = true;
 
                     var message = ex.Message;
@@ -58,7 +58,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
 
         private DatabaseVersion GenerateNewVersion()
         {
-            var baseVersion = this.DatabaseDisplayData.Database.CurrentVersion;
+            var baseVersion = this.DatabaseDisplayData.Database?.CurrentVersion
+                ?? throw new InvalidOperationException($"The Database {this.DatabaseDisplayData.Name} is not connected.");
 
             var nextFile = this.DatabaseDisplayData.Database.DiffFiles
                 .OrderBy(f => f.Version)

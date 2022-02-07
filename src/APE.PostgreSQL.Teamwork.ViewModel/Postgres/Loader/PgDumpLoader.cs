@@ -144,9 +144,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
         {
             var encoding = Encoding.GetEncoding(encodingName);
             var pgDatabase = new PgDatabase(database.Name, database.IgnoredSchemas.ToList());
-            StreamReader? reader = null;
-
-            using (reader = new StreamReader(file, encoding))
+            
+            using (var reader = new StreamReader(file, encoding))
             {
                 var statement = GetWholeStatement(reader);
 
@@ -272,7 +271,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Loader
                         if (statement.ToString().Trim().Length == 0)
                             return null;
                         else
-                            throw new Exception($"EndOfStatementNotFound {statement.ToString()}");
+                            throw new Exception($"EndOfStatementNotFound {statement}");
                     }
 
                     if (statement.Length > 0)

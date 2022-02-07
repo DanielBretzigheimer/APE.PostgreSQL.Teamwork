@@ -75,16 +75,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         private static void ParseTable(Parser parser, PgDatabase database)
         {
-            var tableName = parser.ParseIdentifier();
+            var fullName = parser.ParseIdentifier();
 
-            var objectName = ParserUtils.GetObjectName(tableName);
+            var tableName = ParserUtils.GetObjectName(fullName);
 
-            var schemaName = ParserUtils.GetSchemaName(tableName, database);
+            var schemaName = ParserUtils.GetSchemaName(fullName, database);
 
             if (database.SchemaIsIgnored(schemaName))
                 return;
 
-            var table = database.GetSchema(schemaName).GetTable(objectName);
+            var schema = database.GetSchema(schemaName) ?? throw new TeamworkParserException($"Schema {schemaName} was not found.");
+            var table = schema.GetTable(tableName) ?? throw new TeamworkParserException($"Table {tableName} was not found.");
 
             parser.Expect("IS");
             table.Comment = GetComment(parser);
@@ -100,14 +101,19 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             parser.Expect("ON");
 
-            var tableName = parser.ParseIdentifier();
-            var objectName = ParserUtils.GetObjectName(tableName);
+            var fullName = parser.ParseIdentifier();
+            var tableName = ParserUtils.GetObjectName(fullName);
             var schemaName = ParserUtils.GetSchemaName(constraintName, database);
 
             if (database.SchemaIsIgnored(schemaName))
                 return;
 
-            var constraint = database.GetSchema(schemaName).GetTable(objectName).GetConstraint(constraintName);
+            var schema = database.GetSchema(schemaName)
+                ?? throw new TeamworkParserException($"Schema {schemaName} was not found.");
+            var table = schema.GetTable(tableName)
+                ?? throw new TeamworkParserException($"Table {tableName} was not found.");
+            var constraint = table.GetConstraint(constraintName)
+                ?? throw new TeamworkParserException($"Constraint {constraintName} was not found.");
 
             parser.Expect("IS");
             constraint.Comment = GetComment(parser);
@@ -139,13 +145,14 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             if (database.SchemaIsIgnored(schemaName))
                 return;
 
-            var schema = database.GetSchema(schemaName);
-
+            var schema = database.GetSchema(schemaName)
+                ?? throw new TeamworkParserException($"Schema {schemaName} was not found.");
             var index = schema.GetIndex(objectName);
 
             if (index == null)
             {
-                var primaryKey = schema.GetPrimaryKey(objectName);
+                var primaryKey = schema.GetPrimaryKey(objectName)
+                    ?? throw new TeamworkParserException($"Primary Key {objectName} was not found.");
                 parser.Expect("IS");
                 primaryKey.Comment = GetComment(parser);
                 parser.Expect(";");
@@ -165,7 +172,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         {
             var schemaName = ParserUtils.GetObjectName(parser.ParseIdentifier());
 
-            var schema = database.GetSchema(schemaName);
+            var schema = database.GetSchema(schemaName)
+                ?? throw new TeamworkParserException($"Schema {schemaName} was not found.");
 
             parser.Expect("IS");
             schema.Comment = GetComment(parser);
@@ -186,7 +194,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             if (database.SchemaIsIgnored(schemaName))
                 return;
 
-            var sequence = database.GetSchema(schemaName).GetSequence(objectName);
+            var schema = database.GetSchema(schemaName)
+                ?? throw new TeamworkParserException($"Schema {schemaName} was not found.");
+            var sequence = schema.GetSequence(objectName)
+                ?? throw new TeamworkParserException($"Sequence {sequenceName} was not found.");
 
             parser.Expect("IS");
             sequence.Comment = GetComment(parser);
@@ -211,7 +222,12 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             if (database.SchemaIsIgnored(schemaName))
                 return;
 
-            var trigger = database.GetSchema(schemaName).GetTable(objectName).GetTrigger(triggerName);
+            var schema = database.GetSchema(schemaName)
+                ?? throw new TeamworkParserException($"Schema {schemaName} was not found.");
+            var table = schema.GetTable(objectName)
+                ?? throw new TeamworkParserException($"Table {objectName} was not found.");
+            var trigger = table.GetTrigger(triggerName)
+                ?? throw new TeamworkParserException($"Trigger {triggerName} was not found.");
 
             parser.Expect("IS");
             trigger.Comment = GetComment(parser);
@@ -232,7 +248,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             if (database.SchemaIsIgnored(schemaName))
                 return;
 
-            var view = database.GetSchema(schemaName).GetView(objectName);
+            var schema = database.GetSchema(schemaName)
+                ?? throw new TeamworkParserException($"Schema {schemaName} was not found.");
+            var view = schema.GetView(objectName)
+                ?? throw new TeamworkParserException($"View {objectName} was not found.");
 
             parser.Expect("IS");
             view.Comment = GetComment(parser);
@@ -244,47 +263,43 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         private static void ParseColumn(Parser parser, PgDatabase database)
         {
-            var columnName = parser.ParseIdentifier();
+            var fullName = parser.ParseIdentifier();
 
-            var objectName = ParserUtils.GetObjectName(columnName);
+            var columnName = ParserUtils.GetObjectName(fullName);
 
-            var tableName = ParserUtils.GetSecondObjectName(columnName);
+            var tableName = ParserUtils.GetSecondObjectName(fullName);
 
-            var schemaName = ParserUtils.GetThirdObjectName(columnName);
+            var schemaName = ParserUtils.GetThirdObjectName(fullName);
 
             if (database.SchemaIsIgnored(schemaName))
                 return;
 
-            var schema = database.GetSchema(schemaName);
+            var schema = database.GetSchema(schemaName)
+                ?? throw new TeamworkParserException($"Schema {schemaName} does not exist.");
 
             var table = schema.GetTable(tableName);
-
             if (table == null)
             {
-                var view = schema.GetView(tableName);
+                var view = schema.GetView(tableName)
+                    ?? throw new TeamworkParserException($"View {tableName} could not be found.");
+
                 parser.Expect("IS");
 
                 var comment = GetComment(parser);
 
                 if (comment == null)
-                {
-                    view.RemoveColumnComment(objectName);
-                }
+                    view.RemoveColumnComment(columnName);
                 else
-                {
-                    view.AddColumnComment(objectName, comment);
-                }
+                    view.AddColumnComment(columnName, comment);
 
                 parser.Expect(";");
             }
             else
             {
-                var column = table.GetColumn(objectName);
+                var column = table.GetColumn(columnName);
 
                 if (column == null)
-                {
-                    throw new TeamworkParserException($"CannotFindColumnInTable {columnName} from table {table.Name}");
-                }
+                    throw new TeamworkParserException($"CannotFindColumnInTable {fullName} from table {table.Name}");
 
                 parser.Expect("IS");
                 column.Comment = GetComment(parser);
@@ -306,38 +321,25 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
             if (database.SchemaIsIgnored(schemaName))
                 return;
 
-            var schema = database.GetSchema(schemaName);
+            var schema = database.GetSchema(schemaName)
+                ?? throw new TeamworkParserException($"Schema {schemaName} was not found.");
 
             parser.Expect("(");
 
-            var tmpFunction = new PgFunction()
-            {
-                Name = objectName,
-            };
+            var tmpFunction = new PgFunction(objectName);
             while (!parser.ExpectOptional(")"))
             {
                 string? mode;
-
                 if (parser.ExpectOptional("IN"))
-                {
                     mode = "IN";
-                }
                 else if (parser.ExpectOptional("OUT"))
-                {
                     mode = "OUT";
-                }
                 else if (parser.ExpectOptional("INOUT"))
-                {
                     mode = "INOUT";
-                }
                 else if (parser.ExpectOptional("VARIADIC"))
-                {
                     mode = "VARIADIC";
-                }
                 else
-                {
                     mode = null;
-                }
 
                 var position = parser.Position;
                 string? argumentName = null;
@@ -365,16 +367,13 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
                 tmpFunction.AddArgument(argument);
 
                 if (parser.ExpectOptional(")"))
-                {
                     break;
-                }
                 else
-                {
                     parser.Expect(",");
-                }
             }
 
-            var function = schema.GetFunction(tmpFunction.Signature);
+            var function = schema.GetFunction(tmpFunction.Signature)
+                ?? throw new TeamworkParserException($"Function {tmpFunction.Signature} was not found.");
 
             parser.Expect("IS");
             function.Comment = GetComment(parser);
@@ -392,9 +391,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 #pragma warning restore CS0618 // Type or member is obsolete
 
             if ("null".Equals(comment, StringComparison.CurrentCultureIgnoreCase))
-            {
                 return null;
-            }
 
             return comment;
         }

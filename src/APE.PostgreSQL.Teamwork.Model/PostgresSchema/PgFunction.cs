@@ -15,6 +15,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         private readonly IList<Argument> arguments = new List<Argument>();
 
+        public PgFunction(string name)
+            => this.Name = name;
+
         /// <summary>
         /// Gets or sets the comment of the <see cref="PgFunction"/>.
         /// </summary>
@@ -38,13 +41,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 foreach (var argument in this.arguments)
                 {
                     if (addComma)
-                    {
                         creationSql.Append(", ");
-                    }
                     else
-                    {
                         addComma = true;
-                    }
 
                     creationSql.Append(argument.DataType);
                 }
@@ -61,9 +60,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 foreach (var argument in this.arguments)
                 {
                     if (addComma)
-                    {
                         creationSql.Append(", ");
-                    }
 
                     creationSql.Append(argument.GetDeclaration(true));
 
@@ -85,9 +82,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                     foreach (var argument in this.arguments)
                     {
                         if (addComma)
-                        {
                             creationSql.Append(", ");
-                        }
 
                         creationSql.Append(argument.GetDeclaration(false));
 
@@ -126,17 +121,12 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 foreach (var argument in this.arguments)
                 {
                     if ("OUT".Equals(argument.Mode, StringComparison.CurrentCultureIgnoreCase))
-                    {
                         continue;
-                    }
 
                     if (addComma)
-                    {
                         dropSql.Append(", ");
-                    }
 
                     dropSql.Append(argument.DataType);
-
                     addComma = true;
                 }
 
@@ -149,7 +139,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the name of the <see cref="PgFunction"/>.
         /// </summary>
-        public string? Name { get; set; }
+        public string Name { get; set; }
 
         /// <summary>
         /// Gets a list of all <see cref="Argument"/>s for this <see cref="PgFunction"/>.
@@ -179,7 +169,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                     if (addComma)
                         signature.Append(',');
 
-                    signature.Append(argument.DataType.ToLowerInvariant());
+                    signature.Append(argument.DataType?.ToLowerInvariant());
 
                     addComma = true;
                 }
@@ -201,13 +191,9 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         public override bool Equals(object? obj)
         {
             if (obj is not PgFunction)
-            {
                 return false;
-            }
             else if (obj == this)
-            {
                 return true;
-            }
 
             return this.Equals(obj, false);
         }
@@ -230,9 +216,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             else if (obj is PgFunction function)
             {
                 if ((this.Name == null && function.Name != null) || (this.Name != null && !this.Name.Equals(function.Name)))
-                {
                     return false;
-                }
 
                 string? thisBody;
                 string? thatBody;
@@ -249,9 +233,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 }
 
                 if ((thisBody == null && thatBody != null) || (thisBody != null && !thisBody.Equals(thatBody)))
-                {
                     return false;
-                }
 
                 if (this.arguments.Count != function.Arguments.Count)
                 {
@@ -262,9 +244,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                     for (var i = 0; i < this.arguments.Count; i++)
                     {
                         if (!this.arguments[i].Equals(function.Arguments[i]))
-                        {
                             return false;
-                        }
                     }
                 }
 
@@ -365,16 +345,15 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             public override bool Equals(object? obj)
             {
                 if (obj is not Argument)
-                {
                     return false;
-                }
                 else if (this == obj)
-                {
                     return true;
-                }
 
                 var argument = (Argument)obj;
-                return (this.DataType == null ? argument.DataType == null : this.DataType.Equals(argument.DataType, StringComparison.CurrentCultureIgnoreCase)) && (this.DefaultExpression == null ? argument.DefaultExpression == null : this.DefaultExpression.Equals(this.DefaultExpression)) && (this.mode == null ? argument.Mode == null : this.mode.Equals(argument.Mode, StringComparison.CurrentCultureIgnoreCase)) && (this.Name == null ? argument.Name == null : this.Name.Equals(argument.Name));
+                return (this.DataType == null ? argument.DataType == null : this.DataType.Equals(argument.DataType, StringComparison.CurrentCultureIgnoreCase))
+                    && (this.DefaultExpression == null ? argument.DefaultExpression == null : this.DefaultExpression.Equals(this.DefaultExpression))
+                    && (this.mode == null ? argument.Mode == null : this.mode.Equals(argument.Mode, StringComparison.CurrentCultureIgnoreCase))
+                    && (this.Name == null ? argument.Name == null : this.Name.Equals(argument.Name));
             }
 
             /// <summary>

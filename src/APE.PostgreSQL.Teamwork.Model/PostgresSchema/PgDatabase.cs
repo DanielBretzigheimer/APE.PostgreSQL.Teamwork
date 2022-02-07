@@ -46,7 +46,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// </summary>
         public List<string> IgnoredStatements { get; } = new List<string>();
 
-        public bool SchemaIsIgnored(string schemaName) => this.ignoredSchemas.Contains(schemaName);
+        public bool SchemaIsIgnored(string? schemaName) => this.ignoredSchemas.Contains(schemaName ?? string.Empty);
 
         /// <summary>
         /// Adds ignored statement to the list of ignored statements.
