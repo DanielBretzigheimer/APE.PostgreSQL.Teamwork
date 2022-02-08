@@ -141,7 +141,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         
 
         protected static readonly System.ComponentModel.PropertyChangedEventArgs SelectedDiffFileEventArgs = new System.ComponentModel.PropertyChangedEventArgs(nameof(SelectedDiffFile));
-        private SQLFileDisplayData selectedDiffFile;
+        private SQLFileDisplayData? selectedDiffFile;
 
         public SQLFileDisplayData? SelectedDiffFile
         {
@@ -161,7 +161,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             }
         }
 
-        partial void SelectedDiffFileBeforeSet(SQLFileDisplayData newValue);
+        partial void SelectedDiffFileBeforeSet(SQLFileDisplayData? newValue);
         partial void SelectedDiffFileAfterSet();
         
 

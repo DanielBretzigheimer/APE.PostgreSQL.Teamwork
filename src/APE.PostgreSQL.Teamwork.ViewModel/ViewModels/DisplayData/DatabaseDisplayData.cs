@@ -25,15 +25,6 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         private bool dataInitialized = false;
 
         /// <summary>
-        /// Design time constructor.
-        /// </summary>
-        public DatabaseDisplayData()
-        {
-            this.ShowDetails = true;
-            this.ErrorMessage = "Test error message!";
-        }
-
-        /// <summary>
         /// Event is called when the <see cref="DatabaseDisplayData"/> is removed.
         /// </summary>
         public event EventHandler<EventArgs> Removed;

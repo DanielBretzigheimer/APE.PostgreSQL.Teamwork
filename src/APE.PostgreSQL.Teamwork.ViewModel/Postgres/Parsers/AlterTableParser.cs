@@ -234,20 +234,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         {
             var constraintName = ParserUtils.GetObjectName(parser.ParseIdentifier());
 
-            var constraint = new PgConstraint(constraintName)
-            {
-                TableName = table.Name,
-            };
-            table.AddConstraint(constraint);
-
             if (parser.ExpectOptional("PRIMARY", "KEY"))
             {
+                var definition = "PRIMARY KEY " + parser.Expression();
+                var constraint = new PgConstraint(constraintName, table.Name, definition);
+                table.AddConstraint(constraint);
                 schema.Add(constraint);
-                constraint.Definition = "PRIMARY KEY " + parser.Expression();
             }
             else
             {
-                constraint.Definition = parser.Expression();
+                var constraint = new PgConstraint(constraintName, table.Name, parser.Expression());
+                table.AddConstraint(constraint);
             }
         }
 
@@ -358,10 +355,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             var constraintName = ParserUtils.GenerateName(table.Name + "_", columnNames, "_fkey");
 
-            var constraint = new PgConstraint(constraintName);
+            var constraint = new PgConstraint(constraintName, table.Name, parser.Expression());
             table.AddConstraint(constraint);
-            constraint.Definition = parser.Expression();
-            constraint.TableName = table.Name;
         }
 
         /// <summary>

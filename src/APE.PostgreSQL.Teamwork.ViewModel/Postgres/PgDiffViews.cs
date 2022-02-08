@@ -24,7 +24,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         {
             foreach (var newView in newSchema.Views)
             {
-                if (oldSchema == null || !oldSchema.TryGetView(newView.Name, out var oldView) || IsViewModified(oldView, newView))
+                if (oldSchema == null || !oldSchema.TryGetView(newView.Name, out var oldView) || IsViewModified(oldView!, newView))
                 {
                     searchPathHelper.OutputSearchPath(writer);
                     writer.WriteLine();

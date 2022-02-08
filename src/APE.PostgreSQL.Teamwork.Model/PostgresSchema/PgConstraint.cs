@@ -20,7 +20,12 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// Creates a new <see cref="PgConstraint"/> object.
         /// </summary>
         /// <param name="name">The name of the <see cref="PgConstraint"/>.</param>
-        public PgConstraint(string name) => this.Name = name;
+        public PgConstraint(string name, string tableName, string definition)
+        {
+            this.Name = name;
+            this.TableName = tableName;
+            this.Definition = definition;
+        }
 
         /// <summary>
         /// Creates and returns SQL for creation of the constraint.
@@ -77,7 +82,6 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
                 dropSql.Append("\tDROP CONSTRAINT ");
                 dropSql.Append(PgDiffStringExtension.QuoteName(this.Name));
                 dropSql.Append(';');
-
                 return dropSql.ToString();
             }
         }
@@ -119,9 +123,13 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         {
             if (this.Definition.Equals(constraint.Definition)
                 && this.TableName.Equals(constraint.TableName))
+            {
                 return true;
+            }
             else
+            {
                 return false;
+            }
         }
 
         /// <summary>
@@ -142,12 +150,14 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             return false;
         }
 
-        public override string ToString() => $"{this.GetType().Name} {this.Name} for {this.TableName}";
+        public override string ToString()
+            => $"{this.GetType().Name} {this.Name} for {this.TableName}";
 
         /// <summary>
         /// Serves as the default hash function.
         /// </summary>
         /// <returns>A hash code for the current object.</returns>
-        public override int GetHashCode() => (this.GetType().FullName + "|" + this.Definition + "|" + this.Name + "|" + this.TableName).GetHashCode();
+        public override int GetHashCode()
+            => (this.GetType().FullName + "|" + this.Definition + "|" + this.Name + "|" + this.TableName).GetHashCode();
     }
 }

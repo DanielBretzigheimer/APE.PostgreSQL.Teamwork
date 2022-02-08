@@ -117,18 +117,17 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         /// </summary>
         private static IList<PgIndex> GetDropIndexes(PgTable? oldTable, PgTable? newTable)
         {
-            // todo db Teamwork Indexes that are depending on a removed field should not be added
-            // to drop because they are already removed.
+            // todo db Teamwork Indexes that are depending on a removed field should not be dropped
+            // because they are already removed.
             IList<PgIndex> list = new List<PgIndex>();
 
             if (newTable != null && oldTable != null)
             {
                 foreach (var index in oldTable.Indexes)
                 {
-                    if (!newTable.ContainsIndex(index.Name) || !newTable.GetIndex(index.Name).Equals(index))
-                    {
+                    var newTableIndex = newTable.GetIndex(index.Name);
+                    if (newTableIndex is null || !newTableIndex.Equals(index))
                         list.Add(index);
-                    }
                 }
             }
 
@@ -158,10 +157,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             {
                 foreach (var index in newTable.Indexes)
                 {
-                    if (!oldTable.ContainsIndex(index.Name) || !oldTable.GetIndex(index.Name).Equals(index))
-                    {
+                    var tableIndex = oldTable.GetIndex(index.Name);
+                    if (tableIndex is null || !tableIndex.Equals(index))
                         indexes.Add(index);
-                    }
                 }
             }
 

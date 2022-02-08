@@ -21,19 +21,13 @@ namespace APE.PostgreSQL.Teamwork.View
 
         public override ValidationResult Validate(object value, System.Globalization.CultureInfo cultureInfo)
         {
-            if (value is string)
+            if (value is string databaseName)
             {
-                var databaseName = value as string;
-
                 // check connection
                 if (this.connectionManager.CheckConnection(databaseName))
-                {
                     return ValidationResult.ValidResult;
-                }
                 else
-                {
                     return new ValidationResult(false, "Database was not found.");
-                }
             }
             else
             {

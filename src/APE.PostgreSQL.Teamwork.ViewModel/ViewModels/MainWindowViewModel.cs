@@ -16,23 +16,16 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
     /// </summary>
     public partial class MainWindowViewModel : BaseViewModel, IMainWindowViewModel
     {
-        private DispatcherTimer? worker = null;
+        private DispatcherTimer worker;
         private Dispatcher uiDispatcher;
         private Version version;
 
         private List<DatabaseDisplayData> unfilteredDatabases = new();
 
         /// <summary>
-        /// DESIGN TIME CONSTRUCTOR.
-        /// </summary>
-        public MainWindowViewModel()
-        {
-        }
-
-        /// <summary>
         /// Gets the title of the window.
         /// </summary>
-        public string WindowTitle { get; private set; }
+        public string WindowTitle { get; private set; } = string.Empty;
 
         /// <summary>
         /// Gets a command which will open the settings popup.
@@ -369,10 +362,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
             this.SizeChangedCommand = new RelayCommand<SizeChangedEventArgs>(this.SizeChanged);
         }
 
-        private void SizeChanged(SizeChangedEventArgs args)
+        private void SizeChanged(SizeChangedEventArgs? args)
         {
             // expand databases if window is bigger
-            if (args.NewSize.Height > 600 && args.NewSize.Width > 650)
+            if (args is not null && args.NewSize.Height > 600 && args.NewSize.Width > 650)
             {
                 foreach (var d in this.Databases.Where(d => !d.ShowDetails))
                     d.ToggleExpansion(true);

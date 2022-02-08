@@ -31,22 +31,14 @@ namespace APE.PostgreSQL.Teamwork.Model
     {
         private readonly Func<T, T, bool> equals;
         private readonly Func<T, int> getHashCode;
-        private readonly Expression<Func<T, object>>[] properties;
 
         public EqualsAndHashCode(params Expression<Func<T, object>>[] properties)
         {
             // Expression<Func<TProperty>>
             if (properties == null)
-            {
                 throw new ArgumentNullException(nameof(properties), "properties == null");
-            }
-
             if (properties.Length == 0)
-            {
                 throw new ArgumentOutOfRangeException(nameof(properties), "properties.Length == 0");
-            }
-
-            this.properties = properties;
 
             this.equals = this.BuildEquals(properties);
             this.getHashCode = this.BuildGetHashCode(properties);
@@ -104,12 +96,16 @@ namespace APE.PostgreSQL.Teamwork.Model
                 }
             }
 
+            if (currentHashCode == null)
+                throw new NullReferenceException($"{nameof(currentHashCode)} is null.");
+
             return Expression.Lambda<Func<T, int>>(currentHashCode, sourceParameter).Compile();
         }
 
         private Func<T, T, bool> BuildEquals(Expression<Func<T, object>>[] properties)
         {
-            var equalsMethodInfo = typeof(object).GetMethod("Equals", BindingFlags.Static | BindingFlags.Public);
+            var equalsMethodInfo = typeof(object).GetMethod("Equals", BindingFlags.Static | BindingFlags.Public)
+                    ?? throw new NullReferenceException("Object has no equals method.");
 
             var leftParameter = Expression.Parameter(typeof(T));
             var rightParameter = Expression.Parameter(typeof(T));
@@ -154,6 +150,9 @@ namespace APE.PostgreSQL.Teamwork.Model
                     }
                 }
             }
+
+            if (equalsExpression == null)
+                throw new NullReferenceException("EqualsExpression is null");
 
             return Expression.Lambda<Func<T, T, bool>>(equalsExpression, leftParameter, rightParameter).Compile();
         }

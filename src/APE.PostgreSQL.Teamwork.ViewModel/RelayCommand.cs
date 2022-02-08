@@ -17,7 +17,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// Initializes a new command that is always executable.
         /// </summary>
         /// <param name="executeAction">Action that is invoked when the command is executed.</param>
-        public RelayCommand(Action<T> executeAction)
+        public RelayCommand(Action<T?> executeAction)
             : this() => this.ExecuteAction = executeAction ?? throw new ArgumentNullException(nameof(executeAction));
 
         /// <summary>
@@ -25,7 +25,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel
         /// </summary>
         /// <param name="executeAction">Action that is invoked when the command is executed.</param>
         /// <param name="canExecuteFunc">Function that is evaluated when the CanExecute method is executed.</param>
-        public RelayCommand(Action<T> executeAction, Func<T?, bool> canExecuteFunc)
+        public RelayCommand(Action<T?> executeAction, Func<T?, bool> canExecuteFunc)
         {
             this.ExecuteAction = executeAction ?? throw new ArgumentNullException(nameof(executeAction));
             this.CanExecuteFunc = canExecuteFunc ?? throw new ArgumentNullException(nameof(canExecuteFunc));

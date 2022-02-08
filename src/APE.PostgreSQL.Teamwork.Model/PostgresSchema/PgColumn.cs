@@ -29,7 +29,31 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// Creates a new <see cref="PgColumn"/> object.
         /// </summary>
         /// <param name="name">Name of the column.</param>
-        public PgColumn(string name) => this.Name = name;
+        public PgColumn(string name, string definition)
+        {
+            this.Name = name;
+            if (PatternNotNull.Matches(definition).Count != 0)
+            {
+                definition = PatternNotNull.Matches(definition)[0].Groups[1].ToString().Trim();
+                this.NullValue = false;
+            }
+            else
+            {
+                if (PatternNull.Matches(definition).Count != 0)
+                    definition = PatternNull.Matches(definition)[0].Groups[1].ToString().Trim();
+
+                this.NullValue = true;
+            }
+
+            if (PatternDefault.Matches(definition).Count != 0)
+            {
+                var match = PatternDefault.Matches(definition)[0];
+                definition = match.Groups[1].ToString().Trim();
+                this.DefaultValue = match.Groups[2].ToString().Trim();
+            }
+
+            this.Type = definition;
+        }
 
         /// <summary>
         /// Gets or sets the comment of the <see cref="PgColumn"/>.
@@ -100,37 +124,6 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
             }
 
             return definitionSql.ToString();
-        }
-
-        /// <summary>
-        /// Parses definition of the column.
-        /// </summary>
-        /// <param name="definition">Definition of the column.</param>
-        public void ParseDefinition(string definition)
-        {
-            if (PatternNotNull.Matches(definition).Count != 0)
-            {
-                definition = PatternNotNull.Matches(definition)[0].Groups[1].ToString().Trim();
-                this.NullValue = false;
-            }
-            else
-            {
-                if (PatternNull.Matches(definition).Count != 0)
-                {
-                    definition = PatternNull.Matches(definition)[0].Groups[1].ToString().Trim();
-                }
-
-                this.NullValue = true;
-            }
-
-            if (PatternDefault.Matches(definition).Count != 0)
-            {
-                var match = PatternDefault.Matches(definition)[0];
-                definition = match.Groups[1].ToString().Trim();
-                this.DefaultValue = match.Groups[2].ToString().Trim();
-            }
-
-            this.Type = definition;
         }
     }
 }

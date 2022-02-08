@@ -117,10 +117,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         private static void ParseConstraint(Parser parser, PgTable table)
         {
-            var constraint = new PgConstraint(ParserUtils.GetObjectName(parser.ParseIdentifier()));
+            var constraintName = ParserUtils.GetObjectName(parser.ParseIdentifier());
+            var constraint = new PgConstraint(constraintName, table.Name, parser.Expression());
             table.AddConstraint(constraint);
-            constraint.Definition = parser.Expression();
-            constraint.TableName = table.Name;
         }
 
         /// <summary>
@@ -128,9 +127,9 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
         /// </summary>
         private static void ParseColumn(Parser parser, PgTable table)
         {
-            var column = new PgColumn(ParserUtils.GetObjectName(parser.ParseIdentifier()));
+            var colName = ParserUtils.GetObjectName(parser.ParseIdentifier());
+            var column = new PgColumn(colName, parser.Expression());
             table.AddColumn(column);
-            column.ParseDefinition(parser.Expression());
         }
     }
 }

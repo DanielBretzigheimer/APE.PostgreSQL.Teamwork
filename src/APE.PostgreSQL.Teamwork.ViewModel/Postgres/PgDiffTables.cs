@@ -4,6 +4,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using APE.PostgreSQL.Teamwork.Model.PostgresSchema;
 using APE.PostgreSQL.Teamwork.Model.Utils;
+using APE.PostgreSQL.Teamwork.ViewModel.Exceptions;
 
 namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
 {
@@ -113,11 +114,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             foreach (var newTable in newSchema.Tables)
             {
                 if (oldSchema == null || !oldSchema.ContainsTable(newTable.Name))
-                {
                     continue;
-                }
 
-                var oldTable = oldSchema.GetTable(newTable.Name);
+                var oldTable = oldSchema.GetTable(newTable.Name)
+                    ?? throw new InvalidOperationException($"Table {newTable.Name} was not found.");
                 UpdateTableColumns(writer, oldTable, newTable, searchPathHelper);
                 CheckWithOIDS(writer, oldTable, newTable, searchPathHelper);
                 CheckInherits(writer, oldTable, newTable, searchPathHelper);
@@ -329,11 +329,10 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
             foreach (var newColumn in newTable.Columns)
             {
                 if (!oldTable.ContainsColumn(newColumn.Name))
-                {
                     continue;
-                }
 
-                var oldColumn = oldTable.GetColumn(newColumn.Name);
+                var oldColumn = oldTable.GetColumn(newColumn.Name)
+                    ?? throw new InvalidOperationException($"Column {newColumn.Name} was not found.");
 
                 var newColumnName = PgDiffStringExtension.QuoteName(newColumn.Name);
 
@@ -463,8 +462,7 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres
         {
             for (var i = 0; i < dropedTables.Count; i++)
             {
-                var tables = new List<PgTable>();
-                if (referencedTables.TryGetValue("\"" + dropedTables[i].Name + "\"", out tables))
+                if (referencedTables.TryGetValue("\"" + dropedTables[i].Name + "\"", out var tables))
                 {
                     foreach (var table in tables)
                     {

@@ -172,7 +172,7 @@ namespace APE.PostgreSQL.Teamwork.Model.PostgresSchema
         /// <summary>
         /// Gets or sets the name of the table to which this <see cref="PgTrigger"/> belongs.
         /// </summary>
-        public string? TableName { get; set; }
+        public string TableName { get; set; } = string.Empty;
 
         /// <summary>
         /// Gets a list of all columns which should be updated.

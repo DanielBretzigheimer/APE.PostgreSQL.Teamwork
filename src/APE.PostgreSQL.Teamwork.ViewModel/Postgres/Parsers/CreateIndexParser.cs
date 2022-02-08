@@ -35,7 +35,8 @@ namespace APE.PostgreSQL.Teamwork.ViewModel.Postgres.Parsers
 
             var tableName = parser.ParseIdentifier();
 
-            var definition = parser.Rest();
+            var definition = parser.Rest()
+                ?? throw new NullReferenceException($"Index definition for {indexName} was null.");
 
             var schemaName = ParserUtils.GetSchemaName(tableName, database);
 
